@@ -1,0 +1,7 @@
+com\mycompany\dominio\Dominio.class
+exceptions\DominioException.class
+entidades\Partida.class
+entidades\Jugador.class
+entidades\Tablero.class
+entidades\Ficha.class
+entidades\Pozo.class
