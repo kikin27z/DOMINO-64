@@ -10,15 +10,22 @@ import java.util.Stack;
 
 /**
  *
- * @author luiis
+ * @author luisa
  */
 public class Pozo {
-    Stack<Ficha> fichas;
+    private Stack<Ficha> fichas;
     
-    public Pozo(Stack<Ficha> fichas){
-        this.fichas=fichas;
+    public Pozo(){
+        this.fichas= new Stack<>();
     }
     
+    /**
+     * Obtiene una ficha del pozo.
+     * Se remueve la ficha que se encuentra hasta el tope
+     * del stack, la cual es la que se obtiene con este metodo
+     * @return la ficha en el top del stack
+     * @throws DominioException si no hay fichas en el pozo
+     */
     public Ficha jalarFicha()throws DominioException{
         if(hayFichas()){
             Ficha ficha = fichas.pop();
@@ -29,5 +36,9 @@ public class Pozo {
     
     public boolean hayFichas(){
         return fichas.isEmpty();
+    }
+    
+    public void llenarPozo(Stack<Ficha> fichas){
+        this.fichas = fichas;
     }
 }

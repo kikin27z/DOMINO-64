@@ -6,7 +6,7 @@ package entidades;
 
 /**
  *
- * @author luiis
+ * @author luisa
  */
 class Ficha {
     private int lado1;
