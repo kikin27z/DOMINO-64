@@ -57,6 +57,8 @@ public class Partida {
      * indicando que ya se asignaron los turnos anteriormente
      */
     public void designarTurnos()throws DominioException{
+        //Falta implementar que el jugador con la mula mas alta
+        //tenga el primer turno
         if(!turnosDesignados){
             Collections.shuffle(jugadores);
             turnosDesignados = true;
