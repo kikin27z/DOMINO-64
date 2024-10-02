@@ -9,12 +9,14 @@ import java.awt.LayoutManager;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import utilities.Observable;
+import utilities.Observer;
 
 /**
  *
  * @author luisa
  */
-public class StartView extends javax.swing.JFrame {
+public class StartView extends javax.swing.JFrame implements Observer{
 
     private StartModel model;
     private JButton btnIniciar;
@@ -124,6 +126,12 @@ public class StartView extends javax.swing.JFrame {
         panel.add(label);
         
         this.getContentPane().add(panel);
+    }
+
+    @Override
+    public void update(Observable ob, Object context) {
+        boolean flag = (boolean)context;
+        this.setVisible(flag);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

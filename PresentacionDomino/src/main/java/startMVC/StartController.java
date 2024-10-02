@@ -25,12 +25,16 @@ public class StartController {
         view.addListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                iniciarJuego();
+                model.setVisible(false);
             }
         });
     }
     
-    private void iniciarJuego(){
-        
+    public void showView(){
+        this.model.setVisible(true);
+    }
+    
+    public void destroyView(){
+        this.view.dispose();
     }
 }

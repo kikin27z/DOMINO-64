@@ -9,12 +9,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
+import utilities.Mediator;
+import utilities.Observable;
 
 /**
  *
  * @author luisa
  */
-public class StartModel {
+public class StartModel extends Observable{
     private final int WIDTH=600;//px
     private final int HEIGHT=500;//px
     private final Dimension DIMENSION= new Dimension(WIDTH, HEIGHT);
@@ -28,6 +30,13 @@ public class StartModel {
     private final Font BUTTON_TEXT_FONT = new Font("Franklin Gothic Heavy", Font.PLAIN, 16);
     private final Rectangle BUTTON_BOUNDS = new Rectangle(200, 300, 170, 60);
     private final Rectangle LABEL_BOUNDS = new Rectangle(130, 100, 550, 100);
+    private boolean visible;
+    private Mediator mediator;
+    
+    public void setVisible(boolean flag){
+        visible = flag;
+        this.notifyObservers(visible);
+    }
     
     public Dimension getDimension(){
         return DIMENSION;

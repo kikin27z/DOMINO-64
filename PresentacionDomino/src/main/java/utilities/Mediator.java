@@ -8,6 +8,11 @@ package utilities;
  *
  * @author luiis
  */
-public class Mediator {
+public class Mediator implements IMediator{
+
+    @Override
+    public void changeView() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
 }
