@@ -4,15 +4,25 @@
  */
 package utilities;
 
+import lobbyMVC.LobbyModel;
+import startMVC.StartModel;
+
 /**
  *
  * @author luiis
  */
 public class Mediator implements IMediator{
-
+    private StartModel startModel;
+    private LobbyModel chooseMatchModel; 
+    
+    public Mediator(StartModel startModel, LobbyModel chooseMatchModel){
+        this.startModel = startModel;
+        this.chooseMatchModel = chooseMatchModel;
+    }
+    
     @Override
-    public void changeView() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void changeView(String newView) {
+        
     }
     
 }

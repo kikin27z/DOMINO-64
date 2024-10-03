@@ -9,5 +9,5 @@ package utilities;
  * @author luiis
  */
 public interface IMediator {
-    public void changeView();
+    public void changeView(String newView);
 }
