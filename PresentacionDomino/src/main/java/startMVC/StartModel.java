@@ -30,12 +30,14 @@ public class StartModel extends Observable{
     private final Font BUTTON_TEXT_FONT = new Font("Franklin Gothic Heavy", Font.PLAIN, 16);
     private final Rectangle BUTTON_BOUNDS = new Rectangle(200, 300, 170, 60);
     private final Rectangle LABEL_BOUNDS = new Rectangle(130, 100, 550, 100);
+    private final String nextFrame = "Lobby";
     private boolean visible;
     private Mediator mediator;
     
     public void setVisible(boolean flag){
         visible = flag;
         this.notifyObservers(visible);
+        
     }
     
     public Dimension getDimension(){
