@@ -22,12 +22,17 @@ public class Partida {
     private boolean turnosDesignados;
     private String codigoPartida;
     private Jugador jugadorEnTurno;
+    private int fichasPorJugador;
+    private int maxCantidadJugadores;
     
-    public Partida(String codigoPartida){
-        this.jugadores = new ArrayList<>();
+    public Partida(String codigoPartida, List<Jugador> jugadores, 
+            int fichasPorJugador, int maxCantidadJugadores){
+        this.jugadores = jugadores;
         this.codigoPartida=codigoPartida;
         this.pozo = new Pozo();
         this.tablero = new Tablero();
+        this.fichasPorJugador = fichasPorJugador;
+        this.maxCantidadJugadores = maxCantidadJugadores;
         turnosDesignados = false;
     }
     
@@ -82,6 +87,26 @@ public class Partida {
     
     public String getCodigoPartida(){
         return this.codigoPartida;
+    }
+    
+    public Pozo getPozo(){
+        return pozo;
+    }
+    
+    public Tablero getTablero(){
+        return tablero;
+    }
+    
+    public List<Jugador> getJugadores(){
+        return jugadores;
+    }
+
+    public int getFichasPorJugador() {
+        return fichasPorJugador;
+    }
+
+    public int getMaxCantidadJugadores() {
+        return maxCantidadJugadores;
     }
     
 }

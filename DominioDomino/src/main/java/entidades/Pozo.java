@@ -35,7 +35,7 @@ public class Pozo {
     }
     
     public boolean hayFichas(){
-        return fichas.isEmpty();
+        return !fichas.isEmpty();
     }
     
     public void llenarPozo(Stack<Ficha> fichas){

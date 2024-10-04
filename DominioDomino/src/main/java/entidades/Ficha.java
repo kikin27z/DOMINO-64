@@ -8,7 +8,7 @@ package entidades;
  *
  * @author luisa
  */
-class Ficha {
+public class Ficha {
     private int lado1;
     private int lado2;
 
@@ -31,6 +31,11 @@ class Ficha {
 
     public void setLado2(int lado2) {
         this.lado2 = lado2;
+    }
+
+    @Override
+    public String toString() {
+        return "Ficha{" + "lado1=" + lado1 + ", lado2=" + lado2 + '}';
     }
 
     

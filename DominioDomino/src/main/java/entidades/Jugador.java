@@ -33,6 +33,10 @@ public class Jugador {
         fichas.add(ficha);
     }
 
+    public List<Ficha> getFichas(){
+        return fichas;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 3;
