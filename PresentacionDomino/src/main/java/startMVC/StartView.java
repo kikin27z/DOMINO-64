@@ -131,7 +131,9 @@ public class StartView extends javax.swing.JFrame implements Observer{
     @Override
     public void update(Observable ob, Object context) {
         boolean flag = (boolean)context;
-        this.setVisible(flag);
+        //this.setVisible(flag);
+        if(flag)
+            this.dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

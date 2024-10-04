@@ -17,9 +17,7 @@ import utilities.Observable;
  * @author luisa
  */
 public class StartModel extends Observable{
-    private final int WIDTH=600;//px
-    private final int HEIGHT=500;//px
-    private final Dimension DIMENSION= new Dimension(WIDTH, HEIGHT);
+    private final Dimension DIMENSION= new Dimension(600, 500);
     private final Color BACKGROUND_COLOR = new Color(24,111,101);//hex 186F65
     private final Color LABEL_TEXT_COLOR = Color.WHITE;
     private final Color BUTTON_BACKGROUND_COLOR = new Color(178,83,62);//hex B2533E
@@ -30,14 +28,11 @@ public class StartModel extends Observable{
     private final Font BUTTON_TEXT_FONT = new Font("Franklin Gothic Heavy", Font.PLAIN, 16);
     private final Rectangle BUTTON_BOUNDS = new Rectangle(200, 300, 170, 60);
     private final Rectangle LABEL_BOUNDS = new Rectangle(130, 100, 550, 100);
-    private final String nextFrame = "Lobby";
-    private boolean visible;
-    private Mediator mediator;
+    private boolean viewChanged;
     
-    public void setVisible(boolean flag){
-        visible = flag;
-        this.notifyObservers(visible);
-        
+    public void changeView(boolean flag){
+        viewChanged = flag;
+        this.notifyObservers(viewChanged);
     }
     
     public Dimension getDimension(){

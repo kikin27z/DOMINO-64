@@ -21,20 +21,29 @@ public class StartController {
         setListener();
     }
     
+    /**
+     * agrega un actionListener a la vista,
+     * donde el actionPerformed ejecuta el metodo changeView
+     * en el modelo. 
+     * Le inidica al modelo que debe cerrar la vista existente
+     * para cambiar a otra vista
+     */
     private void setListener(){
         view.addListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.setVisible(false);
+                model.changeView(true);
             }
         });
     }
     
+    /**
+     * Construye una vista nueva.
+     * Este metodo se debe ejecutar una vez que se cerro 
+     * esta vista anteriormente.
+     */
     public void showView(){
-        this.model.setVisible(true);
+        this.view = new StartView(model);
     }
     
-    public void destroyView(){
-        this.view.dispose();
-    }
 }
