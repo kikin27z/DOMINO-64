@@ -15,9 +15,7 @@ module utilities {
     exports lobby;
     opens lobby to javafx.fxml;
     
-//    exports partida;
-//    opens partida to javafx.fxml;
+    exports partida;
+    opens partida to javafx.fxml;
 //    
-    exports salir;
-    opens salir to javafx.fxml;
 }
