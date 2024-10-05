@@ -4,6 +4,8 @@
  */
 package entidades;
 
+import java.util.Comparator;
+
 /**
  *
  * @author luisa

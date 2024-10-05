@@ -41,4 +41,8 @@ public class Pozo {
     public void llenarPozo(Stack<Ficha> fichas){
         this.fichas = fichas;
     }
+    
+    public Stack<Ficha> getFichas(){
+        return fichas;
+    }
 }

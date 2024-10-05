@@ -58,6 +58,10 @@ public class Jugador {
         final Jugador other = (Jugador) obj;
         return Objects.equals(this.username, other.username);
     }
-    
+
+    @Override
+    public String toString() {
+        return "Jugador{" + "username=" + username + '}';
+    }
     
 }
