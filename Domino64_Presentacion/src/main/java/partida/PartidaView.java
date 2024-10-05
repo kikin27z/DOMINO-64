@@ -2,7 +2,10 @@ package partida;
 
 import java.io.IOException;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.ScrollPane;
@@ -19,11 +22,16 @@ import javafx.stage.Stage;
  * @author José Karim Franco Valencia - 00000245138
  */
 public class PartidaView {
-
+    private PartidaModel modelo;
     private AnchorPane panelExterior; // Panel exterior que contiene todos los elementos visuales
     private AnchorPane panelInterior;  // Panel interno que se desplaza dentro del ScrollPane
     private AnchorPane panelJugador1;
     private ScrollPane scrollPanel;     // Panel con capacidad de desplazamiento
+    private Button btnEjemplo;
+
+    public PartidaView(PartidaModel modelo) {
+        this.modelo = modelo;
+    }
 
     /**
      * Inicializa la escena de la partida y muestra la ventana.
@@ -62,8 +70,6 @@ public class PartidaView {
         scrollPanel.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
         scrollPanel.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS); // Mostrar barra horizontal
         scrollPanel.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS); // Mostrar barra vertical
-        scrollPanel.setHvalue(0.5); // Valor horizontal inicial
-        scrollPanel.setVvalue(0.5); // Valor vertical inicial
 
         // Creando el AnchorPane interno dentro del ScrollPane
         panelInterior = new AnchorPane();
@@ -79,6 +85,12 @@ public class PartidaView {
         imageView.setPreserveRatio(true); // Mantiene la proporción de la imagen
         imageView.setImage(new Image(getClass().getResourceAsStream("/dominos/0-2.png"))); // Ruta de la imagen
 
+        btnEjemplo = new Button();
+        btnEjemplo.setText("Clickea");
+        btnEjemplo.setLayoutX(20);
+        btnEjemplo.setLayoutY(20);
+        
+//        new Button().setOnAction((EventHandler<ActionEvent>) new ActionEvent());
         // Añadir el ImageView al panel interior
         panelInterior.getChildren().add(imageView);
 
@@ -87,6 +99,7 @@ public class PartidaView {
 
         // Añadiendo el ScrollPane al AnchorPane principal
         panelExterior.getChildren().add(scrollPanel);
+        panelExterior.getChildren().add(btnEjemplo);
 
         // Creando el segundo AnchorPane para la parte inferior
         panelJugador1 = new AnchorPane();
@@ -111,5 +124,9 @@ public class PartidaView {
         
         // Añadir el segundo AnchorPane al AnchorPane principal
         panelExterior.getChildren().add(panelJugador1);
+    }
+    
+    public void btnEjemploEvento(EventHandler<ActionEvent> evento){
+        btnEjemplo.setOnAction(evento);
     }
 }
