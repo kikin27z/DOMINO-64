@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" fx:id="fondo" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #186F65;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="salir.SalirPartidaControl">
+<AnchorPane id="AnchorPane" fx:id="fondo" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #186F65;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="partida.PartidaControl">
    <children>
-      <ScrollPane layoutX="85.0" layoutY="75.0" minViewportHeight="550.0" minViewportWidth="830.0" prefHeight="550.0" prefWidth="830.0" style="-fx-background-color: transparent; -fx-background: transparent; -fx-hbar-policy: NEVER; -fx-vbar-policy: NEVER;">
+      <ScrollPane fx:id="scrollPane" hbarPolicy="ALWAYS" hvalue="0.5" layoutX="85.0" layoutY="75.0" minViewportHeight="550.0" minViewportWidth="830.0" prefHeight="550.0" prefWidth="830.0" style="-fx-background-color: transparent; -fx-background: transparent;" vbarPolicy="ALWAYS" vvalue="0.5">
          <content>
-            <AnchorPane layoutX="-85.0" layoutY="-75.0" minHeight="1000.0" minWidth="1000.0" style="-fx-background-color: #B5CB99;">
+            <AnchorPane fx:id="panel" minHeight="900.0" minWidth="1200.0" style="-fx-background-color: #B5CB99;">
                <children>
-                  <Button layoutX="112.0" layoutY="64.0" mnemonicParsing="false" text="Button" />
-                  <Button layoutX="309.0" layoutY="381.0" mnemonicParsing="false" text="Button" />
+                  <ImageView fitWidth="106.0" layoutX="547.0" layoutY="419.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../dominos/0-2.png" />
+                     </image>
+                  </ImageView>
                </children>
             </AnchorPane>
          </content>
       </ScrollPane>
+      <AnchorPane layoutX="164.0" layoutY="598.0" prefHeight="92.0" prefWidth="630.0" style="-fx-background-color: #B2533E; -fx-background-radius: 20; -fx-border-color: #000000; -fx-border-radius: 20;">
+         <children>
+            <ImageView fitHeight="55.0" fitWidth="90.0" layoutX="81.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
+               <image>
+                  <Image url="@../dominos/0-5.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

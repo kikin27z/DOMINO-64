@@ -22,11 +22,9 @@ public class InicioControl {
     }
 
     public void irPartida(ActionEvent e) {
-//        navegacion.cambiarPartida();
+        navegacion.cambiarPartida();
     }
     
-    public void irSalir(ActionEvent e){
-        navegacion.cambiarSalir();
-    }
+  
 
 }
