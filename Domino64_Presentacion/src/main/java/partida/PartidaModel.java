@@ -46,8 +46,8 @@ public class PartidaModel {
             + " -fx-border-color: #000000;"
             + " -fx-border-radius: 20;";
     
-    private final double imageViewBottomWidth = 55.0;
-    private final double imageViewBottomHeight = 90.0;
+    private final double imageViewBottomWidth = 90.0;
+    private final double imageViewBottomHeight = 150.0;
     private final double imageViewBottomLayoutX = 81.0;
     private final double imageViewBottomLayoutY = 14.0;
     private final boolean imgViewBttmpickOnBounds = true;
