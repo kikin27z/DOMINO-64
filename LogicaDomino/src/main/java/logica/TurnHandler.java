@@ -12,16 +12,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import utilities.ActivityHandler;
 
 /**
  *
  * @author luisa M
  */
-public class TurnManager {
+public class TurnHandler extends ActivityHandler{
     private List<Jugador> players = new ArrayList<>();
     private Jugador turnPlayer;
     
-    public TurnManager(List<Jugador> players){
+    public TurnHandler(List<Jugador> players){
         this.players = players;
     }
     
@@ -126,6 +127,12 @@ public class TurnManager {
         Ficha tile = new Ficha(side1, side2);
         int index = turnPlayer.getFichas().indexOf(tile);
         return index;
+    }
+
+    @Override
+    public void handleRequest(int level) {
+        
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }
