@@ -12,7 +12,7 @@ import javafx.stage.Stage;
  */
 public class SalirPartidaView {
     public void iniciarEscena(Stage fondo) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/salir.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/partida.fxml"));
         Scene scene = new Scene(root);
         fondo.setScene(scene);
         fondo.show();
