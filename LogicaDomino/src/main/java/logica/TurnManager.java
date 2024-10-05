@@ -7,6 +7,8 @@ package logica;
 import entidades.Ficha;
 import entidades.Jugador;
 import exceptions.LogicException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -15,7 +17,7 @@ import java.util.List;
  * @author luisa M
  */
 public class TurnManager {
-    private List<Jugador> players;
+    private List<Jugador> players = new ArrayList<>();
     private Jugador turnPlayer;
     
     public TurnManager(List<Jugador> players){
@@ -79,6 +81,18 @@ public class TurnManager {
             }
         }
         return higherTile;
+    }
+    
+    public void designateOtherTurns(){
+        if(turnPlayer != null){
+            players.remove(turnPlayer);
+            Collections.shuffle(players);
+            players.addFirst(turnPlayer);
+        }
+    }
+    
+    public void putTile(Ficha ficha){
+        
     }
     
 }

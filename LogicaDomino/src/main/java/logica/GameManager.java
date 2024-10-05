@@ -47,6 +47,13 @@ public class GameManager implements Runnable{
         }
         
         setFirstTurn();
+        
+        turnManager.designateOtherTurns();
+        
+        System.out.println("turnos designados: ");
+        for(Jugador j : partida.getJugadores()){
+            System.out.println(j);
+        }
     }
     
     private void distributeTiles(){
