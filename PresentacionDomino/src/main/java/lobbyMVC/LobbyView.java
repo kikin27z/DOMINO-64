@@ -4,6 +4,9 @@
  */
 package lobbyMVC;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import utilities.Observable;
 import utilities.Observer;
 
@@ -13,11 +16,17 @@ import utilities.Observer;
  */
 public class LobbyView extends javax.swing.JFrame implements Observer{
 
+    private JButton newGameBtn, joinGameBtn;
+    private LobbyModel model;
+    private JLabel label;
+    
     /**
      * Creates new form ChooseMatchView
      */
-    public LobbyView() {
+    public LobbyView(LobbyModel model) {
         initComponents();
+        this.model= model;
+        setFrameSettings();
     }
 
     /**
@@ -29,136 +38,111 @@ public class LobbyView extends javax.swing.JFrame implements Observer{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        newMatchBtn = new javax.swing.JButton();
-        joinMatchBtn = new javax.swing.JButton();
-        exitBtn = new javax.swing.JButton();
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(24, 111, 101));
-
-        panel.setBackground(new java.awt.Color(24, 111, 101));
-
-        jLabel1.setFont(new java.awt.Font("Franklin Gothic Heavy", 1, 36)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(204, 204, 255));
-        jLabel1.setText("Escoge una opción");
-
-        newMatchBtn.setBackground(new java.awt.Color(178, 83, 62));
-        newMatchBtn.setText("nueva partida");
-        newMatchBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newMatchBtnActionPerformed(evt);
-            }
-        });
-
-        joinMatchBtn.setBackground(new java.awt.Color(178, 83, 62));
-        joinMatchBtn.setText("unirme a partida");
-
-        exitBtn.setBackground(new java.awt.Color(204, 204, 255));
-        exitBtn.setForeground(new java.awt.Color(178, 83, 62));
-        exitBtn.setText("salir");
-
-        javax.swing.GroupLayout panelLayout = new javax.swing.GroupLayout(panel);
-        panel.setLayout(panelLayout);
-        panelLayout.setHorizontalGroup(
-            panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(exitBtn)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLayout.createSequentialGroup()
-                .addContainerGap(77, Short.MAX_VALUE)
-                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLayout.createSequentialGroup()
-                        .addComponent(newMatchBtn)
-                        .addGap(70, 70, 70)
-                        .addComponent(joinMatchBtn)
-                        .addGap(97, 97, 97))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(75, 75, 75))))
-        );
-        panelLayout.setVerticalGroup(
-            panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(exitBtn)
-                .addGap(45, 45, 45)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
-                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(joinMatchBtn)
-                    .addComponent(newMatchBtn))
-                .addGap(80, 80, 80))
-        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(0, 486, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(0, 319, Short.MAX_VALUE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void newMatchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMatchBtnActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_newMatchBtnActionPerformed
-
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LobbyView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LobbyView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LobbyView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LobbyView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LobbyView().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(LobbyView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(LobbyView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(LobbyView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(LobbyView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new LobbyView().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton exitBtn;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JButton joinMatchBtn;
-    private javax.swing.JButton newMatchBtn;
-    private javax.swing.JPanel panel;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void update(Observable ob, Object context) {
         boolean flag = (boolean)context;
         this.setVisible(flag);
+    }
+    
+    private JButton setButtonSettings(JButton button) {
+        button = new JButton();
+        button.setBackground(model.getBUTTON_BACKGROUND_COLOR());
+        button.setFont(model.getBUTTON_TEXT_FONT());
+        button.setForeground(model.getBUTTON_TEXT_COLOR());
+        return button;
+    }
+    
+    private void setNewGameButtonSettings() {
+        newGameBtn = setButtonSettings(newGameBtn);
+        newGameBtn.setText(model.getNEW_GAME_BTN_TEXT());
+        newGameBtn.setBounds(model.getNEW_GAME_BTN_BOUNDS());
+    }
+    private void setJoinGameButtonSettings() {
+        joinGameBtn = setButtonSettings(joinGameBtn);
+        joinGameBtn.setText(model.getJOIN_GAME_BTN_TEXT());
+        joinGameBtn.setBounds(model.getJOIN_GAME_BTN_BOUNDS());
+    }
+
+    private void setLabelSettings() {
+        label = new JLabel(model.getLABEL_TEXT());
+        label.setBounds(model.getLABEL_BOUNDS());
+        label.setForeground(model.getLABEL_TEXT_COLOR());
+        label.setFont(model.getLABEL_FONT());
+    }
+
+    private void setFrameSettings() {
+        JPanel panel = new JPanel();
+        panel.setLayout(null);
+
+        this.setSize(model.getDIMENSION());
+        panel.setSize(model.getDIMENSION());
+        panel.setBackground(model.getBACKGROUND_COLOR());
+
+        setNewGameButtonSettings();
+        setJoinGameButtonSettings();
+        setLabelSettings();
+
+        panel.add(newGameBtn);
+        panel.add(joinGameBtn);
+        panel.add(label);
+
+        this.getContentPane().add(panel);
     }
 }

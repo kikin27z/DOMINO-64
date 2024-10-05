@@ -11,18 +11,21 @@ import startMVC.StartModel;
  *
  * @author luiis
  */
-public class Mediator implements IMediator{
-    private StartModel startModel;
-    private LobbyModel chooseMatchModel; 
+public class Mediator  {
+    private static StartModel startModel;
+    private static LobbyModel lobbyModel; 
     
-    public Mediator(StartModel startModel, LobbyModel chooseMatchModel){
-        this.startModel = startModel;
-        this.chooseMatchModel = chooseMatchModel;
+    public Mediator(StartModel startModel, LobbyModel lobbyModel){
+        startModel = startModel;
+        lobbyModel = lobbyModel;
     }
     
-    @Override
-    public void changeView(String newView) {
+    public static void changeToLobbyView() {
         
+    }
+
+    public static void changeToStartView() {
+        startModel.changeView(true);
     }
     
 }

@@ -1,1 +1,16 @@
-/Domino64_Presentacion/target/
+
+
+#archivos de compilación
+*.class
+
+#carpetas de salida
+build/
+dist/
+
+#configuraciones privadas de NetBeans
+nbproject/private/
+
+#archivos de Maven
+target/
+build/
+

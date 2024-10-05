@@ -2,22 +2,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package lobbyMVC;
+package utilities;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
-import utilities.Observable;
 
 /**
  *
- * @author luisa
+ * @author luisa    
  */
-public class LobbyModel extends Observable{
-    private boolean viewChanged;
-    private final Dimension DIMENSION= new Dimension(600, 500);
-    private final Color BACKGROUND_COLOR = new Color(24,111,101);//hex 186F65
+public class GUICommonSettings {
+    private final Dimension DIMENSION = new Dimension(600, 500);
+    private Color BACKGROUND_COLOR = new Color(24,111,101);//hex 186F65
     private final Color LABEL_TEXT_COLOR = new Color(204,204,255);
     private final Color EXIT_BTN_BACKGROUND_COLOR = new Color(204,204,255);
     private final Color BUTTON_BACKGROUND_COLOR = new Color(178, 83, 62);//hex B2533E
@@ -26,25 +24,18 @@ public class LobbyModel extends Observable{
     private final String NEW_GAME_BTN_TEXT = "Nueva partida";
     private final String JOIN_GAME_BTN_TEXT = "Unirme a partida";
     private final String EXIT_BTN_TEXT = "Salir";
-    private final Font LABEL_FONT = new Font("Franklin Gothic Heavy", Font.BOLD, 45);
+    private final Font LABEL_FONT = new Font("Franklin Gothic Heavy", Font.BOLD, 60);
     private final Font BUTTON_TEXT_FONT = new Font("Franklin Gothic Heavy", Font.PLAIN, 16);
     private final Rectangle NEW_GAME_BTN_BOUNDS = new Rectangle(100, 300, 170, 60);
-    private final Rectangle JOIN_GAME_BTN_BOUNDS = new Rectangle(300, 300, 170, 60);
+    private final Rectangle JOIN_GAME_BTN_BOUNDS = new Rectangle(200, 300, 170, 60);
     private final Rectangle EXIT_BTN_BOUNDS = new Rectangle(50, 20, 170, 60);
     private final Rectangle LABEL_BOUNDS = new Rectangle(130, 100, 550, 100);
-    private final String NEW_GAME_FRAME_NAME = "NewGame";
-    private final String JOIN_GAME_FRAME_NAME = "JoinGame";
-    private final String EXIT_FRAME_NAME = "Lobby";
+
     
-    public void changeView(boolean flag){
-        viewChanged = flag;
-        this.notifyObservers(flag);
+    public GUICommonSettings(){
+        
     }
-
-    public boolean isViewChanged() {
-        return viewChanged;
-    }
-
+    
     public Dimension getDIMENSION() {
         return DIMENSION;
     }
@@ -96,11 +87,11 @@ public class LobbyModel extends Observable{
     public Rectangle getNEW_GAME_BTN_BOUNDS() {
         return NEW_GAME_BTN_BOUNDS;
     }
-    
+
     public Rectangle getJOIN_GAME_BTN_BOUNDS() {
         return JOIN_GAME_BTN_BOUNDS;
     }
-    
+
     public Rectangle getEXIT_BTN_BOUNDS() {
         return EXIT_BTN_BOUNDS;
     }
@@ -108,19 +99,4 @@ public class LobbyModel extends Observable{
     public Rectangle getLABEL_BOUNDS() {
         return LABEL_BOUNDS;
     }
-
-    public String getNewGameFrameName() {
-        return NEW_GAME_FRAME_NAME;
-    }
-
-    public String getJoinGameFrameName() {
-        return JOIN_GAME_FRAME_NAME;
-    }
-
-    public String getExitFrameName() {
-        return EXIT_FRAME_NAME;
-    }
-    
-    
-    
 }

@@ -59,36 +59,36 @@ public class PartidaView {
     private void crearComponentes() {
         // Creando el AnchorPane exterior
         panelExterior = new AnchorPane();
-        panelExterior.setPrefSize(1000, 700);
-        panelExterior.setStyle("-fx-background-color: #186F65;");
+        panelExterior.setPrefSize(modelo.getExternalPanelWidth(), modelo.getExternalPanelHeight());
+        panelExterior.setStyle(modelo.getExternalPanelStyle());
 
         // Creando el ScrollPane
         scrollPanel = new ScrollPane();
-        scrollPanel.setLayoutX(85);
-        scrollPanel.setLayoutY(75);
-        scrollPanel.setPrefSize(830, 550);
-        scrollPanel.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
-        scrollPanel.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS); // Mostrar barra horizontal
-        scrollPanel.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS); // Mostrar barra vertical
+        scrollPanel.setLayoutX(modelo.getScrollPanelLayoutX());
+        scrollPanel.setLayoutY(modelo.getScrollPanelLayoutY());
+        scrollPanel.setPrefSize(modelo.getScrollPanelWidth(), modelo.getScrollPanelHeight());
+        scrollPanel.setStyle(modelo.getScrollPanelStyle());
+        scrollPanel.setHbarPolicy(modelo.getScrollPanelHbarPolicy()); // Mostrar barra horizontal
+        scrollPanel.setVbarPolicy(modelo.getScrollPanelVbarPolicy()); // Mostrar barra vertical
 
         // Creando el AnchorPane interno dentro del ScrollPane
         panelInterior = new AnchorPane();
-        panelInterior.setMinSize(1200, 900); // Establecemos el tamaño mínimo
-        panelInterior.setStyle("-fx-background-color: #B5CB99;");
+        panelInterior.setMinSize(modelo.getInternalPanelWidth(), modelo.getInternalPanelHeight()); // Establecemos el tamaño mínimo
+        panelInterior.setStyle(modelo.getInternalPanelStyle());
 
         // Creando el ImageView para la imagen dentro del ScrollPane
         ImageView imageView = new ImageView();
-        imageView.setFitWidth(106.0);
-        imageView.setLayoutX(547.0);
-        imageView.setLayoutY(419.0);
-        imageView.setPickOnBounds(true); // Permite que la imagen sea seleccionable
-        imageView.setPreserveRatio(true); // Mantiene la proporción de la imagen
-        imageView.setImage(new Image(getClass().getResourceAsStream("/dominos/0-2.png"))); // Ruta de la imagen
+        imageView.setFitWidth(modelo.getImageViewWidth());
+        imageView.setLayoutX(modelo.getImageViewLayoutX());
+        imageView.setLayoutY(modelo.getImageViewLayoutY());
+        imageView.setPickOnBounds(modelo.isImgViewPickedOnBounds()); // Permite que la imagen sea seleccionable
+        imageView.setPreserveRatio(modelo.isImgViewRatioPreserved()); // Mantiene la proporción de la imagen
+        imageView.setImage(new Image(getClass().getResourceAsStream(modelo.getImageViewResourceName()))); // Ruta de la imagen
 
         btnEjemplo = new Button();
-        btnEjemplo.setText("Clickea");
-        btnEjemplo.setLayoutX(20);
-        btnEjemplo.setLayoutY(20);
+        btnEjemplo.setText(modelo.getButtonText());
+        btnEjemplo.setLayoutX(modelo.getButtonLayoutX());
+        btnEjemplo.setLayoutY(modelo.getButtonLayoutY());
         
 //        new Button().setOnAction((EventHandler<ActionEvent>) new ActionEvent());
         // Añadir el ImageView al panel interior
@@ -103,21 +103,21 @@ public class PartidaView {
 
         // Creando el segundo AnchorPane para la parte inferior
         panelJugador1 = new AnchorPane();
-        panelJugador1.setLayoutX(164.0);
-        panelJugador1.setLayoutY(598.0);
-        panelJugador1.setPrefSize(630.0, 92.0);
-        panelJugador1.setStyle("-fx-background-color: #B2533E; -fx-background-radius: 20; -fx-border-color: #000000; -fx-border-radius: 20;");
+        panelJugador1.setLayoutX(modelo.getPlayer1PanelLayoutX());
+        panelJugador1.setLayoutY(modelo.getPlayer1PanelLayoutY());
+        panelJugador1.setPrefSize(modelo.getPlayer1PanelWidth(), modelo.getPlayer1PanelHeight());
+        panelJugador1.setStyle(modelo.getPlayer1PanelStyle());
 
         // Crear el ImageView para la segunda imagen
         ImageView imageViewBottom = new ImageView();
-        imageViewBottom.setFitHeight(55.0);
-        imageViewBottom.setFitWidth(90.0);
-        imageViewBottom.setLayoutX(81.0);
-        imageViewBottom.setLayoutY(14.0);
-        imageViewBottom.setPickOnBounds(true); // Permite que la imagen sea seleccionable
-        imageViewBottom.setPreserveRatio(true); // Mantiene la proporción de la imagen
-        imageViewBottom.setRotate(90.0); // Rota la imagen 90 grados
-        imageViewBottom.setImage(new Image(getClass().getResourceAsStream("/dominos/0-5.png"))); // Ruta de la imagen
+        imageViewBottom.setFitHeight(modelo.getImageViewBottomHeight());
+        imageViewBottom.setFitWidth(modelo.getImageViewBottomWidth());
+        imageViewBottom.setLayoutX(modelo.getImageViewBottomLayoutX());
+        imageViewBottom.setLayoutY(modelo.getImageViewBottomLayoutY());
+        imageViewBottom.setPickOnBounds(modelo.isImgViewBttmPickedOnBounds()); // Permite que la imagen sea seleccionable
+        imageViewBottom.setPreserveRatio(modelo.isImgViewBttmRatioPreserved()); // Mantiene la proporción de la imagen
+        imageViewBottom.setRotate(modelo.getImgViewBttmRotate()); // Rota la imagen 90 grados
+        imageViewBottom.setImage(new Image(getClass().getResourceAsStream(modelo.getImgViewBttmResourceName()))); // Ruta de la imagen
 
         // Añadir el ImageView al segundo AnchorPane
         panelJugador1.getChildren().add(imageViewBottom);
