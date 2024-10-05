@@ -5,17 +5,15 @@
 package logica;
 
 import entidades.Ficha;
+import entidades.Jugador;
 import entidades.Pozo;
 import entidades.Tablero;
 import exceptions.DominioException;
 import exceptions.LogicException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -63,7 +61,12 @@ public class TileManager {
         stackFichas.addAll(fichas);//agrega al stack las fichas revueltas
         pozo.llenarPozo(stackFichas);//llena el pozo con el stack
     }
-    
+   
+    /**
+     * 
+     * @return
+     * @throws LogicException 
+     */
     public Ficha giveTile()throws LogicException{
         try {
             Ficha ficha = pozo.jalarFicha();
@@ -73,6 +76,12 @@ public class TileManager {
         }
     }
     
+    /**
+     * 
+     * @param tilesNumber
+     * @return
+     * @throws LogicException 
+     */
     public List<Ficha> giveTiles(int tilesNumber)throws LogicException{
         List<Ficha> fichas = new ArrayList<>();
         try {
@@ -83,5 +92,51 @@ public class TileManager {
         } catch (DominioException ex) {
             throw new LogicException(ex.getMessage());
         }
+    }
+   
+    /**
+     * Reparte la cantidad de fichas indicada por el parametro
+     * a los jugadores en la lista del parametro
+     * @param players quienes recibiran las fichas
+     * @param tilesPerPlayer cantidad de fichas a repartir a cada jugador
+     * @throws LogicException 
+     */
+    public void distributeTiles(List<Jugador> players, int tilesPerPlayer) throws LogicException {
+        for (int i = 0; i < tilesPerPlayer; i++) {
+            for (Jugador j : players) {
+                j.agregarFicha(giveTile());
+            }
+        }
+    }
+    
+    /**
+     * Jala fichas del pozo hasta que se obtiene una
+     * que sea una mula. 
+     * Los jugadores en la lista van recibiendo una ficha
+     * del pozo hasta que salga una ficha mula. La primera
+     * mula que salga sera la primera en ponerse en el tablero.
+     * El jugador que haya jalado dicha mula sera el jugador
+     * con el primer turno.
+     * @param players a recibir fichas
+     * @return una dupla de la mula encontrada y el jugador que la obtuvo
+     * @throws LogicException en caso de que se acaben las fichas en el pozo
+     */
+    public Object[] getFirstDouble(List<Jugador> players) throws LogicException {
+        Object[] duple = new Object[2];
+        for (Jugador j : players) {
+            Ficha tile = giveTile();
+            if (tile.getLado1() == tile.getLado2()) {
+                duple[0] = tile;
+                duple[1] = j;
+                break;
+            }
+            j.agregarFicha(tile);
+        }
+        
+        return duple;
+    }
+    
+    public Stack<Ficha> getFichas(){
+        return pozo.getFichas();
     }
 }

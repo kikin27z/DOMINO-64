@@ -4,6 +4,7 @@
  */
 package logica;
 
+import entidades.Ficha;
 import entidades.Jugador;
 import entidades.Partida;
 import exceptions.LogicException;
@@ -24,37 +25,54 @@ public class GameManager implements Runnable{
     public GameManager(Partida partida){
         this.partida = partida;
         tileManager = new TileManager(partida.getPozo(),partida.getTablero());
-        turnManager = new TurnManager();
+        turnManager = new TurnManager(partida.getJugadores());
     }
 
     @Override
     public void run() {
-        Scanner scan = new Scanner(System.in);
         System.out.println("Bienvenidos a la partida");
         System.out.println("se van a repartir las fichas");
-        try {
-            distributeTiles();
-        } catch (LogicException ex) {
-            Logger.getLogger(GameManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
+        distributeTiles();
         
         System.out.println("fichas de cada jugador");
         for(Jugador j:partida.getJugadores()){
             System.out.println("fichas del jugador " + j.getUsername()+" :");
             System.out.println(j.getFichas());
         }
-    }
-    
-    private void distributeTiles()throws LogicException{
-        List<Jugador> jugadores = partida.getJugadores();
         
-        for (int i = 0; i < partida.getFichasPorJugador(); i++) {
-            for (Jugador j : jugadores) {
-                j.agregarFicha(tileManager.giveTile());
-            }
+        System.out.println("fichas en el pozo:");
+        for(Ficha f:tileManager.getFichas()){
+            System.out.println(f);
         }
-            
+        
+        setFirstTurn();
+    }
+    
+    private void distributeTiles(){
+        try {
+            tileManager.distributeTiles(partida.getJugadores(),partida.getFichasPorJugador());
+        } catch (LogicException ex) {
+            Logger.getLogger(GameManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     
+    private void setFirstTurn(){
+        Jugador firstTurn = turnManager.getFirstTurn();
+        if(firstTurn == null){
+            try {
+                Object[] duple = tileManager.getFirstDouble(partida.getJugadores());
+                firstTurn = (Jugador)duple[1];
+                Ficha doubleToPut = (Ficha)duple[0];
+                System.out.println("firstTurn by first double: "+ firstTurn);
+                System.out.println("double to put: "+ doubleToPut);
+            } catch (LogicException ex) {
+                System.out.println(ex.getMessage());
+            }
+            turnManager.setFirstTurn(firstTurn);
+        }
+        System.out.println("primer jugador:" + firstTurn);
+        
+    }
 }
