@@ -40,5 +40,31 @@ public class Ficha {
         return "Ficha{" + "lado1=" + lado1 + ", lado2=" + lado2 + '}';
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 89 * hash + this.lado1;
+        hash = 89 * hash + this.lado2;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Ficha other = (Ficha) obj;
+        if (this.lado1 != other.lado1) {
+            return false;
+        }
+        return this.lado2 == other.lado2;
+    }
+
     
 }

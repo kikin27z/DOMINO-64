@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  *
@@ -91,8 +92,40 @@ public class TurnManager {
         }
     }
     
-    public void putTile(Ficha ficha){
+    public Ficha getSelectedTile(){
+        Scanner scan = new Scanner(System.in);
+        String numeros = null;
+        int selectedTileIndex = 0;
+        boolean flag = false;
+        do{
+            System.out.println("ingresa la ficha que deseas colocar");
+            System.out.println("los numeros de la ficha deben seguir el"
+                    + "siguiente formato-> 3:5)");
+            System.out.println("las fichas que puedes poner son:");
+            System.out.println(turnPlayer.getFichas());
+            numeros = scan.findInLine("\\d:\\d");
+            
+            if(numeros !=null){
+                selectedTileIndex = tileIndex(numeros);
+                if(selectedTileIndex >= 0)
+                    flag = true;
+                else
+                    System.out.println("no tienes esa ficha");
+            }else{
+                System.out.println("se ingreso un formato inadecuado para los numeros de la ficha");
+            }
+        }while(!flag);
         
+        Ficha selectedTile = turnPlayer.getFichas().get(selectedTileIndex);
+        return selectedTile;
+    }
+    
+    private int tileIndex(String tileNumbers){
+        int side1 = tileNumbers.charAt(0);
+        int side2 = tileNumbers.charAt(2);
+        Ficha tile = new Ficha(side1, side2);
+        int index = turnPlayer.getFichas().indexOf(tile);
+        return index;
     }
     
 }
