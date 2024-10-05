@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" fx:id="fondo" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #186F65;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="partida.PartidaControl">
+   <children>
+      <ScrollPane layoutX="85.0" layoutY="75.0" minViewportHeight="550.0" minViewportWidth="830.0" prefHeight="550.0" prefWidth="830.0" style="-fx-background-color: transparent; -fx-background: transparent; -fx-hbar-policy: NEVER; -fx-vbar-policy: NEVER;">
+         <content>
+            <AnchorPane layoutX="-85.0" layoutY="-75.0" minHeight="1000.0" minWidth="1000.0" style="-fx-background-color: #B5CB99;">
+               <children>
+                  <Button layoutX="112.0" layoutY="64.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="309.0" layoutY="381.0" mnemonicParsing="false" text="Button" />
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

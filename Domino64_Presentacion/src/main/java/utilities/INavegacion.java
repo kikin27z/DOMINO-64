@@ -7,7 +7,10 @@ package utilities;
  * @author José Karim Franco Valencia - 00000245138
  */
 public interface INavegacion {
+    
     public void iniciarApp();
     public void cambiarInicio();
     public void cambiarLobby();
+//    public void cambiarPartida();
+    public void cambiarSalir();
 }
