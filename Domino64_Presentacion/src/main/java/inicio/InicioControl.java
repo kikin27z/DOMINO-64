@@ -2,7 +2,10 @@ package inicio;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import utilities.INavegacion;
+import utilities.Navegacion;
 
 /**
  *
@@ -10,14 +13,20 @@ import javafx.fxml.Initializable;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class InicioControl implements Initializable {
+public class InicioControl {
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+    private INavegacion navegacion;
+
+    public InicioControl() {
+        this.navegacion = Navegacion.getInstance();
+    }
+
+    public void irPartida(ActionEvent e) {
+//        navegacion.cambiarPartida();
+    }
     
+    public void irSalir(ActionEvent e){
+        navegacion.cambiarSalir();
+    }
+
 }

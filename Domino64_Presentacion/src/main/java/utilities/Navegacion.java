@@ -5,6 +5,8 @@ import java.io.IOException;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import lobby.LobbyView;
+import salir.SalirPartidaView;
+//import partida.PartidaView;
 
 /**
  *
@@ -44,6 +46,7 @@ public class Navegacion implements INavegacion{
     @Override
     public void cambiarLobby() {
         try {
+            
             LobbyView lobby = new LobbyView();
             lobby.iniciarEscena(fondo);
         } catch (IOException ex) {
@@ -53,6 +56,26 @@ public class Navegacion implements INavegacion{
 
     public void setFondo(Stage fondo) {
         this.fondo = fondo;
+    }
+
+//    @Override
+//    public void cambiarPartida() {
+//        try {
+//            PartidaView partida = new PartidaView();
+//            partida.iniciarEscena(fondo);
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+//    }
+
+    @Override
+    public void cambiarSalir() {
+        try {
+            SalirPartidaView partida = new SalirPartidaView();
+            partida.iniciarEscena(fondo);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
    

@@ -14,4 +14,10 @@ module utilities {
     // Exporta y abre el paquete 'lobby' para que FXMLLoader pueda acceder a los archivos y controladores FXML
     exports lobby;
     opens lobby to javafx.fxml;
+    
+    exports partida;
+    opens partida to javafx.fxml;
+    
+    exports salir;
+    opens salir to javafx.fxml;
 }
