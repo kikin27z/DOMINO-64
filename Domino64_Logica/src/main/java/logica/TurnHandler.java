@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import utilities.ActivityHandler;
 
 /**
  *
@@ -15,11 +16,11 @@ import java.util.Scanner;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class TurnManager {
+public class TurnHandler extends ActivityHandler{
     private List<Jugador> players = new ArrayList<>();
     private Jugador turnPlayer;
     
-    public TurnManager(List<Jugador> players){
+    public TurnHandler(List<Jugador> players){
         this.players = players;
     }
     
@@ -70,8 +71,8 @@ public class TurnManager {
         int higherValue=0;
         Ficha higherTile=null;
         for(Ficha f: tiles){
-            if(f.getLado1()==f.getLado2()){
-                int actualValue = f.getLado1()+f.getLado2();
+            if(f.getIzquierda()==f.getDerecha()){
+                int actualValue = f.getIzquierda()+f.getDerecha();
                 if(actualValue>higherValue){
                     higherValue=actualValue;
                     higherTile = f;
@@ -127,7 +128,14 @@ public class TurnManager {
     }
     
     public void putTile(Ficha ficha){
+//        Ficha selectedTile = turnPlayer.getFichas().get(selectedTileIndex);
+    }
+
+
+    @Override
+    public void handleRequest(int level) {
         
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }
@@ -155,8 +163,8 @@ class TileComparator implements Comparator<Ficha> {
      */
     @Override
     public int compare(Ficha tile1, Ficha tile2) {
-        int tileValue1 = tile1.getLado1() + tile1.getLado2();
-        int tileValue2 = tile2.getLado1() + tile2.getLado2();
+        int tileValue1 = tile1.getIzquierda()+ tile1.getDerecha();
+        int tileValue2 = tile2.getIzquierda() + tile2.getDerecha();
         return Integer.compare(tileValue1, tileValue2);
     }
     

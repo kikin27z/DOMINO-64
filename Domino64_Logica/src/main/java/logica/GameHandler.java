@@ -17,15 +17,15 @@ import java.util.logging.Logger;
  *
  * @author luisa M
  */
-public class GameManager implements Runnable{
+public class GameHandler implements Runnable{
     private Partida partida;
-    private TileManager tileManager;
-    private TurnManager turnManager;
+    private TileHandler tileManager;
+    private TurnHandler turnManager;
     
-    public GameManager(Partida partida){
+    public GameHandler(Partida partida){
         this.partida = partida;
-        tileManager = new TileManager(partida.getPozo(),partida.getTablero());
-        turnManager = new TurnManager(partida.getJugadores());
+        tileManager = new TileHandler(partida.getPozo(),partida.getTablero());
+        turnManager = new TurnHandler(partida.getJugadores());
     }
 
     @Override
@@ -60,7 +60,7 @@ public class GameManager implements Runnable{
         try {
             tileManager.distributeTiles(partida.getJugadores(),partida.getFichasPorJugador());
         } catch (LogicException ex) {
-            Logger.getLogger(GameManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
