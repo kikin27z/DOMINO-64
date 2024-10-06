@@ -1,7 +1,9 @@
 package partida;
 
 import entidades.Ficha;
+import java.util.Map;
 import javafx.event.ActionEvent;
+import javafx.scene.image.ImageView;
 import utilities.IEventoConcreto;
 
 /**
@@ -17,7 +19,8 @@ public class PartidaControl implements IEventoConcreto {
     public PartidaControl(PartidaView view, PartidaModel modelo) {
         this.view = view;
         this.modelo = modelo;
-        view.addTile();
+        Map<Ficha,ImageView> mapeo=view.addTile();
+        modelo.actualizarMapeo(mapeo);
         view.btnEjemploEvento(this::saludar);
     }
 

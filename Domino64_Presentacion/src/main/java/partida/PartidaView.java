@@ -2,15 +2,19 @@ package partida;
 
 import entidades.Ficha;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Point3D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import utilities.Observable;
 import utilities.Observador;
@@ -31,6 +35,7 @@ public class PartidaView implements Observador{
     private AnchorPane panelJugador1;
     private ScrollPane scrollPanel;     // Panel con capacidad de desplazamiento
     private Button btnEjemplo;
+    private Map<Ficha,ImageView> mapeoFichas;
 
     public PartidaView(PartidaModel modelo) {
         this.modelo = modelo;
@@ -135,43 +140,35 @@ public class PartidaView implements Observador{
         panelInterior.getChildren().add(fichaJugada);
     }
     
-    public void addTile(){
+    public Map<Ficha,ImageView> addTile(){
         // Crear el ImageView para la segunda imagen
         ImageView imageViewBottom;
-        int rotation = 0;
+        double rotation = modelo.getImgViewBttmRotate();
         double contador = modelo.getImageViewBottomLayoutX();
+        mapeoFichas = new HashMap<>();
         for(Ficha f: modelo.getFichasDelJugador()){
             imageViewBottom = new ImageView();
             imageViewBottom.setFitHeight(modelo.getImageViewBottomHeight());
             imageViewBottom.setFitWidth(modelo.getImageViewBottomWidth());
             imageViewBottom.setLayoutX(contador);
             contador+=50;
+            imageViewBottom.setLayoutY(modelo.getImageViewBottomLayoutY());
             imageViewBottom.setRotate(rotation);
             rotation+=90;
             imageViewBottom.setOnMouseClicked(modelo.getEventHandler());
-            imageViewBottom.setLayoutY(modelo.getImageViewBottomLayoutY());
             imageViewBottom.setPickOnBounds(modelo.isImgViewBttmPickedOnBounds()); // Permite que la imagen sea seleccionable
             imageViewBottom.setPreserveRatio(modelo.isImgViewBttmRatioPreserved()); // Mantiene la proporción de la imagen
-            imageViewBottom.setRotate(modelo.getImgViewBttmRotate());
             imageViewBottom.setImage(new Image(getClass().getResourceAsStream(f.getImgUrl()))); // Ruta de la imagen
+            mapeoFichas.put(f, imageViewBottom);
             panelJugador1.getChildren().add(imageViewBottom);
         }
-        
-        // Rota la imagen 90 grados
-//        
-//        if(panelJugador1.getChildren().add(imageViewBottom))
-//            System.out.println("se agrego");
-//        else System.out.println("no se agrego");
+        return mapeoFichas;
     }
     
     public void btnEjemploEvento(EventHandler<ActionEvent> evento){
         btnEjemplo.setOnAction(evento);
     }
 
-    public void getEventHandler(){
-        
-    }
-    
     @Override
     public void update(Observable ob, Object ... context) {
         double layoutX = 0;
