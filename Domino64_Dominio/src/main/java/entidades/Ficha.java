@@ -134,4 +134,32 @@ public class Ficha {
     public String toString() {
         return  " " + izquierda + "-" + derecha + ((this.orientacion == Orientacion.HORIZONTAL) ? " horizontal" : " vertical");
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 67 * hash + this.izquierda;
+        hash = 67 * hash + this.derecha;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Ficha other = (Ficha) obj;
+        if (this.izquierda != other.izquierda) {
+            return false;
+        }
+        return this.derecha == other.derecha;
+    }
+    
+    
 }
