@@ -1,5 +1,6 @@
 package partida;
 
+import entidades.Ficha;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -11,6 +12,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import utilities.Observable;
+import utilities.Observador;
 
 /**
  * Clase que representa la vista de la partida en la aplicación.
@@ -21,7 +24,7 @@ import javafx.stage.Stage;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class PartidaView {
+public class PartidaView implements Observador{
     private PartidaModel modelo;
     private AnchorPane panelExterior; // Panel exterior que contiene todos los elementos visuales
     private AnchorPane panelInterior;  // Panel interno que se desplaza dentro del ScrollPane
@@ -76,7 +79,7 @@ public class PartidaView {
         panelInterior.setMinSize(modelo.getInternalPanelWidth(), modelo.getInternalPanelHeight()); // Establecemos el tamaño mínimo
         panelInterior.setStyle(modelo.getInternalPanelStyle());
 
-        // Creando el ImageView para la imagen dentro del ScrollPane
+//         Creando el ImageView para la imagen dentro del ScrollPane
         ImageView imageView = new ImageView();
         imageView.setFitWidth(modelo.getImageViewWidth());
         imageView.setLayoutX(modelo.getImageViewLayoutX());
@@ -90,8 +93,8 @@ public class PartidaView {
         btnEjemplo.setLayoutX(modelo.getButtonLayoutX());
         btnEjemplo.setLayoutY(modelo.getButtonLayoutY());
         
-//        new Button().setOnAction((EventHandler<ActionEvent>) new ActionEvent());
-        // Añadir el ImageView al panel interior
+////        new Button().setOnAction((EventHandler<ActionEvent>) new ActionEvent());
+//        // Añadir el ImageView al panel interior
         panelInterior.getChildren().add(imageView);
 
         // Asignando el contenido del ScrollPane
@@ -109,24 +112,72 @@ public class PartidaView {
         panelJugador1.setStyle(modelo.getPlayer1PanelStyle());
 
         // Crear el ImageView para la segunda imagen
-        ImageView imageViewBottom = new ImageView();
-        imageViewBottom.setFitHeight(modelo.getImageViewBottomHeight());
-        imageViewBottom.setFitWidth(modelo.getImageViewBottomWidth());
-        imageViewBottom.setLayoutX(modelo.getImageViewBottomLayoutX());
-        imageViewBottom.setLayoutY(modelo.getImageViewBottomLayoutY());
-        imageViewBottom.setPickOnBounds(modelo.isImgViewBttmPickedOnBounds()); // Permite que la imagen sea seleccionable
-        imageViewBottom.setPreserveRatio(modelo.isImgViewBttmRatioPreserved()); // Mantiene la proporción de la imagen
-        imageViewBottom.setRotate(modelo.getImgViewBttmRotate()); // Rota la imagen 90 grados
-        imageViewBottom.setImage(new Image(getClass().getResourceAsStream(modelo.getImgViewBttmResourceName()))); // Ruta de la imagen
-
-        // Añadir el ImageView al segundo AnchorPane
-        panelJugador1.getChildren().add(imageViewBottom);
+//        ImageView imageViewBottom = new ImageView();
+//        imageViewBottom.setFitHeight(modelo.getImageViewBottomHeight());
+//        imageViewBottom.setFitWidth(modelo.getImageViewBottomWidth());
+//        imageViewBottom.setLayoutX(modelo.getImageViewBottomLayoutX());
+//        imageViewBottom.setLayoutY(modelo.getImageViewBottomLayoutY());
+//        imageViewBottom.setPickOnBounds(modelo.isImgViewBttmPickedOnBounds()); // Permite que la imagen sea seleccionable
+//        imageViewBottom.setPreserveRatio(modelo.isImgViewBttmRatioPreserved()); // Mantiene la proporción de la imagen
+//        imageViewBottom.setRotate(modelo.getImgViewBttmRotate()); // Rota la imagen 90 grados
+//        imageViewBottom.setImage(new Image(getClass().getResourceAsStream(modelo.getImgViewBttmResourceName()))); // Ruta de la imagen
+//
+//        // Añadir el ImageView al segundo AnchorPane
+//        panelJugador1.getChildren().add(imageViewBottom);
         
         // Añadir el segundo AnchorPane al AnchorPane principal
         panelExterior.getChildren().add(panelJugador1);
     }
     
+    public void ponerFichaEnTablero(double layoutX){
+        ImageView fichaJugada = (ImageView)panelJugador1.getChildren().removeLast();
+        fichaJugada.setLayoutX(layoutX);
+        panelInterior.getChildren().add(fichaJugada);
+    }
+    
+    public void addTile(){
+        // Crear el ImageView para la segunda imagen
+        ImageView imageViewBottom;
+        int rotation = 0;
+        double contador = modelo.getImageViewBottomLayoutX();
+        for(Ficha f: modelo.getFichasDelJugador()){
+            imageViewBottom = new ImageView();
+            imageViewBottom.setFitHeight(modelo.getImageViewBottomHeight());
+            imageViewBottom.setFitWidth(modelo.getImageViewBottomWidth());
+            imageViewBottom.setLayoutX(contador);
+            contador+=50;
+            imageViewBottom.setRotate(rotation);
+            rotation+=90;
+            imageViewBottom.setOnMouseClicked(modelo.getEventHandler());
+            imageViewBottom.setLayoutY(modelo.getImageViewBottomLayoutY());
+            imageViewBottom.setPickOnBounds(modelo.isImgViewBttmPickedOnBounds()); // Permite que la imagen sea seleccionable
+            imageViewBottom.setPreserveRatio(modelo.isImgViewBttmRatioPreserved()); // Mantiene la proporción de la imagen
+            imageViewBottom.setRotate(modelo.getImgViewBttmRotate());
+            imageViewBottom.setImage(new Image(getClass().getResourceAsStream(f.getImgUrl()))); // Ruta de la imagen
+            panelJugador1.getChildren().add(imageViewBottom);
+        }
+        
+        // Rota la imagen 90 grados
+//        
+//        if(panelJugador1.getChildren().add(imageViewBottom))
+//            System.out.println("se agrego");
+//        else System.out.println("no se agrego");
+    }
+    
     public void btnEjemploEvento(EventHandler<ActionEvent> evento){
         btnEjemplo.setOnAction(evento);
+    }
+
+    public void getEventHandler(){
+        
+    }
+    
+    @Override
+    public void update(Observable ob, Object ... context) {
+        double layoutX = 0;
+        for (Object object : context) {
+            layoutX = (double) object;
+        }
+        ponerFichaEnTablero(layoutX);
     }
 }

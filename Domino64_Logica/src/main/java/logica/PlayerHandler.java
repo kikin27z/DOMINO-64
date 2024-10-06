@@ -4,10 +4,48 @@
  */
 package logica;
 
+import entidades.Ficha;
+import entidades.Jugador;
+import exceptions.LogicException;
+import java.util.List;
+import utilities.ActivityHandler;
+
 /**
  *
  * @author luisa M
  */
-public class PlayerHandler {
+public class PlayerHandler extends ActivityHandler{
+
+    private Jugador player;
+    private Ficha higherDouble;
+//    public static final int GET_HIGHER_DOUBLE = 1;
+//    public static final int PUT_TILE = 2;
+    
+    public PlayerHandler(Jugador player){
+        this.player = player;
+    }
+    
+    @Override
+    public void handleRequest(int activityType, Object ... context) throws LogicException{
+        switch (activityType) {
+            case SELECT_TILE:
+                
+                break;
+        }
+
+    }
+    
+    public Jugador getPlayer(){
+        return this.player;
+    }
+    
+    public Ficha getHigherDouble(){
+        return higherDouble;
+    }
+    
+    private boolean hasValidTiles(){
+        return true;
+    }
+    
     
 }

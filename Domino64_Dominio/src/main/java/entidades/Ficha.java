@@ -14,6 +14,7 @@ public class Ficha {
     private Orientacion orientacion; 
     private int izquierda;
     private int derecha;
+    private String imgUrl;
 
     /**
      * Constructor de la clase Ficha. Inicializa una ficha con valores en sus 
@@ -27,6 +28,20 @@ public class Ficha {
         this.derecha = derecha;
     }
 
+    
+    /**
+     * Constructor de la clase Ficha. Inicializa una ficha con valores en sus 
+     * lados izquierdo y derecho.
+     * 
+     * @param izquierda Valor del lado izquierdo de la ficha.
+     * @param derecha Valor del lado derecho de la ficha.
+     */
+    public Ficha(int izquierda, int derecha, String imgUrl) {
+        this.izquierda = izquierda;
+        this.derecha = derecha;
+        this.imgUrl = imgUrl;
+    }
+
     /**
      * Obtiene el valor del lado izquierdo de la ficha.
      * 
@@ -34,6 +49,14 @@ public class Ficha {
      */
     public int getIzquierda() {
         return izquierda;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     /**

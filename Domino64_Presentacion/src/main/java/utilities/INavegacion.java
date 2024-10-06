@@ -1,5 +1,7 @@
 package utilities;
 
+import partida.PartidaModel;
+
 /**
  * Interfaz que define los métodos para la navegación entre diferentes vistas
  * de la aplicación. Esta interfaz establece un contrato para las clases que
@@ -31,4 +33,11 @@ public interface INavegacion {
      * Cambia la vista a la pantalla de partida.
      */
     public void cambiarPartida();
+    
+    /**
+     * Actualiza la vista de la partida.
+     */
+    public void actualizarPartida(PartidaModel modelo);
+    
+    //public void quitarFicha()
 }

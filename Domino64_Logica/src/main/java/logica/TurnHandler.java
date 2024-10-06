@@ -19,41 +19,61 @@ import utilities.ActivityHandler;
 public class TurnHandler extends ActivityHandler{
     private List<Jugador> players = new ArrayList<>();
     private Jugador turnPlayer;
+    private boolean isOnTurn;
+    private List<PlayerHandler> playerHandlers = new ArrayList<>();
+    //private final int SET_FIRST_TURN = 1;
     
     public TurnHandler(List<Jugador> players){
         this.players = players;
+        setHandlersChain();
+    }
+    
+    private void setHandlersChain(){
+        PlayerHandler playerHandler = null;
+        for (Jugador player : players) {
+            if(playerHandler!=null){
+                PlayerHandler newHandler = new PlayerHandler(player);
+                playerHandler.setNextHandler(newHandler);
+                playerHandler = newHandler;
+            }else{
+                playerHandler = new PlayerHandler(player);
+            }
+            playerHandlers.add(playerHandler);
+        }
+        
+    }
+    
+    public Jugador getFirstTurn(){
+        return turnPlayer;
     }
     
     /**
      * determina el jugador que tendra el primer turno.
      * Para determinarlo se busca el jugador que tenga
      * la mula mas grande
-     * @return el jugador con la mula mas grande. Null
-     * en caso de que ningun jugador tenga una mula en sus fichas
      */
-    public Jugador getFirstTurn(){
-        Ficha higherTile=null;
-        TileComparator comparator= new TileComparator();
-        
-        for(Jugador j:players){
-            List<Ficha> playersTiles = j.getFichas();
-            Ficha actualTile = getHigherTile(playersTiles);
-            
-            if(actualTile != null){
-                System.out.println("actual higher double: "+actualTile);
+    public void setFirstTurn(){
+        Ficha higherTile = null;
+        TileComparator comparator = new TileComparator();
+        System.out.println("setFirstTurn");
+        for (Jugador player : players) {
+            Ficha playerHigherTile = player.getHigherDouble();
+            //System.out.println("playerHif dsf:" + playerHigherTile);
+            if(playerHigherTile != null){
                 if (higherTile == null) {
-                    higherTile = actualTile;
-                    turnPlayer = j;
-                } else if (comparator.compare(actualTile, higherTile) > 0) {
-                    higherTile = actualTile;
-                    turnPlayer = j;
+                    higherTile = playerHigherTile;
+                    turnPlayer = player;
+                } else if (comparator.compare(playerHigherTile, higherTile) > 0) {
+                    higherTile = playerHigherTile;
+                    turnPlayer = player;
                 }
-                
             }
         }
-        if(turnPlayer!=null)
-            System.out.println(turnPlayer.getUsername());
-        return turnPlayer;
+        if(turnPlayer != null){
+            System.out.println("first player: "+turnPlayer);
+            System.out.println("higher double: "+ higherTile);
+        }
+        //return turnPlayer;
     }
     
     public void setFirstTurn(Jugador turnPlayer){
@@ -81,6 +101,14 @@ public class TurnHandler extends ActivityHandler{
             }
         }
         return higherTile;
+    
+    }
+    private void setIsOnTurn(boolean flag){
+        this.isOnTurn = flag;
+    }
+    
+    public boolean isOnTurn(){
+        return isOnTurn;
     }
     
     public void designateOtherTurns(){
@@ -88,7 +116,9 @@ public class TurnHandler extends ActivityHandler{
             players.remove(turnPlayer);
             Collections.shuffle(players);
             players.addFirst(turnPlayer);
-        }
+            System.out.println("se designaron los demas turnos");
+        }else
+            System.out.println("turn player null");
     }
     
     public Ficha getSelectedTile(){
@@ -133,11 +163,30 @@ public class TurnHandler extends ActivityHandler{
 
 
     @Override
-    public void handleRequest(int level) {
-        
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void handleRequest(int activityType, Object ... context) throws LogicException{
+        switch (activityType) {
+            case DESIGNATE_FIRST_TURN:
+                setFirstTurn();
+                designateOtherTurns();
+                break;
+            case FIRST_DOUBLE:
+                Jugador firstTurn = null;
+                for (Object object : context) {
+                    firstTurn = (Jugador) object;
+                }
+                setFirstTurn(firstTurn);
+                designateOtherTurns();
+                break;
+            case CHECK_TURN:
+                Jugador jugador  = null;
+                for (Object object : context) {
+                    jugador = (Jugador)object;
+                }
+                setIsOnTurn(turnPlayer.equals(jugador));
+                break;
+        }
     }
-    
+
 }
 
 /**
