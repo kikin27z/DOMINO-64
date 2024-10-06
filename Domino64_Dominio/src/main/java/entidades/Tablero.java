@@ -23,6 +23,12 @@ public class Tablero {
         trenFichas = new ArrayDeque<>();
     }
 
+    public boolean tableroVacio(){
+        return trenFichas.isEmpty();
+    }
+    
+    
+    
     /**
      * Valida si una ficha puede ser colocada en el tablero, comparando sus
      * extremos con los extremos del tren de fichas actual. La ficha puede

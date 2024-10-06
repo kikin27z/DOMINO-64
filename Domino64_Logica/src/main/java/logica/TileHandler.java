@@ -8,7 +8,7 @@ import entidades.Ficha;
 import entidades.Jugador;
 import entidades.Pozo;
 import entidades.Tablero;
-import exceptions.DominioException;
+//import exceptions.DominioException;
 import exceptions.LogicException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,7 +89,7 @@ public class TileHandler extends ActivityHandler {
         try {
             Ficha ficha = pozo.jalarFicha();
             return ficha;
-        } catch (DominioException ex) {
+        } catch (Exception ex) {
             throw new LogicException(ex.getMessage());
         }
     }
@@ -107,7 +107,7 @@ public class TileHandler extends ActivityHandler {
                 fichas.add(pozo.jalarFicha());
             }
             return fichas;
-        } catch (DominioException ex) {
+        } catch (Exception ex) {
             throw new LogicException(ex.getMessage());
         }
     }
@@ -160,8 +160,8 @@ public class TileHandler extends ActivityHandler {
     private List<Ficha> getValidTiles(){
         List<Ficha> validTiles = new ArrayList<>();
         if(!tablero.tableroVacio()){
-            Ficha tile1 = tablero.getExtremo1();
-            Ficha tile2 = tablero.getExtremo2();
+            Ficha tile1 = tablero.obtenerFichaIzq();
+            Ficha tile2 = tablero.obtenerFichaDer();
             validTiles.add(tile1);
             validTiles.add(tile2);
         }
@@ -234,9 +234,9 @@ public class TileHandler extends ActivityHandler {
      */
     private void putFirstDouble(Ficha firstDouble)throws LogicException{
         try {
-            this.tablero.setPrimeraFicha(firstDouble);
+            this.tablero.insertarFicha(firstDouble);
             System.out.println("se coloco la ficha " + firstDouble + " en el tablero");
-        } catch (DominioException ex) {
+        } catch (Exception ex) {
             throw new LogicException(ex.getMessage());
         }
     }

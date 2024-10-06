@@ -45,8 +45,8 @@ public class Jugador {
         Ficha higherDouble = null;
         int higherValue = 0;
         for (Ficha f : fichas) {
-            if (f.getLado1() == f.getLado2()) {
-                int actualValue = f.getLado1() + f.getLado2();
+            if (f.esMula()) {
+                int actualValue = f.getIzquierda()+ f.getDerecha();
                 if (actualValue > higherValue) {
                     higherValue = actualValue;
                     higherDouble = f;

@@ -5,7 +5,7 @@ import java.util.List;
 import entidades.Jugador;
 import entidades.Partida;
 import entidades.Tablero;
-import exceptions.DominioException;
+//import exceptions.DominioException;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
@@ -75,11 +75,11 @@ public class PartidaModel extends Observable{
         Tablero tablero = partida.getTablero();
         try {
             if(tablero.tableroVacio()){
-                partida.getTablero().setPrimeraFicha(ficha);
+                partida.getTablero().insertarFicha(ficha);
             }else{
-                partida.getTablero().setExtremo1(ficha);
+                partida.getTablero().insertarFichaDer(ficha);
             }
-        } catch (DominioException ex) {
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }

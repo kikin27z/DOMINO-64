@@ -71,18 +71,18 @@ public class GameHandler extends ActivityHandler implements Runnable{
         System.out.println("hello");
         Tablero tablero = partida.getTablero();
         boolean flag = false;
-        try{
-            while (!flag) {
-                if (!tablero.tableroVacio()) {
-                    System.out.println("ficha en tablero: " + tablero.getExtremo1());
-                    handleRequest(PUT_TILE);
-                    flag = true;
-                }
-            }
-            System.out.println("bye");
-        }catch(LogicException ex){
-            Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try{
+////            while (!flag) {
+////                if (!tablero.tableroVacio()) {
+////                    System.out.println("ficha en tablero: " + tablero.obtenerExtremoIzq());
+////                    handleRequest(PUT_TILE);
+////                    flag = true;
+////                }
+////            }
+//            System.out.println("bye");
+//        }catch(LogicException ex){
+//            Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
+//        }
        
 //        
 //        
