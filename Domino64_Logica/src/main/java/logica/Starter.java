@@ -58,7 +58,7 @@ public class Starter {
         
         Partida partida = new Partida(codigo, jugadores, cantidadFichas, cantidadJugadores);
         
-        Thread thread = new Thread(new GameManager(partida));
+        Thread thread = new Thread(new GameHandler(partida));
         thread.start();
     }
     
