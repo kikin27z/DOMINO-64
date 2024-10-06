@@ -13,10 +13,25 @@ import java.util.Comparator;
 public class Ficha {
     private int lado1;
     private int lado2;
+    private String imgUrl;
 
     public Ficha(int lado1, int lado2) {
         this.lado1 = lado1;
         this.lado2 = lado2;
+    }
+
+    public Ficha(int lado1, int lado2, String imgUrl) {
+        this.lado1 = lado1;
+        this.lado2 = lado2;
+        this.imgUrl = imgUrl;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public int getLado1() {

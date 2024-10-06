@@ -37,6 +37,28 @@ public class Jugador {
         return fichas;
     }
     
+    /**
+     * encuentra la mula mas grande en la lista de fichas proporcionada
+     *
+     * @param tiles Lista de fichas de donde se buscara la mula
+     * @return la mula mas grande. Null si no hay mulas
+     */
+    public Ficha getHigherDouble() {
+        Ficha higherDouble = null;
+        int higherValue = 0;
+        for (Ficha f : fichas) {
+            if (f.getLado1() == f.getLado2()) {
+                int actualValue = f.getLado1() + f.getLado2();
+                if (actualValue > higherValue) {
+                    higherValue = actualValue;
+                    higherDouble = f;
+                    //System.out.println("higher double: " + higherDouble);
+                }
+            }
+        }
+        return higherDouble;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 3;
