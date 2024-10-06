@@ -80,29 +80,7 @@ public class TurnHandler extends ActivityHandler{
         this.turnPlayer = turnPlayer;
     }
     
-    /**
-     * encuentra la mula mas grande en la lista
-     * de fichas proporcionada
-     * @param tiles Lista de fichas de donde se buscara
-     * la mula
-     * @return la mula mas grande. Null si no hay mulas 
-     */
-    private Ficha getHigherTile(List<Ficha> tiles){
-        int higherValue=0;
-        Ficha higherTile=null;
-        for(Ficha f: tiles){
-            if(f.getIzquierda()==f.getDerecha()){
-                int actualValue = f.getIzquierda()+f.getDerecha();
-                if(actualValue>higherValue){
-                    higherValue=actualValue;
-                    higherTile = f;
-                    System.out.println("higher double: "+higherTile);
-                }
-            }
-        }
-        return higherTile;
-    
-    }
+   
     private void setIsOnTurn(boolean flag){
         this.isOnTurn = flag;
     }
@@ -157,10 +135,26 @@ public class TurnHandler extends ActivityHandler{
         return index;
     }
     
-    public void putTile(Ficha ficha){
+    /**
+     * metodo para cambiar el turno del jugador.
+     */
+    public void cambiarTurno(){
+        int index = players.indexOf(turnPlayer);
+        //si el jugador con el turno actual es
+        //el jugador con el ultimo turno
+        if(index == players.size()-1){
+            //inicia otra ronda de turnos, es decir
+            //que ahora el siguiente jugador es el primero en la lista
+            index = 0;
+        }else 
+            index++;
+        turnPlayer = players.get(index);
 //        Ficha selectedTile = turnPlayer.getFichas().get(selectedTileIndex);
     }
-
+    
+    public Jugador jugadorEnTurno(){
+        return turnPlayer;
+    }
 
     @Override
     public void handleRequest(int activityType, Object ... context) throws LogicException{
@@ -183,6 +177,9 @@ public class TurnHandler extends ActivityHandler{
                     jugador = (Jugador)object;
                 }
                 setIsOnTurn(turnPlayer.equals(jugador));
+                break;
+            case CHANGE_TURN:
+                cambiarTurno();
                 break;
         }
     }

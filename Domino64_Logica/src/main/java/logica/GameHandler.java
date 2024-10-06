@@ -71,31 +71,20 @@ public class GameHandler extends ActivityHandler implements Runnable{
         System.out.println("hello");
         Tablero tablero = partida.getTablero();
         boolean flag = false;
-//        try{
-////            while (!flag) {
-////                if (!tablero.tableroVacio()) {
-////                    System.out.println("ficha en tablero: " + tablero.obtenerExtremoIzq());
-////                    handleRequest(PUT_TILE);
-////                    flag = true;
-////                }
-////            }
-//            System.out.println("bye");
-//        }catch(LogicException ex){
-//            Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-       
-//        
-//        
-//        try{
-//            while (true) {
-//                handleRequest(CHECK_TURN, jugador);
-//                if (turnManager.isOnTurn()) {
-//                    
-//                }
-//            }
-//        }catch(LogicException ex){
-//            Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        
+        try {
+            while(true){
+                handleRequest(CHECK_TURN, jugador);
+                if(turnManager.isOnTurn()){
+                    System.out.println("es tu turno");
+                }
+                System.out.println(turnManager.jugadorEnTurno());
+                Thread.sleep(5000);
+                handleRequest(CHANGE_TURN);
+            }
+        } catch (InterruptedException | LogicException e) {
+            System.out.println(e.getMessage());
+        }
     }
     
 
