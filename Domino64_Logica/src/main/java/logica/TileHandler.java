@@ -125,7 +125,7 @@ public class TileHandler {
         Object[] duple = new Object[2];
         for (Jugador j : players) {
             Ficha tile = giveTile();
-            if (tile.getLado1() == tile.getLado2()) {
+            if (tile.getIzquierda()== tile.getDerecha()) {
                 duple[0] = tile;
                 duple[1] = j;
                 break;

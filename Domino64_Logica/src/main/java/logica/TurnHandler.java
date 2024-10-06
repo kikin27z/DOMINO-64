@@ -8,10 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
-<<<<<<<< HEAD:Domino64_Logica/src/main/java/logica/TurnManager.java
-========
 import utilities.ActivityHandler;
->>>>>>>> luisa:Domino64_Logica/src/main/java/logica/TurnHandler.java
 
 /**
  *
@@ -74,8 +71,8 @@ public class TurnHandler extends ActivityHandler{
         int higherValue=0;
         Ficha higherTile=null;
         for(Ficha f: tiles){
-            if(f.getLado1()==f.getLado2()){
-                int actualValue = f.getLado1()+f.getLado2();
+            if(f.getIzquierda()==f.getDerecha()){
+                int actualValue = f.getIzquierda()+f.getDerecha();
                 if(actualValue>higherValue){
                     higherValue=actualValue;
                     higherTile = f;
@@ -117,7 +114,6 @@ public class TurnHandler extends ActivityHandler{
                 System.out.println("se ingreso un formato inadecuado para los numeros de la ficha");
             }
         }while(!flag);
-<<<<<<<< HEAD:Domino64_Logica/src/main/java/logica/TurnManager.java
         
         Ficha selectedTile = turnPlayer.getFichas().get(selectedTileIndex);
         return selectedTile;
@@ -132,20 +128,9 @@ public class TurnHandler extends ActivityHandler{
     }
     
     public void putTile(Ficha ficha){
-========
->>>>>>>> luisa:Domino64_Logica/src/main/java/logica/TurnHandler.java
-        
-        Ficha selectedTile = turnPlayer.getFichas().get(selectedTileIndex);
-        return selectedTile;
+//        Ficha selectedTile = turnPlayer.getFichas().get(selectedTileIndex);
     }
-    
-    private int tileIndex(String tileNumbers){
-        int side1 = tileNumbers.charAt(0);
-        int side2 = tileNumbers.charAt(2);
-        Ficha tile = new Ficha(side1, side2);
-        int index = turnPlayer.getFichas().indexOf(tile);
-        return index;
-    }
+
 
     @Override
     public void handleRequest(int level) {
@@ -178,8 +163,8 @@ class TileComparator implements Comparator<Ficha> {
      */
     @Override
     public int compare(Ficha tile1, Ficha tile2) {
-        int tileValue1 = tile1.getLado1() + tile1.getLado2();
-        int tileValue2 = tile2.getLado1() + tile2.getLado2();
+        int tileValue1 = tile1.getIzquierda()+ tile1.getDerecha();
+        int tileValue2 = tile2.getIzquierda() + tile2.getDerecha();
         return Integer.compare(tileValue1, tileValue2);
     }
     

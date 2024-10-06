@@ -1,61 +1,181 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidades;
 
-import exceptions.DominioException;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
+ * La clase Tablero representa el tren de fichas del juego, permitiendo la
+ * gestión de las jugadas y la inserción de fichas en los extremos del tren. Se
+ * encarga de orientar las fichas correctamente y girarlas si es necesario para
+ * que puedan coincidir con los extremos de la fila de fichas.
  *
- * @author luisa
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author Paul Alejandro Vázquez Cervantes - 00000241400
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class Tablero {
-    private Ficha extremo1;
-    private Ficha extremo2;
-    
+    private Deque<Ficha> trenFichas;
+
     /**
-     * Inicializa el tablero sin fichas
+     * Constructor que inicializa el tren de fichas para la partida.
      */
-    public Tablero(){
-        this.extremo1=null;
-        this.extremo2=null;
+    public Tablero() {
+        trenFichas = new ArrayDeque<>();
     }
 
-    
     /**
-     * Establece la primera ficha en juego
-     * @param ficha a colocar en el tablero
+     * Valida si una ficha puede ser colocada en el tablero, comparando sus
+     * extremos con los extremos del tren de fichas actual. La ficha puede
+     * coincidir con uno o ambos extremos, o no coincidir con ninguno.
+     *
+     * @param ficha Ficha a validar.
+     * @return JugadaPosible, que indica en qué extremo(s) es posible insertar
+     * la ficha: 
+     * - AMBAS: La ficha puede ser insertada en ambos extremos.
+     * - SOLOXDERECHA: La ficha solo puede ser insertada en el extremo derecho. 
+     * - SOLOXIZQUIERDA: La ficha solo puede ser insertada en el extremo
+     * izquierdo. 
+     * - NINGUNA: La ficha no coincide con ninguno de los extremos y
+     * no puede ser insertada.
      */
-    public void setPrimeraFicha(Ficha ficha)throws DominioException{
-        if(tableroVacio()){
-            extremo1 = ficha;
-            extremo2 = ficha; 
-        }else
-            throw new DominioException("Ya se coloco una ficha anteriormente");
-    }
-    
-    public Ficha getExtremo1() {
-        return extremo1;
+    public JugadaPosible validarFicha(Ficha ficha) {
+        boolean derecha = (obtenerExtremoDer() == ficha.getIzquierda() || obtenerExtremoDer() == ficha.getDerecha());
+        boolean izquierda = (obtenerExtremoIzq() == ficha.getDerecha() || obtenerExtremoIzq() == ficha.getIzquierda());
+
+        if (derecha && izquierda) {
+            return JugadaPosible.AMBAS;
+        } else if (derecha) {
+            return JugadaPosible.SOLOXDERECHA;
+        } else if (izquierda) {
+            return JugadaPosible.SOLOXIZQUIERDA;
+        }
+        return JugadaPosible.NINGUNA;
     }
 
-    public void setExtremo1(Ficha extremo1) {
-        this.extremo1 = extremo1;
-    }
-
-    public Ficha getExtremo2() {
-        return extremo2;
-    }
-
-    public void setExtremo2(Ficha extremo2) {
-        this.extremo2 = extremo2;
-    }
-    
     /**
-     * Valida si hay fichas en el tablero.
-     * @return true si cualquiera de los extremos es nulo
+     * Método que sirve para insertar la ficha automaticamente en alguno de los
+     * extremos, pensado mas al uso de jugar solo y que la computadora juegue.
+     *
+     * @param ficha Ficha a insertar.
      */
-    public boolean tableroVacio(){
-        return extremo1==null || extremo2==null;
+    public void insertarFicha(Ficha ficha) {
+        if (trenFichas.isEmpty()) {
+            ficha.setOrientacion(Orientacion.VERTICAL);
+            trenFichas.offer(ficha);
+            return;
+        }
+
+        if (obtenerExtremoIzq() == ficha.getDerecha() || obtenerExtremoIzq() == ficha.getIzquierda()) {
+            sentidoFichaIzq(ficha);
+            orientarFicha(ficha, obtenerFichaIzq());
+            trenFichas.offerFirst(ficha);
+        } else {
+            sentidoFichaDer(ficha);
+            orientarFicha(ficha, obtenerFichaDer());
+            trenFichas.offerLast(ficha);
+        }
+    }
+
+    /**
+     * Método que inserta la ficha del extremo izquierdo del juego.
+     *
+     * @param ficha Ficha a insertar
+     */
+    public void insertarFichaIzq(Ficha ficha) {
+        sentidoFichaIzq(ficha);
+        orientarFicha(ficha, obtenerFichaIzq());
+        trenFichas.offerFirst(ficha);
+    }
+
+    /**
+     * Método que inserta la ficha del extremo derecho del juego.
+     *
+     * @param ficha Ficha a insertar
+     */
+    public void insertarFichaDer(Ficha ficha) {
+        sentidoFichaDer(ficha);
+        orientarFicha(ficha, obtenerFichaDer());
+        trenFichas.offerLast(ficha);
+    }
+
+    /**
+     * Método que orienta la ficha ya sea horizontalmente o verticalmente
+     * dependiendo la jugada de la partida, por ejemplo en caso de ser una ficha
+     * mula se debe cambiar la orientación, de lo contrario se queda igual al
+     * extremo.
+     *
+     * @param ficha Ficha a orientar
+     * @param extremo Ficha del extremo con la cual se compara la orientación.
+     */
+    private void orientarFicha(Ficha ficha, Ficha extremo) {
+        if (ficha.esMula()) {
+            if (extremo.getOrientacion() == Orientacion.HORIZONTAL) {
+                ficha.setOrientacion(Orientacion.VERTICAL);
+            } else {
+                ficha.setOrientacion(Orientacion.HORIZONTAL);
+            }
+        } else {
+            ficha.setOrientacion(extremo.getOrientacion());
+        }
+    }
+
+    /**
+     * Método que gira la ficha en caso de no coincidir con el extremo izquierdo
+     * de la partida.
+     *
+     * @param ficha Ficha a girar.
+     */
+    private void sentidoFichaIzq(Ficha ficha) {
+        if (obtenerExtremoIzq() != ficha.getDerecha()) {
+            ficha.girarFicha();
+        }
+    }
+
+    /**
+     * Gira la ficha si no coincide con el valor del extremo derecho del tren de
+     * fichas.
+     *
+     * @param ficha Ficha que se evaluará y posiblemente se girará.
+     */
+    private void sentidoFichaDer(Ficha ficha) {
+        if (obtenerExtremoDer() != ficha.getIzquierda()) {
+            ficha.girarFicha();
+        }
+    }
+
+    /**
+     * Obtiene el valor del extremo izquierdo del tren de fichas.
+     *
+     * @return Valor del extremo izquierdo del tren.
+     */
+    public int obtenerExtremoIzq() {
+        return trenFichas.peekFirst().getIzquierda();
+    }
+
+    /**
+     * Obtiene el valor del extremo derecho del tren de fichas.
+     *
+     * @return Valor del extremo derecho del tren.
+     */
+    public int obtenerExtremoDer() {
+        return trenFichas.peekLast().getDerecha();
+    }
+
+    /**
+     * Obtiene la ficha ubicada en el extremo izquierdo del tren de fichas.
+     *
+     * @return Ficha ubicada en el extremo izquierdo.
+     */
+    public Ficha obtenerFichaIzq() {
+        return trenFichas.peekFirst();
+    }
+
+    /**
+     * Obtiene la ficha ubicada en el extremo derecho del tren de fichas.
+     *
+     * @return Ficha ubicada en el extremo derecho.
+     */
+    public Ficha obtenerFichaDer() {
+        return trenFichas.peekLast();
     }
 }
