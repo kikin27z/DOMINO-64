@@ -1,6 +1,16 @@
 package partida;
 
+import entidades.Ficha;
+import java.util.List;
+import entidades.Jugador;
+import entidades.Partida;
+import entidades.Tablero;
+import exceptions.DominioException;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.input.MouseEvent;
+import utilities.Observable;
 
 /**
  *
@@ -8,7 +18,9 @@ import javafx.scene.control.ScrollPane.ScrollBarPolicy;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class PartidaModel {
+public class PartidaModel extends Observable{
+    private Jugador jugador;
+    private Partida partida;
     private final double externalPanelWidth = 1000;
     private final double externalPanelHeight = 700;
     private final String externalPanelStyle = "-fx-background-color: #186F65;";
@@ -54,6 +66,58 @@ public class PartidaModel {
     private final boolean imgViewBttmpreserveRatio = true;
     private final double imgViewBttmRotate = 90.0;
     private final String imgViewBttmResourceName = "/dominos/0-5.png";
+
+    public Partida getPartida() {
+        return partida;
+    }
+
+    private void ponerFichaEnTablero(Ficha ficha){
+        Tablero tablero = partida.getTablero();
+        try {
+            if(tablero.tableroVacio()){
+                partida.getTablero().setPrimeraFicha(ficha);
+            }else{
+                partida.getTablero().setExtremo1(ficha);
+            }
+        } catch (DominioException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
+    public void setGame(Partida partida) {
+        this.partida = partida;
+    }
+
+    public EventHandler<MouseEvent> getEventHandler(){
+        EventHandler<MouseEvent> event = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent t) {
+                System.out.println("ficha seelccionada");
+            }
+        };
+        return event;
+    }
+    
+    public Jugador getJugador() {
+        return jugador;
+    }
+    
+    public void colocarFicha(){
+        Ficha ultimaFicha = getFichasDelJugador().getLast();
+        jugador.removerFicha(ultimaFicha);
+        ponerFichaEnTablero(ultimaFicha);
+        double imgViewLayoutX = imageViewLayoutX+50;
+        //double imgViewLayoutY = imageViewLayoutY+50;
+        this.notifyObservers(imgViewLayoutX);
+    }
+    
+    public List<Ficha> getFichasDelJugador(){
+        return jugador.getFichas();
+    }
+
+    public void setJugador(Jugador jugador) {
+        this.jugador = jugador;
+    }
 
     public double getExternalPanelWidth() {
         return externalPanelWidth;

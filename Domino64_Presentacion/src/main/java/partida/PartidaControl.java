@@ -1,5 +1,6 @@
 package partida;
 
+import entidades.Ficha;
 import javafx.event.ActionEvent;
 import utilities.IEventoConcreto;
 
@@ -16,16 +17,21 @@ public class PartidaControl implements IEventoConcreto {
     public PartidaControl(PartidaView view, PartidaModel modelo) {
         this.view = view;
         this.modelo = modelo;
-        
+        view.addTile();
         view.btnEjemploEvento(this::saludar);
     }
 
+    private void colocarFicha(ActionEvent e){
+        modelo.colocarFicha();
+    }
+    
     @Override
     public void accionarEvento(ActionEvent e) {
         
     }
     
     private void saludar(ActionEvent e){
+        //view.addTile();
         System.out.println("Hola");
     }
 }

@@ -21,6 +21,7 @@ import partida.PartidaView;
 public class Navegacion implements INavegacion {
     private Stage fondo; // La ventana principal de la aplicación
     private static Navegacion navegacion; // Instancia única de Navegacion
+    private PartidaModel partidaModelo;
 
     // Constructor privado para evitar instanciación externa
     private Navegacion() {
@@ -93,12 +94,17 @@ public class Navegacion implements INavegacion {
     @Override
     public void cambiarPartida() {
         try {
-            PartidaModel modelo = new PartidaModel();
-            PartidaView partida = new PartidaView(modelo); // Instancia la vista de la partida
+            //PartidaModel modelo = new PartidaModel();
+            PartidaView partida = new PartidaView(partidaModelo); // Instancia la vista de la partida
             partida.iniciarEscena(fondo); // Inicia la escena de la partida
-            PartidaControl control = new PartidaControl(partida, modelo);
+            PartidaControl control = new PartidaControl(partida, partidaModelo);
         } catch (IOException ex) {
             ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
         }
+    }
+
+    @Override
+    public void actualizarPartida(PartidaModel modelo) {
+        this.partidaModelo=modelo;
     }
 }
