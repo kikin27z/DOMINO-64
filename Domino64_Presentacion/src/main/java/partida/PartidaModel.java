@@ -5,10 +5,14 @@ import java.util.List;
 import entidades.Jugador;
 import entidades.Partida;
 import entidades.Tablero;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 //import exceptions.DominioException;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import utilities.Observable;
 
@@ -21,6 +25,10 @@ import utilities.Observable;
 public class PartidaModel extends Observable{
     private Jugador jugador;
     private Partida partida;
+    private boolean jugadorEnTurno;
+    private List<Ficha> fichasValidas;
+    private Map<Ficha, ImageView> mapeoFichas;
+    
     private final double externalPanelWidth = 1000;
     private final double externalPanelHeight = 700;
     private final String externalPanelStyle = "-fx-background-color: #186F65;";
@@ -67,11 +75,54 @@ public class PartidaModel extends Observable{
     private final double imgViewBttmRotate = 90.0;
     private final String imgViewBttmResourceName = "/dominos/0-5.png";
 
+    public void setFichasValidas(List<Ficha> fichasValidas){
+        if(jugadorEnTurno()){
+            this.fichasValidas = fichasValidas;
+            this.notifyObservers(fichasValidas);
+        }
+        
+    }
+    
+    public void setJugadorEnTurno(boolean flag){
+        this.jugadorEnTurno = flag;
+    }
+    
+    public boolean jugadorEnTurno(){
+        return jugadorEnTurno;
+    }
+    
     public Partida getPartida() {
         return partida;
     }
 
-    public void ponerFichaEnTablero(Ficha ficha){
+    /**
+     * actualiza el mapeo de las fichas con su correspondiente
+     * componente ImageView. 
+     * @param mapeo a establecer en la variable de la clase
+     */
+    public void actualizarMapeo(Map<Ficha,ImageView> mapeo){
+        mapeoFichas= mapeo;
+    }
+    
+    /**
+     * metodo para obtener la ficha seleccionada.
+     * Este metodo se llama cada vez que se selecciona una ficha
+     * del panel del jugador. Busca entre los mapeos Ficha-ImageView
+     * para encontrar el valor de la ficha del imageView que genero 
+     * el evento, es decir, el imageView que se selecciono
+     * @param imgView seleccionado
+     * @return la ficha mapeada al imageView del parametro
+     */
+    public Ficha getFichaSeleccionada(ImageView imgView){
+        Ficha fichaSeleccionada = null;
+        for(Entry<Ficha, ImageView> set: mapeoFichas.entrySet()){
+            if(set.getValue().equals(imgView))
+                fichaSeleccionada = set.getKey();
+        }
+        return fichaSeleccionada;
+    }
+    
+    private void ponerFichaEnTablero(Ficha ficha){
         Tablero tablero = partida.getTablero();
         try {
             if(tablero.tableroVacio()){
@@ -86,16 +137,6 @@ public class PartidaModel extends Observable{
     
     public void setGame(Partida partida) {
         this.partida = partida;
-    }
-
-    public EventHandler<MouseEvent> getEventHandler(){
-        EventHandler<MouseEvent> event = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                System.out.println("ficha seelccionada");
-            }
-        };
-        return event;
     }
     
     public Jugador getJugador() {

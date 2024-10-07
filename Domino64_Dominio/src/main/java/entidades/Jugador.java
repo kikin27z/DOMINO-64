@@ -13,10 +13,19 @@ import java.util.Objects;
 public class Jugador {
     private String username;
     private List<Ficha> fichas;
+    private Ficha fichaSeleccionada;
     
     public Jugador(String username){
         this.fichas = new ArrayList<>();
         this.username = username;
+    }
+
+    public Ficha getFichaSeleccionada() {
+        return fichaSeleccionada;
+    }
+
+    public void setFichaSeleccionada(Ficha fichaSeleccionada) {
+        this.fichaSeleccionada = fichaSeleccionada;
     }
     
     public String getUsername(){
@@ -38,7 +47,6 @@ public class Jugador {
     /**
      * encuentra la mula mas grande en la lista de fichas proporcionada
      *
-     * @param tiles Lista de fichas de donde se buscara la mula
      * @return la mula mas grande. Null si no hay mulas
      */
     public Ficha getHigherDouble() {

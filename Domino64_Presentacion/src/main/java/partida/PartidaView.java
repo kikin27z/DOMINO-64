@@ -8,6 +8,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Point3D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -21,6 +28,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import utilities.Observable;
 import utilities.Observador;
@@ -43,6 +51,7 @@ public class PartidaView implements Observador {
     private ScrollPane scrollPanel;     // Panel con capacidad de desplazamiento
     private Button btnEjemplo;
     private List<Canvas> mazo;
+    private Map<Ficha,ImageView> mapeoFichas;
 
     public PartidaView(PartidaModel modelo) {
         this.modelo = modelo;
@@ -165,6 +174,43 @@ public class PartidaView implements Observador {
         panelJugador1.getChildren().add(ficha);
     }
     
+    
+    public Map<Ficha,ImageView> addTile(EventHandler<MouseEvent> handler){
+        // Crear el ImageView para la segunda imagen
+        ImageView imageViewBottom;
+        double rotation = modelo.getImgViewBttmRotate();
+        double contador = modelo.getImageViewBottomLayoutX();
+        mapeoFichas = new HashMap<>();
+        for(Ficha f: modelo.getFichasDelJugador()){
+            imageViewBottom = new ImageView();
+            imageViewBottom.setFitHeight(modelo.getImageViewBottomHeight());
+            imageViewBottom.setFitWidth(modelo.getImageViewBottomWidth());
+            imageViewBottom.setLayoutX(contador);
+            contador+=50;
+            imageViewBottom.setLayoutY(modelo.getImageViewBottomLayoutY());
+            imageViewBottom.setRotate(rotation);
+            rotation+=90;
+            //imageViewBottom.setOnMouseClicked(modelo.getEventHandler());
+            imageViewBottom.setPickOnBounds(modelo.isImgViewBttmPickedOnBounds()); // Permite que la imagen sea seleccionable
+            imageViewBottom.setPreserveRatio(modelo.isImgViewBttmRatioPreserved()); // Mantiene la proporción de la imagen
+            imageViewBottom.setImage(new Image(getClass().getResourceAsStream(f.getImgUrl()))); // Ruta de la imagen
+            mapeoFichas.put(f, imageViewBottom);
+            panelJugador1.getChildren().add(imageViewBottom);
+        }
+        setEventHandler(handler);
+        return mapeoFichas;
+    }
+    
+    private void setEventHandler(EventHandler<MouseEvent> handler){
+        for(Entry<Ficha,ImageView> entry : mapeoFichas.entrySet()){
+            entry.getValue().setOnMouseClicked(handler);
+        }
+    }
+    
+    public void btnEjemploEvento(EventHandler<ActionEvent> evento){
+        btnEjemplo.setOnAction(evento);
+    }
+
     @Override
     public void actualizarTablero(Observable ob, Object... context) {
         double layoutX = 0;

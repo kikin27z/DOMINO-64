@@ -34,11 +34,10 @@ public class Starter {
         jugadores.add(new Jugador("Maria"));
         Partida partida = new Partida("123", jugadores, 4, 3);
         GameHandler handler = newGame(partida, jugador);
-        adapter.pintarJuego(partida, jugador);
-        adapter.iniciarJuego();
-        System.out.println("se inicio el juego");
         Thread thread = new Thread(handler);
         thread.start();
+        adapter.pintarJuego(partida, jugador);
+        adapter.iniciarJuego();
 //        scan = new Scanner(System.in);
 //        System.out.println("elige el tipo de partida:");
 //        System.out.println("1)nueva partida");

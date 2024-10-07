@@ -15,11 +15,15 @@ public abstract class ActivityHandler {
     public static final int DISRTIBUTE_TILES = 1;
     public final static int SELECT_TILE = 2;
     public final static int CHECK_TURN = 3;
-    public final static int PUT_TILE = 4;
-    public static final int DESIGNATE_FIRST_TURN = 5;
-    public static final int FIRST_DOUBLE = 6;
-    public static final int REMOVE_PLAYER = 7;
-    public static final int FINISH_GAME = 8;
+    public final static int CHANGE_TURN = 4;
+    public final static int PUT_TILE = 5;
+    public static final int DESIGNATE_FIRST_TURN = 6;
+    public static final int FIRST_DOUBLE = 7;
+    public static final int REMOVE_PLAYER = 8;
+    public static final int FINISH_GAME = 9;
+    public static final int CHECK_VALID_TILES = 10;
+    public static final int MAKE_AUTO_MOVE = 11;
+    public static final int PUT_FIRST_DOUBLE = 12;
     
 
     /**
