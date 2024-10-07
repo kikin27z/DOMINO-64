@@ -4,8 +4,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import utilities.INavegacion;
-import utilities.Navegacion;
+import presentacion_utilities.INavegacion;
+import presentacion_utilities.Navegacion;
 
 /**
  *

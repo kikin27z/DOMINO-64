@@ -6,7 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import utilities.IEventoConcreto;
+import presentacion_utilities.IEventoConcreto;
 
 /**
  *

@@ -1,8 +1,8 @@
 package inicio;
 
 import javafx.event.ActionEvent;
-import utilities.INavegacion;
-import utilities.Navegacion;
+import presentacion_utilities.INavegacion;
+import presentacion_utilities.Navegacion;
 
 /**
  *

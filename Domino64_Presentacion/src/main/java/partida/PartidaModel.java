@@ -14,7 +14,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import utilities.Observable;
+import presentacion_utilities.Observable;
 
 /**
  *

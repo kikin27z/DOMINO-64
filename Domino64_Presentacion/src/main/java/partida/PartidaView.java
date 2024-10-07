@@ -3,9 +3,6 @@ package partida;
 import entidades.Ficha;
 import java.io.IOException;
 import java.util.List;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import java.util.HashMap;
@@ -30,8 +27,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import utilities.Observable;
-import utilities.Observador;
+import presentacion_utilities.Observable;
+import presentacion_utilities.Observador;
 
 /**
  * Clase que representa la vista de la partida en la aplicación. Esta clase se
@@ -207,9 +204,7 @@ public class PartidaView implements Observador {
         }
     }
     
-    public void btnEjemploEvento(EventHandler<ActionEvent> evento){
-        btnEjemplo.setOnAction(evento);
-    }
+    
 
     @Override
     public void actualizarTablero(Observable ob, Object... context) {

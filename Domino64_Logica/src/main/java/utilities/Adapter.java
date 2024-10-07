@@ -13,10 +13,10 @@ import partida.PartidaModel;
  * @author luisa M
  */
 public class Adapter implements ViewAdapter{
-    INavegacion navegacion;
+//    private INavegacion navegacion;
 
     public Adapter(){
-        navegacion = Navegacion.getInstance();
+//        navegacion = Navegacion.getInstance();
     }
     
     @Override
@@ -24,12 +24,12 @@ public class Adapter implements ViewAdapter{
         PartidaModel model = new PartidaModel();
         model.setGame(partida);
         model.setJugador(jugador);
-        navegacion.actualizarPartida(model);
+//        navegacion.actualizarPartida(model);
     }
 
     @Override
     public void iniciarJuego() {
-        navegacion.iniciarApp();
+//        navegacion.iniciarApp();
     }
     
     
