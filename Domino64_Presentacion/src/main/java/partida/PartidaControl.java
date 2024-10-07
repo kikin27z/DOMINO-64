@@ -7,7 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import utilities.IEventoConcreto;
+import presentacion_utilities.IEventoConcreto;
 
 /**
  *
@@ -67,12 +67,18 @@ public class PartidaControl implements IEventoConcreto {
     
     private void saludar(ActionEvent e){
         //view.addTile();
-        //view.agregarDominoMazo(3, 3, null);
+        EventHandler<MouseEvent> clic = seleccionFicha();
+        view.agregarDominoMazo(3, 3, clic);
     }
     
-    public void seleccionFicha(MouseEvent event) {
-        System.out.println("Botón clickeado: " + event.getSource());
-        
+    private EventHandler<MouseEvent> seleccionFicha(){
+        return (MouseEvent event) -> {
+            //Se verifica que sea turno del jugador
+            //Valida que se pueda jugar
+            
+            //Se dibuja en el tablero
+//            modelo.ponerFichaEnTablero(ficha);
+        };
     }
     
     private void dibujarTablero(){

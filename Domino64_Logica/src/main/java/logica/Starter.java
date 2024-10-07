@@ -1,14 +1,11 @@
 package logica;
 
-import entidades.Ficha;
 import entidades.Jugador;
 import entidades.Partida;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import utilities.Adapter;
-import utilities.INavegacion;
-import utilities.Navegacion;
 import utilities.ViewAdapter;
 
 /**

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package utilities;
+package presentacion_utilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class Observable {
     public void notifyObservers(Object ... context){
         if (!this.observadores.isEmpty()) {
             this.observadores.forEach((o) -> {
-                o.update(this, context);
+                o.actualizarTablero(this, context);
             });
         }
     }

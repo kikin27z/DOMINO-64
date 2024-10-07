@@ -1,9 +1,11 @@
-package utilities;
+package presentacion_utilities;
 
 import inicio.InicioView;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import lobby.LobbyControl;
+import lobby.LobbyModel;
 import lobby.LobbyView;
 import partida.PartidaControl;
 import partida.PartidaModel;
@@ -21,7 +23,6 @@ import partida.PartidaView;
 public class Navegacion implements INavegacion {
     private Stage fondo; // La ventana principal de la aplicación
     private static Navegacion navegacion; // Instancia única de Navegacion
-    private PartidaModel partidaModelo;
 
     // Constructor privado para evitar instanciación externa
     private Navegacion() {
@@ -70,8 +71,10 @@ public class Navegacion implements INavegacion {
     @Override
     public void cambiarLobby() {
         try {
-            LobbyView lobby = new LobbyView(); // Instancia la vista del lobby
-            lobby.iniciarEscena(fondo); // Inicia la escena del lobby
+            LobbyModel modelo = new LobbyModel();
+            LobbyView view = new LobbyView(modelo); // Instancia la vista de la partida
+            view.iniciarEscena(fondo); // Inicia la escena de la partida
+            LobbyControl control = new LobbyControl(view, modelo);
         } catch (IOException ex) {
             ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
         }
@@ -94,10 +97,10 @@ public class Navegacion implements INavegacion {
     @Override
     public void cambiarPartida() {
         try {
-            //PartidaModel modelo = new PartidaModel();
-            PartidaView partida = new PartidaView(partidaModelo); // Instancia la vista de la partida
+            PartidaModel modelo = new PartidaModel();
+            PartidaView partida = new PartidaView(modelo); // Instancia la vista de la partida
             partida.iniciarEscena(fondo); // Inicia la escena de la partida
-            PartidaControl control = new PartidaControl(partida, partidaModelo);
+            PartidaControl control = new PartidaControl(partida, modelo);
         } catch (IOException ex) {
             ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
         }
@@ -105,6 +108,6 @@ public class Navegacion implements INavegacion {
 
     @Override
     public void actualizarPartida(PartidaModel modelo) {
-        this.partidaModelo=modelo;
+//        this.partidaModelo=modelo;
     }
 }
