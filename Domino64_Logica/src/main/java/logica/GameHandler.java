@@ -97,13 +97,13 @@ public class GameHandler extends ActivityHandler implements Runnable{
                         jugador.removerFicha(jugador.getFichaSeleccionada());
                         jugador.setFichaSeleccionada(null);
                     }
-                }else{
-                    System.out.println(turnManager.jugadorEnTurno());
-                    handleRequest(MAKE_AUTO_MOVE, turnManager.jugadorEnTurno());
                 }
-                
-                Thread.sleep(10000);
-                handleRequest(CHANGE_TURN);
+                Thread.sleep(6000);
+                    
+                System.out.println(turnManager.jugadorEnTurno());
+                handleRequest(MAKE_AUTO_MOVE, turnManager.jugadorEnTurno());
+               // handleRequest(CHANGE_TURN);
+
             }
         } catch (InterruptedException | LogicException e) {
             System.out.println(e.getMessage());

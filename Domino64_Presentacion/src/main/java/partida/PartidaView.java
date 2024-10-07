@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -142,31 +143,31 @@ public class PartidaView implements Observador{
         panelInterior.getChildren().add(fichaJugada);
     }
     
-    public Map<Ficha,ImageView> addTile(EventHandler<MouseEvent> handler){
-        // Crear el ImageView para la segunda imagen
-        ImageView imageViewBottom;
-        double rotation = modelo.getImgViewBttmRotate();
-        double contador = modelo.getImageViewBottomLayoutX();
-        mapeoFichas = new HashMap<>();
-        for(Ficha f: modelo.getFichasDelJugador()){
-            imageViewBottom = new ImageView();
-            imageViewBottom.setFitHeight(modelo.getImageViewBottomHeight());
-            imageViewBottom.setFitWidth(modelo.getImageViewBottomWidth());
-            imageViewBottom.setLayoutX(contador);
-            contador+=50;
-            imageViewBottom.setLayoutY(modelo.getImageViewBottomLayoutY());
-            imageViewBottom.setRotate(rotation);
-            rotation+=90;
-            //imageViewBottom.setOnMouseClicked(modelo.getEventHandler());
-            imageViewBottom.setPickOnBounds(modelo.isImgViewBttmPickedOnBounds()); // Permite que la imagen sea seleccionable
-            imageViewBottom.setPreserveRatio(modelo.isImgViewBttmRatioPreserved()); // Mantiene la proporción de la imagen
-            imageViewBottom.setImage(new Image(getClass().getResourceAsStream(f.getImgUrl()))); // Ruta de la imagen
-            mapeoFichas.put(f, imageViewBottom);
-            panelJugador1.getChildren().add(imageViewBottom);
-        }
-        setEventHandler(handler);
-        return mapeoFichas;
-    }
+//    public Map<Ficha,ImageView> addTile(EventHandler<MouseEvent> handler){
+//        // Crear el ImageView para la segunda imagen
+//        ImageView imageViewBottom;
+//        double rotation = modelo.getImgViewBttmRotate();
+//        double contador = modelo.getImageViewBottomLayoutX();
+//        mapeoFichas = new HashMap<>();
+//        for(Ficha f: modelo.getFichasDelJugador()){
+//            imageViewBottom = new ImageView();
+//            imageViewBottom.setFitHeight(modelo.getImageViewBottomHeight());
+//            imageViewBottom.setFitWidth(modelo.getImageViewBottomWidth());
+//            imageViewBottom.setLayoutX(contador);
+//            contador+=50;
+//            imageViewBottom.setLayoutY(modelo.getImageViewBottomLayoutY());
+//            imageViewBottom.setRotate(rotation);
+//            rotation+=90;
+//            //imageViewBottom.setOnMouseClicked(modelo.getEventHandler());
+//            imageViewBottom.setPickOnBounds(modelo.isImgViewBttmPickedOnBounds()); // Permite que la imagen sea seleccionable
+//            imageViewBottom.setPreserveRatio(modelo.isImgViewBttmRatioPreserved()); // Mantiene la proporción de la imagen
+//            imageViewBottom.setImage(new Image(getClass().getResourceAsStream(f.getImgUrl()))); // Ruta de la imagen
+//            mapeoFichas.put(f, imageViewBottom);
+//            panelJugador1.getChildren().add(imageViewBottom);
+//        }
+//        setEventHandler(handler);
+//        return mapeoFichas;
+//    }
     
     private void setEventHandler(EventHandler<MouseEvent> handler){
         for(Entry<Ficha,ImageView> entry : mapeoFichas.entrySet()){
@@ -176,6 +177,37 @@ public class PartidaView implements Observador{
     
     public void btnEjemploEvento(EventHandler<ActionEvent> evento){
         btnEjemplo.setOnAction(evento);
+    }
+
+
+    public void getEventHandler() {
+
+    }
+
+    public Canvas crearDomino(int izquierda, int derecha,EventHandler<MouseEvent> evento){
+        Canvas ficha = DominoDraw.dibujarFicha(izquierda, derecha, DominoDraw.Orientation.VERTICAL);
+        ficha.setOnMouseClicked(evento);
+        agregarDominoMazo(ficha);
+        return ficha;
+    }
+    
+    public void agregarDominoMazo(Canvas ficha){
+        panelJugador1.getChildren().add(ficha);
+    }
+    
+    public void quitarDominoMazo(int izquierda, int derecha){
+        Canvas ficha = DominoDraw.dibujarFicha(izquierda, derecha, DominoDraw.Orientation.VERTICAL);
+        panelJugador1.getChildren().add(ficha);
+    }
+    
+    public Map<Canvas,Ficha> addTile(EventHandler<MouseEvent> evento){
+        // Crear el ImageView para la segunda imagen
+        Map<Canvas,Ficha> mapeo = new HashMap<>();
+        for(Ficha ficha: modelo.getFichasDelJugador()){
+            Canvas fichaDibujo = crearDomino(ficha.getIzquierda(), ficha.getDerecha(), evento);
+            mapeo.put(fichaDibujo,ficha);
+        } 
+        return mapeo;
     }
 
     @Override

@@ -207,6 +207,8 @@ public class TileHandler extends ActivityHandler {
         Ficha ficha = (Ficha)context[0];
         Jugador jugador = (Jugador)context[1];
         putFirstDouble(ficha);
+        //jugador.setFichaSeleccionada(ficha);
+        
         jugador.removerFicha(ficha);
         System.out.println("first double request handled");
         nextHandler.handleRequest(CHANGE_TURN);
@@ -227,6 +229,11 @@ public class TileHandler extends ActivityHandler {
         
     }
    
+    /**
+     * 
+     * @param fichas
+     * @return 
+     */
     private Map<Ficha,JugadaPosible> checkValidTiles(List<Ficha> fichas){
         Map<Ficha,JugadaPosible> jugadas = new HashMap<>();
         if (!tablero.tableroVacio()) {
@@ -241,7 +248,12 @@ public class TileHandler extends ActivityHandler {
         return jugadas;
     }
     
-     private void handleAutoMoveRequest(Object ... context) throws LogicException{
+    /**
+     * 
+     * @param context
+     * @throws LogicException 
+     */
+    private void handleAutoMoveRequest(Object ... context) throws LogicException{
          Map<Ficha,JugadaPosible> jugadasValidas = new HashMap<>();
          Jugador jugador = (Jugador)context[0];
          List<Ficha> fichas = jugador.getFichas();
@@ -271,8 +283,14 @@ public class TileHandler extends ActivityHandler {
          else
              System.out.println("el jugador "+jugador.getUsername()+" no puso ficha");
          System.out.println("fichas actuales del jugador: "+jugador.getFichas());
-     }
+    }
     
+     /**
+      * 
+      * @param activityType
+      * @param context
+      * @throws LogicException 
+      */
     private void handleCheckValidTilesRequest(int activityType, Object ... context) throws LogicException{
         List<Ficha> fichas = null;
         for (Object object : context) {
@@ -325,7 +343,13 @@ public class TileHandler extends ActivityHandler {
         }
     }
     
-    private void putTile(Ficha ficha, String extremo){
+    /**
+     * 
+     * @param ficha
+     * @param extremo
+     * @throws LogicException 
+     */
+    private void putTile(Ficha ficha, String extremo) throws LogicException{
         System.out.println("se podia poner de ambos lados");
         StringBuilder msj = new StringBuilder("se coloco la ficha "+ficha + " en el extremo ");
         if(extremo.equals("izquierda")){
@@ -339,9 +363,16 @@ public class TileHandler extends ActivityHandler {
         System.out.println();
         System.out.println("tablero hasta ahora");
         System.out.println(tablero.imprimirTren());
+        nextHandler.handleRequest(CHANGE_TURN);
     }
     
-    private void putTile(Ficha ficha, JugadaPosible jugada){
+    /**
+     * 
+     * @param ficha
+     * @param jugada
+     * @throws LogicException 
+     */
+    private void putTile(Ficha ficha, JugadaPosible jugada) throws LogicException{
         System.out.println("solo se podia poner de un lado");
         StringBuilder msj = new StringBuilder("se coloco la ficha "+ficha + " en el extremo ");
         if(jugada == JugadaPosible.SOLOXIZQUIERDA){
@@ -355,6 +386,7 @@ public class TileHandler extends ActivityHandler {
         System.out.println(msj);
         System.out.println("tablero hasta ahora");
         System.out.println(tablero.imprimirTren());
+        nextHandler.handleRequest(CHANGE_TURN);
     }
     
     @Override
