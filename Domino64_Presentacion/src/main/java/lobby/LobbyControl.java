@@ -36,7 +36,6 @@ public class LobbyControl  {
      }
      
      public void abandonarPartida(ActionEvent e){
-         
      }
     
      public void abrirAjustes(ActionEvent e){

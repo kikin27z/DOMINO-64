@@ -8,7 +8,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
-        <exec.mainClass>run.CargarJuego</exec.mainClass>
+        <exec.mainClass>logica.Starter</exec.mainClass>
     </properties>
     <name>Domino64_Logica</name>
     <dependencies>

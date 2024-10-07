@@ -207,6 +207,9 @@ public class TileHandler extends ActivityHandler {
         Ficha ficha = (Ficha)context[0];
         Jugador jugador = (Jugador)context[1];
         putFirstDouble(ficha);
+        // Se ponga en el tablero
+        
+        
         jugador.removerFicha(ficha);
         System.out.println("first double request handled");
         nextHandler.handleRequest(CHANGE_TURN);

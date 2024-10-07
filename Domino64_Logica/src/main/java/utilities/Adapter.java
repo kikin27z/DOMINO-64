@@ -38,18 +38,4 @@ public class Adapter implements ViewAdapter{
     public void iniciarJuego() {
         navegacion.iniciarApp();
     }
-
-    @Override
-    public void cargarPartida() {
-        List<Jugador> jugadores = new ArrayList<>();
-        Jugador jugador = new Jugador("Luisa");
-        jugadores.add(jugador);
-        jugadores.add(new Jugador("Maria"));
-        
-        Partida partida = new Partida("123", jugadores, 7, 2);
-        GameHandler handler = new GameHandler(partida, jugador);
-        Thread thread = new Thread(handler);
-        thread.start();
-        
-    }
 }

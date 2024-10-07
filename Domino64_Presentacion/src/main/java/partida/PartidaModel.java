@@ -5,6 +5,8 @@ import java.util.List;
 import entidades.Jugador;
 import entidades.Partida;
 import entidades.Tablero;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,6 +32,8 @@ public class PartidaModel extends Observable{
     private boolean jugadorEnTurno;
     private List<Ficha> fichasValidas;
     private Map<Canvas, Ficha> mapeoFichas;
+    private Deque<Canvas> mapeoFichasJugadas = new ArrayDeque<>();
+//    private TrenFicha prueba = new ArrayDeque<>();
     
     private final double externalPanelWidth = 1000;
     private final double externalPanelHeight = 700;
@@ -82,6 +86,7 @@ public class PartidaModel extends Observable{
     }
 
     public PartidaModel(Jugador jugador, Partida partida) {
+        mapeoFichas = new HashMap<>();
         this.jugador = jugador;
         this.partida = partida;
     }
@@ -101,6 +106,12 @@ public class PartidaModel extends Observable{
     public boolean jugadorEnTurno(){
         return jugadorEnTurno;
     }
+
+    public void setPartida(Partida partida) {
+        this.partida = partida;
+    }
+    
+    
     
     public Partida getPartida() {
         return partida;
@@ -310,6 +321,22 @@ public class PartidaModel extends Observable{
     public void setMapeoFichas(Map<Canvas, Ficha> mapeoFichas) {
         this.mapeoFichas = mapeoFichas;
     }
+
+    public Deque<Canvas> getMapeoFichasJugadas() {
+        return mapeoFichasJugadas;
+    }
+
+    public void setMapeoFichasJugadas(Deque<Canvas> mapeoFichasJugadas) {
+        this.mapeoFichasJugadas = mapeoFichasJugadas;
+    }
     
-    
+//    public Ficha obtenerPrimeraMulaTablero(){
+//        Tablero tablero = partida.getTablero();
+//        Ficha ficha = null;
+//        if(tablero.tableroVacio()){
+//            ficha = tablero.obtenerFichaDer();
+//        }
+//        return ficha;
+//    }
+
 }

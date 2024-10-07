@@ -33,7 +33,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.5</version>
                 <configuration>
-                    <mainClass>utilities.Principal</mainClass>
+                    <mainClass>presentacion_utilities.Principal</mainClass>
                 </configuration>
                 <executions>
                     <execution>
