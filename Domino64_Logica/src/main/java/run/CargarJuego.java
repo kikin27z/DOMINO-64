@@ -5,7 +5,7 @@ import entidades.Partida;
 import java.util.ArrayList;
 import java.util.List;
 import logica.GameHandler;
-import presentacion_utilities.INavegacion;
+//import presentacion_utilities.
 import presentacion_utilities.Navegacion;
 import utilities.Adapter;
 import utilities.ViewAdapter;

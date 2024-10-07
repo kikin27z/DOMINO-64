@@ -10,15 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import logica.GameHandler;
 import partida.PartidaModel;
-import presentacion_utilities.INavegacion;
 import presentacion_utilities.Navegacion;
-
+import presentacion_utilities.INavegacion;
 /**
  *
  * @author luisa M
  */
 public class Adapter implements ViewAdapter{
-    private INavegacion navegacion;
+    private Navegacion navegacion;
 
     public Adapter(){
         navegacion = Navegacion.getInstance();

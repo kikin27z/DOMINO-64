@@ -148,10 +148,6 @@ public class PartidaModel extends Observable{
      */
     public Ficha getFichaSeleccionada(Canvas canvas){
         Ficha fichaSeleccionada = mapeoFichas.get(canvas);
-//        for(Entry<Canvas,Ficha> set: mapeoFichas.entrySet()){
-//            if(set.getKey().equals(canvas))
-//                fichaSeleccionada = set.getValue();
-//        }
         return fichaSeleccionada;
     }
     
@@ -199,10 +195,6 @@ public class PartidaModel extends Observable{
 
     public void setJugador(Jugador jugador) {
         this.jugador = jugador;
-    }
-
-    public void setMapeoFichas(Map<Canvas, Ficha> mapeoFichas) {
-        this.mapeoFichas = mapeoFichas;
     }
 
     public void actualizarMapeoFichasJugadas(Entry<Canvas,Ficha> fichasJugadas) {

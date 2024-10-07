@@ -21,19 +21,14 @@ public class PartidaControl  {
     public PartidaControl(PartidaView view, PartidaModel modelo) {
         this.view = view;
         this.modelo = modelo;
-        //agrega las fichas, pasandole un eventHandler que se encargara
-        //de manejar los eventos de cuando la ficha sea seleccionada
-//        Map<Ficha,ImageView> mapeo=view.addTile(establecerManejador());
-//        modelo.actualizarMapeo(mapeo);
-//        view.btnEjemploEvento(this::saludar);
-        modelo.setMapeoFichas(view.addTile(this::seleccionFicha));
+        modelo.setMapeoFichas(view.addTile(getEventHandler()));
         colocarPrimeraMula();
     }
 
     private void colocarPrimeraMula(){
         if (modelo.obtenerPrimeraMulaTablero() != null) {
             Ficha mula = modelo.obtenerPrimeraMulaTablero();
-            Canvas mulaDibujo = view.crearDomino(mula.getIzquierda(), mula.getDerecha(), null);
+            Canvas mulaDibujo = view.dibujarPrimeraMula(mula.getIzquierda(), mula.getDerecha(), 500, 600);
             Map.Entry<Canvas, Ficha> entry = Map.entry(mulaDibujo, mula);
             modelo.actualizarMapeoFichasJugadas(entry);
         }
@@ -45,14 +40,25 @@ public class PartidaControl  {
     
     private void saludar(ActionEvent e){
         //view.addTile();
-        view.agregarDominoMazo(3, 3, null);
+        //view.agregarDominoMazo(3, 3, null);
     }
     
     public void seleccionFicha(MouseEvent event) {
         System.out.println("Botón clickeado: " + event.getSource());
+        
     }
     
-
+    private EventHandler<MouseEvent> getEventHandler(){
+        EventHandler<MouseEvent> event = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent t) {
+                Canvas canvas = (Canvas)t.getSource();
+                Ficha fichaSeleccionada = modelo.getFichaSeleccionada(canvas);
+                modelo.getJugador().setFichaSeleccionada(fichaSeleccionada);
+            }
+        };
+        return event;
+    }
     
     private void dibujarTablero(){
         

@@ -36,6 +36,7 @@ public interface INavegacion {
     
     /**
      * Actualiza la vista de la partida.
+     * @param modelo
      */
     public void actualizarPartida(PartidaModel modelo);
     

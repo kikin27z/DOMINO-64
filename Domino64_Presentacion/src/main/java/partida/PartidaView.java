@@ -155,33 +155,11 @@ public class PartidaView implements Observador {
     public void btnEjemploEvento(EventHandler<ActionEvent> evento) {
         btnEjemplo.setOnAction(evento);
     }
-
-    public Canvas crearDomino(int izquierda, int derecha,EventHandler<MouseEvent> evento){
-        Canvas ficha = DominoDraw.dibujarFicha(izquierda, derecha, DominoDraw.Orientation.VERTICAL);
-        ficha.setOnMouseClicked(evento);
-        return ficha;
-    }
     
     public void agregarDominoMazo(Canvas ficha){
         panelJugador1.getChildren().add(ficha);
     }
-    /**
-     * public void quitarDominoMazo(int izquierda, int derecha){
-        Canvas ficha = DominoDraw.dibujarFicha(izquierda, derecha, DominoDraw.Orientation.VERTICAL);
-        panelJugador1.getChildren().add(ficha);
-    }
-    */
     
-    public Map<Canvas,Ficha> addTile(EventHandler<MouseEvent> evento){
-        // Crear el ImageView para la segunda imagen
-        for(Ficha ficha: modelo.getFichasDelJugador()){
-            Canvas fichaDibujo = crearDomino(ficha.getIzquierda(), ficha.getDerecha(), evento);
-            mapeoFichas.put(fichaDibujo,ficha);
-        }
-        return mapeoFichas;
-    }
-
-
     public void getEventHandler() {
 
     }
@@ -193,8 +171,10 @@ public class PartidaView implements Observador {
         return ficha;
     }
     
-    public void agregarDominoMazo(Canvas ficha){
-        panelJugador1.getChildren().add(ficha);
+    public Canvas dibujarPrimeraMula(int izquierda, int derecha,int x, int y){
+        Canvas ficha = DominoDraw.dibujarFicha(izquierda, derecha, x, y, DominoDraw.Orientation.VERTICAL);
+        panelInterior.getChildren().add(ficha);
+        return ficha;
     }
     
     public void quitarDominoMazo(int izquierda, int derecha){

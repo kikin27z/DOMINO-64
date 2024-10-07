@@ -151,12 +151,15 @@ public class TileHandler extends ActivityHandler {
         Object[] duple = new Object[2];
         for (Jugador j : players) {
             Ficha tile = giveTile();
-            if (tile.getIzquierda()== tile.getDerecha()) {
+            if (tile.esMula()) {
                 duple[0] = tile;
                 duple[1] = j;
                 break;
             }
             j.agregarFicha(tile);
+            System.out.println("");
+            System.out.println("fichas actuales del jugador:");
+            System.out.println(j.getFichas());
         }
         
         return duple;
