@@ -168,6 +168,14 @@ public class PartidaModel extends Observable{
         }
     }
     
+    public Map<Canvas, Ficha> getMapeoFichas() {
+        return mapeoFichas;
+    }
+
+    public void setMapeoFichas(Map<Canvas, Ficha> mapeoFichas) {
+        this.mapeoFichas = mapeoFichas;
+    }
+    
     public void setGame(Partida partida) {
         this.partida = partida;
     }
@@ -195,10 +203,6 @@ public class PartidaModel extends Observable{
 
     public void setMapeoFichas(Map<Canvas, Ficha> mapeoFichas) {
         this.mapeoFichas = mapeoFichas;
-    }
-    
-    public Map<Canvas, Ficha> getMapeoFichas() {
-        return mapeoFichas;
     }
 
     public void actualizarMapeoFichasJugadas(Entry<Canvas,Ficha> fichasJugadas) {
@@ -344,6 +348,5 @@ public class PartidaModel extends Observable{
         return imgViewBttmResourceName;
     }
 
-   
     
 }

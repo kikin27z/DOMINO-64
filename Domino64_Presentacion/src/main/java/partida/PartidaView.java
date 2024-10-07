@@ -25,7 +25,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import presentacion_utilities.Observable;
 import presentacion_utilities.Observador;
@@ -48,7 +47,7 @@ public class PartidaView implements Observador {
     private ScrollPane scrollPanel;     // Panel con capacidad de desplazamiento
     private Button btnEjemplo;
     private List<Canvas> mazo;
-    private Map<Ficha,ImageView> mapeoFichas;
+    private Map<Canvas,Ficha> mapeoFichas;
 
     public PartidaView(PartidaModel modelo) {
         this.modelo = modelo;
@@ -157,9 +156,13 @@ public class PartidaView implements Observador {
         btnEjemplo.setOnAction(evento);
     }
 
-    public void agregarDominoMazo(int izquierda, int derecha,EventHandler<MouseEvent> evento){
+    public Canvas crearDomino(int izquierda, int derecha,EventHandler<MouseEvent> evento){
         Canvas ficha = DominoDraw.dibujarFicha(izquierda, derecha, DominoDraw.Orientation.VERTICAL);
         ficha.setOnMouseClicked(evento);
+        return ficha;
+    }
+    
+    public void agregarDominoMazo(Canvas ficha){
         panelJugador1.getChildren().add(ficha);
     }
     /**
@@ -169,39 +172,14 @@ public class PartidaView implements Observador {
     }
     */
     
-//    public Map<Ficha,ImageView> addTile(EventHandler<MouseEvent> handler){
-//        // Crear el ImageView para la segunda imagen
-//        ImageView imageViewBottom;
-//        double rotation = modelo.getImgViewBttmRotate();
-//        double contador = modelo.getImageViewBottomLayoutX();
-//        mapeoFichas = new HashMap<>();
-//        for(Ficha f: modelo.getFichasDelJugador()){
-//            imageViewBottom = new ImageView();
-//            imageViewBottom.setFitHeight(modelo.getImageViewBottomHeight());
-//            imageViewBottom.setFitWidth(modelo.getImageViewBottomWidth());
-//            imageViewBottom.setLayoutX(contador);
-//            contador+=50;
-//            imageViewBottom.setLayoutY(modelo.getImageViewBottomLayoutY());
-//            imageViewBottom.setRotate(rotation);
-//            rotation+=90;
-//            //imageViewBottom.setOnMouseClicked(modelo.getEventHandler());
-//            imageViewBottom.setPickOnBounds(modelo.isImgViewBttmPickedOnBounds()); // Permite que la imagen sea seleccionable
-//            imageViewBottom.setPreserveRatio(modelo.isImgViewBttmRatioPreserved()); // Mantiene la proporción de la imagen
-//            imageViewBottom.setImage(new Image(getClass().getResourceAsStream(f.getImgUrl()))); // Ruta de la imagen
-//            mapeoFichas.put(f, imageViewBottom);
-//            panelJugador1.getChildren().add(imageViewBottom);
-//        }
-//        setEventHandler(handler);
-//        return mapeoFichas;
-//    }
-    
-    private void setEventHandler(EventHandler<MouseEvent> handler){
-        for(Entry<Ficha,ImageView> entry : mapeoFichas.entrySet()){
-            entry.getValue().setOnMouseClicked(handler);
+    public Map<Canvas,Ficha> addTile(EventHandler<MouseEvent> evento){
+        // Crear el ImageView para la segunda imagen
+        for(Ficha ficha: modelo.getFichasDelJugador()){
+            Canvas fichaDibujo = crearDomino(ficha.getIzquierda(), ficha.getDerecha(), evento);
+            mapeoFichas.put(fichaDibujo,ficha);
         }
+        return mapeoFichas;
     }
-    
-    
 
 
     public void getEventHandler() {
@@ -434,4 +412,14 @@ public class PartidaView implements Observador {
 
         panelExterior.getChildren().addAll(topPanel, rightPanel, leftPanel);
     }
+
+    public Map<Canvas, Ficha> getMapeoFichas() {
+        return mapeoFichas;
+    }
+
+    public void setMapeoFichas(Map<Canvas, Ficha> mapeoFichas) {
+        this.mapeoFichas = mapeoFichas;
+    }
+    
+    
 }
