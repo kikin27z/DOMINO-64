@@ -27,7 +27,18 @@ public class Tablero {
         return trenFichas.isEmpty();
     }
     
-    
+    public String imprimirTren(){
+        StringBuilder str = new StringBuilder();
+        if(!trenFichas.isEmpty()){
+            for (Ficha ficha : trenFichas) {
+                str.append(ficha.getIzquierda());
+                str.append("|");
+                str.append(ficha.getDerecha());
+                str.append(" ");
+            }
+        }
+        return str.toString();
+    }
     
     /**
      * Valida si una ficha puede ser colocada en el tablero, comparando sus
