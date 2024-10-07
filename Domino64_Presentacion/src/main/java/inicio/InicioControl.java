@@ -1,9 +1,6 @@
 package inicio;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
-import javafx.fxml.Initializable;
 import utilities.INavegacion;
 import utilities.Navegacion;
 
@@ -22,7 +19,7 @@ public class InicioControl {
     }
 
     public void irPartida(ActionEvent e) {
-        navegacion.cambiarPartida();
+        navegacion.cambiarLobby();
     }
     
   

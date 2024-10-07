@@ -9,5 +9,5 @@ package utilities;
  * @author luisa M
  */
 public interface Observador {
-    public void update(Observable ob, Object ... context);
+    public void actualizarTablero(Observable ob, Object ... context);
 }

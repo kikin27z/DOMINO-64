@@ -19,11 +19,16 @@ public class Partida {
     private Pozo pozo;
     private Tablero tablero;
     private List<Jugador> jugadores;
+    private ModoPartida modo;
     private boolean turnosDesignados;
     private String codigoPartida;
     private Jugador jugadorEnTurno;
     private int fichasPorJugador;
     private int maxCantidadJugadores;
+    
+    public Partida(ModoPartida modo){
+        this.modo = modo;
+    }
     
     public Partida(String codigoPartida, List<Jugador> jugadores, 
             int fichasPorJugador, int maxCantidadJugadores){

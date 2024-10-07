@@ -2,6 +2,8 @@ package partida;
 
 import entidades.Ficha;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import utilities.IEventoConcreto;
 
 /**
@@ -17,7 +19,6 @@ public class PartidaControl implements IEventoConcreto {
     public PartidaControl(PartidaView view, PartidaModel modelo) {
         this.view = view;
         this.modelo = modelo;
-        view.addTile();
         view.btnEjemploEvento(this::saludar);
     }
 
@@ -32,6 +33,21 @@ public class PartidaControl implements IEventoConcreto {
     
     private void saludar(ActionEvent e){
         //view.addTile();
-        System.out.println("Hola");
+        EventHandler<MouseEvent> clic = seleccionFicha();
+        view.agregarDominoMazo(3, 3, clic);
+    }
+    
+    private EventHandler<MouseEvent> seleccionFicha(){
+        return (MouseEvent event) -> {
+            //Se verifica que sea turno del jugador
+            //Valida que se pueda jugar
+            
+            //Se dibuja en el tablero
+//            modelo.ponerFichaEnTablero(ficha);
+        };
+    }
+    
+    private void dibujarTablero(){
+        
     }
 }

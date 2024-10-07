@@ -13,6 +13,12 @@ import javafx.stage.Stage;
  * @author José Karim Franco Valencia - 00000245138
  */
 public class LobbyView {
+    private LobbyModel modelo;
+
+    public LobbyView(LobbyModel modelo) {
+        this.modelo = modelo;
+    }
+    
     public void iniciarEscena(Stage fondo) throws IOException{
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/lobby.fxml"));
         Scene scene = new Scene(root);

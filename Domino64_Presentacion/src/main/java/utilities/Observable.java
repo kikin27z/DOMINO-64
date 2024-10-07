@@ -35,7 +35,7 @@ public class Observable {
     public void notifyObservers(Object ... context){
         if (!this.observadores.isEmpty()) {
             this.observadores.forEach((o) -> {
-                o.update(this, context);
+                o.actualizarTablero(this, context);
             });
         }
     }

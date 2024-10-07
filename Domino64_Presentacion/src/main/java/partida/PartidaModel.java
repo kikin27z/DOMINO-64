@@ -71,7 +71,7 @@ public class PartidaModel extends Observable{
         return partida;
     }
 
-    private void ponerFichaEnTablero(Ficha ficha){
+    public void ponerFichaEnTablero(Ficha ficha){
         Tablero tablero = partida.getTablero();
         try {
             if(tablero.tableroVacio()){
