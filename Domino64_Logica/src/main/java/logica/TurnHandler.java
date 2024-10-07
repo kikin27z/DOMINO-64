@@ -1,12 +1,14 @@
 package logica;
 
 import entidades.Ficha;
+import entidades.JugadaPosible;
 import entidades.Jugador;
 import exceptions.LogicException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import utilities.ActivityHandler;
 
@@ -21,7 +23,7 @@ public class TurnHandler extends ActivityHandler{
     private Jugador turnPlayer;
     private boolean isOnTurn;
     private List<PlayerHandler> playerHandlers = new ArrayList<>();
-    //private final int SET_FIRST_TURN = 1;
+    private Ficha higherDouble;
     
     public TurnHandler(List<Jugador> players){
         this.players = players;
@@ -43,8 +45,8 @@ public class TurnHandler extends ActivityHandler{
         
     }
     
-    public Jugador getFirstTurn(){
-        return turnPlayer;
+    public Ficha getHigherDouble(){
+        return higherDouble;
     }
     
     /**
@@ -53,25 +55,23 @@ public class TurnHandler extends ActivityHandler{
      * la mula mas grande
      */
     public void setFirstTurn(){
-        Ficha higherTile = null;
         TileComparator comparator = new TileComparator();
         System.out.println("setFirstTurn");
         for (Jugador player : players) {
             Ficha playerHigherTile = player.getHigherDouble();
-            //System.out.println("playerHif dsf:" + playerHigherTile);
             if(playerHigherTile != null){
-                if (higherTile == null) {
-                    higherTile = playerHigherTile;
+                if (higherDouble == null) {
+                    higherDouble = playerHigherTile;
                     turnPlayer = player;
-                } else if (comparator.compare(playerHigherTile, higherTile) > 0) {
-                    higherTile = playerHigherTile;
+                } else if (comparator.compare(playerHigherTile, higherDouble) > 0) {
+                    higherDouble = playerHigherTile;
                     turnPlayer = player;
                 }
             }
         }
         if(turnPlayer != null){
             System.out.println("first player: "+turnPlayer);
-            System.out.println("higher double: "+ higherTile);
+            System.out.println("higher double: "+ higherDouble);
         }
         //return turnPlayer;
     }
@@ -97,34 +97,6 @@ public class TurnHandler extends ActivityHandler{
             System.out.println("se designaron los demas turnos");
         }else
             System.out.println("turn player null");
-    }
-    
-    public Ficha getSelectedTile(){
-        Scanner scan = new Scanner(System.in);
-        String numeros = null;
-        int selectedTileIndex = 0;
-        boolean flag = false;
-        do{
-            System.out.println("ingresa la ficha que deseas colocar");
-            System.out.println("los numeros de la ficha deben seguir el"
-                    + "siguiente formato-> 3:5)");
-            System.out.println("las fichas que puedes poner son:");
-            System.out.println(turnPlayer.getFichas());
-            numeros = scan.findInLine("\\d:\\d");
-            
-            if(numeros !=null){
-                selectedTileIndex = tileIndex(numeros);
-                if(selectedTileIndex >= 0)
-                    flag = true;
-                else
-                    System.out.println("no tienes esa ficha");
-            }else{
-                System.out.println("se ingreso un formato inadecuado para los numeros de la ficha");
-            }
-        }while(!flag);
-        
-        Ficha selectedTile = turnPlayer.getFichas().get(selectedTileIndex);
-        return selectedTile;
     }
     
     private int tileIndex(String tileNumbers){
@@ -156,31 +128,49 @@ public class TurnHandler extends ActivityHandler{
         return turnPlayer;
     }
 
+    private void manejarSolicitudFichasValidas(Object ... context){
+        Map<Ficha,JugadaPosible> fichasValidas = 
+                (Map<Ficha,JugadaPosible>)context[0];
+        if(fichasValidas.isEmpty()){
+            System.out.println("no tienes fichas para poner");
+            cambiarTurno();
+            setIsOnTurn(false);
+        }else 
+            System.out.println("fichas validas: "+fichasValidas);
+    }
+    
+    private void manejarSolicitudPrimerTurno(){
+        setFirstTurn();
+        designateOtherTurns();
+        
+    }
+    
+    private void manejarSolicitudPrimeraMula(Object ... context){
+        Jugador firstTurn = null;
+        for (Object object : context) {
+            firstTurn = (Jugador) object;
+        }
+        setFirstTurn(firstTurn);
+        designateOtherTurns();
+        cambiarTurno();
+    }
+    
+    private void manejarSolicitudVerificarTurno(Object ... context){
+        Jugador jugador = null;
+        for (Object object : context) {
+            jugador = (Jugador) object;
+        }
+        setIsOnTurn(turnPlayer.equals(jugador));
+    }
+    
     @Override
     public void handleRequest(int activityType, Object ... context) throws LogicException{
         switch (activityType) {
-            case DESIGNATE_FIRST_TURN:
-                setFirstTurn();
-                designateOtherTurns();
-                break;
-            case FIRST_DOUBLE:
-                Jugador firstTurn = null;
-                for (Object object : context) {
-                    firstTurn = (Jugador) object;
-                }
-                setFirstTurn(firstTurn);
-                designateOtherTurns();
-                break;
-            case CHECK_TURN:
-                Jugador jugador  = null;
-                for (Object object : context) {
-                    jugador = (Jugador)object;
-                }
-                setIsOnTurn(turnPlayer.equals(jugador));
-                break;
-            case CHANGE_TURN:
-                cambiarTurno();
-                break;
+            case DESIGNATE_FIRST_TURN -> manejarSolicitudPrimerTurno();
+            case FIRST_DOUBLE -> manejarSolicitudPrimeraMula(context);
+            case CHECK_TURN -> manejarSolicitudVerificarTurno(context);
+            case CHANGE_TURN -> cambiarTurno();
+            case CHECK_VALID_TILES -> manejarSolicitudFichasValidas(context);
         }
     }
 

@@ -5,6 +5,7 @@
 package logica;
 
 import entidades.Ficha;
+import entidades.JugadaPosible;
 import entidades.Jugador;
 import entidades.Partida;
 import entidades.Tablero;
@@ -52,9 +53,20 @@ public class GameHandler extends ActivityHandler implements Runnable{
                 System.out.println(f);
             }
             
+            try {
+                Thread.sleep(20000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
             handleRequest(DESIGNATE_FIRST_TURN);
-            if(turnManager.getFirstTurn() == null){
+            if(turnManager.jugadorEnTurno() == null){
+                System.out.println(" first turn null");
                 handleRequest(FIRST_DOUBLE,partida.getJugadores()); 
+            }else{
+                System.out.println("first turn designed");
+                System.out.println("hogher double: "+ turnManager.getHigherDouble());
+                handleRequest(PUT_FIRST_DOUBLE, turnManager.getHigherDouble(), turnManager.jugadorEnTurno());
             }
             
             System.out.println("turnos designados: ");
@@ -69,17 +81,28 @@ public class GameHandler extends ActivityHandler implements Runnable{
     @Override
     public void run() {
         System.out.println("hello");
-        Tablero tablero = partida.getTablero();
-        boolean flag = false;
         
         try {
             while(true){
                 handleRequest(CHECK_TURN, jugador);
                 if(turnManager.isOnTurn()){
                     System.out.println("es tu turno");
+                    handleRequest(CHECK_VALID_TILES, jugador.getFichas());
+                    if(turnManager.isOnTurn()){
+                        while(jugador.getFichaSeleccionada() == null){
+                            System.out.println("SELECCIONA UNA FICHA");
+                            Thread.sleep(5000);
+                        }
+                        handleRequest(PUT_TILE, jugador.getFichaSeleccionada());//falta arreglar esto
+                        jugador.removerFicha(jugador.getFichaSeleccionada());
+                        jugador.setFichaSeleccionada(null);
+                    }
+                }else{
+                    System.out.println(turnManager.jugadorEnTurno());
+                    handleRequest(MAKE_AUTO_MOVE, turnManager.jugadorEnTurno());
                 }
-                System.out.println(turnManager.jugadorEnTurno());
-                Thread.sleep(5000);
+                
+                Thread.sleep(10000);
                 handleRequest(CHANGE_TURN);
             }
         } catch (InterruptedException | LogicException e) {

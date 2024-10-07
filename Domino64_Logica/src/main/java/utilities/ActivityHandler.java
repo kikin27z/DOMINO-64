@@ -21,6 +21,9 @@ public abstract class ActivityHandler {
     public static final int FIRST_DOUBLE = 7;
     public static final int REMOVE_PLAYER = 8;
     public static final int FINISH_GAME = 9;
+    public static final int CHECK_VALID_TILES = 10;
+    public static final int MAKE_AUTO_MOVE = 11;
+    public static final int PUT_FIRST_DOUBLE = 12;
     
 
     /**

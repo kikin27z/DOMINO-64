@@ -5,6 +5,7 @@
 package logica;
 
 import entidades.Ficha;
+import entidades.JugadaPosible;
 import entidades.Jugador;
 import entidades.Pozo;
 import entidades.Tablero;
@@ -13,7 +14,11 @@ import exceptions.LogicException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -172,6 +177,10 @@ public class TileHandler extends ActivityHandler {
         return pozo.getFichas();
     }
 
+    private void colocarFicha(Ficha ficha){
+        
+    }
+    
     /**
      * Metodo para manejar la solicitud de repartir
      * las fichas a los jugadores
@@ -194,8 +203,84 @@ public class TileHandler extends ActivityHandler {
         distributeTiles(players, tilesPerPlayer);
     }
     
-    private void handlePutTileRequest(Object ... context){
+    private void handlePutFirstDoubleRequest(Object ... context) throws LogicException{
+        Ficha ficha = (Ficha)context[0];
+        Jugador jugador = (Jugador)context[1];
+        putFirstDouble(ficha);
+        jugador.removerFicha(ficha);
+        System.out.println("first double request handled");
+        nextHandler.handleRequest(CHANGE_TURN);
+    }
+    
+    private void handlePutTileRequest(Object ... context) throws LogicException{
+        Ficha ficha = (Ficha)context[0];
+        JugadaPosible jugada = tablero.validarFicha(ficha);
+        if(jugada == JugadaPosible.AMBAS){
+            putTile(ficha, "izquierda");//falta arreglar que esto lo indique el jugador en si, no hardcodeado
+        }else if(jugada != JugadaPosible.NINGUNA){
+            putTile(ficha, jugada);
+        }else{
+            System.out.println("jugada invalida");
+            nextHandler.handleRequest(CHANGE_TURN);
+        }
+        //JugadaPosible jugada = tablero.validarFicha(ficha);
         
+    }
+   
+    private Map<Ficha,JugadaPosible> checkValidTiles(List<Ficha> fichas){
+        Map<Ficha,JugadaPosible> jugadas = new HashMap<>();
+        if (!tablero.tableroVacio()) {
+            
+            for (Ficha ficha : fichas) {
+                JugadaPosible jugada = tablero.validarFicha(ficha);
+                if (!jugada.equals(JugadaPosible.NINGUNA)) {
+                    jugadas.put(ficha, jugada);
+                }
+            }
+        }
+        return jugadas;
+    }
+    
+     private void handleAutoMoveRequest(Object ... context) throws LogicException{
+         Map<Ficha,JugadaPosible> jugadasValidas = new HashMap<>();
+         Jugador jugador = (Jugador)context[0];
+         List<Ficha> fichas = jugador.getFichas();
+         
+         jugadasValidas = checkValidTiles(fichas);
+         
+         Ficha fichaJugada;
+         JugadaPosible jugada;
+         if(!jugadasValidas.isEmpty()){
+             Set<Entry<Ficha,JugadaPosible>> entrySet = jugadasValidas.entrySet();
+             Entry<Ficha,JugadaPosible> entry = null;
+             for (Entry<Ficha,JugadaPosible> entry2 : entrySet) {
+                 entry = entry2;
+                 break;
+             }
+             jugada = entry.getValue();
+             fichaJugada = entry.getKey();
+             jugador.removerFicha(fichaJugada);
+         }else{
+             fichaJugada = giveTile();
+             jugada = tablero.validarFicha(fichaJugada);
+         }
+         if(jugada == JugadaPosible.AMBAS){
+             putTile(fichaJugada, "derecha");
+         }else if(jugada != JugadaPosible.NINGUNA)
+             putTile(fichaJugada, jugada);
+         else
+             System.out.println("el jugador "+jugador.getUsername()+" no puso ficha");
+         System.out.println("fichas actuales del jugador: "+jugador.getFichas());
+     }
+    
+    private void handleCheckValidTilesRequest(int activityType, Object ... context) throws LogicException{
+        List<Ficha> fichas = null;
+        for (Object object : context) {
+            fichas = (List<Ficha>) object;
+        }
+        Map<Ficha, JugadaPosible> fichasValidas = checkValidTiles(fichas);
+        
+        nextHandler.handleRequest(activityType, fichasValidas);
     }
     
     /**
@@ -216,16 +301,13 @@ public class TileHandler extends ActivityHandler {
         
         Object[] duple = getFirstDouble(players);
         Jugador firstPlayer = (Jugador)duple[1];
-        this.nextHandler.handleRequest(activityType, firstPlayer);
         
         Ficha firstDouble = (Ficha)duple[0];
         putFirstDouble(firstDouble);
         
+        this.nextHandler.handleRequest(activityType, firstPlayer);
     }
     
-    private void paintTile(Ficha tile){
-        
-    }
     
     /**
      * coloca la primera mula en el tablero
@@ -236,9 +318,43 @@ public class TileHandler extends ActivityHandler {
         try {
             this.tablero.insertarFicha(firstDouble);
             System.out.println("se coloco la ficha " + firstDouble + " en el tablero");
+            System.out.println("tablero hasta ahora");
+            System.out.println(tablero.imprimirTren());
         } catch (Exception ex) {
             throw new LogicException(ex.getMessage());
         }
+    }
+    
+    private void putTile(Ficha ficha, String extremo){
+        System.out.println("se podia poner de ambos lados");
+        StringBuilder msj = new StringBuilder("se coloco la ficha "+ficha + " en el extremo ");
+        if(extremo.equals("izquierda")){
+            tablero.insertarFichaIzq(ficha);
+            msj.append("izquierdo del tablero");
+        }else{
+            tablero.insertarFichaDer(ficha);
+            msj.append("derecho del tablero");
+        }
+        System.out.println(msj);
+        System.out.println();
+        System.out.println("tablero hasta ahora");
+        System.out.println(tablero.imprimirTren());
+    }
+    
+    private void putTile(Ficha ficha, JugadaPosible jugada){
+        System.out.println("solo se podia poner de un lado");
+        StringBuilder msj = new StringBuilder("se coloco la ficha "+ficha + " en el extremo ");
+        if(jugada == JugadaPosible.SOLOXIZQUIERDA){
+            tablero.insertarFichaIzq(ficha);
+            msj.append("izquierdo del tablero");
+        }
+        else{
+            tablero.insertarFichaDer(ficha);
+            msj.append("derecho del tablero");
+        }
+        System.out.println(msj);
+        System.out.println("tablero hasta ahora");
+        System.out.println(tablero.imprimirTren());
     }
     
     @Override
@@ -247,7 +363,11 @@ public class TileHandler extends ActivityHandler {
             case DISRTIBUTE_TILES -> handleDistriubteTilesRequest(context);
             case FIRST_DOUBLE -> handleFirstDoubleRequest(activityType,context);
             case PUT_TILE -> handlePutTileRequest(context);
+            case PUT_FIRST_DOUBLE -> handlePutFirstDoubleRequest(context);
+            case CHECK_VALID_TILES -> handleCheckValidTilesRequest(activityType, context);
+            case MAKE_AUTO_MOVE -> handleAutoMoveRequest( context);
             default -> this.nextHandler.handleRequest(activityType, context);
         }
     }
+
 }
