@@ -25,7 +25,10 @@ import utilities.Observable;
 public class PartidaModel extends Observable{
     private Jugador jugador;
     private Partida partida;
+    private boolean jugadorEnTurno;
+    private List<Ficha> fichasValidas;
     private Map<Ficha, ImageView> mapeoFichas;
+    
     private final double externalPanelWidth = 1000;
     private final double externalPanelHeight = 700;
     private final String externalPanelStyle = "-fx-background-color: #186F65;";
@@ -72,6 +75,22 @@ public class PartidaModel extends Observable{
     private final double imgViewBttmRotate = 90.0;
     private final String imgViewBttmResourceName = "/dominos/0-5.png";
 
+    public void setFichasValidas(List<Ficha> fichasValidas){
+        if(jugadorEnTurno()){
+            this.fichasValidas = fichasValidas;
+            this.notifyObservers(fichasValidas);
+        }
+        
+    }
+    
+    public void setJugadorEnTurno(boolean flag){
+        this.jugadorEnTurno = flag;
+    }
+    
+    public boolean jugadorEnTurno(){
+        return jugadorEnTurno;
+    }
+    
     public Partida getPartida() {
         return partida;
     }
@@ -118,28 +137,6 @@ public class PartidaModel extends Observable{
     
     public void setGame(Partida partida) {
         this.partida = partida;
-    }
-
-    /**
-     * establece el manejador del evento de tipo MouseEvent
-     * de los componentes imageView.
-     * Cada vez que se le de click a un imageView, se ejecutara el
-     * codigo definido en el metodo handle
-     * @return el eventHandler creado
-     */
-    public EventHandler<MouseEvent> getEventHandler(){
-        EventHandler<MouseEvent> event = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                System.out.println("source: "+ (ImageView)t.getSource());
-                ImageView imgViewSeleccionado = (ImageView)t.getSource();
-                Ficha ficha = getFichaSeleccionada(imgViewSeleccionado);
-                System.out.println("ficha seleccionada : "+ ficha);
-                //System.out.println("ficha seelccionada");
-                
-            }
-        };
-        return event;
     }
     
     public Jugador getJugador() {

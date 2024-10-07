@@ -3,7 +3,9 @@ package partida;
 import entidades.Ficha;
 import java.util.Map;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import utilities.IEventoConcreto;
 
 /**
@@ -19,13 +21,32 @@ public class PartidaControl implements IEventoConcreto {
     public PartidaControl(PartidaView view, PartidaModel modelo) {
         this.view = view;
         this.modelo = modelo;
-        Map<Ficha,ImageView> mapeo=view.addTile();
+        //agrega las fichas, pasandole un eventHandler que se encargara
+        //de manejar los eventos de cuando la ficha sea seleccionada
+        Map<Ficha,ImageView> mapeo=view.addTile(establecerManejador());
         modelo.actualizarMapeo(mapeo);
         view.btnEjemploEvento(this::saludar);
     }
 
     private void colocarFicha(ActionEvent e){
         modelo.colocarFicha();
+    }
+    
+    
+    private EventHandler<MouseEvent> establecerManejador(){
+        EventHandler<MouseEvent> handler = 
+                new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent t) {
+                System.out.println("source: " + (ImageView) t.getSource());
+                ImageView imgViewSeleccionado = (ImageView) t.getSource();
+                Ficha ficha = modelo.getFichaSeleccionada(imgViewSeleccionado);
+                modelo.getJugador().setFichaSeleccionada(ficha);
+                System.out.println("ficha seleccionada : " + ficha);
+                
+            }
+        };
+        return handler;
     }
     
     @Override

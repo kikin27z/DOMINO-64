@@ -4,6 +4,7 @@ import entidades.Ficha;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
@@ -140,7 +142,7 @@ public class PartidaView implements Observador{
         panelInterior.getChildren().add(fichaJugada);
     }
     
-    public Map<Ficha,ImageView> addTile(){
+    public Map<Ficha,ImageView> addTile(EventHandler<MouseEvent> handler){
         // Crear el ImageView para la segunda imagen
         ImageView imageViewBottom;
         double rotation = modelo.getImgViewBttmRotate();
@@ -155,14 +157,21 @@ public class PartidaView implements Observador{
             imageViewBottom.setLayoutY(modelo.getImageViewBottomLayoutY());
             imageViewBottom.setRotate(rotation);
             rotation+=90;
-            imageViewBottom.setOnMouseClicked(modelo.getEventHandler());
+            //imageViewBottom.setOnMouseClicked(modelo.getEventHandler());
             imageViewBottom.setPickOnBounds(modelo.isImgViewBttmPickedOnBounds()); // Permite que la imagen sea seleccionable
             imageViewBottom.setPreserveRatio(modelo.isImgViewBttmRatioPreserved()); // Mantiene la proporción de la imagen
             imageViewBottom.setImage(new Image(getClass().getResourceAsStream(f.getImgUrl()))); // Ruta de la imagen
             mapeoFichas.put(f, imageViewBottom);
             panelJugador1.getChildren().add(imageViewBottom);
         }
+        setEventHandler(handler);
         return mapeoFichas;
+    }
+    
+    private void setEventHandler(EventHandler<MouseEvent> handler){
+        for(Entry<Ficha,ImageView> entry : mapeoFichas.entrySet()){
+            entry.getValue().setOnMouseClicked(handler);
+        }
     }
     
     public void btnEjemploEvento(EventHandler<ActionEvent> evento){
