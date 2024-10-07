@@ -54,7 +54,7 @@ public class GameHandler extends ActivityHandler implements Runnable{
             }
             
             try {
-                Thread.sleep(20000);
+                Thread.sleep(4000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -91,7 +91,7 @@ public class GameHandler extends ActivityHandler implements Runnable{
                     if(turnManager.isOnTurn()){
                         while(jugador.getFichaSeleccionada() == null){
                             System.out.println("SELECCIONA UNA FICHA");
-                            Thread.sleep(5000);
+                            Thread.sleep(3000);
                         }
                         handleRequest(PUT_TILE, jugador.getFichaSeleccionada());//falta arreglar esto
                         jugador.removerFicha(jugador.getFichaSeleccionada());
@@ -102,10 +102,40 @@ public class GameHandler extends ActivityHandler implements Runnable{
                     handleRequest(MAKE_AUTO_MOVE, turnManager.jugadorEnTurno());
                 }
                 
-                Thread.sleep(10000);
+                Thread.sleep(1000);
                 handleRequest(CHANGE_TURN);
             }
         } catch (InterruptedException | LogicException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    
+    public void runOffline() {
+        System.out.println("hello");
+        
+        try {
+            while(true){
+                handleRequest(CHECK_TURN, jugador);
+                if(turnManager.isOnTurn()){
+                    System.out.println("es tu turno");
+                    handleRequest(CHECK_VALID_TILES, jugador.getFichas());
+                    if(turnManager.isOnTurn()){
+                        while(jugador.getFichaSeleccionada() == null){
+                            System.out.println("SELECCIONA UNA FICHA");
+                        }
+                        handleRequest(PUT_TILE, jugador.getFichaSeleccionada());//falta arreglar esto
+                        jugador.removerFicha(jugador.getFichaSeleccionada());
+                        jugador.setFichaSeleccionada(null);
+                    }
+                }else{
+                    System.out.println(turnManager.jugadorEnTurno());
+                    handleRequest(MAKE_AUTO_MOVE, turnManager.jugadorEnTurno());
+                }
+                
+                handleRequest(CHANGE_TURN);
+            }
+        } catch (LogicException e) {
             System.out.println(e.getMessage());
         }
     }

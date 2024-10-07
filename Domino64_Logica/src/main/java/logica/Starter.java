@@ -23,13 +23,10 @@ public class Starter {
         adapter = new Adapter();
         List<Jugador> jugadores = new ArrayList<>();
         Jugador jugador = new Jugador("Luisa");
-//        jugador.agregarFicha(new Ficha(0,5,"/dominos/0-5.png"));
-//        jugador.agregarFicha(new Ficha(0,3,"/dominos/0-3.png"));
-//        jugador.agregarFicha(new Ficha(0,2,"/dominos/0-2.png"));
         jugadores.add(jugador);
-        jugadores.add(new Jugador("Fer"));
         jugadores.add(new Jugador("Maria"));
-        Partida partida = new Partida("123", jugadores, 4, 3);
+        
+        Partida partida = new Partida("123", jugadores, 7, 2);
         GameHandler handler = newGame(partida, jugador);
         Thread thread = new Thread(handler);
         thread.start();

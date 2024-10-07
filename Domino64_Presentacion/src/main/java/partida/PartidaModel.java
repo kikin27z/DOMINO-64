@@ -5,12 +5,14 @@ import java.util.List;
 import entidades.Jugador;
 import entidades.Partida;
 import entidades.Tablero;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 //import exceptions.DominioException;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -27,7 +29,7 @@ public class PartidaModel extends Observable{
     private Partida partida;
     private boolean jugadorEnTurno;
     private List<Ficha> fichasValidas;
-    private Map<Ficha, ImageView> mapeoFichas;
+    private Map<Canvas, Ficha> mapeoFichas;
     
     private final double externalPanelWidth = 1000;
     private final double externalPanelHeight = 700;
@@ -75,6 +77,15 @@ public class PartidaModel extends Observable{
     private final double imgViewBttmRotate = 90.0;
     private final String imgViewBttmResourceName = "/dominos/0-5.png";
 
+    public PartidaModel() {
+        mapeoFichas = new HashMap<>();
+    }
+
+    public PartidaModel(Jugador jugador, Partida partida) {
+        this.jugador = jugador;
+        this.partida = partida;
+    }
+
     public void setFichasValidas(List<Ficha> fichasValidas){
         if(jugadorEnTurno()){
             this.fichasValidas = fichasValidas;
@@ -94,15 +105,6 @@ public class PartidaModel extends Observable{
     public Partida getPartida() {
         return partida;
     }
-
-    /**
-     * actualiza el mapeo de las fichas con su correspondiente
-     * componente ImageView. 
-     * @param mapeo a establecer en la variable de la clase
-     */
-    public void actualizarMapeo(Map<Ficha,ImageView> mapeo){
-        mapeoFichas= mapeo;
-    }
     
     /**
      * metodo para obtener la ficha seleccionada.
@@ -115,9 +117,10 @@ public class PartidaModel extends Observable{
      */
     public Ficha getFichaSeleccionada(ImageView imgView){
         Ficha fichaSeleccionada = null;
-        for(Entry<Ficha, ImageView> set: mapeoFichas.entrySet()){
+        for(Entry<Canvas,Ficha> set: mapeoFichas.entrySet()){
             if(set.getValue().equals(imgView))
-                fichaSeleccionada = set.getKey();
+//                fichaSeleccionada = set.getKey();
+                fichaSeleccionada = null;
         }
         return fichaSeleccionada;
     }
@@ -298,6 +301,14 @@ public class PartidaModel extends Observable{
 
     public String getImgViewBttmResourceName() {
         return imgViewBttmResourceName;
+    }
+
+    public Map<Canvas, Ficha> getMapeoFichas() {
+        return mapeoFichas;
+    }
+
+    public void setMapeoFichas(Map<Canvas, Ficha> mapeoFichas) {
+        this.mapeoFichas = mapeoFichas;
     }
     
     
