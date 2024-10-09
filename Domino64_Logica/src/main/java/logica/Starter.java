@@ -5,6 +5,8 @@ import entidades.Partida;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import presentacion_utilities.INavegacion;
+import presentacion_utilities.Navegacion;
 import utilities.Adapter;
 import utilities.ViewAdapter;
 
@@ -30,8 +32,12 @@ public class Starter {
         GameHandler handler = newGame(partida, jugador);
         Thread thread = new Thread(handler);
         thread.start();
-        adapter.pintarJuego(partida, jugador);
-        adapter.iniciarJuego();
+        
+        INavegacion nav = Navegacion.getInstance();
+        nav.cambiarInicio();
+        //handler.runOffline();
+//        adapter.pintarJuego(partida, jugador);
+//        adapter.iniciarJuego();
 //        scan = new Scanner(System.in);
 //        System.out.println("elige el tipo de partida:");
 //        System.out.println("1)nueva partida");

@@ -69,11 +69,10 @@ public class TurnHandler extends ActivityHandler{
                 }
             }
         }
-        if(turnPlayer != null){
-            System.out.println("first player: "+turnPlayer);
-            System.out.println("higher double: "+ higherDouble);
-        }
-        //return turnPlayer;
+//        if(turnPlayer != null){
+//            System.out.println("first player: "+turnPlayer);
+//            System.out.println("higher double: "+ higherDouble);
+//        }
     }
     
     public void setFirstTurn(Jugador turnPlayer){
@@ -141,8 +140,10 @@ public class TurnHandler extends ActivityHandler{
     
     private void manejarSolicitudPrimerTurno(){
         setFirstTurn();
+        if(turnPlayer==null){
+            
+        }
         designateOtherTurns();
-        
     }
     
     private void manejarSolicitudPrimeraMula(Object ... context){

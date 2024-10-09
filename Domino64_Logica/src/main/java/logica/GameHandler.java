@@ -31,10 +31,23 @@ public class GameHandler extends ActivityHandler implements Runnable{
         this.jugador = jugador;
         tileManager = new TileHandler(partida.getPozo(),partida.getTablero());
         turnManager = new TurnHandler(partida.getJugadores());
-        this.setNextHandler(tileManager);
-        tileManager.setNextHandler(turnManager);
+        this.setNextHandler(turnManager);
+        turnManager.setNextHandler(tileManager);
     }
 
+    public void init2(){
+        try {
+            handleRequest(DISRTIBUTE_TILES,partida.getFichasPorJugador(), partida.getJugadores());
+            handleRequest(DESIGNATE_FIRST_TURN);
+            if (turnManager.jugadorEnTurno() == null) {
+                handleRequest(FIRST_DOUBLE, partida.getJugadores());
+            } else {
+                handleRequest(PUT_FIRST_DOUBLE, turnManager.getHigherDouble(), turnManager.jugadorEnTurno());
+            }
+        } catch (Exception e) {
+        }
+    }
+    
     public void init(){
         System.out.println("Bienvenidos a la partida");
         System.out.println("se van a repartir las fichas");

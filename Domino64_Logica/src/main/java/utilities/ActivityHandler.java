@@ -12,18 +12,19 @@ import exceptions.LogicException;
  */
 public abstract class ActivityHandler {
     protected ActivityHandler nextHandler;
-    public static final int DISRTIBUTE_TILES = 1;
-    public final static int SELECT_TILE = 2;
-    public final static int CHECK_TURN = 3;
-    public final static int CHANGE_TURN = 4;
-    public final static int PUT_TILE = 5;
-    public static final int DESIGNATE_FIRST_TURN = 6;
-    public static final int FIRST_DOUBLE = 7;
-    public static final int REMOVE_PLAYER = 8;
-    public static final int FINISH_GAME = 9;
-    public static final int CHECK_VALID_TILES = 10;
-    public static final int MAKE_AUTO_MOVE = 11;
-    public static final int PUT_FIRST_DOUBLE = 12;
+    public final int DISRTIBUTE_TILES = 1;
+    public final int SELECT_TILE = 2;
+    public final int CHECK_TURN = 3;
+    public final int CHANGE_TURN = 4;
+    public final int PUT_TILE = 5;
+    public final int DESIGNATE_FIRST_TURN = 6;
+    public final int FIRST_DOUBLE = 7;
+    public final int REMOVE_PLAYER = 8;
+    public final int FINISH_GAME = 9;
+    public final int CHECK_VALID_TILES = 10;
+    public final int MAKE_AUTO_MOVE = 11;
+    public final int PUT_FIRST_DOUBLE = 12;
+    public final int DESIGNATE_OTHER_TURNS = 13;
     
 
     /**

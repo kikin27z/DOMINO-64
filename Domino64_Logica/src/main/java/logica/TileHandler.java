@@ -51,6 +51,7 @@ public class TileHandler extends ActivityHandler {
     
     private final Pozo pozo;
     private final Tablero tablero;
+    private ;
     
     public TileHandler(Pozo pozo, Tablero tablero){
         this.pozo = pozo;
@@ -228,7 +229,6 @@ public class TileHandler extends ActivityHandler {
             System.out.println("jugada invalida");
             nextHandler.handleRequest(CHANGE_TURN);
         }
-        //JugadaPosible jugada = tablero.validarFicha(ficha);
         
     }
    
