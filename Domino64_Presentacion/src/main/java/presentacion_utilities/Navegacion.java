@@ -3,6 +3,7 @@ package presentacion_utilities;
 import inicio.InicioView;
 import java.io.IOException;
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import lobby.LobbyControl;
 import lobby.LobbyModel;
@@ -20,7 +21,7 @@ import partida.PartidaView;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class Navegacion implements INavegacion {
+public class Navegacion extends Application implements INavegacion {
     private Stage fondo; // La ventana principal de la aplicación
     private static Navegacion navegacion; // Instancia única de Navegacion
     private PartidaModel modeloPartida;
@@ -49,16 +50,23 @@ public class Navegacion implements INavegacion {
         Application.launch(App.class); // Inicia la aplicación
     }
 
+    @Override
+    public void start(Stage stage){
+        this.fondo = stage;
+    }
+    
     /**
      * Cambia la vista a la vista de inicio.
-     * 
-     * @throws IOException Si ocurre un error al cargar la vista de inicio.
      */
     @Override
     public void cambiarInicio() {
         try {
+            Application.launch(Navegacion.class);
             InicioView inicio = new InicioView(); // Instancia la vista de inicio
             inicio.iniciarEscena(fondo); // Inicia la escena de inicio
+            Image icon = new Image(getClass().getResourceAsStream("/images/logo.png"));
+            fondo.getIcons().add(icon);
+            fondo.setTitle("Domino 64");
         } catch (IOException ex) {
             ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
         }

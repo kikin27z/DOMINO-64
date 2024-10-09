@@ -31,11 +31,9 @@ public class Adapter implements ViewAdapter{
         navegacion.actualizarPartida(model);
     }
 
-    
-    
     @Override
     public void iniciarJuego() {
-        navegacion.iniciarApp();
+        navegacion.cambiarInicio();
     }
 
     @Override
@@ -49,6 +47,7 @@ public class Adapter implements ViewAdapter{
         GameHandler handler = new GameHandler(partida, jugador);
         Thread thread = new Thread(handler);
         thread.start();
+        
         
     }
 }
