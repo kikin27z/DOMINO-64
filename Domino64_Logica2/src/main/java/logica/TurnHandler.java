@@ -42,6 +42,10 @@ public class TurnHandler implements Observer<NotificadorPresentacion> {
         
     }
 
+    public boolean jugadorSinFichas(){
+        return jugadorEnTurno.getFichas().isEmpty();
+    }
+    
     public void designarPrimerTurno(Jugador primerTurno){
         jugadorEnTurno = primerTurno;
     }

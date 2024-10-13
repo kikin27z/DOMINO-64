@@ -113,17 +113,25 @@ public class IniciarPartida extends AccionBase implements Runnable{
     }
     
     
-    private void colocarFicha(JugadaPosible jugada, Ficha ficha, Jugador jugadorEnTurno) throws LogicException, InterruptedException {
+    private void colocarFicha(JugadaPosible jugada, Ficha ficha) throws LogicException, InterruptedException {
         if (jugada == JugadaPosible.AMBAS) {
             tileHandler.colocarFicha(ficha, "izquierda");//falta arreglar que esto lo indique el jugador en si, no hardcodeado
         } else if (jugada != JugadaPosible.NINGUNA) {
             tileHandler.colocarFicha(ficha, jugada);
         }
-        jugadorEnTurno.removerFicha(ficha);
-        jugadorEnTurno.setFichaSeleccionada(null);
+        
+        System.out.println("");
+        System.out.println("fichas actuales del jugador del game: "+GameHandler.getJugador().getFichas());
+        
+        turnHandler.getJugadorEnTurno().removerFicha(ficha);
+        turnHandler.getJugadorEnTurno().setFichaSeleccionada(null);
         display.enviarPartidaActualizada();
-        if(jugadorEnTurno.equals(GameHandler.getJugador()))
+        System.out.println("jugador en trno??: "+turnHandler.getJugadorEnTurno());
+        if(turnHandler.getJugadorEnTurno().equals(GameHandler.getJugador())){
+            System.out.println("fichas actuales del jugador del game despeus de remover la ficha: "
+                    +"\n"+GameHandler.getJugador().getFichas());
             display.enviarJugadorActualizado();
+        }
     }
 
     private Map<Ficha, JugadaPosible> jugadasPosibles(Jugador jugadorEnTurno) throws InterruptedException, LogicException {
@@ -159,7 +167,7 @@ public class IniciarPartida extends AccionBase implements Runnable{
         Ficha fichaJugada = entry.getKey();
 
         if (jugada != null) {
-            colocarFicha(jugada, fichaJugada, turnHandler.getJugadorEnTurno());
+            colocarFicha(jugada, fichaJugada);
         } else {
             System.out.println("no puedes colocar esta ficha");
         }
@@ -181,10 +189,16 @@ public class IniciarPartida extends AccionBase implements Runnable{
                     display.enviarJugadorActualizado();
             } else {
                 hacerJugadaOffline(fichasValidas);
+                if(turnHandler.jugadorSinFichas()){
+                    break;
+                }else{
+                    turnHandler.cambiarTurno();
+                }
             }
             display.enviarPartidaActualizada();
-            turnHandler.cambiarTurno();
+            //turnHandler.cambiarTurno();
         }
+        System.out.println("el jugador "+turnHandler.getJugadorEnTurno()+" puso todas sus fichas. Ya gano");
     }
     
     private void inicializarManejadores(){
