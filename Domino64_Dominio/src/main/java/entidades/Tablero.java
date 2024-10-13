@@ -1,7 +1,9 @@
 package entidades;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 
 /**
  * La clase Tablero representa el tren de fichas del juego, permitiendo la
@@ -23,6 +25,11 @@ public class Tablero {
         trenFichas = new ArrayDeque<>();
     }
 
+    public List<Ficha> obtenerFichas(){
+        List<Ficha> fichas = new ArrayList<>(trenFichas);
+        return fichas;
+    }
+    
     public boolean tableroVacio(){
         return trenFichas.isEmpty();
     }

@@ -26,12 +26,12 @@ public class Pozo {
      * @return la ficha en el top del stack
      * @throws DominioException si no hay fichas en el pozo
      */
-    public Ficha jalarFicha()throws Exception{
+    public Ficha jalarFicha()throws DominioException{
         if(hayFichas()){
             Ficha ficha = fichas.pop();
             return ficha;
         }
-        throw new Exception("Pozo vacio");
+        throw new DominioException("Pozo vacio");
     }
     
     public boolean hayFichas(){

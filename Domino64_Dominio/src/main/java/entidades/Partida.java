@@ -8,8 +8,6 @@ import exceptions.DominioException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-import java.util.Stack;
 
 /**
  *
@@ -27,18 +25,34 @@ public class Partida {
     private int maxCantidadJugadores;
     
     public Partida(ModoPartida modo){
+        this.jugadores = new ArrayList<>();
         this.modo = modo;
+        this.pozo = new Pozo();
+        this.tablero = new Tablero();
+        this.turnosDesignados = false;
+    }
+    
+    public ModoPartida getModo(){
+        return modo;
+    }
+    
+    public void inicializarPartida(String codigoPartida, Jugador creadorPartida,
+            int fichasPorJugador, int cantidadMaxJugadores){
+        this.codigoPartida = codigoPartida;
+        jugadores.add(creadorPartida);
+        this.fichasPorJugador = fichasPorJugador;
+        this.maxCantidadJugadores = cantidadMaxJugadores;
     }
     
     public Partida(String codigoPartida, List<Jugador> jugadores, 
             int fichasPorJugador, int maxCantidadJugadores){
-        this.jugadores = jugadores;
+        //this.jugadores = jugadores;
         this.codigoPartida=codigoPartida;
-        this.pozo = new Pozo();
-        this.tablero = new Tablero();
+//        this.pozo = new Pozo();
+//        this.tablero = new Tablero();
         this.fichasPorJugador = fichasPorJugador;
         this.maxCantidadJugadores = maxCantidadJugadores;
-        turnosDesignados = false;
+        //turnosDesignados = false;
     }
     
     /**

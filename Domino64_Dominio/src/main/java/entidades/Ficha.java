@@ -26,6 +26,9 @@ public class Ficha {
     public Ficha(int izquierda, int derecha) {
         this.izquierda = izquierda;
         this.derecha = derecha;
+        if(esMula())
+            this.orientacion = Orientacion.VERTICAL;
+        this.orientacion = Orientacion.HORIZONTAL;
     }
 
     
