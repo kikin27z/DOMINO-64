@@ -28,7 +28,7 @@ public class Starter {
         jugadores.add(jugador);
         jugadores.add(new Jugador("Maria"));
         
-        Partida partida = new Partida("123", jugadores, 7, 2);
+        Partida partida = new Partida("123", jugadores, 4, 2);
         GameHandler handler = newGame(partida, jugador);
         Thread thread = new Thread(handler);
         thread.start();
@@ -50,34 +50,6 @@ public class Starter {
     
     
     private static GameHandler newGame(Partida partida, Jugador jugadorInicial){
-//        System.out.println("ingresa tu username:");
-//        String username = scan.next();
-//        
-//        Jugador jugador = new Jugador(username);
-//        List<Jugador> jugadores = new ArrayList<>();
-//        jugadores.add(jugador);
-//        
-//        System.out.println("ingresa el codigo de la partida nueva:");
-//        String codigo = scan.next();
-//        
-//        System.out.println("ingresa la cantidad de jugadores permitidos (minimo 2, maximo 4):");
-//        int cantidadJugadores = scan.nextInt();
-//        
-//        System.out.println("ingresa la cantidad de fichas a repartir por jugador (minimo 2, maximo 7):");
-//        int cantidadFichas = scan.nextInt();
-//        
-//        while(jugadores.size()<cantidadJugadores){
-//            System.out.println("La partida se configuro para "+ cantidadJugadores+" jugadores");
-//            System.out.println("¿Desea agregar otro jugador? Si/No");
-//            String resp = scan.next();
-//            if(resp.equalsIgnoreCase("si")){
-//                System.out.println("Ingresa el username del nuevo jugador:");
-//                String userNuevo = scan.next();
-//                Jugador jugadorNuevo = new Jugador(userNuevo);
-//                jugadores.add(jugadorNuevo);
-//            }
-//        }
-        
         //Partida partida = new Partida(codigo, jugadores, cantidadFichas, cantidadJugadores);
         GameHandler handler = new GameHandler(partida, jugadorInicial);
         handler.init();

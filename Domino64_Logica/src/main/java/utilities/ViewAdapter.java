@@ -14,5 +14,4 @@ import entidades.Partida;
 public interface ViewAdapter {
     public void iniciarJuego();
     public void pintarJuego(Partida partida, Jugador jugador);
-    public void cargarPartida();
 }

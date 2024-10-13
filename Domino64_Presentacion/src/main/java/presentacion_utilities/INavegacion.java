@@ -43,5 +43,6 @@ public interface INavegacion {
     public void actualizarPartida(PartidaDTO partidaActualizada);
     public void actualizarJugador(JugadorDTO jugadorActualizado);
     
-    //public void quitarFicha()
+    public void cambiarOpcionesPartida();
+    
 }

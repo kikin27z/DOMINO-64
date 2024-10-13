@@ -4,11 +4,10 @@ package entidades;
  *
  * @author karim
  */
-public enum ModoPartida {
-    VS_CPU(0),
-    DOS_JUGADORES(2),
-    TRES_JUGADORES(3),
-    CUATRO_JUGADORES(4);
+public enum EstadoPartida {
+    EN_JUEGO(0),
+    GANO_ALGUIEN(2),
+    SE_RINDIERON(3);
 
     private final int modo;
 
@@ -16,7 +15,7 @@ public enum ModoPartida {
      * Constructor para asociar la URL con cada avatar
      * @param url Url del avatar.
      */
-    ModoPartida(int url) {
+    EstadoPartida(int url) {
         this.modo = url;
     }
 

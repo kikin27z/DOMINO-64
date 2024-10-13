@@ -1,47 +1,62 @@
 package inicio;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import presentacion_utilities.INavegacion;
-import presentacion_utilities.Navegacion;
-import presentacion_utilities.NotificadorPresentacion;
+import javafx.scene.input.MouseEvent;
 
 /**
- *
+ * La clase InicioControl actúa como el controlador del patrón MVC (Modelo-Vista-Controlador) 
+ * para la pantalla de inicio del juego de dominó. Su función principal es gestionar la 
+ * interacción entre la vista (InicioView) y el modelo (InicioModel), manejando los eventos 
+ * de los botones que permiten seleccionar el modo de juego.
+ * 
  * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
 public class InicioControl {
-
-    private final NotificadorPresentacion notificador;
+    private InicioView view;
     private InicioModel modelo;
-    private InicioView vista;
-    
-    public InicioControl(InicioModel modelo, InicioView vista) {
+
+    /**
+     * Constructor que inicializa el controlador con la vista y el modelo.
+     * También carga los eventos asociados a la vista.
+     * 
+     * @param view la vista de inicio que será controlada.
+     * @param modelo el modelo de datos asociado a la vista.
+     */
+    public InicioControl(InicioView view, InicioModel modelo) {
+        this.view = view;
         this.modelo = modelo;
-        this.vista = vista;
-        this.notificador = NotificadorPresentacion.getInstance();
-        this.vista.setOnActionSolo(getHandler());//falta el setOnAction de cuando se juega en linea
+        cargarEventos();  // Configura los eventos de los botones.
     }
 
-    public void irLobby(ActionEvent e) {
-        System.out.println("metodo ir lobby");
+    /**
+     * Método privado que configura los eventos para los botones de la vista.
+     * Asocia las acciones de "modo Offline" y "modo Online" con los métodos
+     * correspondientes del controlador.
+     */
+    private void cargarEventos() {
+        view.modoOffline(this::irModoOffline);  // Asigna el evento para el modo Offline.
+        view.modoOnline(this::irModoOnline);    // Asigna el evento para el modo Online.
     }
-    /*
-    crea el handler para el boton de jugar solo (contra la maquina)
-    */
-    public EventHandler<ActionEvent> getHandler() {
-        EventHandler<ActionEvent> handler = new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                //accion asociada al boton de jugar solo
-                modelo.getAcciones().forEach(action->{
-                    action.ejecutarAccion();
-                });
-            }
-        };
-        return handler;
+
+    /**
+     * Método que maneja el evento cuando se selecciona el modo "Offline".
+     * Invoca el método correspondiente en el modelo.
+     * 
+     * @param e el evento de ratón que indica que se ha hecho clic en el botón.
+     */
+    private void irModoOffline(MouseEvent e) {
+        this.modelo.irModoOffline();
+
     }
-//    
+
+    /**
+     * Método que maneja el evento cuando se selecciona el modo "Online".
+     * Invoca el método correspondiente en el modelo.
+     * 
+     * @param e el evento de ratón que indica que se ha hecho clic en el botón.
+     */
+    private void irModoOnline(MouseEvent e) {
+        this.modelo.irModoOnline();
+    }
 }
