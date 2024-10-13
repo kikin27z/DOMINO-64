@@ -8,12 +8,12 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>Domino64_Presentacion</artifactId>
+            <artifactId>Domino64_Dominio</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>Domino64_Dominio</artifactId>
+            <artifactId>Domino64_Presentacion</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
