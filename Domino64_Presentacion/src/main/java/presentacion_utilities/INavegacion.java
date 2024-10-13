@@ -1,5 +1,7 @@
 package presentacion_utilities;
 
+import entidadesDTO.JugadorDTO;
+import entidadesDTO.PartidaDTO;
 import partida.PartidaModel;
 
 /**
@@ -36,9 +38,10 @@ public interface INavegacion {
     
     /**
      * Actualiza la vista de la partida.
-     * @param modelo
+     * @param partidaActualizada
      */
-    public void actualizarPartida(PartidaModel modelo);
+    public void actualizarPartida(PartidaDTO partidaActualizada);
+    public void actualizarJugador(JugadorDTO jugadorActualizado);
     
     //public void quitarFicha()
 }

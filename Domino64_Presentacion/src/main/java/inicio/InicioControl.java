@@ -1,8 +1,10 @@
 package inicio;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import presentacion_utilities.INavegacion;
 import presentacion_utilities.Navegacion;
+import presentacion_utilities.NotificadorPresentacion;
 
 /**
  *
@@ -12,16 +14,34 @@ import presentacion_utilities.Navegacion;
  */
 public class InicioControl {
 
-    private INavegacion navegacion;
-
-    public InicioControl() {
-        this.navegacion = Navegacion.getInstance();
-    }
-
-    public void irPartida(ActionEvent e) {
-        navegacion.cambiarLobby();
-    }
+    private final NotificadorPresentacion notificador;
+    private InicioModel modelo;
+    private InicioView vista;
     
-  
+    public InicioControl(InicioModel modelo, InicioView vista) {
+        this.modelo = modelo;
+        this.vista = vista;
+        this.notificador = NotificadorPresentacion.getInstance();
+        this.vista.setOnActionSolo(getHandler());//falta el setOnAction de cuando se juega en linea
+    }
 
+    public void irLobby(ActionEvent e) {
+        System.out.println("metodo ir lobby");
+    }
+    /*
+    crea el handler para el boton de jugar solo (contra la maquina)
+    */
+    public EventHandler<ActionEvent> getHandler() {
+        EventHandler<ActionEvent> handler = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                //accion asociada al boton de jugar solo
+                modelo.getAcciones().forEach(action->{
+                    action.ejecutarAccion();
+                });
+            }
+        };
+        return handler;
+    }
+//    
 }

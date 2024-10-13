@@ -1,7 +1,10 @@
 package partida;
 
-import entidades.Ficha;
+//import entidades.Ficha;
+import entidadesDTO.FichaDTO;
+import entidadesDTO.JugadorDTO;
 import java.util.Map;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
@@ -21,17 +24,39 @@ public class PartidaControl  {
     public PartidaControl(PartidaView view, PartidaModel modelo) {
         this.view = view;
         this.modelo = modelo;
+        System.out.println("modelo en control");
+        System.out.println(modelo.getJugador());
+        System.out.println(modelo.getPartida().getJugadores());
         modelo.setMapeoFichas(view.addTile(getEventHandler()));
+        System.out.println("se pusiseron las fichas");
         colocarPrimeraMula();
     }
 
     private void colocarPrimeraMula(){
         if (modelo.obtenerPrimeraMulaTablero() != null) {
-            Ficha mula = modelo.obtenerPrimeraMulaTablero();
+            FichaDTO mula = modelo.obtenerPrimeraMulaTablero();
+            System.out.println("primera mula: "+mula);
             Canvas mulaDibujo = view.dibujarPrimeraMula(mula.getIzquierda(), mula.getDerecha(), 500, 600);
-            Map.Entry<Canvas, Ficha> entry = Map.entry(mulaDibujo, mula);
+            Map.Entry<Canvas, FichaDTO> entry = Map.entry(mulaDibujo, mula);
             modelo.actualizarMapeoFichasJugadas(entry);
+            System.out.println("fichas jugadas: "+modelo.getMapeoFichasJugadas());
         }
+    }
+    
+    private EventHandler<MouseEvent> getEventHandler() {
+        EventHandler<MouseEvent> event = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent t) {
+                Canvas canvas = (Canvas) t.getSource();
+                FichaDTO fichaSeleccionada = modelo.getFichaSeleccionada(canvas);
+                System.out.println("ficha selec: "+fichaSeleccionada);
+                modelo.setFichaSeleccionada(fichaSeleccionada);
+                Platform.runLater(()->{
+                    view.iluminarFicha(canvas);
+                });
+            }
+        };
+        return event;
     }
     
     private void colocarFicha(ActionEvent e){
@@ -48,19 +73,4 @@ public class PartidaControl  {
         
     }
     
-    private EventHandler<MouseEvent> getEventHandler(){
-        EventHandler<MouseEvent> event = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                Canvas canvas = (Canvas)t.getSource();
-                Ficha fichaSeleccionada = modelo.getFichaSeleccionada(canvas);
-                modelo.getJugador().setFichaSeleccionada(fichaSeleccionada);
-            }
-        };
-        return event;
-    }
-    
-    private void dibujarTablero(){
-        
-    }
 }

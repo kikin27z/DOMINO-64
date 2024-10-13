@@ -1,6 +1,8 @@
 package partida;
 
-import entidades.Ficha;
+//import entidades.Ficha;
+import com.mycompany.patrones.observer.Observer;
+import entidadesDTO.FichaDTO;
 import java.io.IOException;
 import java.util.List;
 import javafx.geometry.Insets;
@@ -26,8 +28,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import presentacion_utilities.Observable;
-import presentacion_utilities.Observador;
 
 /**
  * Clase que representa la vista de la partida en la aplicación. Esta clase se
@@ -38,8 +38,8 @@ import presentacion_utilities.Observador;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class PartidaView implements Observador {
-
+public class PartidaView implements Observer<PartidaModel>{
+    private boolean fichasCreadas;
     private PartidaModel modelo;
     private AnchorPane panelExterior; // Panel exterior que contiene todos los elementos visuales
     private AnchorPane panelInterior;  // Panel interno que se desplaza dentro del ScrollPane
@@ -47,7 +47,7 @@ public class PartidaView implements Observador {
     private ScrollPane scrollPanel;     // Panel con capacidad de desplazamiento
     private Button btnEjemplo;
     private List<Canvas> mazo;
-    private Map<Canvas,Ficha> mapeoFichas;
+    private Map<Canvas,FichaDTO> mapeoFichas;
 
     public PartidaView(PartidaModel modelo) {
         this.modelo = modelo;
@@ -157,7 +157,10 @@ public class PartidaView implements Observador {
     }
     
     public void agregarDominoMazo(Canvas ficha){
-        panelJugador1.getChildren().add(ficha);
+        if(panelJugador1.getChildren().add(ficha))
+            System.out.println("se agrego al panel");
+        else
+            System.out.println("no se agrego");
     }
     
     public void getEventHandler() {
@@ -166,9 +169,14 @@ public class PartidaView implements Observador {
 
     public Canvas crearDomino(int izquierda, int derecha,EventHandler<MouseEvent> evento){
         Canvas ficha = DominoDraw.dibujarFicha(izquierda, derecha, DominoDraw.Orientation.VERTICAL);
+        System.out.println("canvas: "+ficha.toString());
         ficha.setOnMouseClicked(evento);
         agregarDominoMazo(ficha);
         return ficha;
+    }
+    
+    protected void iluminarFicha(Canvas canva){
+        canva.getGraphicsContext2D().setFill(Color.BLUEVIOLET);
     }
     
     public Canvas dibujarPrimeraMula(int izquierda, int derecha,int x, int y){
@@ -182,23 +190,15 @@ public class PartidaView implements Observador {
         panelJugador1.getChildren().add(ficha);
     }
     
-    public Map<Canvas,Ficha> addTile(EventHandler<MouseEvent> evento){
-        // Crear el ImageView para la segunda imagen
-        Map<Canvas,Ficha> mapeo = new HashMap<>();
-        for(Ficha ficha: modelo.getFichasDelJugador()){
+    public Map<Canvas,FichaDTO> addTile(EventHandler<MouseEvent> evento){
+        Map<Canvas,FichaDTO> mapeo = new HashMap<>();
+        for(FichaDTO ficha: modelo.getFichasDelJugador()){
             Canvas fichaDibujo = crearDomino(ficha.getIzquierda(), ficha.getDerecha(), evento);
             mapeo.put(fichaDibujo,ficha);
-        } 
-        return mapeo;
-    }
-
-    @Override
-    public void actualizarTablero(Observable ob, Object... context) {
-        double layoutX = 0;
-        for (Object object : context) {
-            layoutX = (double) object;
         }
-        ponerFichaEnTablero(layoutX);
+        if(!mapeo.isEmpty())
+            fichasCreadas = true;
+        return mapeo;
     }
 
     private Canvas dibujarFicha(int izquierda, int derecha, double layoutX, double layoutY) {
@@ -393,13 +393,32 @@ public class PartidaView implements Observador {
         panelExterior.getChildren().addAll(topPanel, rightPanel, leftPanel);
     }
 
-    public Map<Canvas, Ficha> getMapeoFichas() {
+    public Map<Canvas, FichaDTO> getMapeoFichas() {
         return mapeoFichas;
     }
 
-    public void setMapeoFichas(Map<Canvas, Ficha> mapeoFichas) {
+    public void setMapeoFichas(Map<Canvas, FichaDTO> mapeoFichas) {
         this.mapeoFichas = mapeoFichas;
     }
     
+
+    @Override
+    public void update(PartidaModel observable, Object ... context) {
+        int accion = (int)context[0];
+        if(accion == observable.JUGADOR_ACTUALIZADO){
+            System.out.println("jugador actualiazdooo");
+            if(!fichasCreadas){
+                System.out.println("fichas nooo creadas");
+                //addTile(modelo.getEventHandler());
+            }else{
+                
+                System.out.println("fichas creadas?");
+            }
+        }else if(accion == observable.PARTIDA_ACTUALIZADA){
+            System.out.println("partidaaaaa actualizadaaaaaaaa");
+        }else if(accion == observable.FICHA_SELECCIONADA){
+            System.out.println("hola");
+        }
+    }
     
 }
