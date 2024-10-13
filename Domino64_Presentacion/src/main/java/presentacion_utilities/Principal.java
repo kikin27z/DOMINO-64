@@ -1,8 +1,6 @@
 package presentacion_utilities;
 
-import partida.PartidaControl;
-import partida.PartidaModel;
-import partida.PartidaView;
+import dtos.avatar.AvatarDTO;
 
 /**
  *
@@ -10,10 +8,8 @@ import partida.PartidaView;
  */
 public class Principal {
     public static void main(String[] args) {
-        
-        PartidaModel modelo = new PartidaModel();
         INavegacion navegacion = Navegacion.getInstance();
         navegacion.iniciarApp();
-        
+                
     }
 }

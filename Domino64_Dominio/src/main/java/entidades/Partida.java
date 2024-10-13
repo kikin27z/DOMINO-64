@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidades;
 
 import exceptions.DominioException;
@@ -19,15 +15,15 @@ public class Partida {
     private Pozo pozo;
     private Tablero tablero;
     private List<Jugador> jugadores;
-    private ModoPartida modo;
+    private EstadoPartida estado;
     private boolean turnosDesignados;
     private String codigoPartida;
     private Jugador jugadorEnTurno;
     private int fichasPorJugador;
     private int maxCantidadJugadores;
     
-    public Partida(ModoPartida modo){
-        this.modo = modo;
+    public Partida(EstadoPartida estado){
+        this.estado = estado;
     }
     
     public Partida(String codigoPartida, List<Jugador> jugadores, 

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.effect.BoxBlur?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #186F65;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="opciones_partida.OpcionesPartidaControl">
+   <children>
+      <ImageView fitHeight="150.0" fitWidth="70.0" layoutX="36.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/btnVolver.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <HBox layoutX="116.0" layoutY="150.0" maxHeight="480.0" maxWidth="772.0" prefHeight="480.0" prefWidth="772.0" spacing="31.0">
+         <children>
+            <AnchorPane maxWidth="370.0" prefHeight="200.0" prefWidth="370.0">
+               <children>
+                  <Circle fill="#d9d9d9" layoutX="178.0" layoutY="201.0" radius="147.0" stroke="#5c4033" strokeDashOffset="21.0" strokeLineCap="BUTT" strokeType="INSIDE" strokeWidth="3.0">
+                     <effect>
+                        <BoxBlur />
+                     </effect>
+                  </Circle>
+                  <Button layoutX="5.0" layoutY="362.0" maxWidth="360.0" mnemonicParsing="false" prefWidth="360.0" style="-fx-background-color: #B2533E; -fx-background-radius: 10;" text="Nueva partida" textFill="WHITE">
+                     <font>
+                        <Font name="Russo One" size="35.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <ImageView fitHeight="280.0" fitWidth="280.0" layoutX="53.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/nuevaPartida.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="140.0" fitWidth="140.0" layoutX="29.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/mas.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+            <AnchorPane maxWidth="370.0" prefHeight="200.0" prefWidth="370.0" />
+            <AnchorPane maxWidth="370.0" prefHeight="200.0" prefWidth="370.0">
+               <children>
+                  <Circle fill="#d9d9d9" layoutX="178.0" layoutY="201.0" radius="147.0" stroke="#5c4033" strokeDashOffset="21.0" strokeLineCap="BUTT" strokeType="INSIDE" strokeWidth="3.0">
+                     <effect>
+                        <BoxBlur />
+                     </effect>
+                  </Circle>
+                  <Button layoutX="5.0" layoutY="362.0" maxWidth="360.0" mnemonicParsing="false" prefWidth="360.0" style="-fx-background-color: #B2533E; -fx-background-radius: 10;" text="Nueva partida" textFill="WHITE">
+                     <font>
+                        <Font name="Russo One" size="35.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <ImageView fitHeight="280.0" fitWidth="280.0" layoutX="42.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/unirsePartida.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+         </children>
+      </HBox>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="863.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+         <image>
+            <Image url="@../images/fichas.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

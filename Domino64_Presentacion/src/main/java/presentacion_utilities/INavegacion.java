@@ -39,4 +39,6 @@ public interface INavegacion {
      */
     public void actualizarPartida(PartidaModel modelo);
     
+    public void cambiarOpcionesPartida();
+    
 }

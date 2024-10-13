@@ -1,39 +1,42 @@
 package entidades;
 
 /**
- * Enum que representa distintos tipos de avatares con su respectiva URL.
+ * Enumeración que representa los avatares disponibles en el juego.
+ * Cada avatar tiene un identificador único (url) que puede utilizarse para
+ * acceder a la representación visual del avatar.
  * 
  * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
 public enum Avatar {
-    AVE("/avatar/ave.png"),
-    GATO("/avatar/gato.png"),
-    JAGUAR("/avatar/jaguar.png"),
-    KIWI("/avatar/kiwi.png"),
-    MARIPOSA("/avatar/mariposa.png"),
-    PANDA("/avatar/panda.png"),
-    SERPIENTE("/avatar/serpiente.png"),
-    TORTUGA("/avatar/tortuga.png"),
-    VENADO("/avatar/venado.png");
+    AVE(0),       
+    GATO(1),       
+    JAGUAR(2),     
+    KIWI(3),      
+    MARIPOSA(4),   
+    PANDA(5),     
+    SERPIENTE(6),  
+    TORTUGA(7),
+    VENADO(8);     
 
-    private final String url;
+    private final int url;  
 
     /**
-     * Constructor para asociar la URL con cada avatar
-     * @param url Url del avatar.
+     * Constructor de la enumeración AvatarDTO.
+     * 
+     * @param url el identificador único del avatar.
      */
-    Avatar(String url) {
-        this.url = url;
+    Avatar(int url) {
+        this.url = url; 
     }
 
     /**
-     * Método para obtener la URL asociada al avatar.
+     * Obtiene el identificador único del avatar.
      * 
-     * @return URL del avatar.
+     * @return el identificador del avatar.
      */
-    public String getUrl() {
-        return url;
+    public int getUrl() {
+        return url;  
     }
 }

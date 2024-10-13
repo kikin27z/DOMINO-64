@@ -1,11 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidades;
 
 import exceptions.DominioException;
-import java.util.List;
 import java.util.Stack;
 
 /**
@@ -26,12 +21,12 @@ public class Pozo {
      * @return la ficha en el top del stack
      * @throws DominioException si no hay fichas en el pozo
      */
-    public Ficha jalarFicha()throws Exception{
+    public Ficha jalarFicha(){
         if(hayFichas()){
             Ficha ficha = fichas.pop();
             return ficha;
         }
-        throw new Exception("Pozo vacio");
+        return null;
     }
     
     public boolean hayFichas(){

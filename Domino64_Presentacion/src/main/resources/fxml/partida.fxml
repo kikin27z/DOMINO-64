@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -8,6 +9,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane id="AnchorPane" fx:id="fondo" maxHeight="700.0" maxWidth="1000.0" minHeight="700.0" minWidth="1000.0" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #186F65;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="partida.PartidaControl">
@@ -79,8 +81,79 @@
             <Insets bottom="-12.0" left="20.0" />
          </padding>
          <children>
+            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/btnVolver.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
             <Button maxHeight="98.0" maxWidth="55.0" minHeight="98.0" minWidth="55.0" mnemonicParsing="false" prefHeight="98.0" prefWidth="55.0" text="Button" translateY="-24.0" HBox.hgrow="ALWAYS" />
+            <ImageView fitHeight="50.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+               <image>
+                  <Image url="@../images/btnVolver.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
          </children>
       </HBox>
+      <StackPane layoutX="15.0" layoutY="12.0" prefHeight="60.0" prefWidth="60.0">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 100; -fx-background-color: #d9d9d9; -fx-border-color: #2F1C1C; -fx-border-radius: 90;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/rendirse.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+         </children>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </StackPane>
+      <StackPane layoutX="930.0" layoutY="12.0" prefHeight="60.0" prefWidth="60.0">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 100; -fx-background-color: #d9d9d9; -fx-border-color: #2F1C1C; -fx-border-radius: 90;" />
+            <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/btnPausa.png" />
+               </image>
+            </ImageView>
+         </children>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </StackPane>
+      <StackPane layoutX="23.0" layoutY="546.0">
+         <children>
+            <ImageView fitHeight="130.0" fitWidth="78.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/pozoIndicador.png" />
+               </image>
+            </ImageView>
+            <Label graphicTextGap="0.0" text="jo" textFill="#790000" translateY="-30.0" underline="true" wrapText="true">
+               <font>
+                  <Font name="Russo One" size="23.0" />
+               </font>
+            </Label>
+         </children>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </StackPane>
+      <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="835.0" layoutY="536.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../avatar/jaguar.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

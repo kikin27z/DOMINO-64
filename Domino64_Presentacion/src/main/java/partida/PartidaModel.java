@@ -94,7 +94,7 @@ public class PartidaModel extends Observable{
     public void setFichasValidas(List<Ficha> fichasValidas){
         if(jugadorEnTurno()){
             this.fichasValidas = fichasValidas;
-            this.notifyObservers(fichasValidas);
+//            this.notifyObservers(fichasValidas);
         }
         
     }
@@ -163,7 +163,7 @@ public class PartidaModel extends Observable{
         ponerFichaEnTablero(ultimaFicha);
         double imgViewLayoutX = imageViewLayoutX+50;
         //double imgViewLayoutY = imageViewLayoutY+50;
-        this.notifyObservers(imgViewLayoutX);
+//        this.notifyObservers(imgViewLayoutX);
     }
     
     public List<Ficha> getFichasDelJugador(){

@@ -1,5 +1,7 @@
 package presentacion_utilities;
 
+import inicio.InicioControl;
+import inicio.InicioModel;
 import inicio.InicioView;
 import java.io.IOException;
 import javafx.application.Application;
@@ -7,20 +9,24 @@ import javafx.stage.Stage;
 import lobby.LobbyControl;
 import lobby.LobbyModel;
 import lobby.LobbyView;
+import opciones_partida.OpcionesPartidaControl;
+import opciones_partida.OpcionesPartidaModel;
+import opciones_partida.OpcionesPartidaView;
 import partida.PartidaControl;
 import partida.PartidaModel;
 import partida.PartidaView;
 
 /**
  * Clase que gestiona la navegación entre diferentes vistas de la aplicación.
- * Esta clase implementa el patrón Singleton para asegurar que solo haya
- * una instancia de navegación a lo largo de la aplicación.
- * 
+ * Esta clase implementa el patrón Singleton para asegurar que solo haya una
+ * instancia de navegación a lo largo de la aplicación.
+ *
  * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
 public class Navegacion implements INavegacion {
+
     private Stage fondo; // La ventana principal de la aplicación
     private static Navegacion navegacion; // Instancia única de Navegacion
     private PartidaModel modeloPartida;
@@ -31,7 +37,7 @@ public class Navegacion implements INavegacion {
 
     /**
      * Obtiene la instancia única de Navegacion.
-     * 
+     *
      * @return La instancia de Navegacion.
      */
     public static Navegacion getInstance() {
@@ -51,14 +57,16 @@ public class Navegacion implements INavegacion {
 
     /**
      * Cambia la vista a la vista de inicio.
-     * 
+     *
      * @throws IOException Si ocurre un error al cargar la vista de inicio.
      */
     @Override
     public void cambiarInicio() {
         try {
-            InicioView inicio = new InicioView(); // Instancia la vista de inicio
-            inicio.iniciarEscena(fondo); // Inicia la escena de inicio
+            InicioModel modelo = new InicioModel();
+            InicioView view = new InicioView(modelo);
+            view.iniciarEscena(fondo); // Inicia la escena de inicio
+            InicioControl inicio = new InicioControl(view, modelo); // Instancia la vista de inicio
         } catch (IOException ex) {
             ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
         }
@@ -66,7 +74,7 @@ public class Navegacion implements INavegacion {
 
     /**
      * Cambia la vista a la vista del lobby.
-     * 
+     *
      * @throws IOException Si ocurre un error al cargar la vista del lobby.
      */
     @Override
@@ -83,7 +91,7 @@ public class Navegacion implements INavegacion {
 
     /**
      * Establece la ventana principal de la aplicación.
-     * 
+     *
      * @param fondo La ventana principal (Stage) donde se mostrará la escena.
      */
     public void setFondo(Stage fondo) {
@@ -92,7 +100,7 @@ public class Navegacion implements INavegacion {
 
     /**
      * Cambia la vista a la vista de la partida.
-     * 
+     *
      * @throws IOException Si ocurre un error al cargar la vista de la partida.
      */
     @Override
@@ -109,5 +117,17 @@ public class Navegacion implements INavegacion {
     @Override
     public void actualizarPartida(PartidaModel modelo) {
         this.modeloPartida = modelo;
+    }
+
+    @Override
+    public void cambiarOpcionesPartida() {
+        try {
+            OpcionesPartidaModel modelo = new OpcionesPartidaModel();
+            OpcionesPartidaView view = new OpcionesPartidaView(modelo); // Instancia la vista de la partida
+            view.iniciarEscena(fondo); // Inicia la escena de la partida
+            OpcionesPartidaControl control = new OpcionesPartidaControl(view, modelo);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
