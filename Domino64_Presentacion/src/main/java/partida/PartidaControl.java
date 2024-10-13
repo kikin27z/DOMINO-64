@@ -27,7 +27,7 @@ public class PartidaControl  {
         System.out.println("modelo en control");
         System.out.println(modelo.getJugador());
         System.out.println(modelo.getPartida().getJugadores());
-        modelo.setMapeoFichas(view.addTile(getEventHandler()));
+        modelo.setMapeoFichas(view.addTile(modelo.getEventHandler()));
         System.out.println("se pusiseron las fichas");
         colocarPrimeraMula();
     }
@@ -51,9 +51,9 @@ public class PartidaControl  {
                 FichaDTO fichaSeleccionada = modelo.getFichaSeleccionada(canvas);
                 System.out.println("ficha selec: "+fichaSeleccionada);
                 modelo.setFichaSeleccionada(fichaSeleccionada);
-                Platform.runLater(()->{
-                    view.iluminarFicha(canvas);
-                });
+//                Platform.runLater(()->{
+//                    view.iluminarFicha(canvas);
+//                });
             }
         };
         return event;

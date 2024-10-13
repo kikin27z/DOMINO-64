@@ -409,9 +409,17 @@ public class PartidaView implements Observer<PartidaModel>{
             System.out.println("jugador actualiazdooo");
             if(!fichasCreadas){
                 System.out.println("fichas nooo creadas");
-                //addTile(modelo.getEventHandler());
             }else{
-                
+                //falta cambiar esto:
+                //distinguir las actualizaciones del jugador,
+                //cuando se le agrega y cuando se le quita una ficha
+                //para que se pinten y borren las fichas del panel
+                List<FichaDTO> fichasActuales = modelo.getJugador().getFichas();
+                FichaDTO nuevaFicha = fichasActuales.getLast();
+                Platform.runLater(()->{
+                    Canvas canva = crearDomino(nuevaFicha.getIzquierda(), nuevaFicha.getDerecha(), modelo.getEventHandler());
+                    modelo.getMapeoFichas().put(canva,nuevaFicha);
+                });
                 System.out.println("fichas creadas?");
             }
         }else if(accion == observable.PARTIDA_ACTUALIZADA){

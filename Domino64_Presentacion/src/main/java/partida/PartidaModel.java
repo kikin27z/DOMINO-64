@@ -112,6 +112,22 @@ public class PartidaModel extends Observable<PartidaModel>{
         }
     }
     
+    protected EventHandler<MouseEvent> getEventHandler() {
+        EventHandler<MouseEvent> event = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent t) {
+                Canvas canvas = (Canvas) t.getSource();
+                FichaDTO fichaSeleccionada = getFichaSeleccionada(canvas);
+                System.out.println("ficha selec: " + fichaSeleccionada);
+                setFichaSeleccionada(fichaSeleccionada);
+//                Platform.runLater(()->{
+//                    view.iluminarFicha(canvas);
+//                });
+            }
+        };
+        return event;
+    }
+    
     public void setJugadorEnTurno(boolean flag){
         this.jugadorEnTurno = flag;
     }
