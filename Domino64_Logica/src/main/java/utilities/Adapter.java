@@ -26,8 +26,8 @@ public class Adapter implements ViewAdapter{
     @Override
     public void pintarJuego(Partida partida, Jugador jugador) {
         PartidaModel model = new PartidaModel();
-        model.setGame(partida);
-        model.setJugador(jugador);
+//        model.setGame(partida);
+//        model.setJugador(jugador);
         navegacion.actualizarPartida(model);
     }
 

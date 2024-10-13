@@ -51,7 +51,6 @@ public class TileHandler extends ActivityHandler {
     
     private final Pozo pozo;
     private final Tablero tablero;
-    private ;
     
     public TileHandler(Pozo pozo, Tablero tablero){
         this.pozo = pozo;
