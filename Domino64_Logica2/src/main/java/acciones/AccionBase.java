@@ -1,6 +1,6 @@
 package acciones;
 
-import com.mycompany.patrones.command.Accion;
+import patrones.command.Accion;
 import com.mycompany.starter.Display;
 import logica.GameHandler;
 import logica.TileHandler;

@@ -1,7 +1,7 @@
 package partida;
 
 //import entidades.Ficha;
-import com.mycompany.patrones.observer.Observer;
+import patrones.observer.Observer;
 import entidadesDTO.FichaDTO;
 import java.io.IOException;
 import java.util.List;
@@ -162,16 +162,16 @@ public class PartidaView implements Observer<PartidaModel>{
         panelJugador1.getChildren().add(ficha);
     }
 
-    public Map<Canvas, Ficha> addTile(EventHandler<MouseEvent> evento) {
-        // Crear el ImageView para la segunda imagen
-        for (Ficha ficha : modelo.getFichasDelJugador()) {
-            Canvas fichaDibujo = crearDomino(ficha.getIzquierda(), ficha.getDerecha(), evento);
-            modelo.getMapeoFichas().put(fichaDibujo, ficha);
-
-            agregarDominoMazo(fichaDibujo);
-        }
-        return modelo.getMapeoFichas();
-    }
+//    public Map<Canvas, Ficha> addTile(EventHandler<MouseEvent> evento) {
+//        // Crear el ImageView para la segunda imagen
+//        for (Ficha ficha : modelo.getFichasDelJugador()) {
+//            Canvas fichaDibujo = crearDomino(ficha.getIzquierda(), ficha.getDerecha(), evento);
+//            modelo.getMapeoFichas().put(fichaDibujo, ficha);
+//
+//            agregarDominoMazo(fichaDibujo);
+//        }
+//        return modelo.getMapeoFichas();
+//    }
     
     private void insertarMesaAba(AnchorPane panelExterior){
         panelJugador1 = new HBox();
@@ -205,24 +205,24 @@ public class PartidaView implements Observer<PartidaModel>{
         btnEjemplo.setOnAction(evento);
     }
     
-    public void agregarDominoMazo(Canvas ficha){
-        if(panelJugador1.getChildren().add(ficha))
-            System.out.println("se agrego al panel");
-        else
-            System.out.println("no se agrego");
-    }
+//    public void agregarDominoMazo(Canvas ficha){
+//        if(panelJugador1.getChildren().add(ficha))
+//            System.out.println("se agrego al panel");
+//        else
+//            System.out.println("no se agrego");
+//    }
     
     public void getEventHandler() {
 
     }
 
-    public Canvas crearDomino(int izquierda, int derecha,EventHandler<MouseEvent> evento){
-        Canvas ficha = DominoDraw.dibujarFicha(izquierda, derecha, DominoDraw.Orientation.VERTICAL);
-        System.out.println("canvas: "+ficha.toString());
-        ficha.setOnMouseClicked(evento);
-        agregarDominoMazo(ficha);
-        return ficha;
-    }
+//    public Canvas crearDomino(int izquierda, int derecha,EventHandler<MouseEvent> evento){
+//        Canvas ficha = DominoDraw.dibujarFicha(izquierda, derecha, DominoDraw.Orientation.VERTICAL);
+//        System.out.println("canvas: "+ficha.toString());
+//        ficha.setOnMouseClicked(evento);
+//        agregarDominoMazo(ficha);
+//        return ficha;
+//    }
     
     protected void iluminarFicha(Canvas canva){
         canva.getGraphicsContext2D().setFill(Color.BLUEVIOLET);
@@ -234,10 +234,10 @@ public class PartidaView implements Observer<PartidaModel>{
         return ficha;
     }
     
-    public void quitarDominoMazo(int izquierda, int derecha){
-        Canvas ficha = DominoDraw.dibujarFicha(izquierda, derecha, DominoDraw.Orientation.VERTICAL);
-        panelJugador1.getChildren().add(ficha);
-    }
+//    public void quitarDominoMazo(int izquierda, int derecha){
+//        Canvas ficha = DominoDraw.dibujarFicha(izquierda, derecha, DominoDraw.Orientation.VERTICAL);
+//        panelJugador1.getChildren().add(ficha);
+//    }
     
     public Map<Canvas,FichaDTO> addTile(EventHandler<MouseEvent> evento){
         Map<Canvas,FichaDTO> mapeo = new HashMap<>();
@@ -399,14 +399,14 @@ public class PartidaView implements Observer<PartidaModel>{
         rightPanel.getChildren().add(rightBirdImageView);
 
         // Left Panel (Player 2)
-        mazoIzq = new AnchorPane();
-        mazoIzq.setId("jugador3");
-        mazoIzq.setLayoutX(10);
-        mazoIzq.setLayoutY(210);
-        mazoIzq.setPrefSize(98, 234);
-        mazoIzq.setMinSize(98, 234);
-        mazoIzq.setMaxSize(98, 234);
-        mazoIzq.setStyle("-fx-background-color: #B2533E; -fx-background-radius: 20; -fx-border-color: #000000; -fx-border-radius: 20;");
+//        mazoIzq = new AnchorPane();
+//        mazoIzq.setId("jugador3");
+//        mazoIzq.setLayoutX(10);
+//        mazoIzq.setLayoutY(210);
+//        mazoIzq.setPrefSize(98, 234);
+//        mazoIzq.setMinSize(98, 234);
+//        mazoIzq.setMaxSize(98, 234);
+//        mazoIzq.setStyle("-fx-background-color: #B2533E; -fx-background-radius: 20; -fx-border-color: #000000; -fx-border-radius: 20;");
 
         ImageView leftBirdImageView = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
         leftBirdImageView.setId("jugador3");
@@ -416,7 +416,7 @@ public class PartidaView implements Observer<PartidaModel>{
         leftBirdImageView.setLayoutY(-34);
         leftBirdImageView.setPickOnBounds(true);
         leftBirdImageView.setPreserveRatio(true);
-        mazoIzq.getChildren().add(leftBirdImageView);
+//        mazoIzq.getChildren().add(leftBirdImageView);
 
         ImageView leftDeckImageView = new ImageView(new Image(getClass().getResourceAsStream("/images/mazoJugador.png")));
         leftDeckImageView.setFitHeight(100);
@@ -426,7 +426,7 @@ public class PartidaView implements Observer<PartidaModel>{
         leftDeckImageView.setPickOnBounds(true);
         leftDeckImageView.setPreserveRatio(true);
         leftDeckImageView.setRotate(90);
-        mazoIzq.getChildren().add(leftDeckImageView);
+//        mazoIzq.getChildren().add(leftDeckImageView);
 
         Label leftPlayerCountLabel = new Label("6");
         leftPlayerCountLabel.setAlignment(Pos.CENTER);
@@ -437,9 +437,9 @@ public class PartidaView implements Observer<PartidaModel>{
         leftPlayerCountLabel.setMaxSize(60, 60);
         leftPlayerCountLabel.setTextFill(Color.WHITE);
         leftPlayerCountLabel.setFont(new Font("Verdana Bold", 40));
-        mazoIzq.getChildren().add(leftPlayerCountLabel);
-
-        panelExterior.getChildren().add(mazoIzq);
+//        mazoIzq.getChildren().add(leftPlayerCountLabel);
+//
+//        panelExterior.getChildren().add(mazoIzq);
     }
 
     public Map<Canvas, FichaDTO> getMapeoFichas() {

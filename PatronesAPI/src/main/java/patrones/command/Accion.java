@@ -1,4 +1,4 @@
-package com.mycompany.patrones.command;
+package patrones.command;
 
 /**
  *

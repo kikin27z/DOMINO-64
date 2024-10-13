@@ -4,7 +4,7 @@
  */
 package presentacion_utilities;
 
-import com.mycompany.patrones.command.Accion;
+import patrones.command.Accion;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaDTO;
 import java.util.List;

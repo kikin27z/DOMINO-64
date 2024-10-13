@@ -1,6 +1,6 @@
 package presentacion_utilities;
 
-import dtos.avatar.AvatarDTO;
+import entidadesDTO.AvatarDTO;
 
 /**
  *

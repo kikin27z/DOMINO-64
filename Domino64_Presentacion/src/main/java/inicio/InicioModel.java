@@ -1,5 +1,8 @@
 package inicio;
 
+import java.util.List;
+import patrones.command.Accion;
+
 /**
  * La clase InicioModel representa el modelo en el patrón MVC (Modelo-Vista-Controlador) 
  * para la pantalla de inicio del juego de dominó. Su función es gestionar la lógica 
@@ -11,6 +14,14 @@ package inicio;
  */
 public class InicioModel {
     private List<Accion> acciones;
+
+    public InicioModel() {
+    }
+
+    public void setAcciones(List<Accion> acciones) {
+        this.acciones = acciones;
+    }
+    
     /**
      * Método que representa la acción de entrar en el modo Offline (jugador solo).
      * Actualmente, imprime un mensaje en la consola, pero se puede extender para
@@ -18,7 +29,7 @@ public class InicioModel {
      */
     public void irModoOffline() {
         System.out.println("Habla con lógica");  // Placeholder para lógica del modo Offline.
-        modelo.acciones.forEach(action->{
+        acciones.forEach(action->{
                     action.ejecutarAccion();
                 });
     }

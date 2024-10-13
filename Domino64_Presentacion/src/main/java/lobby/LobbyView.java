@@ -1,6 +1,6 @@
 package lobby;
 
-import dtos.cuenta.CuentaDTO;
+import entidadesDTO.CuentaDTO;
 import java.io.IOException;
 import java.util.List;
 import javafx.event.EventHandler;
@@ -729,10 +729,5 @@ public class LobbyView implements ObservadorLobby {
     public void actualizarNombreOtroJugador(CuentaDTO cuenta) {
         AnchorPane panelJugador = modelo.obtenerPanelJugador(cuenta.getId());
         actualizarNombreOtroJugador(panelJugador, cuenta.getNombre());
-    }
-
-    @Override
-    public void update(LobbyModel observable, Object ... context) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

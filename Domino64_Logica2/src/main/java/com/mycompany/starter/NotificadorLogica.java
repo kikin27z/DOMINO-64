@@ -5,9 +5,9 @@
 package com.mycompany.starter;
 
 import acciones.CambiarPantalla;
-import com.mycompany.patrones.command.Accion;
-import com.mycompany.patrones.observer.Observable;
-import com.mycompany.patrones.observer.Observer;
+import patrones.command.Accion;
+import patrones.observer.Observable;
+import patrones.observer.Observer;
 import presentacion_utilities.NotificadorPresentacion;
 
 /**

@@ -4,7 +4,7 @@
  */
 package logica;
 
-import com.mycompany.patrones.observer.Observer;
+import patrones.observer.Observer;
 import entidades.Ficha;
 import entidades.Jugador;
 import entidades.Partida;
@@ -72,7 +72,7 @@ public class GameHandler implements Observer<NotificadorPresentacion> {
     public void update(NotificadorPresentacion observable, Object ... context) {
         int tipoAccion = (int)context[0];
         if(tipoAccion == NotificadorPresentacion.INICIALIZAR_PARITDA){
-            inicializarPartida(observable.getJugador());
+//            inicializarPartida(observable.getJugador());
         }else if(tipoAccion == NotificadorPresentacion.FICHA_SELECCIONADA){
             setFichaSeleccionada(observable.getFichaSeleccionada());
         }

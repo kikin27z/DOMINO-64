@@ -1,4 +1,4 @@
-package dtos.cuenta;
+package entidadesDTO;
 
 /**
  * Clase que representa una cuenta de jugador en el sistema.

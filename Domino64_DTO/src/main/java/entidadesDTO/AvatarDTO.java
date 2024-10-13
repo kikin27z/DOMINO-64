@@ -1,4 +1,4 @@
-package dtos.avatar;
+package entidadesDTO;
 
 /**
  * Enumeración que representa los avatares disponibles en el juego.

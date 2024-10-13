@@ -4,8 +4,8 @@
  */
 package presentacion_utilities;
 
-import com.mycompany.patrones.observer.Observable;
-import com.mycompany.patrones.observer.Observer;
+import patrones.observer.Observable;
+import patrones.observer.Observer;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadorDTO;
 import inicio.InicioModel;
@@ -38,10 +38,10 @@ public class NotificadorPresentacion extends Observable<NotificadorPresentacion>
         return notificador;
     }
     
-    public JugadorDTO getJugador(){
-        JugadorDTO jugador = lobbyModel.getJugador();
-        return jugador;
-    }
+//    public JugadorDTO getJugador(){
+//        JugadorDTO jugador = lobbyModel.getJugador();
+//        return jugador;
+//    }
     
     public FichaDTO getFichaSeleccionada(){
         FichaDTO ficha = partidaModel.obtenerFichaSeleccionada();

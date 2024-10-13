@@ -19,6 +19,7 @@ public class Partida {
     private Jugador jugadorEnTurno;
     private int fichasPorJugador;
     private int maxCantidadJugadores;
+    private ModoPartida modo;
     
     public Partida(ModoPartida modo){
         this.jugadores = new ArrayList<>();

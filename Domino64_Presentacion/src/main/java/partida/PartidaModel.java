@@ -1,28 +1,19 @@
 package partida;
 
 //import entidades.Ficha;
-import com.mycompany.patrones.observer.Observable;
+import patrones.observer.Observable;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaDTO;
 import entidadesDTO.TableroDTO;
 import java.util.List;
-import entidades.Jugador;
-import entidades.Partida;
-import entidades.Tablero;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import static java.util.Map.entry;
-import java.util.Set;
 //import exceptions.DominioException;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import presentacion_utilities.NotificadorPresentacion;
 
@@ -44,9 +35,9 @@ public class PartidaModel extends Observable<PartidaModel>{
     public final int JUGADOR_ACTUALIZADO=0;
     public final int PARTIDA_ACTUALIZADA=1;
     public final int FICHA_SELECCIONADA=2;
-    private List<Ficha> fichasValidas;
-    private Map<Canvas, Ficha> mapeoFichas;
-    private Deque<Canvas> mapeoFichasJugadas = new ArrayDeque<>();
+//    private List<Ficha> fichasValidas;
+//    private Map<Canvas, Ficha> mapeoFichas;
+//    private Deque<Canvas> mapeoFichasJugadas = new ArrayDeque<>();
 //    private TrenFicha prueba = new ArrayDeque<>();
     
     private final double externalPanelWidth = 1000;
@@ -142,9 +133,9 @@ public class PartidaModel extends Observable<PartidaModel>{
         return jugadorEnTurno;
     }
 
-    public void setPartida(Partida partida) {
-        this.partida = partida;
-    }
+//    public void setPartida(Partida partida) {
+//        this.partida = partida;
+//    }
     
     
     
@@ -393,22 +384,22 @@ public class PartidaModel extends Observable<PartidaModel>{
     public String getImgViewBttmResourceName() {
         return imgViewBttmResourceName;
     }
-
-    public Map<Canvas, Ficha> getMapeoFichas() {
-        return mapeoFichas;
-    }
-
-    public void setMapeoFichas(Map<Canvas, Ficha> mapeoFichas) {
-        this.mapeoFichas = mapeoFichas;
-    }
-
-    public Deque<Canvas> getMapeoFichasJugadas() {
-        return mapeoFichasJugadas;
-    }
-
-    public void setMapeoFichasJugadas(Deque<Canvas> mapeoFichasJugadas) {
-        this.mapeoFichasJugadas = mapeoFichasJugadas;
-    }
+//
+//    public Map<Canvas, Ficha> getMapeoFichas() {
+//        return mapeoFichas;
+//    }
+//
+//    public void setMapeoFichas(Map<Canvas, Ficha> mapeoFichas) {
+//        this.mapeoFichas = mapeoFichas;
+//    }
+//
+//    public Deque<Canvas> getMapeoFichasJugadas() {
+//        return mapeoFichasJugadas;
+//    }
+//
+//    public void setMapeoFichasJugadas(Deque<Canvas> mapeoFichasJugadas) {
+//        this.mapeoFichasJugadas = mapeoFichasJugadas;
+//    }
     
 //    public Ficha obtenerPrimeraMulaTablero(){
 //        Tablero tablero = partida.getTablero();

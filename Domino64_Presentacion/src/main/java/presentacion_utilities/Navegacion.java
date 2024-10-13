@@ -1,6 +1,6 @@
 package presentacion_utilities;
 
-import com.mycompany.patrones.command.Accion;
+import patrones.command.Accion;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaDTO;
 import inicio.InicioControl;
@@ -81,12 +81,7 @@ public class Navegacion implements INavegacion {
      */
     @Override
     public void iniciarApp() {
-        Application.launch(App.class); // Inicia la aplicación
-//        Application.launch(Navegacion.class); // Inicia la aplicación
-//        Image icon = new Image(getClass().getResourceAsStream("/images/logo.png"));
-//        fondo.getIcons().add(icon);
-//        fondo.setTitle("Domino 64");
-//        cambiarInicio();
+        Application.launch(App.class);
     }
     
     /**
@@ -98,8 +93,8 @@ public class Navegacion implements INavegacion {
     public void cambiarInicio() {
         try {
             InicioView view = new InicioView(modeloInicio); // Instancia la vista de inicio
-            view.initComponents(fondo); // Inicia la escena de inicio
-            InicioControl control = new InicioControl(modeloInicio, view);
+            view.iniciarEscena(fondo); // Inicia la escena de inicio
+            InicioControl control = new InicioControl(view, modeloInicio);
         } catch (Exception ex) {
             ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
         }
@@ -114,7 +109,7 @@ public class Navegacion implements INavegacion {
     public void cambiarLobby() {
         try {
             LobbyView view = new LobbyView(modeloLobby); // Instancia la vista de la partida
-            view.initComponents(fondo); // Inicia la escena de la partida
+            view.iniciarEscena(fondo); // Inicia la escena de la partida
             LobbyControl control = new LobbyControl(view, modeloLobby);
         } catch (Exception ex) {
             ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace

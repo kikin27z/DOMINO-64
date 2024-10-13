@@ -11,8 +11,8 @@ import java.util.List;
  * encarga de orientar las fichas correctamente y girarlas si es necesario para
  * que puedan coincidir con los extremos de la fila de fichas.
  *
- * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author José Karim Franco Valencia - 00000245138
  */
 public class Tablero {

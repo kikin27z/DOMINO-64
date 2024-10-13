@@ -1,6 +1,6 @@
 package presentacion_observers;
 
-import dtos.cuenta.CuentaDTO;
+import entidadesDTO.CuentaDTO;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +9,6 @@ import java.util.List;
  * @author karim
  */
 public abstract class ObservableLobby {
-
     private List<ObservadorLobby> observadores;
 
     public ObservableLobby() {

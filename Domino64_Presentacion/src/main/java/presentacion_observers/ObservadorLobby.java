@@ -1,6 +1,6 @@
 package presentacion_observers;
 
-import dtos.cuenta.CuentaDTO;
+import entidadesDTO.CuentaDTO;
 
 /**
  *

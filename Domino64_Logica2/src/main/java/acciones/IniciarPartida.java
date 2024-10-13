@@ -1,17 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package acciones;
 
 import static acciones.AccionBase.gameHandler;
 import static acciones.AccionBase.tileHandler;
 import static acciones.AccionBase.turnHandler;
-import entidades.Ficha;
 import entidades.JugadaPosible;
-import entidades.Jugador;
 import entidades.ModoPartida;
 import entidades.Partida;
+import entidades.Jugador;
+import entidades.Ficha;
+import entidades.Tablero;
 import excepciones.LogicException;
 import java.util.List;
 import java.util.Map;
