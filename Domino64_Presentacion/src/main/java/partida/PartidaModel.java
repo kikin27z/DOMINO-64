@@ -1,20 +1,20 @@
 package partida;
 
 //import entidades.Ficha;
-import patrones.observer.Observable;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaDTO;
+import entidadesDTO.PozoDTO;
 import entidadesDTO.TableroDTO;
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-//import exceptions.DominioException;
-import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import javafx.scene.input.MouseEvent;
+import presentacion_observers.ObservablePartida;
 import presentacion_utilities.NotificadorPresentacion;
 
 /**
@@ -23,22 +23,18 @@ import presentacion_utilities.NotificadorPresentacion;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class PartidaModel extends Observable<PartidaModel>{
+public class PartidaModel extends ObservablePartida{
     private JugadorDTO jugador;
     private PartidaDTO partida;
-    private boolean jugadorEnTurno;
-    private List<FichaDTO> fichasValidas;
+    private TableroDTO tablero = new TableroDTO();
+    private PozoDTO pozo;
     private Map<Canvas, FichaDTO> mapeoFichas;
-    private Map<Canvas, FichaDTO> mapeoFichasJugadas;
-    private FichaDTO fichaSeleccionada;
-    NotificadorPresentacion notificador;
+//    public Map<FichaDTO, Canvas> mapeoFichasJugadas;
+    
+    private NotificadorPresentacion notificador;
     public final int JUGADOR_ACTUALIZADO=0;
     public final int PARTIDA_ACTUALIZADA=1;
     public final int FICHA_SELECCIONADA=2;
-//    private List<Ficha> fichasValidas;
-//    private Map<Canvas, Ficha> mapeoFichas;
-//    private Deque<Canvas> mapeoFichasJugadas = new ArrayDeque<>();
-//    private TrenFicha prueba = new ArrayDeque<>();
     
     private final double externalPanelWidth = 1000;
     private final double externalPanelHeight = 700;
@@ -85,123 +81,78 @@ public class PartidaModel extends Observable<PartidaModel>{
     private final boolean imgViewBttmpreserveRatio = true;
     private final double imgViewBttmRotate = 90.0;
     private final String imgViewBttmResourceName = "/dominos/0-5.png";
-
+    
+    
+    public PartidaModel() {
+        mapeoFichas = new HashMap<>();
+//        mapeoFichasJugadas = new HashMap<>();
+    }
 
     public PartidaModel(NotificadorPresentacion notificador) {
         this.notificador = notificador;
         mapeoFichas = new HashMap<>();
-        mapeoFichasJugadas = new HashMap<>();
+//        mapeoFichasJugadas = new HashMap<>();
         jugador = new JugadorDTO();
         partida = new PartidaDTO();
     }
 
     public PartidaModel(JugadorDTO jugador, PartidaDTO partida) {
         mapeoFichas = new HashMap<>();
-        mapeoFichasJugadas = new HashMap<>();
+//        mapeoFichasJugadas = new HashMap<>();
         this.jugador = jugador;
         this.partida = partida;
     }
+    
 
-    public void setFichasValidas(List<FichaDTO> fichasValidas){
-        if(jugadorEnTurno()){
-            this.fichasValidas = fichasValidas;
-            this.notifyObservers(this);
-        }
+    
+     //--------------Métodos notificadores-------------------
+    public void agregarFichasUsuarioActual(List<FichaDTO> fichas){
+        notificarAgregarFichas(fichas);
+    }
+    public void agregarFichaUsuarioActual(FichaDTO ficha){
+        notificarAgregarFicha(ficha);
     }
     
-    protected EventHandler<MouseEvent> getEventHandler() {
-        EventHandler<MouseEvent> event = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                Canvas canvas = (Canvas) t.getSource();
-                FichaDTO fichaSeleccionada = getFichaSeleccionada(canvas);
-                System.out.println("ficha selec: " + fichaSeleccionada);
-                setFichaSeleccionada(fichaSeleccionada);
-//                Platform.runLater(()->{
-//                    view.iluminarFicha(canvas);
-//                });
-            }
-        };
-        return event;
+    public void agregarFichaAlTablero(FichaDTO ficha, TableroDTO tablero, boolean izquierda){
+        this.tablero = tablero;
+        notificarAgregarFichaAlTablero(ficha, izquierda);
     }
     
-    public void setJugadorEnTurno(boolean flag){
-        this.jugadorEnTurno = flag;
+     //-----------------------------------------------------
+    
+    public void insertarIzqTablero(FichaDTO ficha){
+        tablero.setExtremoIzq(ficha);
     }
     
-    public boolean jugadorEnTurno(){
-        return jugadorEnTurno;
+    
+    public void agregarMapeoFichas(Canvas dibujo, FichaDTO ficha){
+        mapeoFichas.put(dibujo, ficha);
     }
-
-//    public void setPartida(Partida partida) {
-//        this.partida = partida;
+    
+//    public void agregarMapeoFichasJugadas(FichaDTO ficha, Canvas dibujo){
+//        mapeoFichasJugadas.put(ficha, dibujo);
 //    }
     
+    public void quitarMapeoFichas(Canvas dibujo){
+        mapeoFichas.remove(dibujo);
+    }
     
     
     public PartidaDTO getPartida() {
         return partida;
     }
-
-    /**
-     * actualiza el mapeo de las fichas con su correspondiente
-     * componente ImageView. 
-     * @param mapeo a establecer en la variable de la clase
-     */
-    public void actualizarMapeo(Map<Canvas,FichaDTO> mapeo){
-        mapeoFichas= mapeo;
+    
+    public List<Canvas> obtenerDibujos(){
+        List<Canvas> dibujosFicha = new ArrayList<>(mapeoFichas.keySet());
+        return dibujosFicha;
     }
     
-    public FichaDTO obtenerFichaSeleccionada(){
-        return fichaSeleccionada;
-//        FichaDTO ficha = null;
-//        if(jugador.getFichaSeleccionada() != null){
-//            ficha  = jugador.getFichaSeleccionada();
-//        }
-//        return ficha;
-    }
-    
-    public FichaDTO obtenerPrimeraMulaTablero(){
-        TableroDTO tablero = partida.getTablero();
-        FichaDTO ficha = null;
-        if(!tablero.tableroVacio()){
-            ficha = tablero.obtenerFichaDer();
-        }
-        return ficha;
-    }
-    
-    /**
-     * metodo para obtener la ficha seleccionada.
-     * Este metodo se llama cada vez que se selecciona una ficha
-     * del panel del jugador. Busca entre los mapeos Ficha-ImageView
-     * para encontrar el valor de la ficha del imageView que genero 
-     * el evento, es decir, el imageView que se selecciono
-     * @param canvas seleccionado
-     * @return la ficha mapeada al imageView del parametro
-     */
-    public FichaDTO getFichaSeleccionada(Canvas canvas){
-        FichaDTO fichaSeleccionada = mapeoFichas.get(canvas);
-        return fichaSeleccionada;
-    }
-    
-    private void ponerFichaEnTablero(FichaDTO ficha){
-        TableroDTO tablero = partida.getTablero();
-        try {
-            if(tablero.tableroVacio()){
-                partida.getTablero().insertarFicha(ficha);
-            }else{
-                partida.getTablero().insertarFichaLadoDerecho(ficha);
-            }
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+    public FichaDTO obtenerFichaExacta(Canvas dibujo){
+        return mapeoFichas.get(dibujo);
     }
     
     public Map<Canvas, FichaDTO> getMapeoFichas() {
         return mapeoFichas;
-    }
-    public Map<Canvas, FichaDTO> getMapeoFichasJugadas() {
-        return mapeoFichasJugadas;
     }
 
     public void setMapeoFichas(Map<Canvas, FichaDTO> mapeoFichas) {
@@ -210,21 +161,19 @@ public class PartidaModel extends Observable<PartidaModel>{
     
     public void setGame(PartidaDTO partida) {
         this.partida = partida;
-        this.notifyObservers(this, PARTIDA_ACTUALIZADA);
+//        this.notifyObservers(this, PARTIDA_ACTUALIZADA);
     }
     
     public JugadorDTO getJugador() {
         return jugador;
     }
-    
-    public void colocarFicha(){
-        FichaDTO ultimaFicha = getFichasDelJugador().getLast();
-        jugador.removerFicha(ultimaFicha);
-        ponerFichaEnTablero(ultimaFicha);
-        double imgViewLayoutX = imageViewLayoutX+50;
-        //double imgViewLayoutY = imageViewLayoutY+50;
-        this.notifyObservers(this,PARTIDA_ACTUALIZADA);
+
+    public TableroDTO getTablero() {
+        return tablero;
     }
+    
+    
+    
     
     public List<FichaDTO> getFichasDelJugador(){
         return jugador.getFichas();
@@ -232,18 +181,7 @@ public class PartidaModel extends Observable<PartidaModel>{
 
     public void setJugador(JugadorDTO jugador) {
         this.jugador = jugador;
-        this.notifyObservers(this, JUGADOR_ACTUALIZADO);
-    }
-    
-    
-    public void setFichaSeleccionada(FichaDTO ficha){
-        fichaSeleccionada = ficha;
-        notificador.notificar(this);
-        this.notifyObservers(this, FICHA_SELECCIONADA);
-    }
-    
-    public void actualizarMapeoFichasJugadas(Entry<Canvas,FichaDTO> fichasJugadas) {
-        this.mapeoFichasJugadas.put(fichasJugadas.getKey(),fichasJugadas.getValue());
+//        this.notifyObservers(this, JUGADOR_ACTUALIZADO);
     }
     
     public double getExternalPanelWidth() {
@@ -384,30 +322,4 @@ public class PartidaModel extends Observable<PartidaModel>{
     public String getImgViewBttmResourceName() {
         return imgViewBttmResourceName;
     }
-//
-//    public Map<Canvas, Ficha> getMapeoFichas() {
-//        return mapeoFichas;
-//    }
-//
-//    public void setMapeoFichas(Map<Canvas, Ficha> mapeoFichas) {
-//        this.mapeoFichas = mapeoFichas;
-//    }
-//
-//    public Deque<Canvas> getMapeoFichasJugadas() {
-//        return mapeoFichasJugadas;
-//    }
-//
-//    public void setMapeoFichasJugadas(Deque<Canvas> mapeoFichasJugadas) {
-//        this.mapeoFichasJugadas = mapeoFichasJugadas;
-//    }
-    
-//    public Ficha obtenerPrimeraMulaTablero(){
-//        Tablero tablero = partida.getTablero();
-//        Ficha ficha = null;
-//        if(tablero.tableroVacio()){
-//            ficha = tablero.obtenerFichaDer();
-//        }
-//        return ficha;
-//    }
-
 }

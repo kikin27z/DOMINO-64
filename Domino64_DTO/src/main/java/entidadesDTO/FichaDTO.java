@@ -15,6 +15,24 @@ public class FichaDTO {
     private int izquierda;
     private int derecha;
 
+    public FichaDTO() {
+    }
+
+    
+    
+    public FichaDTO(int izquierda, int derecha) {
+        this.izquierda = izquierda;
+        this.derecha = derecha;
+    }
+
+    public FichaDTO( int izquierda, int derecha, int orientacion) {
+        this.orientacion = orientacion;
+        this.izquierda = izquierda;
+        this.derecha = derecha;
+    }
+    
+    
+    
     public int getOrientacion() {
         return orientacion;
     }
@@ -50,6 +68,27 @@ public class FichaDTO {
         this.derecha = derecha;
     }
 
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final FichaDTO other = (FichaDTO) obj;
+        if (this.izquierda != other.izquierda) {
+            return false;
+        }
+        return this.derecha == other.derecha;
+    }
+
+    
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

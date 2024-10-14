@@ -44,8 +44,8 @@ public class NotificadorPresentacion extends Observable<NotificadorPresentacion>
 //    }
     
     public FichaDTO getFichaSeleccionada(){
-        FichaDTO ficha = partidaModel.obtenerFichaSeleccionada();
-        return ficha;
+//        FichaDTO ficha = partidaModel.obtenerFichaSeleccionada();
+        return null;
     }
     
     public void notificar(Object contexto){

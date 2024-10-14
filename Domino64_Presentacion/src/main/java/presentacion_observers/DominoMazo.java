@@ -1,56 +1,45 @@
-package partida;
+package presentacion_observers;
 
+import entidadesDTO.FichaDTO;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class DominoDraw {
+public class DominoMazo extends DominoDraw {
+    private Canvas ficha;
 
-    public enum Orientation {
-        HORIZONTAL,
-        VERTICAL
+    @Override
+    public void reiniciar() {
+        ficha = new Canvas();
     }
 
-    public static Canvas dibujarFicha(int izquierda, int derecha, double layoutX, double layoutY, Orientation orientation) {
-        int width = orientation == Orientation.HORIZONTAL ? 106 : 60;
-        int height = orientation == Orientation.HORIZONTAL ? 60 : 106;
+    @Override
+    public void construirVertical(FichaDTO fichaDTO) {
+        reiniciar();
+        this.ficha = dibujarFicha(fichaDTO.getIzquierda(), fichaDTO.getDerecha(), Orientation.VERTICAL);
+    }
+
+    @Override
+    public void construirHorizontal(FichaDTO fichaDTO) {
+        reiniciar();
+        this.ficha = dibujarFicha(fichaDTO.getIzquierda(), fichaDTO.getDerecha(), Orientation.HORIZONTAL);
+        System.out.println(ficha);
+    }
+
+    @Override
+    public Canvas resultado() {
+        return this.ficha;
+    }
+
+    private Canvas dibujarFicha(int izquierda, int derecha, Orientation orientation) {
+        int width = orientation == Orientation.HORIZONTAL ? 90 : 50;
+        int height = orientation == Orientation.HORIZONTAL ? 50 : 90;
         Canvas ficha = new Canvas(width, height);
         GraphicsContext gc = ficha.getGraphicsContext2D();
 
         // Dibujar el fondo de la ficha
         gc.setFill(Color.WHITE);
-        gc.fillRoundRect(0, 0, width, height, 10, 10); // Ficha con bordes redondeados
-
-        // Dibujar la línea divisoria
-        gc.setStroke(Color.BLACK);
-        if (orientation == Orientation.HORIZONTAL) {
-            gc.strokeLine(width / 2, 0, width / 2, height);
-        } else {
-            gc.strokeLine(0, height / 2, width, height / 2);
-        }
-
-        // Dibujar los puntos en cada lado
-        if (orientation == Orientation.HORIZONTAL) {
-            dibujarPuntos(gc, izquierda, 0, 0, orientation);
-            dibujarPuntos(gc, derecha, width / 2, 0, orientation);
-        } else {
-            dibujarPuntos(gc, izquierda, 0, 0, orientation);
-            dibujarPuntos(gc, derecha, 0, height / 2, orientation);
-        }
-
-        ficha.setLayoutX(layoutX);
-        ficha.setLayoutY(layoutY);
-        return ficha;
-    }
-    public static Canvas dibujarFicha(int izquierda, int derecha, Orientation orientation) {
-        int width = orientation == Orientation.HORIZONTAL ? 106 : 60;
-        int height = orientation == Orientation.HORIZONTAL ? 60 : 106;
-        Canvas ficha = new Canvas(width, height);
-        GraphicsContext gc = ficha.getGraphicsContext2D();
-
-        // Dibujar el fondo de la ficha
-        gc.setFill(Color.WHITE);
-        gc.fillRoundRect(0, 0, width, height, 10, 10); // Ficha con bordes redondeados
+        gc.fillRoundRect(0, 0, width, height, 8, 8); // Ficha con bordes redondeados
 
         // Dibujar la línea divisoria
         gc.setStroke(Color.BLACK);
@@ -72,14 +61,14 @@ public class DominoDraw {
         return ficha;
     }
 
-    private static void dibujarPuntos(GraphicsContext gc, int valor, int offsetX, int offsetY, Orientation orientation) {
+    private void dibujarPuntos(GraphicsContext gc, int valor, int offsetX, int offsetY, Orientation orientation) {
         gc.setFill(Color.BLACK);
-        int grosorBolita = 10;
-        int grosorBola1 = 14;
-        int grosorBola2 = 12;
+        int grosorBolita = 7;
+        int grosorBola1 = 10;
+        int grosorBola2 = 9;
 
-        int ancho = orientation == Orientation.HORIZONTAL ? 53 : 60;
-        int alto = orientation == Orientation.HORIZONTAL ? 60 : 53;
+        int ancho = orientation == Orientation.HORIZONTAL ? 45 : 50;
+        int alto = orientation == Orientation.HORIZONTAL ? 50 : 45;
 
         switch (valor) {
             case 0 -> {

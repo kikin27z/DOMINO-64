@@ -2,6 +2,7 @@ package lobby;
 
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.PartidaDTO;
+import java.util.ArrayList;
 import patrones.command.Accion;
 import presentacion_utilities.NotificadorPresentacion;
 import java.util.HashMap;
@@ -44,6 +45,7 @@ public class LobbyModel extends ObservableLobby {
 
     public LobbyModel(NotificadorPresentacion notificador) {
         this.notificador = notificador;
+        cargarDatos();
     }
 
     public void setAcciones(List<Accion> acciones) {
@@ -70,6 +72,7 @@ public class LobbyModel extends ObservableLobby {
             "/avatar/venado.png"
         };  // Lista de avatares
         panelesJugadores = new HashMap<>();
+        cuentasJugadoresOnline = new ArrayList<>();
         cuentaActual = new CuentaDTO(0, "/avatar/venado.png", mensaje);
     }
 

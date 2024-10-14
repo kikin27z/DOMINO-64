@@ -165,7 +165,11 @@ public class LobbyControl {
      * @param nombre el nombre de usuario ingresado por el usuario.
      */
     private void logicaNombreUsuario(String nombre) {
-        modelo.sonCaracteresValidosNombre(nombre);  // Valida los caracteres del nombre
+        if(nombre == null){
+            modelo.sonCaracteresValidosNombre("");
+        }else{
+            modelo.sonCaracteresValidosNombre(nombre);  // Valida los caracteres del nombre
+        }
         if (modelo.getMensaje() == null) {
             modelo.validarNombreNoRepetido(nombre);  // Verifica que el nombre no esté repetido
         }

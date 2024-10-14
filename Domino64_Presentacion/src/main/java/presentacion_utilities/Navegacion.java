@@ -134,7 +134,6 @@ public class Navegacion implements INavegacion {
     public void cambiarPartida() {
         try {
             PartidaView partida = new PartidaView(modeloPartida); // Instancia la vista de la partida
-            modeloPartida.addObserver(partida);
             partida.iniciarEscena(fondo); // Inicia la escena de la partida
             new PartidaControl(partida, modeloPartida);
         } catch (IOException ex) {
@@ -162,6 +161,18 @@ public class Navegacion implements INavegacion {
             OpcionesPartidaControl control = new OpcionesPartidaControl(view, modelo);
         } catch (IOException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void cambiarPartidaModoAnterior() {
+        try {
+            PartidaModel modelo  = new PartidaModel();
+            PartidaView partida = new PartidaView(modelo); // Instancia la vista de la partida
+            partida.iniciarEscena(fondo); // Inicia la escena de la partida
+            new PartidaControl(partida, modelo);
+        } catch (IOException ex) {
+            ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
         }
     }
 }

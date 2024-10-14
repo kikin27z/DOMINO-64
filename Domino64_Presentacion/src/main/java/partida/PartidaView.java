@@ -1,22 +1,18 @@
 package partida;
 
 //import entidades.Ficha;
-import patrones.observer.Observer;
 import entidadesDTO.FichaDTO;
 import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Point3D;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -28,6 +24,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import presentacion_observers.DominoMazo;
+import presentacion_observers.DominoTablero;
+import presentacion_observers.ObservadorPartida;
 
 /**
  * Clase que representa la vista de la partida en la aplicación. Esta clase se
@@ -38,19 +37,20 @@ import javafx.stage.Stage;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class PartidaView implements Observer<PartidaModel>{
-    private boolean fichasCreadas;
+public class PartidaView implements ObservadorPartida {
+
     private PartidaModel modelo;
     private AnchorPane panelExterior; // Panel exterior que contiene todos los elementos visuales
     private AnchorPane panelInterior;  // Panel interno que se desplaza dentro del ScrollPane
-    private HBox panelJugador1;
+    private HBox panelJugadorActual;
     private ScrollPane scrollPanel;     // Panel con capacidad de desplazamiento
     private Button btnEjemplo;
-    private List<Canvas> mazo;
-    private Map<Canvas,FichaDTO> mapeoFichas;
+    private EventHandler<MouseEvent> eventoFicha;
+    public Deque<Canvas> trenFichasDibujos;
 
     public PartidaView(PartidaModel modelo) {
         this.modelo = modelo;
+        trenFichasDibujos = new ArrayDeque<>();
     }
 
     /**
@@ -64,7 +64,7 @@ public class PartidaView implements Observer<PartidaModel>{
         Scene scene = new Scene(panelExterior); // Usamos panelExterior como la raíz
         fondo.setScene(scene);
         fondo.show();
-
+        modelo.addObserver(this);
         // Ajustamos la posición inicial del ScrollPane
         Platform.runLater(() -> {
             scrollPanel.setHvalue(0.5); // Centrar horizontalmente
@@ -118,71 +118,29 @@ public class PartidaView implements Observer<PartidaModel>{
         panelExterior.getChildren().add(scrollPanel);
         panelExterior.getChildren().add(btnEjemplo);
 
-        // Creando el segundo AnchorPane para la parte inferior
-//        panelJugador1 = new HBox();
-//        panelJugador1.setSpacing(20);
-//        panelJugador1.setLayoutX(modelo.getPlayer1PanelLayoutX());
-//        panelJugador1.setLayoutY(modelo.getPlayer1PanelLayoutY());
-//        panelJugador1.setPrefSize(modelo.getPlayer1PanelWidth(), modelo.getPlayer1PanelHeight());
-//        panelJugador1.setMinSize(modelo.getPlayer1PanelWidth(), modelo.getPlayer1PanelHeight());
-//        panelJugador1.setMaxSize(modelo.getPlayer1PanelWidth(), modelo.getPlayer1PanelHeight());
-//        panelJugador1.setPadding(new Insets(-12.0, 0, 0, 20.0));
-//        panelJugador1.setStyle(modelo.getPlayer1PanelStyle());
-//        ImageView catImageView = new ImageView(new Image(getClass().getResourceAsStream("/avatar/gato.png")));
-//        catImageView.setFitHeight(150);
-//        catImageView.setFitWidth(150);
-//        catImageView.setLayoutX(835);
-//        catImageView.setLayoutY(536);
-//        catImageView.setPickOnBounds(true);
-//        catImageView.setPreserveRatio(true);
-//
-//        panelExterior.getChildren().add(catImageView);
-
         insertarMesaAba(panelExterior);
         insertarMesaArr(panelExterior);
     }
 
-    public Canvas crearDomino(int izquierda, int derecha, EventHandler<MouseEvent> evento) {
-        Canvas ficha = DominoDraw.dibujarFicha(izquierda, derecha, DominoDraw.Orientation.VERTICAL);
-        ficha.setOnMouseClicked(evento);
-        return ficha;
-    }
-
     public void agregarDominoMazo(Canvas ficha) {
         ficha.setVisible(true);
-        panelJugador1.getChildren().add(ficha);
+        panelJugadorActual.getChildren().add(ficha);
     }
 
     public void agregarDominoTablero(Canvas ficha) {
         panelInterior.getChildren().add(ficha);
     }
 
-    public void quitarDominoMazo(int izquierda, int derecha) {
-        Canvas ficha = DominoDraw.dibujarFicha(izquierda, derecha, DominoDraw.Orientation.VERTICAL);
-        panelJugador1.getChildren().add(ficha);
-    }
-
-//    public Map<Canvas, Ficha> addTile(EventHandler<MouseEvent> evento) {
-//        // Crear el ImageView para la segunda imagen
-//        for (Ficha ficha : modelo.getFichasDelJugador()) {
-//            Canvas fichaDibujo = crearDomino(ficha.getIzquierda(), ficha.getDerecha(), evento);
-//            modelo.getMapeoFichas().put(fichaDibujo, ficha);
-//
-//            agregarDominoMazo(fichaDibujo);
-//        }
-//        return modelo.getMapeoFichas();
-//    }
-    
-    private void insertarMesaAba(AnchorPane panelExterior){
-        panelJugador1 = new HBox();
-        panelJugador1.setSpacing(20);
-        panelJugador1.setLayoutX(modelo.getPlayer1PanelLayoutX());
-        panelJugador1.setLayoutY(modelo.getPlayer1PanelLayoutY());
-        panelJugador1.setPrefSize(modelo.getPlayer1PanelWidth(), modelo.getPlayer1PanelHeight());
-        panelJugador1.setMinSize(modelo.getPlayer1PanelWidth(), modelo.getPlayer1PanelHeight());
-        panelJugador1.setMaxSize(modelo.getPlayer1PanelWidth(), modelo.getPlayer1PanelHeight());
-        panelJugador1.setPadding(new Insets(-12.0, 0, 0, 20.0));
-        panelJugador1.setStyle(modelo.getPlayer1PanelStyle());
+    private void insertarMesaAba(AnchorPane panelExterior) {
+        panelJugadorActual = new HBox();
+        panelJugadorActual.setSpacing(10);
+        panelJugadorActual.setLayoutX(modelo.getPlayer1PanelLayoutX());
+        panelJugadorActual.setLayoutY(modelo.getPlayer1PanelLayoutY());
+        panelJugadorActual.setPrefSize(modelo.getPlayer1PanelWidth(), modelo.getPlayer1PanelHeight());
+        panelJugadorActual.setMinSize(modelo.getPlayer1PanelWidth(), modelo.getPlayer1PanelHeight());
+        panelJugadorActual.setMaxSize(modelo.getPlayer1PanelWidth(), modelo.getPlayer1PanelHeight());
+        panelJugadorActual.setPadding(new Insets(-12.0, 0, 0, 20.0));
+        panelJugadorActual.setStyle(modelo.getPlayer1PanelStyle());
         ImageView catImageView = new ImageView(new Image(getClass().getResourceAsStream("/avatar/gato.png")));
         catImageView.setFitHeight(150);
         catImageView.setFitWidth(150);
@@ -192,125 +150,21 @@ public class PartidaView implements Observer<PartidaModel>{
         catImageView.setPreserveRatio(true);
 
         panelExterior.getChildren().add(catImageView);
-        panelExterior.getChildren().add(panelJugador1);
+        panelExterior.getChildren().add(panelJugadorActual);
     }
 
     public void ponerFichaEnTablero(double layoutX) {
-        ImageView fichaJugada = (ImageView) panelJugador1.getChildren().removeLast();
+        ImageView fichaJugada = (ImageView) panelJugadorActual.getChildren().removeLast();
         fichaJugada.setLayoutX(layoutX);
         panelInterior.getChildren().add(fichaJugada);
     }
 
-    public void btnEjemploEvento(EventHandler<ActionEvent> evento) {
-        btnEjemplo.setOnAction(evento);
+    public void btnEjemploEvento(EventHandler<MouseEvent> e) {
+        btnEjemplo.setOnMouseClicked(e);
     }
-    
-//    public void agregarDominoMazo(Canvas ficha){
-//        if(panelJugador1.getChildren().add(ficha))
-//            System.out.println("se agrego al panel");
-//        else
-//            System.out.println("no se agrego");
-//    }
-    
+
     public void getEventHandler() {
 
-    }
-
-//    public Canvas crearDomino(int izquierda, int derecha,EventHandler<MouseEvent> evento){
-//        Canvas ficha = DominoDraw.dibujarFicha(izquierda, derecha, DominoDraw.Orientation.VERTICAL);
-//        System.out.println("canvas: "+ficha.toString());
-//        ficha.setOnMouseClicked(evento);
-//        agregarDominoMazo(ficha);
-//        return ficha;
-//    }
-    
-    protected void iluminarFicha(Canvas canva){
-        canva.getGraphicsContext2D().setFill(Color.BLUEVIOLET);
-    }
-    
-    public Canvas dibujarPrimeraMula(int izquierda, int derecha,int x, int y){
-        Canvas ficha = DominoDraw.dibujarFicha(izquierda, derecha, x, y, DominoDraw.Orientation.VERTICAL);
-        panelInterior.getChildren().add(ficha);
-        return ficha;
-    }
-    
-//    public void quitarDominoMazo(int izquierda, int derecha){
-//        Canvas ficha = DominoDraw.dibujarFicha(izquierda, derecha, DominoDraw.Orientation.VERTICAL);
-//        panelJugador1.getChildren().add(ficha);
-//    }
-    
-    public Map<Canvas,FichaDTO> addTile(EventHandler<MouseEvent> evento){
-        Map<Canvas,FichaDTO> mapeo = new HashMap<>();
-        for(FichaDTO ficha: modelo.getFichasDelJugador()){
-            Canvas fichaDibujo = crearDomino(ficha.getIzquierda(), ficha.getDerecha(), evento);
-            mapeo.put(fichaDibujo,ficha);
-        }
-        if(!mapeo.isEmpty())
-            fichasCreadas = true;
-        return mapeo;
-    }
-
-    private Canvas dibujarFicha(int izquierda, int derecha, double layoutX, double layoutY) {
-        Canvas ficha = new Canvas(106, 60);
-        GraphicsContext gc = ficha.getGraphicsContext2D();
-        // Dibujar el fondo de la ficha
-        gc.setFill(Color.WHITE);
-        gc.fillRoundRect(0, 0, 106, 60, 10, 10); // Ficha con bordes redondeados
-
-        // Dibujar la línea divisoria
-        gc.setStroke(Color.BLACK);
-        gc.strokeLine(53, 0, 53, 60);
-
-        // Dibujar los puntos en cada lado
-        dibujarPuntos(gc, izquierda, 0); // Puntos del lado izquierdo
-        dibujarPuntos(gc, derecha, 53);   // Puntos del lado derecho
-
-        ficha.setLayoutX(layoutX);
-        ficha.setLayoutY(layoutY);
-        return ficha;
-    }
-
-    private void dibujarPuntos(GraphicsContext gc, int valor, int offsetX) {
-        gc.setFill(Color.BLACK);
-        int grosorBolita = 10;
-        int grosorBola1 = 14;
-        int grosorBola2 = 12;
-        switch (valor) {
-            case 0 -> {
-            }
-            case 1 ->
-                gc.fillOval(offsetX + 20, 23, grosorBola1, grosorBola1); // Centro
-            case 2 -> {
-                gc.fillOval(offsetX + 10, 15, grosorBola2, grosorBola2);   // Arriba izquierda
-                gc.fillOval(offsetX + 32, 37, grosorBola2, grosorBola2); // Abajo derecha
-            }
-            case 3 -> {
-                gc.fillOval(offsetX + 5, 10, grosorBolita, grosorBolita);   // Arriba izquierda
-                gc.fillOval(offsetX + 21, 26, grosorBolita, grosorBolita); // Centro
-                gc.fillOval(offsetX + 37, 42, grosorBolita, grosorBolita); // Abajo derecha
-            }
-            case 4 -> {
-                gc.fillOval(offsetX + 5, 10, grosorBolita, grosorBolita);   // Arriba izquierda
-                gc.fillOval(offsetX + 5, 42, grosorBolita, grosorBolita);  // Abajo izquierda
-                gc.fillOval(offsetX + 37, 10, grosorBolita, grosorBolita);  // Arriba derecha
-                gc.fillOval(offsetX + 37, 42, grosorBolita, grosorBolita); // Abajo derecha
-            }
-            case 5 -> {
-                gc.fillOval(offsetX + 5, 10, grosorBolita, grosorBolita);   // Arriba izquierda
-                gc.fillOval(offsetX + 5, 42, grosorBolita, grosorBolita);  // Abajo izquierda
-                gc.fillOval(offsetX + 37, 10, grosorBolita, grosorBolita);  // Arriba derecha
-                gc.fillOval(offsetX + 37, 42, grosorBolita, grosorBolita); // Abajo derecha
-                gc.fillOval(offsetX + 21, 26, grosorBolita, grosorBolita); // Centro
-            }
-            case 6 -> {
-                gc.fillOval(offsetX + 5, 10, grosorBolita, grosorBolita);   // Arriba izquierda
-                gc.fillOval(offsetX + 21, 10, grosorBolita, grosorBolita);  // Centro izquierda
-                gc.fillOval(offsetX + 5, 42, grosorBolita, grosorBolita);  // Abajo izquierda
-                gc.fillOval(offsetX + 37, 10, grosorBolita, grosorBolita);  // Arriba derecha
-                gc.fillOval(offsetX + 21, 42, grosorBolita, grosorBolita); // Centro derecha
-                gc.fillOval(offsetX + 37, 42, grosorBolita, grosorBolita); // Abajo derecha
-            }
-        }
     }
 
     private void insertarMesas(AnchorPane panelExterior) {
@@ -407,7 +261,6 @@ public class PartidaView implements Observer<PartidaModel>{
 //        mazoIzq.setMinSize(98, 234);
 //        mazoIzq.setMaxSize(98, 234);
 //        mazoIzq.setStyle("-fx-background-color: #B2533E; -fx-background-radius: 20; -fx-border-color: #000000; -fx-border-radius: 20;");
-
         ImageView leftBirdImageView = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
         leftBirdImageView.setId("jugador3");
         leftBirdImageView.setFitHeight(114);
@@ -442,42 +295,6 @@ public class PartidaView implements Observer<PartidaModel>{
 //        panelExterior.getChildren().add(mazoIzq);
     }
 
-    public Map<Canvas, FichaDTO> getMapeoFichas() {
-        return mapeoFichas;
-    }
-
-    public void setMapeoFichas(Map<Canvas, FichaDTO> mapeoFichas) {
-        this.mapeoFichas = mapeoFichas;
-    }
-    
-
-    @Override
-    public void update(PartidaModel observable, Object ... context) {
-        int accion = (int)context[0];
-        if(accion == observable.JUGADOR_ACTUALIZADO){
-            System.out.println("jugador actualiazdooo");
-            if(!fichasCreadas){
-                System.out.println("fichas nooo creadas");
-            }else{
-                //falta cambiar esto:
-                //distinguir las actualizaciones del jugador,
-                //cuando se le agrega y cuando se le quita una ficha
-                //para que se pinten y borren las fichas del panel
-                List<FichaDTO> fichasActuales = modelo.getJugador().getFichas();
-                FichaDTO nuevaFicha = fichasActuales.getLast();
-                Platform.runLater(()->{
-                    Canvas canva = crearDomino(nuevaFicha.getIzquierda(), nuevaFicha.getDerecha(), modelo.getEventHandler());
-                    modelo.getMapeoFichas().put(canva,nuevaFicha);
-                });
-                System.out.println("fichas creadas?");
-            }
-        }else if(accion == observable.PARTIDA_ACTUALIZADA){
-            System.out.println("partidaaaaa actualizadaaaaaaaa");
-        }else if(accion == observable.FICHA_SELECCIONADA){
-            System.out.println("hola");
-        }
-    }
-    
     private void insertarMesaDer(AnchorPane panelExterior) {
         AnchorPane mazoDer = new AnchorPane();
         mazoDer.setId("jugador4");
@@ -563,4 +380,159 @@ public class PartidaView implements Observer<PartidaModel>{
 
         panelExterior.getChildren().add(mazoArr);
     }
+
+    private void insertarAlTablero(double coordenaX, double coordenadaY, Canvas dibujo, FichaDTO ficha) {
+        dibujo.setLayoutX(coordenaX);
+        dibujo.setLayoutY(coordenadaY);
+        panelInterior.getChildren().add(dibujo);
+
+        modelo.getTablero().setExtremoIzq(ficha);
+        trenFichasDibujos.offerFirst(dibujo);
+        System.out.println(trenFichasDibujos.size());
+    }
+
+    private void insertarPrimeraFicha(FichaDTO fichaDTO) {
+        DominoTablero dibujaFicha = new DominoTablero();
+        dibujaFicha.construirVertical(fichaDTO);
+        Canvas dibujo = dibujaFicha.resultado();
+
+        insertarAlTablero(555, 336, dibujo, fichaDTO);
+
+    }
+
+    private void insertarFichaDespuesMula(FichaDTO fichaDTO) {
+        DominoTablero dibujar = new DominoTablero();
+        Canvas fichaDibujoIzq = trenFichasDibujos.peekFirst();
+        FichaDTO fichaIzq = modelo.getTablero().getExtremoIzq();
+        Canvas fichaDibujo;
+        double coordenadaX, coordenadaY;
+
+        if (fichaIzq.getOrientacion() == 0) {
+            dibujar.construirHorizontal(fichaDTO);
+            fichaDibujo = dibujar.resultado();
+            coordenadaX = fichaDibujoIzq.getLayoutX() - 106;
+            coordenadaY = fichaDibujoIzq.getLayoutY() + 23;
+        } else {
+            dibujar.construirVertical(fichaDTO);
+            fichaDibujo = dibujar.resultado();
+            coordenadaX = fichaDibujoIzq.getLayoutX() - 60;
+            coordenadaY = fichaDibujoIzq.getLayoutY() - 23;
+        }
+        insertarAlTablero(coordenadaX, coordenadaY, fichaDibujo, fichaDTO);
+    }
+
+    private void insertarFichaExtremoIzq(FichaDTO fichaDTO) {
+        System.out.println(fichaDTO);
+        DominoTablero dibujar = new DominoTablero();
+        Canvas fichaDibujoIzq = trenFichasDibujos.peekFirst();
+        FichaDTO fichaIzq = modelo.getTablero().getExtremoIzq();
+        Canvas fichaDibujo;
+        double coordenadaX, coordenadaY;
+
+        if (fichaDTO.esMula()) {
+            if (fichaIzq.getOrientacion() == 0) {
+                dibujar.construirHorizontal(fichaDTO);
+                fichaDibujo = dibujar.resultado();
+                coordenadaX = fichaDibujoIzq.getLayoutX() - 106;
+                coordenadaY = fichaDibujoIzq.getLayoutY() + 23;
+            } else {
+                dibujar.construirVertical(fichaDTO);
+                fichaDibujo = dibujar.resultado();
+                coordenadaX = fichaDibujoIzq.getLayoutX() - 60;
+                coordenadaY = fichaDibujoIzq.getLayoutY() - 23;
+            }
+        } else {
+            if (fichaIzq.getOrientacion() == 0) {
+                dibujar.construirVertical(fichaDTO);
+                fichaDibujo = dibujar.resultado();
+                coordenadaX = fichaDibujoIzq.getLayoutX();
+                coordenadaY = fichaDibujoIzq.getLayoutY() - 106;
+            } else {
+                dibujar.construirHorizontal(fichaDTO);
+                fichaDibujo = dibujar.resultado();
+                coordenadaX = fichaDibujoIzq.getLayoutX() - 106;
+                coordenadaY = fichaDibujoIzq.getLayoutY();
+            }
+        }
+
+        insertarAlTablero(coordenadaX, coordenadaY, fichaDibujo, fichaDTO);
+    }
+
+    private void insertarFichaExtremoDer(FichaDTO fichaDTO) {
+    }
+
+    //--------------------------------Eventos--------------------------------
+    public void eventoFicha(EventHandler<MouseEvent> e) {
+        eventoFicha = e;
+    }
+
+    //--------------------------------Metodos Observador--------------------------------
+    @Override
+    public void agregarFichaMazo(FichaDTO ficha) {
+        DominoMazo dibujaFicha = new DominoMazo();
+        dibujaFicha.construirVertical(ficha);
+        Canvas dibujo = dibujaFicha.resultado();
+        modelo.agregarMapeoFichas(dibujo, ficha);
+        agregarDominoMazo(dibujo);
+    }
+
+    @Override
+    public void quitarFichaMazo(Canvas ficha) {
+        panelJugadorActual.getChildren().remove(ficha);
+    }
+
+    @Override
+    public void actualizarPozo() {
+        modelo.getPartida().getPozo().getFichas().capacity();
+    }
+
+    @Override
+    public void agregarFichaTablero(FichaDTO ficha, boolean izquierda) {
+        if (modelo.getTablero().tableroVacio()) {
+            insertarPrimeraFicha(ficha);
+        } else if (izquierda) {
+            if(modelo.getTablero().)
+            insertarFichaExtremoIzq(ficha);
+        } else {
+            insertarFichaExtremoDer(ficha);
+        }
+    }
+
+    @Override
+    public void inhabilitarJugador() {
+    }
+
+    @Override
+    public void actualizarNumFichasJugador() {
+    }
+
+    @Override
+    public void agregarFichasMazo(List<FichaDTO> fichas) {
+        DominoMazo dibujaFicha = new DominoMazo();
+
+        for (FichaDTO ficha : fichas) {
+            dibujaFicha.construirVertical(ficha);
+            Canvas dibujo = dibujaFicha.resultado();
+            modelo.agregarMapeoFichas(dibujo, ficha);
+            agregarDominoMazo(dibujo);
+        }
+        activarEventoFicha();
+    }
+
+    @Override
+    public void activarEventoFicha() {
+        for (Canvas dibujo : modelo.obtenerDibujos()) {
+            dibujo.setCursor(Cursor.HAND);
+            dibujo.setOnMouseClicked(eventoFicha);
+        }
+    }
+
+    @Override
+    public void desactivarEventoFicha() {
+        for (Canvas dibujo : modelo.obtenerDibujos()) {
+            dibujo.setCursor(Cursor.DEFAULT);
+            dibujo.setOnMouseClicked(null);
+        }
+    }
+
 }

@@ -34,6 +34,7 @@ public interface INavegacion {
     /**
      * Cambia la vista a la pantalla de partida.
      */
+    public void cambiarPartidaModoAnterior();
     public void cambiarPartida();
     
     /**
