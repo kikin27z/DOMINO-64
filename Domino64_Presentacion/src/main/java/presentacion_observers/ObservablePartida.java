@@ -1,6 +1,8 @@
 package presentacion_observers;
 
 import entidadesDTO.FichaDTO;
+import entidadesDTO.PartidaOfflineDTO;
+import entidadesDTO.PartidaOnlineDTO;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,17 @@ public abstract class ObservablePartida {
 
     public void removeObserver(ObservadorPartida o) {
         this.observadores.remove(o);
+    }
+    
+    public void notificarPartidaOffline(PartidaOfflineDTO partida){
+        for (ObservadorPartida observador : observadores) {
+            observador.iniciarPartidaOffline(partida);
+        }
+    }
+    public void notificarPartidaOnline(PartidaOnlineDTO partida){
+        for (ObservadorPartida observador : observadores) {
+            observador.iniciarPartidaOnline(partida);
+        }
     }
     
     public void notificarAgregarFichaAlTablero(FichaDTO fichaDTO, boolean queLado){

@@ -1,15 +1,18 @@
 package presentacion_utilities;
 
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.FichaDTO;
 import patrones.command.Accion;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaDTO;
+import entidadesDTO.PartidaOfflineDTO;
 import inicio.InicioControl;
 import inicio.InicioModel;
 import inicio.InicioView;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import lobby.LobbyControl;
 import lobby.LobbyModel;
@@ -171,6 +174,27 @@ public class Navegacion implements INavegacion {
             PartidaView partida = new PartidaView(modelo); // Instancia la vista de la partida
             partida.iniciarEscena(fondo); // Inicia la escena de la partida
             new PartidaControl(partida, modelo);
+            
+//            CuentaDTO cuentaActual = new CuentaDTO(0, "/avatar/kiwi.png","Karim" );
+//            CuentaDTO cpu = new CuentaDTO(1, "/avatar/tortuga.png","Karim" );
+//            List<FichaDTO> fichas = new ArrayList<>();
+//            fichas.add(new FichaDTO(6,6,0));
+//            fichas.add(new FichaDTO(1,6,1));
+//            fichas.add(new FichaDTO(1,1,0));
+//            fichas.add(new FichaDTO(0,1,0));
+//            fichas.add(new FichaDTO(3,0,0));
+//            fichas.add(new FichaDTO(3,3,1));
+//            fichas.add(new FichaDTO(2,3,1));
+//            PartidaOfflineDTO partidaDTO = new PartidaOfflineDTO();
+//            JugadorDTO jugador = new JugadorDTO();
+//            jugador.setFichas(fichas);
+//            cuentaActual.setJugador(new JugadorDTO());
+//            cpu.setJugador(new JugadorDTO());
+//            
+//            partidaDTO.setCpu(cpu);
+//            partidaDTO.setCuentaActual(cuentaActual);
+//            modelo.iniciarPartida(partidaDTO);
+            
         } catch (IOException ex) {
             ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
         }

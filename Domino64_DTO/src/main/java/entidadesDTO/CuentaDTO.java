@@ -13,6 +13,7 @@ public class CuentaDTO {
     private Integer id;       
     private String avatar;
     private String nombre;
+    private JugadorDTO jugador;
 
     public CuentaDTO() {
     }
@@ -84,4 +85,14 @@ public class CuentaDTO {
     public void setId(int id) {
         this.id = id;
     }
+
+    public JugadorDTO getJugador() {
+        return jugador;
+    }
+
+    public void setJugador(JugadorDTO jugador) {
+        this.jugador = jugador;
+    }
+    
+    
 }

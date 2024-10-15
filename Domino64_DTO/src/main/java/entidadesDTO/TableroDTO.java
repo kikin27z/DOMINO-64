@@ -6,6 +6,7 @@ package entidadesDTO;
  */
 public class TableroDTO {
     private FichaDTO extremoIzq;
+    private FichaDTO fichaInicial;
     private FichaDTO extremoDer;
 
     public TableroDTO() {
@@ -17,8 +18,7 @@ public class TableroDTO {
 
     public void setExtremoIzq(FichaDTO extremoIzq) {
         if(tableroVacio()){
-            this.extremoIzq = extremoIzq;
-            this.extremoDer = extremoIzq;
+            this.fichaInicial = extremoIzq;
         }else{
             this.extremoIzq = extremoIzq;
         }
@@ -30,17 +30,25 @@ public class TableroDTO {
 
     public void setExtremoDer(FichaDTO extremoDer) {
         if(tableroVacio()){
-            this.extremoIzq = extremoDer;
-            this.extremoDer = extremoDer;
+            this.fichaInicial = extremoDer;
         }else{
             this.extremoDer = extremoDer;
         }
     }
+
+    public FichaDTO getFichaInicial() {
+        return fichaInicial;
+    }
+
+    public void setFichaInicial(FichaDTO fichaInicial) {
+        this.fichaInicial = fichaInicial;
+    }
+    
     
     
     
     public boolean tableroVacio(){
-        return extremoIzq == null && extremoDer == null;
+        return fichaInicial == null;
     }
     
 }

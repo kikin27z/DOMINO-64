@@ -68,6 +68,13 @@ public class FichaDTO {
         this.derecha = derecha;
     }
 
+    
+    public boolean esLaMismaFicha(FichaDTO ficha){
+        if(this.izquierda == ficha.getIzquierda() && this.derecha == ficha.getDerecha()) return true;
+        if(this.izquierda == ficha.getDerecha() && this.derecha == ficha.getIzquierda()) return true;
+            
+        return false;
+    }
 
     @Override
     public boolean equals(Object obj) {

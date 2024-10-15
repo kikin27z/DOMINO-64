@@ -1,6 +1,7 @@
 package partida;
 
 //import entidades.Ficha;
+import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadorDTO;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ public class PartidaControl {
         this.view = view;
         this.modelo = modelo;
         cargarEventos();
+        CuentaDTO cuenta = new CuentaDTO(0, "/avatar/tortuga.png", "Karim");
+        view.insertarMesaAba(cuenta);
         JugadorDTO jugador = new JugadorDTO();
         List<FichaDTO> fichas = new ArrayList<>();
         fichas.add(new FichaDTO(6,6,0));

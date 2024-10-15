@@ -1,9 +1,12 @@
 package partida;
 
 //import entidades.Ficha;
+import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaDTO;
+import entidadesDTO.PartidaOfflineDTO;
+import entidadesDTO.PartidaOnlineDTO;
 import entidadesDTO.PozoDTO;
 import entidadesDTO.TableroDTO;
 import java.util.ArrayList;
@@ -40,8 +43,8 @@ public class PartidaModel extends ObservablePartida{
     private final double externalPanelHeight = 700;
     private final String externalPanelStyle = "-fx-background-color: #186F65;";
     
-    private final double internalPanelWidth = 1200;
-    private final double internalPanelHeight = 900;
+    private final double internalPanelWidth = 1800;
+    private final double internalPanelHeight = 1500;
     private final String internalPanelStyle = "-fx-background-color: #B5CB99;";
     
     private final double scrollPanelLayoutX = 85;
@@ -106,6 +109,14 @@ public class PartidaModel extends ObservablePartida{
 
     
      //--------------Métodos notificadores-------------------
+    public void iniciarPartida(PartidaOfflineDTO partida){
+        notificarPartidaOffline(partida);
+        notificarAgregarFichas(partida.obtenerFichasJugadorActual());
+    }
+    public void iniciarPartida(PartidaOnlineDTO partida){
+        notificarPartidaOnline(partida);
+    }
+    
     public void agregarFichasUsuarioActual(List<FichaDTO> fichas){
         notificarAgregarFichas(fichas);
     }
@@ -129,9 +140,12 @@ public class PartidaModel extends ObservablePartida{
         mapeoFichas.put(dibujo, ficha);
     }
     
-//    public void agregarMapeoFichasJugadas(FichaDTO ficha, Canvas dibujo){
-//        mapeoFichasJugadas.put(ficha, dibujo);
-//    }
+    public boolean es1raFichaDespuesDeMulaIzq(){
+        return tablero.getExtremoIzq() == null;
+    }
+    public boolean es1raFichaDespuesDeMulaDer(){
+        return tablero.getExtremoDer() == null;
+    }
     
     public void quitarMapeoFichas(Canvas dibujo){
         mapeoFichas.remove(dibujo);
@@ -142,6 +156,10 @@ public class PartidaModel extends ObservablePartida{
         return partida;
     }
     
+    
+    public String obtenerNumeroFichaCuenta(CuentaDTO cuenta){
+        return String.valueOf(cuenta.getJugador().numFichas());
+    }
     public List<Canvas> obtenerDibujos(){
         List<Canvas> dibujosFicha = new ArrayList<>(mapeoFichas.keySet());
         return dibujosFicha;

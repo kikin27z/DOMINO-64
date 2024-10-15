@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidadesDTO;
 
 import java.util.ArrayList;
@@ -49,6 +45,10 @@ public class JugadorDTO {
     
     public void removerFicha(FichaDTO ficha){
         this.fichas.remove(ficha);
+    }
+    
+    public int numFichas(){
+        return this.fichas.size();
     }
 
     @Override
