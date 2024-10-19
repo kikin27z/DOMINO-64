@@ -4,7 +4,7 @@
 
 package com.mycompany.starter;
 
-import presentacion_utilities.NotificadorPresentacion;
+import logica.DisplayHandler;
 
 /**
  *
@@ -13,9 +13,7 @@ import presentacion_utilities.NotificadorPresentacion;
 public class Starter {
 
     public static void main(String[] args) {
-        //NotificadorLogica notificador = NotificadorLogica.getInstance();
-        NotificadorPresentacion notificador= NotificadorPresentacion.getInstance();
-        Display display = new Display(notificador);
+        DisplayHandler display = new DisplayHandler();
         display.iniciarJuego();
     }
 }

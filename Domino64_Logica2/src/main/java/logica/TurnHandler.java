@@ -5,7 +5,6 @@
 package logica;
 
 import com.mycompany.patrones.observer.Observer;
-import com.mycompany.starter.NotificadorLogica;
 import entidades.Ficha;
 import entidades.Jugador;
 import java.util.ArrayList;

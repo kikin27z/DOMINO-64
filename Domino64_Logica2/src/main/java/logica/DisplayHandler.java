@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.starter;
+package logica;
 
 import acciones.CambiarPantalla;
 import acciones.CrearPartida;
@@ -35,26 +35,25 @@ import logica.TurnHandler;
  *
  * @author luisa M
  */
-public class Display<T> implements Observer<NotificadorPresentacion>, Runnable{
+public class DisplayHandler<T> implements Runnable{
     private final FachadaNavegador fachada;
     private final NotificadorPresentacion notificador;
     private PartidaDTO partidaDTO;
     private JugadorDTO jugadorDTO;
     
-    protected Display(NotificadorPresentacion notificador){
-        this.notificador = notificador;
+    public DisplayHandler(){
+        this.notificador = NotificadorPresentacion.getInstance();
         fachada = FachadaNavegador.getInstance();
         this.partidaDTO = new PartidaDTO();
         this.jugadorDTO = new JugadorDTO();
     }
     
-    protected void iniciarJuego(){
+    public void iniciarJuego(){
         if(fachada != null){
             List<List<Accion>> acciones = new ArrayList<>();
             acciones.add(crearAccionesInicio());
             acciones.add(crearAccionesLobby());
             fachada.iniciarApp(acciones);
-            notificador.addObserver(this);
         }
     }
     
@@ -74,14 +73,12 @@ public class Display<T> implements Observer<NotificadorPresentacion>, Runnable{
     
     private Accion getAccionCambiarPantalla(int destino){
         CambiarPantalla cambiarPantalla = new CambiarPantalla(this, destino);
-        System.out.println("se creo el cambiar pantalla");
-        System.out.println("dirigido a "+ cambiarPantalla);
         return cambiarPantalla;
     }
     
     private Accion getAccionCrearPartidaCPU(){
         GameHandler gameHandler = new GameHandler();
-        CrearPartida accion = new CrearPartida(ModoPartida.VS_CPU,gameHandler);
+        CrearPartida accion = new CrearPartida(Partida.OFFLINE,gameHandler);
         
         notificador.addObserver(accion.getGameHandler());
         
@@ -108,6 +105,10 @@ public class Display<T> implements Observer<NotificadorPresentacion>, Runnable{
 
     public void irInicio(){
         this.fachada.irInicio();
+    }
+    
+    public void irTipoPartida(){
+        
     }
     
     public void irLobby(){
@@ -177,12 +178,6 @@ public class Display<T> implements Observer<NotificadorPresentacion>, Runnable{
         return jugadoresDTO;
     }
     
- 
-    @Override
-    public void update(NotificadorPresentacion observable, Object ... context) {
-        
-    }
-
     public void enviarJugadorActualizado(){
         actualizarJugador(GameHandler.getJugador());
         System.out.println(jugadorDTO);

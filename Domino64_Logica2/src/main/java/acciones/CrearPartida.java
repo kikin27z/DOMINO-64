@@ -13,17 +13,19 @@ import logica.GameHandler;
  * @author luisa M
  */
 public class CrearPartida extends AccionBase{
+    private int modo;
     
-    private ModoPartida modo;
-    
-    public CrearPartida(ModoPartida modoPartida, GameHandler handler){
-        gameHandler = handler;
+    public CrearPartida(int modoPartida, GameHandler handler){
+        if(gameHandler == null)
+            gameHandler = handler;
         modo = modoPartida;
     }
     
     private void crearPartida(){
-        Partida partida = new Partida(modo);
-        gameHandler.setPartida(partida);
+        if(GameHandler.getPartida() == null){
+            Partida partida = new Partida(modo);
+            gameHandler.setPartida(partida);
+        }
     }
     
     

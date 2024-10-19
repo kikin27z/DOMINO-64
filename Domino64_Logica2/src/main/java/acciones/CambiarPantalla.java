@@ -4,7 +4,7 @@
  */
 package acciones;
 
-import com.mycompany.starter.Display;
+import logica.DisplayHandler;
 /**
  *
  * @author luisa M
@@ -13,9 +13,10 @@ public class CambiarPantalla extends AccionBase{
     private int destino;
     public static final int IR_INICIO = 0;
     public static final int IR_LOBBY = 1;
-    public static final int IR_PARTIDA = 2;
+    public static final int IR_TIPO_PARTIDA = 2;
+    public static final int IR_PARTIDA = 3;
     
-    public CambiarPantalla(Display displayNuevo, int destino){
+    public CambiarPantalla(DisplayHandler displayNuevo, int destino){
         if(display==null)
             display = displayNuevo;
         this.destino = destino;
@@ -31,7 +32,10 @@ public class CambiarPantalla extends AccionBase{
             case IR_INICIO -> {
                 display.irInicio();
             }
-            case IR_LOBBY -> {
+            case IR_TIPO_PARTIDA -> {
+                display.irTipoPartida();
+            }
+            case IR_LOBBY ->{
                 display.irLobby();
             }
             case IR_PARTIDA ->{

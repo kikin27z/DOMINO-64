@@ -14,17 +14,19 @@ import java.util.List;
  * @author luisa
  */
 public class Partida {
+    public final static int ONLINE = 1;
+    public final static int OFFLINE = 2;
     private Pozo pozo;
     private Tablero tablero;
     private List<Jugador> jugadores;
-    private ModoPartida modo;
+    private int modo;
     private boolean turnosDesignados;
     private String codigoPartida;
     private Jugador jugadorEnTurno;
     private int fichasPorJugador;
     private int maxCantidadJugadores;
     
-    public Partida(ModoPartida modo){
+    public Partida(int modo){
         this.jugadores = new ArrayList<>();
         this.modo = modo;
         this.pozo = new Pozo();
@@ -32,8 +34,12 @@ public class Partida {
         this.turnosDesignados = false;
     }
     
-    public ModoPartida getModo(){
+    public int getModo(){
         return modo;
+    }
+    
+    public void setModo(int modo){
+        this.modo = modo;
     }
     
     public void inicializarPartida(String codigoPartida, Jugador creadorPartida,
