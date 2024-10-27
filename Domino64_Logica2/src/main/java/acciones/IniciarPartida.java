@@ -199,15 +199,15 @@ public class IniciarPartida extends AccionBase implements Runnable{
     }
     
     private void inicializarManejadores(){
-        tileHandler.setPozo(gameHandler.getPartida().getPozo());
-        tileHandler.setTablero(gameHandler.getPartida().getTablero());
-        turnHandler.setJugadores(gameHandler.getPartida().getJugadores());
+        tileHandler.setPozo(GameHandler.getPartida().getPozo());
+        tileHandler.setTablero(GameHandler.getPartida().getTablero());
+        turnHandler.setJugadores(GameHandler.getPartida().getJugadores());
     }
     
     private void iniciarJuego() throws LogicException{
-        tileHandler.repartirFichas(gameHandler.getPartida().getJugadores(), gameHandler.getPartida().getFichasPorJugador());
+        tileHandler.repartirFichas(GameHandler.getPartida().getJugadores(), GameHandler.getPartida().getFichasPorJugador());
         if (!turnHandler.designarPrimerTurno()) {
-            buscarPrimeraMula(gameHandler.getPartida().getJugadores());
+            buscarPrimeraMula(GameHandler.getPartida().getJugadores());
         } else {
             colocarPrimeraMula();
         }
@@ -219,7 +219,7 @@ public class IniciarPartida extends AccionBase implements Runnable{
         try {
             inicializarManejadores();
             iniciarJuego();
-            if (GameHandler.getPartida().getModo() == ModoPartida.VS_CPU) {
+            if (GameHandler.getPartida().getModo() == Partida.OFFLINE) {
                 display.enviarPartidaActualizada();
                 display.enviarJugadorActualizado();
                 //display.irPartida();

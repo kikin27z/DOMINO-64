@@ -1,7 +1,7 @@
 package acciones;
 
-import patrones.command.Accion;
-import com.mycompany.starter.Display;
+import com.mycompany.patrones.command.Accion;
+import logica.DisplayHandler;
 import logica.GameHandler;
 import logica.TileHandler;
 import logica.TurnHandler;
@@ -14,9 +14,9 @@ public abstract class AccionBase implements Accion{
     public static GameHandler gameHandler;
     static TileHandler tileHandler;
     static TurnHandler turnHandler;
-    static Display display;
+    static DisplayHandler display;
     
-    public void setDisplay(Display displayy){
+    public void setDisplay(DisplayHandler displayy){
         display = displayy;
     }
 
@@ -44,7 +44,7 @@ public abstract class AccionBase implements Accion{
         return turnHandler;
     }
 
-    public Display getDisplay() {
+    public DisplayHandler getDisplay() {
         return display;
     }
     

@@ -2,6 +2,7 @@ package logica;
 
 import patrones.observer.Observer;
 import com.mycompany.starter.NotificadorLogica;
+import com.mycompany.patrones.observer.Observer;
 import entidades.Ficha;
 import entidades.JugadaPosible;
 import entidades.Jugador;
