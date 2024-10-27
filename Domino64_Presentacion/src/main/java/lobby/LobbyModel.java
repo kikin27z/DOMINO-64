@@ -3,8 +3,6 @@ package lobby;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.PartidaDTO;
 import java.util.ArrayList;
-import patrones.command.Accion;
-import presentacion_utilities.NotificadorPresentacion;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +22,6 @@ import presentacion_observers.ObservableLobby;
  */
 public class LobbyModel extends ObservableLobby {
 
-    private List<Accion> acciones;
     private CuentaDTO cuentaActual;  // Cuenta del jugador actual
     private List<CuentaDTO> cuentasJugadoresOnline;  // Lista de cuentas de jugadores en línea
     private Map<Integer, AnchorPane> panelesJugadores;  // Mapa de paneles de jugadores, indexados por ID
@@ -33,7 +30,6 @@ public class LobbyModel extends ObservableLobby {
     private boolean esOnline;  // Estado de conexión (online/offline)
     private String[] avatares;  // Lista de avatares disponibles
     private PartidaDTO partidaDTO;
-    private NotificadorPresentacion notificador;
 
     /**
      * Constructor del modelo del lobby. Inicializa los datos y carga la
@@ -41,15 +37,6 @@ public class LobbyModel extends ObservableLobby {
      */
     public LobbyModel() {
         cargarDatos();  // Carga los datos iniciales
-    }
-
-    public LobbyModel(NotificadorPresentacion notificador) {
-        this.notificador = notificador;
-        cargarDatos();
-    }
-
-    public void setAcciones(List<Accion> acciones) {
-        this.acciones = acciones;
     }
 
     /**
@@ -97,10 +84,6 @@ public class LobbyModel extends ObservableLobby {
     }
 
     public void iniciarPartida() {
-//        notificador.
-        acciones.forEach(action -> {
-            action.ejecutarAccion();
-        });
     }
 
     //--------------Validadores-------------------

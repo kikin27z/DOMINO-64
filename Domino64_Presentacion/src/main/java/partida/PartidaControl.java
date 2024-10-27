@@ -28,13 +28,13 @@ public class PartidaControl {
         view.insertarMesaAba(cuenta);
         JugadorDTO jugador = new JugadorDTO();
         List<FichaDTO> fichas = new ArrayList<>();
-        fichas.add(new FichaDTO(6,6,0));
-        fichas.add(new FichaDTO(1,6,1));
-        fichas.add(new FichaDTO(1,1,0));
-        fichas.add(new FichaDTO(0,1,0));
-        fichas.add(new FichaDTO(3,0,0));
-        fichas.add(new FichaDTO(3,3,1));
-        fichas.add(new FichaDTO(2,3,1));
+//        fichas.add(new FichaDTO(6,6,0));
+//        fichas.add(new FichaDTO(1,6,1));
+//        fichas.add(new FichaDTO(1,1,0));
+//        fichas.add(new FichaDTO(0,1,0));
+//        fichas.add(new FichaDTO(3,0,0));
+//        fichas.add(new FichaDTO(3,3,1));
+//        fichas.add(new FichaDTO(2,3,1));
         
         jugador.setFichas(fichas);
         modelo.setJugador(jugador);
@@ -56,6 +56,6 @@ public class PartidaControl {
     }
     
     public void mostrarFichasMazo(MouseEvent e){
-        modelo.agregarFichaUsuarioActual(new FichaDTO(3,3));
+//        modelo.agregarFichaUsuarioActual(new FichaDTO(3,3));
     }
 }

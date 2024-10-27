@@ -10,7 +10,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import presentacion_utilities.NotificadorPresentacion;
 
 /**
  * La clase InicioView representa la vista inicial del juego de dominó, donde

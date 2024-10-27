@@ -1,4 +1,4 @@
-package partida;
+ package partida;
 
 //import entidades.Ficha;
 import entidadesDTO.CuentaDTO;
@@ -310,12 +310,12 @@ public class PartidaView implements ObservadorPartida {
     }
     
     private void agregarTrenFichasIzq(FichaDTO ficha, Canvas dibujo){
-        modelo.getTablero().setExtremoIzq(ficha);
+//        modelo.getTablero().setExtremoIzq(ficha);
         trenFichasDibujos.offerFirst(dibujo);
     }
     
     private void agregarTrenFichasDer(FichaDTO ficha, Canvas dibujo){
-        modelo.getTablero().setExtremoDer(ficha);
+//        modelo.getTablero().setExtremoDer(ficha);
         trenFichasDibujos.offerLast(dibujo);
     }
     
@@ -333,7 +333,7 @@ public class PartidaView implements ObservadorPartida {
     dibujaFicha.construirVertical(fichaDTO);
     Canvas dibujo = dibujaFicha.resultado();
     trenFichasDibujos.offerFirst(dibujo);
-    modelo.getTablero().setFichaInicial(fichaDTO);
+//    modelo.getTablero().setFichaInicial(fichaDTO);
     insertarAlTablero(847, 720, dibujo, fichaDTO);
 }
 
@@ -362,49 +362,49 @@ private void insertarFichaDespuesMula(FichaDTO fichaDTO, boolean izquierda) {
 private void insertarFichaExtremoIzq(FichaDTO fichaDTO) {
     DominoMazo dibujar = new DominoMazo();
     Canvas fichaDibujoIzq = trenFichasDibujos.peekFirst();
-    FichaDTO fichaIzq = modelo.getTablero().getExtremoIzq();
+//    FichaDTO fichaIzq = modelo.getTablero().getExtremoIzq();
     Canvas fichaDibujo;
     double coordenadaX, coordenadaY;
 
-    if (fichaDTO.esMula()) {
-        if (fichaIzq.getOrientacion() == 0) { // Horizontal
-            dibujar.construirHorizontal(fichaDTO);
-            fichaDibujo = dibujar.resultado();
-            coordenadaX = fichaDibujoIzq.getLayoutX() - 20;
-            coordenadaY = fichaDibujoIzq.getLayoutY() - 50;
-        } else { // Vertical
-            dibujar.construirVertical(fichaDTO);
-            fichaDibujo = dibujar.resultado();
-            coordenadaX = fichaDibujoIzq.getLayoutX() - 50;
-            coordenadaY = fichaDibujoIzq.getLayoutY() - 20;
-        }
-    } else {
-        if (fichaIzq.getOrientacion() == 0) { // Horizontal
-            dibujar.construirVertical(fichaDTO);
-            fichaDibujo = dibujar.resultado();
-            coordenadaX = fichaDibujoIzq.getLayoutX();
-            coordenadaY = fichaDibujoIzq.getLayoutY() - 90;
-        } else { // Vertical
-            dibujar.construirHorizontal(fichaDTO);
-            fichaDibujo = dibujar.resultado();
-            coordenadaX = fichaDibujoIzq.getLayoutX() - 90;
-            coordenadaY = fichaDibujoIzq.getLayoutY();
-        }
-    }
+//    if (fichaDTO.esMula()) {
+//        if (fichaIzq.getOrientacion() == 0) { // Horizontal
+//            dibujar.construirHorizontal(fichaDTO);
+//            fichaDibujo = dibujar.resultado();
+//            coordenadaX = fichaDibujoIzq.getLayoutX() - 20;
+//            coordenadaY = fichaDibujoIzq.getLayoutY() - 50;
+//        } else { // Vertical
+//            dibujar.construirVertical(fichaDTO);
+//            fichaDibujo = dibujar.resultado();
+//            coordenadaX = fichaDibujoIzq.getLayoutX() - 50;
+//            coordenadaY = fichaDibujoIzq.getLayoutY() - 20;
+//        }
+//    } else {
+//        if (fichaIzq.getOrientacion() == 0) { // Horizontal
+//            dibujar.construirVertical(fichaDTO);
+//            fichaDibujo = dibujar.resultado();
+//            coordenadaX = fichaDibujoIzq.getLayoutX();
+//            coordenadaY = fichaDibujoIzq.getLayoutY() - 90;
+//        } else { // Vertical
+//            dibujar.construirHorizontal(fichaDTO);
+//            fichaDibujo = dibujar.resultado();
+//            coordenadaX = fichaDibujoIzq.getLayoutX() - 90;
+//            coordenadaY = fichaDibujoIzq.getLayoutY();
+//        }
+//    }
 
-    agregarTrenFichasIzq(fichaDTO, fichaDibujo);
-    insertarAlTablero(coordenadaX, coordenadaY, fichaDibujo, fichaDTO);
+//    agregarTrenFichasIzq(fichaDTO, fichaDibujo);
+//    insertarAlTablero(coordenadaX, coordenadaY, fichaDibujo, fichaDTO);
 }
 
 private void insertarFichaExtremoDer(FichaDTO fichaDTO) {
     DominoMazo dibujar = new DominoMazo();
     Canvas fichaDibujoDer = trenFichasDibujos.peekLast();
-    FichaDTO fichaDer = modelo.getTablero().getExtremoDer();
+//    FichaDTO fichaDer = modelo.getTablero().getExtremoDer();
     Canvas fichaDibujo;
     double coordenadaX, coordenadaY;
 
     if (fichaDTO.esMula()) {
-        if (fichaDer.getOrientacion() == 0) { // Horizontal
+        if (0 == 0) { // Horizontal
             dibujar.construirHorizontal(fichaDTO);
             fichaDibujo = dibujar.resultado();
             coordenadaX = fichaDibujoDer.getLayoutX() - 20;
@@ -416,7 +416,7 @@ private void insertarFichaExtremoDer(FichaDTO fichaDTO) {
             coordenadaY = fichaDibujoDer.getLayoutY() - 20;
         }
     } else {
-        if (fichaDer.getOrientacion() == 0) { // Horizontal
+        if (0 == 0) { // Horizontal
             dibujar.construirVertical(fichaDTO);
             fichaDibujo = dibujar.resultado();
             coordenadaX = fichaDibujoDer.getLayoutX();
