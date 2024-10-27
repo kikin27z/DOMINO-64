@@ -1,18 +1,9 @@
 package presentacion_utilities;
 
-import entidadesDTO.CuentaDTO;
-import entidadesDTO.FichaDTO;
-import patrones.command.Accion;
-//import com.mycompany.patrones.command.Accion;
-import entidadesDTO.JugadorDTO;
-import entidadesDTO.PartidaDTO;
-import entidadesDTO.PartidaOfflineDTO;
 import inicio.InicioControl;
 import inicio.InicioModel;
 import inicio.InicioView;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import lobby.LobbyControl;
@@ -44,9 +35,6 @@ public class Navegacion implements INavegacion {
 
     // Constructor privado para evitar instanciación externa
     private Navegacion() {
-        modeloInicio = new InicioModel();
-        modeloLobby = new LobbyModel(NotificadorPresentacion.getInstance());
-        modeloPartida = new PartidaModel(NotificadorPresentacion.getInstance());
     }
 
     /**
@@ -61,25 +49,6 @@ public class Navegacion implements INavegacion {
         return navegacion;
     }
     
-    /**
-     * Actualiza los modelos, estableciendoles las acciones a ejecutar en cada boton
-     * que tenga la vista asociada a dicho modelo
-     * @param acciones Lista con todas las acciones a establecer en cada modelo,
-     * cada elemnto es una lista con las acciones correspondientes a un modelo en especifico.
-     * La primera lista contiene las acciones a asignarle al modeloInicio,
-     * la segunda lista contiene las acciones a asignarle al modeloLobby,
-     * y la tercera lista contiene las acciones a asignarle al modeloPartida
-     */
-    public void setAcciones(List<List<Accion>> acciones){
-        List<Accion> accionesInicio = acciones.get(0);//acciones para el modeloInicio
-        List<Accion> accionesLobby = acciones.get(1);//acciones para el modeloLobby
-        //List<Accion> accionesPartida = acciones.get(2);
-        
-        //actualizando los modelos, estableciendoles las acciones especificas
-        modeloInicio.setAcciones(accionesInicio);
-        modeloLobby.setAcciones(accionesLobby);
-    }
-
     /**
      * Inicia la aplicación lanzando la clase principal de JavaFX.
      */
@@ -143,17 +112,6 @@ public class Navegacion implements INavegacion {
         } catch (IOException ex) {
             ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
         }
-    }
-
-    @Override
-    public void actualizarPartida(PartidaDTO partidaActualizada) {
-        this.modeloPartida.setGame(partidaActualizada);
-        
-    }
-
-    @Override
-    public void actualizarJugador(JugadorDTO jugadorActualizado) {
-        this.modeloPartida.setJugador(jugadorActualizado);
     }
 
     @Override
