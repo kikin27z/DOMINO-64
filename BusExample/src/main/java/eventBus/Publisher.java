@@ -4,6 +4,8 @@
  */
 package eventBus;
 
+import event.Event;
+
 /**
  *
  * @author luisa M

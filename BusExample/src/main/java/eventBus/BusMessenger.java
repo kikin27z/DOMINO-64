@@ -4,6 +4,8 @@
  */
 package eventBus;
 
+import event.Event;
+import event.EventType;
 import exceptions.BusException;
 import java.util.Collections;
 import java.util.Comparator;

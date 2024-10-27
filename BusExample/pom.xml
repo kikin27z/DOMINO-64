@@ -7,9 +7,9 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>ObserverAPI</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.event.api</groupId>
+            <artifactId>Event</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <properties>
