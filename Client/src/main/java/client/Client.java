@@ -93,7 +93,11 @@ public class Client extends Observable<Event>{
                     try {
                         event = (Event)input.readObject();
                         System.out.println("mensaje recibido " + event);
+<<<<<<< HEAD
                         notifyObservers(event);
+=======
+                        //notifyObservers(message);
+>>>>>>> f58427e (proyecto del cliente)
                     } catch (ClassNotFoundException | IOException ex) {
                         closeClient();
                     }
@@ -103,6 +107,12 @@ public class Client extends Observable<Event>{
         }).start();
     }
 
+<<<<<<< HEAD
+=======
+    private void notifyEvent(Event event){
+        this.notifyObservers(event);
+    }
+>>>>>>> f58427e (proyecto del cliente)
 //    
 //    public String getRecentMessage() {
 //        return this.event;
