@@ -4,10 +4,6 @@
  */
 
 module BusExample {
-    requires ObserverAPI;
     requires java.logging;
-    requires java.desktop;
-    
-    uses observer.Observable;
-    uses observer.Observer;
+    requires Event;
 }

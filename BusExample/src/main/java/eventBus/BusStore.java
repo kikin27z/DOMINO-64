@@ -4,6 +4,8 @@
  */
 package eventBus;
 
+import event.Event;
+import event.EventType;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
