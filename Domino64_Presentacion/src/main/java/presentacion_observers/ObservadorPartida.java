@@ -1,6 +1,8 @@
 package presentacion_observers;
 
 import entidadesDTO.FichaDTO;
+import entidadesDTO.PartidaOfflineDTO;
+import entidadesDTO.PartidaOnlineDTO;
 import java.util.List;
 import javafx.scene.canvas.Canvas;
 
@@ -19,4 +21,7 @@ public interface ObservadorPartida {
     public void agregarFichasMazo(List<FichaDTO> fichasDTO);
     public void activarEventoFicha();
     public void desactivarEventoFicha();
+    
+    public void iniciarPartidaOffline(PartidaOfflineDTO partida);
+    public void iniciarPartidaOnline(PartidaOnlineDTO partida);
 }

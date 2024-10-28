@@ -8,6 +8,5 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
-        <exec.mainClass>com.mycompany.domino64_dto.Domino64_DTO</exec.mainClass>
     </properties>
 </project>

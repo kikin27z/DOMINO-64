@@ -2,11 +2,8 @@ module utilities {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.base;
-    requires PatronesAPI;
     requires Domino64_DTO;
-    
-    uses patrones.observer.Observable;
-    uses patrones.observer.Observer;
+    requires Domino64.Observers;
 
     // Exporta y abre el paquete 'utilities' para que otros módulos puedan acceder y cargar FXML
     exports presentacion_utilities;
