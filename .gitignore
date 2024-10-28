@@ -13,8 +13,8 @@ target/
 build/
 
 # Archivos de StarUML
-*.uml               # Ignora todos los archivos .uml
-*.staruml           # Ignora todos los archivos .staruml (si existen)
+*.mdj               # Ignora todos los archivos .mdj
+*.uml               # Ignora todos los archivos .uml (si corresponde)
 *.png               # Ignora archivos de imagen generados por StarUML
 *.svg               # Ignora archivos SVG generados por StarUML
-staruml-project/    # Ignora la carpeta de proyecto de StarUML (ajusta el nombre según tu estructura)
+staruml-project/    # Ignora la carpeta de proyecto de StarUML (ajusta según tu estructura)
