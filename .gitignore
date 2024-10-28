@@ -1,16 +1,20 @@
-
-
-#archivos de compilación
+# Archivos de compilación
 *.class
 
-#carpetas de salida
+# Carpetas de salida
 build/
 dist/
 
-#configuraciones privadas de NetBeans
+# Configuraciones privadas de NetBeans
 nbproject/private/
 
-#archivos de Maven
+# Archivos de Maven
 target/
 build/
 
+# Archivos de StarUML
+*.uml               # Ignora todos los archivos .uml
+*.staruml           # Ignora todos los archivos .staruml (si existen)
+*.png               # Ignora archivos de imagen generados por StarUML
+*.svg               # Ignora archivos SVG generados por StarUML
+staruml-project/    # Ignora la carpeta de proyecto de StarUML (ajusta el nombre según tu estructura)
