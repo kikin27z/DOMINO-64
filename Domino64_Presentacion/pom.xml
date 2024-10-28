@@ -25,6 +25,11 @@
             <artifactId>Domino64_DTO</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>Arquitectura_Software</groupId>
+            <artifactId>Domino64_Observers</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

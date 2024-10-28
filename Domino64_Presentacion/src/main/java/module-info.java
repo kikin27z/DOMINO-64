@@ -3,6 +3,7 @@ module utilities {
     requires javafx.fxml;
     requires java.base;
     requires Domino64_DTO;
+    requires Domino64.Observers;
 
     // Exporta y abre el paquete 'utilities' para que otros módulos puedan acceder y cargar FXML
     exports presentacion_utilities;

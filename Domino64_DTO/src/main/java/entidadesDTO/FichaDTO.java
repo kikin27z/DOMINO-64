@@ -18,6 +18,13 @@ public class FichaDTO {
     public int getOrientacion() {
         return orientacion;
     }
+
+    public FichaDTO(int izquierda, int derecha) {
+        this.izquierda = izquierda;
+        this.derecha = derecha;
+    }
+    
+    
     
     public boolean esMula() {
         return izquierda == derecha;

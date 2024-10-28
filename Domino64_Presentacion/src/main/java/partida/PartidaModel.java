@@ -1,23 +1,23 @@
 package partida;
 
-//import entidades.Ficha;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaDTO;
-import entidadesDTO.PartidaOfflineDTO;
-import entidadesDTO.PartidaOnlineDTO;
 import entidadesDTO.PozoDTO;
 import entidadesDTO.TableroDTO;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import presentacion_observers.ObservablePartida;
+import observer_logica.EventoLogica;
+import observer_logica.ObservableLogica;
+import observer_logica.ObservadorLogica;
+import observer_MVC.EventoMVC;
+import observer_MVC.ObservableMVC;
+
 
 /**
  *
@@ -25,13 +25,13 @@ import presentacion_observers.ObservablePartida;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class PartidaModel extends ObservablePartida{
+public class PartidaModel extends ObservableMVC implements ObservableLogica{
+    private List<ObservadorLogica> observadores = new ArrayList<>();
     private JugadorDTO jugador;
     private PartidaDTO partida;
     private TableroDTO tablero = new TableroDTO();
     private PozoDTO pozo;
     private Map<Canvas, FichaDTO> mapeoFichas;
-//    public Map<FichaDTO, Canvas> mapeoFichasJugadas;
     
     public final int JUGADOR_ACTUALIZADO=0;
     public final int PARTIDA_ACTUALIZADA=1;
@@ -86,7 +86,9 @@ public class PartidaModel extends ObservablePartida{
     
     public PartidaModel() {
         mapeoFichas = new HashMap<>();
-//        mapeoFichasJugadas = new HashMap<>();
+        List<FichaDTO> fichas = new ArrayList<>();
+        fichas.add(new FichaDTO(3,2));
+        
     }
 
 
@@ -95,22 +97,30 @@ public class PartidaModel extends ObservablePartida{
 //        mapeoFichasJugadas = new HashMap<>();
         this.jugador = jugador;
         this.partida = partida;
+        List<FichaDTO> fichas = new ArrayList<>();
+        fichas.add(new FichaDTO(3,2));
+        
+        this.agregarFichas(fichas);
     }
     
 
     
      //--------------Métodos notificadores-------------------
-    public void agregarFichasUsuarioActual(List<FichaDTO> fichas){
-        notificarAgregarFichas(fichas);
+    public void agregarFichas(List<FichaDTO> fichas){
+        EventoMVC<List<FichaDTO>> evento = new EventoMVC<>("fichasMazo", fichas);
+        this.notificarObservadores(evento);
     }
-    public void agregarFichaUsuarioActual(FichaDTO ficha){
-        notificarAgregarFicha(ficha);
+    public void agregarFicha(FichaDTO ficha){
+        EventoMVC<FichaDTO> evento = new EventoMVC<>("fichaMazo", ficha);
+        this.notificarObservadores(evento);
     }
     
     public void agregarFichaAlTablero(FichaDTO ficha, TableroDTO tablero, boolean izquierda){
         this.tablero = tablero;
-        notificarAgregarFichaAlTablero(ficha, izquierda);
+//        notificarAgregarFichaAlTablero(ficha, izquierda);
     }
+    
+    
     
      //-----------------------------------------------------
     
@@ -325,5 +335,24 @@ return null;
 
     public String getImgViewBttmResourceName() {
         return imgViewBttmResourceName;
+    }
+
+    
+    // Notificaciones a lógica
+    @Override
+    public void agregarObservador(ObservadorLogica observador) {
+        observadores.add(observador);
+    }
+
+    @Override
+    public void eliminarObservador(ObservadorLogica observador) {
+         observadores.remove(observador);
+    }
+
+    @Override
+    public void notificarObservadores(EventoLogica<?> evento) {
+        for (ObservadorLogica observador : observadores) {
+            observador.notificar(evento);
+        }
     }
 }

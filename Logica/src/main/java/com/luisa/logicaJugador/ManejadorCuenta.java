@@ -4,7 +4,7 @@
  */
 package com.luisa.logicaJugador;
 
-import client.Client;
+//import client.Client;
 import com.luisa.entidades.Cuenta;
 import com.luisa.entidades.Partida;
 import event.Event;
@@ -19,13 +19,13 @@ import observer.Observer;
  */
 public class ManejadorCuenta implements Observer<Event>{
     private Cuenta jugador;
-    private Client cliente;
+//    private Client cliente;
     
     public ManejadorCuenta(){
         this.jugador = new Cuenta(generarIdCuenta());
-        cliente = new Client(5000,jugador.getId());
-        cliente.addObserver(this);
-        cliente.initClient();
+//        cliente = new Client(5000,jugador.getId());
+//        cliente.addObserver(this);
+//        cliente.initClient();
     }
     
     private String generarIdCuenta(){
@@ -38,7 +38,7 @@ public class ManejadorCuenta implements Observer<Event>{
     }
     
     public void unirmePartida(Partida partida){
-        cliente.sendMessage(new EventoUnirsePartida(jugador.getId(),partida));
+//        cliente.sendMessage(new EventoUnirsePartida(jugador.getId(),partida));
     }
 
     @Override
