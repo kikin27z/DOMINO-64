@@ -4,14 +4,14 @@
  */
 package presentacion_utilities;
 
-import com.mycompany.patrones.observer.Observable;
-import com.mycompany.patrones.observer.Observer;
+
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadorDTO;
 import inicio.InicioModel;
 import java.util.ArrayList;
 import java.util.List;
 import lobby.LobbyModel;
+import observer.Observable;
 import partida.PartidaModel;
 
 /**

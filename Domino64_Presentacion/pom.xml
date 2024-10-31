@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>ObserverAPI</artifactId>
+            <artifactId>Observer</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
