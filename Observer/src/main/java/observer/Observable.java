@@ -6,13 +6,14 @@ package observer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author luisa M
  */
 public class Observable<T> {
-    private List<Observer<T>> observers;
+    private Map<CategoriaEvento, List<Observer>> observers;
     //private boolean estado;
 
     public Observable() {
