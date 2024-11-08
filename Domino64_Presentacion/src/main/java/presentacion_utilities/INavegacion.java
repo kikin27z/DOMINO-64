@@ -1,6 +1,8 @@
 package presentacion_utilities;
 
 
+
+
 /**
  * Interfaz que define los métodos para la navegación entre diferentes vistas
  * de la aplicación. Esta interfaz establece un contrato para las clases que
@@ -31,9 +33,7 @@ public interface INavegacion {
     /**
      * Cambia la vista a la pantalla de partida.
      */
-    public void cambiarPartidaModoAnterior();
     public void cambiarPartida();
     
     public void cambiarOpcionesPartida();
-    
 }

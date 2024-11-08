@@ -1,11 +1,11 @@
 package opciones_partida;
 
-import java.io.IOException;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
+import eventosInicio.ObserverInicio;
+import eventosOpcionesPartida.EventosOpcionesPartida;
+import eventosOpcionesPartida.ObserverOpcionesPartida;
+import java.util.ArrayList;
+import java.util.List;
+import presentacion_utilities.NotificadorEvento;
 
 /**
  *
@@ -13,7 +13,41 @@ import javafx.scene.Scene;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class OpcionesPartidaModel {
-    
+public class OpcionesPartidaModel implements EventosOpcionesPartida{
+    private final NotificadorEvento notificador;
+    private final List<ObserverOpcionesPartida> observers;
+    private String codigoPartida;
+    public OpcionesPartidaModel() {
+        notificador = NotificadorEvento.getInstance();
+        observers = new ArrayList<>();
+    }
 
+    public void avisarMostrarInicio() {
+        notificador.avisarMostrarInicio();
+    }
+
+    @Override
+    public void avisarCrearPartida() {
+        for(var observer : observers){
+            observer.avisarCrearPartida();
+        }
+    }
+
+    @Override
+    public void avisarBuscarPartida(String codigoPartida) {
+        for(var observer : observers){
+            observer.avisarBuscarPartida(codigoPartida);
+        }
+    }
+
+    public String getCodigoPartida() {
+        return codigoPartida;
+    }
+
+    public void setCodigoPartida(String codigoPartida) {
+        this.codigoPartida = codigoPartida;
+    }
+    
+    
+    
 }

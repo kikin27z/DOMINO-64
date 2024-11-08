@@ -12,12 +12,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
- * La clase InicioView representa la vista inicial del juego de dominó, donde
- * se ofrecen opciones para jugar en modo "Offline" (solo) o "Online". Utiliza
- * JavaFX para la creación de la interfaz gráfica.
- * 
- * Los elementos principales incluyen imágenes decorativas y dos botones que 
- * permiten seleccionar el modo de juego. 
  * 
  * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
@@ -28,8 +22,8 @@ public class InicioView {
     private ImageView imgDomino;
     private ImageView imgTitulo;
     // Botones para seleccionar el modo de juego.
-    private Button btnOnline;
-    private Button btnOffline;
+    private Button btnCreditos;
+    private Button btnJugar;
     private InicioModel modelo;
 
     /**
@@ -69,28 +63,28 @@ public class InicioView {
         crearBotones();
 
         // Se añaden todos los componentes al panel.
-        panel.getChildren().addAll(imgDomino, imgTitulo, btnOffline, btnOnline);
+        panel.getChildren().addAll(imgDomino, imgTitulo, btnJugar, btnCreditos);
     }
 
     /**
      * Crea y configura los botones de la vista de inicio: "Jugar solo" y "Jugar online".
      */
     private void crearBotones() {
-        btnOffline = new Button("Jugar solo");
-        btnOffline.setLayoutX(276);
-        btnOffline.setLayoutY(493);
-        btnOffline.setPrefSize(447, 75);
-        btnOffline.setStyle("-fx-padding: 0 0; -fx-background-color: #B2533E;");
-        btnOffline.setTextFill(javafx.scene.paint.Color.WHITE);
-        btnOffline.setFont(Font.font("Lucida Console", 43));
+        btnJugar = new Button("Jugar partida");
+        btnJugar.setLayoutX(276);
+        btnJugar.setLayoutY(493);
+        btnJugar.setPrefSize(447, 75);
+        btnJugar.setStyle("-fx-padding: 0 0; -fx-background-color: #B2533E;");
+        btnJugar.setTextFill(javafx.scene.paint.Color.WHITE);
+        btnJugar.setFont(Font.font("Lucida Console", 43));
 
-        btnOnline = new Button("Jugar online");
-        btnOnline.setLayoutX(276);
-        btnOnline.setLayoutY(591);
-        btnOnline.setPrefSize(447, 75);
-        btnOnline.setStyle("-fx-padding: 0 0; -fx-background-color: #B2533E;");
-        btnOnline.setTextFill(javafx.scene.paint.Color.WHITE);
-        btnOnline.setFont(Font.font("Lucida Console", 43));
+        btnCreditos = new Button("Mostrar créditos");
+        btnCreditos.setLayoutX(276);
+        btnCreditos.setLayoutY(591);
+        btnCreditos.setPrefSize(447, 75);
+        btnCreditos.setStyle("-fx-padding: 0 0; -fx-background-color: #B2533E;");
+        btnCreditos.setTextFill(javafx.scene.paint.Color.WHITE);
+        btnCreditos.setFont(Font.font("Lucida Console", 43));
     }
 
     /**
@@ -121,20 +115,15 @@ public class InicioView {
     //------------EVENTOS------------
     
     /**
-     * Asigna el evento de clic para el botón de modo Offline.
+     * Asigna el evento de clic para el botón de modo Jugar.
      * 
      * @param e el manejador de eventos que se ejecutará al hacer clic en el botón.
      */
-    public void modoOffline(EventHandler<MouseEvent> e){
-        btnOffline.setOnMouseClicked(e);
+    public void modoJugar(EventHandler<MouseEvent> e){
+        btnJugar.setOnMouseClicked(e);
     }
 
-    /**
-     * Asigna el evento de clic para el botón de modo Online.
-     * 
-     * @param e el manejador de eventos que se ejecutará al hacer clic en el botón.
-     */
-    public void modoOnline(EventHandler<MouseEvent> e){
-        btnOnline.setOnMouseClicked(e);
+    public void mostrarCreditos(EventHandler<MouseEvent> e){
+        btnCreditos.setOnMouseClicked(e);
     }
 }

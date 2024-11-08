@@ -40,6 +40,7 @@ public class OpcionesPartidaView {
     private Stage fondo;
     private Button btnCancelarBuscarPartida;
     private Button btnBuscarPartida;
+    private Label lblMensajes;
 
     public OpcionesPartidaView(OpcionesPartidaModel modelo) {
         this.modelo = modelo;
@@ -181,16 +182,16 @@ public class OpcionesPartidaView {
         txtCodigo.setFont(new Font("Russo One", 18));
         txtCodigo.setId("codigo");
 
-        Label placeholderLabel = new Label("****");
-        placeholderLabel.setAlignment(javafx.geometry.Pos.CENTER);
-        placeholderLabel.setLayoutX(21);
-        placeholderLabel.setLayoutY(266);
-        placeholderLabel.setPrefWidth(534);
-        placeholderLabel.setStyle("-fx-padding: 10 0;");
-        placeholderLabel.setTextFill(Color.web("#2e1c1cc7"));
-        placeholderLabel.setFont(new Font("Verdana Bold", 18));
+        lblMensajes = new Label("****");
+        lblMensajes.setAlignment(javafx.geometry.Pos.CENTER);
+        lblMensajes.setLayoutX(21);
+        lblMensajes.setLayoutY(266);
+        lblMensajes.setPrefWidth(534);
+        lblMensajes.setStyle("-fx-padding: 10 0;");
+        lblMensajes.setTextFill(Color.web("#2e1c1cc7"));
+        lblMensajes.setFont(new Font("Verdana Bold", 18));
 
-        innerPane.getChildren().addAll(titleLabel1, titleLabel2, btnCancelarBuscarPartida, btnBuscarPartida, txtCodigo, placeholderLabel);
+        innerPane.getChildren().addAll(titleLabel1, titleLabel2, btnCancelarBuscarPartida, btnBuscarPartida, txtCodigo, lblMensajes);
         fondoBuscarPartida.getChildren().add(innerPane);
 
         // Crear una nueva ventana (Stage) modal
@@ -236,6 +237,8 @@ public class OpcionesPartidaView {
 
     public void mostrarVentanaBuscarPartida() {
         ventanaBuscarPartida.setResizable(false);
+        txtCodigo.setText("");
+        lblMensajes.setText("****");
         ventanaBuscarPartida.showAndWait();  // showAndWait hace que sea modal
     }
 
@@ -253,5 +256,20 @@ public class OpcionesPartidaView {
 
     public void unirsePartida(EventHandler<MouseEvent> e) {
         btnUnirsePartida.setOnMouseClicked(e);
+    }
+    
+    public void volverInicio(EventHandler<MouseEvent> e){
+        btnVolver.setOnMouseClicked(e);
+    }
+    public void buscarPartida(EventHandler<MouseEvent> e){
+        
+        btnBuscarPartida.setOnMouseClicked(e);
+    }
+    public void cancelarBuscarPartida(EventHandler<MouseEvent> e){
+        btnCancelarBuscarPartida.setOnMouseClicked(e);
+    }
+    
+    public String obtenerCodigo(){
+        return txtCodigo.getText();
     }
 }

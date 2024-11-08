@@ -5,6 +5,7 @@ import inicio.InicioModel;
 import inicio.InicioView;
 import java.io.IOException;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import lobby.LobbyControl;
 import lobby.LobbyModel;
@@ -26,12 +27,11 @@ import partida.PartidaView;
  * @author José Karim Franco Valencia - 00000245138
  */
 public class Navegacion implements INavegacion {
-
     private Stage fondo; // La ventana principal de la aplicación
     private static Navegacion navegacion; // Instancia única de Navegacion
-    private PartidaModel modeloPartida;
-    private InicioModel modeloInicio;
-    private LobbyModel modeloLobby;
+    private PartidaModel partidaModel;
+    private InicioModel partidaInicio;
+    private Thread hiloApp;
 
     // Constructor privado para evitar instanciación externa
     private Navegacion() {
@@ -48,27 +48,28 @@ public class Navegacion implements INavegacion {
         }
         return navegacion;
     }
-    
+
     /**
      * Inicia la aplicación lanzando la clase principal de JavaFX.
      */
     @Override
     public void iniciarApp() {
-        Application.launch(App.class);
+        hiloApp = new Thread(() -> Application.launch(App.class));
+        hiloApp.start();
     }
     
     /**
      * Cambia la vista a la vista de inicio.
      *
-     * @throws IOException Si ocurre un error al cargar la vista de inicio.
      */
     @Override
     public void cambiarInicio() {
+        InicioModel modeloInicio = new InicioModel();
         try {
             InicioView view = new InicioView(modeloInicio); // Instancia la vista de inicio
             view.iniciarEscena(fondo); // Inicia la escena de inicio
             InicioControl control = new InicioControl(view, modeloInicio);
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
         }
     }
@@ -80,11 +81,12 @@ public class Navegacion implements INavegacion {
      */
     @Override
     public void cambiarLobby() {
+        LobbyModel modeloLobby = new LobbyModel();
         try {
             LobbyView view = new LobbyView(modeloLobby); // Instancia la vista de la partida
             view.iniciarEscena(fondo); // Inicia la escena de la partida
             LobbyControl control = new LobbyControl(view, modeloLobby);
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
         }
     }
@@ -101,14 +103,15 @@ public class Navegacion implements INavegacion {
     /**
      * Cambia la vista a la vista de la partida.
      *
-     * @throws IOException Si ocurre un error al cargar la vista de la partida.
      */
     @Override
     public void cambiarPartida() {
+        PartidaModel modeloPartida = new PartidaModel();
+
         try {
             PartidaView partida = new PartidaView(modeloPartida); // Instancia la vista de la partida
             partida.iniciarEscena(fondo); // Inicia la escena de la partida
-            new PartidaControl(partida, modeloPartida);
+            PartidaControl partidaControl = new PartidaControl(partida, modeloPartida);
         } catch (IOException ex) {
             ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
         }
@@ -126,36 +129,7 @@ public class Navegacion implements INavegacion {
         }
     }
 
-    @Override
-    public void cambiarPartidaModoAnterior() {
-        try {
-            PartidaModel modelo  = new PartidaModel();
-            PartidaView partida = new PartidaView(modelo); // Instancia la vista de la partida
-            partida.iniciarEscena(fondo); // Inicia la escena de la partida
-            new PartidaControl(partida, modelo);
-            
-//            CuentaDTO cuentaActual = new CuentaDTO(0, "/avatar/kiwi.png","Karim" );
-//            CuentaDTO cpu = new CuentaDTO(1, "/avatar/tortuga.png","Karim" );
-//            List<FichaDTO> fichas = new ArrayList<>();
-//            fichas.add(new FichaDTO(6,6,0));
-//            fichas.add(new FichaDTO(1,6,1));
-//            fichas.add(new FichaDTO(1,1,0));
-//            fichas.add(new FichaDTO(0,1,0));
-//            fichas.add(new FichaDTO(3,0,0));
-//            fichas.add(new FichaDTO(3,3,1));
-//            fichas.add(new FichaDTO(2,3,1));
-//            PartidaOfflineDTO partidaDTO = new PartidaOfflineDTO();
-//            JugadorDTO jugador = new JugadorDTO();
-//            jugador.setFichas(fichas);
-//            cuentaActual.setJugador(new JugadorDTO());
-//            cpu.setJugador(new JugadorDTO());
-//            
-//            partidaDTO.setCpu(cpu);
-//            partidaDTO.setCuentaActual(cuentaActual);
-//            modelo.iniciarPartida(partidaDTO);
-            
-        } catch (IOException ex) {
-            ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
-        }
+    public Thread getHiloApp() {
+        return hiloApp;
     }
 }

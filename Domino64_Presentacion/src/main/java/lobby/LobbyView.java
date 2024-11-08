@@ -26,7 +26,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import presentacion_observers.ObservadorLobby;
 
 /**
  * La clase LobbyView gestiona la interfaz gráfica (GUI) de la pantalla de lobby
@@ -41,7 +40,7 @@ import presentacion_observers.ObservadorLobby;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class LobbyView implements ObservadorLobby {
+public class LobbyView {
 
     private final LobbyModel modelo;
     private AnchorPane panel;
@@ -86,7 +85,6 @@ public class LobbyView implements ObservadorLobby {
         this.fondo = fondo;
         fondo.setScene(scene);
         fondo.show();
-        modelo.addObserver(this);
     }
 
     //------------GUI------------\\
@@ -647,7 +645,7 @@ public class LobbyView implements ObservadorLobby {
     /**
     * Actualiza el mensaje de aviso en la interfaz de usuario.
     */
-    @Override
+//    @Override
     public void actualizarMensajeAviso() {
         String mensaje = modelo.getMensaje();
         if (mensaje != null) {
@@ -660,7 +658,7 @@ public class LobbyView implements ObservadorLobby {
     * Actualiza el encabezado del lobby.
     * Muestra cuántos jugadores están listos.
     */
-    @Override
+//    @Override
     public void actualizarEncabezado() {
         lblEncabezado.setText(modelo.getEncabezadoLobby());//---------------------------Falta terminar----------
         //Aparezca cuantos esten listos
@@ -671,7 +669,7 @@ public class LobbyView implements ObservadorLobby {
     * 
     * @param cuenta La cuenta del jugador a agregar.
     */
-    @Override
+//    @Override
     public void agregarOtroJugador(CuentaDTO cuenta) {
         colocarJugadorOnline(cuenta);
     }
@@ -681,7 +679,7 @@ public class LobbyView implements ObservadorLobby {
     * 
     * @param cuenta La cuenta del jugador a quitar.
     */
-    @Override
+//    @Override
     public void quitarOtroJugador(CuentaDTO cuenta) {
         AnchorPane panelJugador = modelo.obtenerPanelJugador(cuenta.getId());
         quitarJugadorOnline(panelJugador);
@@ -692,7 +690,7 @@ public class LobbyView implements ObservadorLobby {
     * 
     * @param cuenta La cuenta del jugador que está listo.
     */
-    @Override
+//    @Override
     public void ponerListoJugador(CuentaDTO cuenta) {
         AnchorPane panelJugador = modelo.obtenerPanelJugador(cuenta.getId());
         ponerListoJugador(panelJugador);
@@ -703,7 +701,7 @@ public class LobbyView implements ObservadorLobby {
     * 
     * @param cuenta La cuenta del jugador que no está listo.
     */
-    @Override
+//    @Override
     public void quitarListoJugador(CuentaDTO cuenta) {
         AnchorPane panelJugador = modelo.obtenerPanelJugador(cuenta.getId());
         quitarListoJugador(panelJugador);
@@ -714,7 +712,7 @@ public class LobbyView implements ObservadorLobby {
     * 
     * @param cuenta La cuenta del jugador cuyo avatar será actualizado.
     */
-    @Override
+//    @Override
     public void actualizarAvatarJugador(CuentaDTO cuenta) {
         AnchorPane panelJugador = modelo.obtenerPanelJugador(cuenta.getId());
         actualizarAvatarJugador(panelJugador, cuenta.getAvatar());
@@ -725,7 +723,7 @@ public class LobbyView implements ObservadorLobby {
     * 
     * @param cuenta La cuenta del jugador cuyo nombre será actualizado.
     */
-    @Override
+//    @Override
     public void actualizarNombreOtroJugador(CuentaDTO cuenta) {
         AnchorPane panelJugador = modelo.obtenerPanelJugador(cuenta.getId());
         actualizarNombreOtroJugador(panelJugador, cuenta.getNombre());
