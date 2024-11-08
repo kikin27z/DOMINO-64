@@ -3,6 +3,10 @@ package partida;
 //import entidades.Ficha;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
+import entidadesDTO.JugadaRealizadaDTO;
+import entidadesDTO.JugadaValidaDTO;
+import eventosPartida.ObserverPartida;
+
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -10,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.application.Platform;
@@ -29,10 +34,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import observer_MVC.EventoMVC;
-import observer_MVC.ObservableMVC;
-import observer_MVC.ObservadorMVC;
-import presentacion_observers.DominoMazo;
+import presentacion_dibujo.DibujoTablero;
+import presentacion_dibujo.BuilderFichaMazo;
+import presentacion_dibujo.DibujoJugada;
 
 /**
  * Clase que representa la vista de la partida en la aplicación. Esta clase se
@@ -43,30 +47,26 @@ import presentacion_observers.DominoMazo;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class PartidaView extends ObservableMVC implements ObservadorMVC {
-    private final Map<String, Consumer<EventoMVC<?>>> manejadores;
-    private PartidaModel modelo;
-    private AnchorPane panelExterior; 
+public class PartidaView implements ObserverPartida {
+
+    private static final Logger logger = Logger.getLogger(PartidaView.class.getName());
+    private final PartidaModel modelo;
+    private AnchorPane panelExterior;
     private AnchorPane panelInterior;
     private HBox panelJugadorActual;
     private ScrollPane scrollPanel;
     private Button btnEjemplo;
-    private EventHandler<MouseEvent> eventoFicha;
     public Deque<Canvas> trenFichasDibujos;
     private StackPane pozoIndicator;
+    private DibujoTablero dibujoTablero;
+    private EventHandler<MouseEvent> evaluarFicha;
 
     public PartidaView(PartidaModel modelo) {
         this.modelo = modelo;
         trenFichasDibujos = new ArrayDeque<>();
-        modelo.agregarObservador(this);
-        
-        manejadores = new HashMap<>();
-        manejadores.put("fichaMazo", this::addFichaMazo);
-        manejadores.put("fichasMazo", this::addFichasMazo);
-        manejadores.put("posiblesJugadas", this::posiblesJugadas);
-        manejadores.put("turnoActual", this::prepararTurno);
-        
-        
+
+        this.modelo.agregarObserver(this);
+
     }
 
     /**
@@ -80,16 +80,14 @@ public class PartidaView extends ObservableMVC implements ObservadorMVC {
         Scene scene = new Scene(panelExterior); // Usamos panelExterior como la raíz
         fondo.setScene(scene);
         fondo.show();
-        
-        
+
         Platform.runLater(() -> {
             scrollPanel.setHvalue(0.5); // Centrar horizontalmente
             scrollPanel.setVvalue(0.5); // Centrar verticalmente
         });
-        
-        cargarEventos();
+
     }
-    
+
     /**
      * Crea y configura los componentes de la interfaz de usuario. Esto incluye
      * el AnchorPane principal, el ScrollPane y los elementos internos.
@@ -105,15 +103,23 @@ public class PartidaView extends ObservableMVC implements ObservadorMVC {
         scrollPanel.setLayoutX(modelo.getScrollPanelLayoutX());
         scrollPanel.setLayoutY(modelo.getScrollPanelLayoutY());
         scrollPanel.setPrefSize(modelo.getScrollPanelWidth(), modelo.getScrollPanelHeight());
+        scrollPanel.setFitToWidth(true);  // Ajustar el ancho del contenido al ScrollPane
+        scrollPanel.setFitToHeight(true);
         scrollPanel.setStyle(modelo.getScrollPanelStyle());
         scrollPanel.setHbarPolicy(modelo.getScrollPanelHbarPolicy()); // Mostrar barra horizontal
         scrollPanel.setVbarPolicy(modelo.getScrollPanelVbarPolicy()); // Mostrar barra vertical
 
         // Creando el AnchorPane interno dentro del ScrollPane
-        panelInterior = new AnchorPane();
-        panelInterior.setMinSize(modelo.getInternalPanelWidth(), modelo.getInternalPanelHeight()); // Establecemos el tamaño mínimo
-        panelInterior.setStyle(modelo.getInternalPanelStyle());
-
+//        panelInterior = new AnchorPane();
+//        panelInterior.setMinSize(modelo.getInternalPanelWidth(), modelo.getInternalPanelHeight()); // Establecemos el tamaño mínimo
+//        panelInterior.setStyle(modelo.getInternalPanelStyle());
+        dibujoTablero = new DibujoTablero(evaluarFicha, modelo.getInternalPanelWidth(), modelo.getInternalPanelHeight());
+//        dibujoTablero.setPrefSize(modelo.getInternalPanelWidth(), modelo.getInternalPanelHeight()); // Establecemos el tamaño mínimo
+        dibujoTablero.setStyle(modelo.getInternalPanelStyle());
+        dibujoTablero.prefWidthProperty().bind(scrollPanel.widthProperty());
+        dibujoTablero.prefHeightProperty().bind(scrollPanel.heightProperty());
+        
+        
         // Creando el ImageView para la imagen dentro del ScrollPane
         ImageView imageView = new ImageView();
         imageView.setFitWidth(modelo.getImageViewWidth());
@@ -130,12 +136,12 @@ public class PartidaView extends ObservableMVC implements ObservadorMVC {
 
         // Añadir el ImageView al panel interior
         // Asignando el contenido del ScrollPane
-        scrollPanel.setContent(panelInterior);
+//        scrollPanel.setContent(panelInterior);
+        scrollPanel.setContent(dibujoTablero);
         crearPozo();
 
         // Añadiendo el ScrollPane al AnchorPane principal
         panelExterior.getChildren().addAll(btnEjemplo, scrollPanel, pozoIndicator);
-
     }
 
     private void crearPozo() {
@@ -166,9 +172,6 @@ public class PartidaView extends ObservableMVC implements ObservadorMVC {
         panelInterior.getChildren().add(ficha);
     }
 
-    public void btnEjemploEvento(EventHandler<MouseEvent> e) {
-        btnEjemplo.setOnMouseClicked(e);
-    }
 
     private void insertarMesaIzq(CuentaDTO cuenta) {
         AnchorPane mazoIzq;
@@ -322,17 +325,7 @@ public class PartidaView extends ObservableMVC implements ObservadorMVC {
         panelExterior.getChildren().add(panelJugadorActual);
     }
 
-    private void agregarTrenFichasIzq(FichaDTO ficha, Canvas dibujo) {
-//        modelo.getTablero().setExtremoIzq(ficha);
-        trenFichasDibujos.offerFirst(dibujo);
-    }
-
-    private void agregarTrenFichasDer(FichaDTO ficha, Canvas dibujo) {
-//        modelo.getTablero().setExtremoDer(ficha);
-        trenFichasDibujos.offerLast(dibujo);
-    }
-
-    private void insertarAlTablero(double coordenaX, double coordenadaY, Canvas dibujo, FichaDTO ficha) {
+    public void insertarAlTablero(double coordenaX, double coordenadaY, Canvas dibujo, FichaDTO ficha) {
         dibujo.setLayoutX(coordenaX);
         dibujo.setLayoutY(coordenadaY);
         panelInterior.getChildren().add(dibujo);
@@ -340,112 +333,8 @@ public class PartidaView extends ObservableMVC implements ObservadorMVC {
         System.out.println(trenFichasDibujos.size());
     }
 
-    private void insertarPrimeraFicha(FichaDTO fichaDTO) {
-        DominoMazo dibujaFicha = new DominoMazo();
-        dibujaFicha.construirVertical(fichaDTO);
-        Canvas dibujo = dibujaFicha.resultado();
-        trenFichasDibujos.offerFirst(dibujo);
-//    modelo.getTablero().setFichaInicial(fichaDTO);
-        insertarAlTablero(847, 720, dibujo, fichaDTO);
-    }
-
-    private void insertarFichaDespuesMula(FichaDTO fichaDTO, boolean izquierda) {
-        DominoMazo dibujar = new DominoMazo();
-        Canvas fichaDibujoExtremo = izquierda ? trenFichasDibujos.peekFirst() : trenFichasDibujos.peekLast();
-        Canvas fichaDibujo;
-        double coordenadaX, coordenadaY;
-
-        dibujar.construirHorizontal(fichaDTO);
-        fichaDibujo = dibujar.resultado();
-
-        if (izquierda) {
-            coordenadaX = fichaDibujoExtremo.getLayoutX() - 90;
-            coordenadaY = fichaDibujoExtremo.getLayoutY() + 20;
-            agregarTrenFichasIzq(fichaDTO, fichaDibujo);
-        } else {
-            coordenadaX = fichaDibujoExtremo.getLayoutX() + 50;
-            coordenadaY = fichaDibujoExtremo.getLayoutY() + 20;
-            agregarTrenFichasDer(fichaDTO, fichaDibujo);
-        }
-
-        insertarAlTablero(coordenadaX, coordenadaY, fichaDibujo, fichaDTO);
-    }
-
-    private void insertarFichaExtremoIzq(FichaDTO fichaDTO) {
-        DominoMazo dibujar = new DominoMazo();
-        Canvas fichaDibujoIzq = trenFichasDibujos.peekFirst();
-//    FichaDTO fichaIzq = modelo.getTablero().getExtremoIzq();
-        Canvas fichaDibujo;
-        double coordenadaX, coordenadaY;
-
-    if (fichaDTO.esMula()) {
-        if (0 == 0) { // Horizontal
-            dibujar.construirHorizontal(fichaDTO);
-            fichaDibujo = dibujar.resultado();
-            coordenadaX = fichaDibujoIzq.getLayoutX() - 20;
-            coordenadaY = fichaDibujoIzq.getLayoutY() - 50;
-        } else { // Vertical
-            dibujar.construirVertical(fichaDTO);
-            fichaDibujo = dibujar.resultado();
-            coordenadaX = fichaDibujoIzq.getLayoutX() - 50;
-            coordenadaY = fichaDibujoIzq.getLayoutY() - 20;
-        }
-    } else {
-        if (0 == 0) { // Horizontal
-            dibujar.construirVertical(fichaDTO);
-            fichaDibujo = dibujar.resultado();
-            coordenadaX = fichaDibujoIzq.getLayoutX();
-            coordenadaY = fichaDibujoIzq.getLayoutY() - 90;
-        } else { // Vertical
-            dibujar.construirHorizontal(fichaDTO);
-            fichaDibujo = dibujar.resultado();
-            coordenadaX = fichaDibujoIzq.getLayoutX() - 90;
-            coordenadaY = fichaDibujoIzq.getLayoutY();
-        }
-    }
-    agregarTrenFichasIzq(fichaDTO, fichaDibujo);
-    insertarAlTablero(coordenadaX, coordenadaY, fichaDibujo, fichaDTO);
-    }
-
-    private void insertarFichaExtremoDer(FichaDTO fichaDTO) {
-        DominoMazo dibujar = new DominoMazo();
-        Canvas fichaDibujoDer = trenFichasDibujos.peekLast();
-//    FichaDTO fichaDer = modelo.getTablero().getExtremoDer();
-        Canvas fichaDibujo;
-        double coordenadaX, coordenadaY;
-
-        if (fichaDTO.esMula()) {
-            if (0 == 0) { // Horizontal
-                dibujar.construirHorizontal(fichaDTO);
-                fichaDibujo = dibujar.resultado();
-                coordenadaX = fichaDibujoDer.getLayoutX() - 20;
-                coordenadaY = fichaDibujoDer.getLayoutY() + 90;
-            } else { // Vertical
-                dibujar.construirVertical(fichaDTO);
-                fichaDibujo = dibujar.resultado();
-                coordenadaX = fichaDibujoDer.getLayoutX() + 90;
-                coordenadaY = fichaDibujoDer.getLayoutY() - 20;
-            }
-        } else {
-            if (0 == 0) { // Horizontal
-                dibujar.construirVertical(fichaDTO);
-                fichaDibujo = dibujar.resultado();
-                coordenadaX = fichaDibujoDer.getLayoutX();
-                coordenadaY = fichaDibujoDer.getLayoutY() + 90;
-            } else { // Vertical
-                dibujar.construirHorizontal(fichaDTO);
-                fichaDibujo = dibujar.resultado();
-                coordenadaX = fichaDibujoDer.getLayoutX() + 50;
-                coordenadaY = fichaDibujoDer.getLayoutY();
-            }
-        }
-
-        agregarTrenFichasDer(fichaDTO, fichaDibujo);
-        insertarAlTablero(coordenadaX, coordenadaY, fichaDibujo, fichaDTO);
-    }
     //--------------------------------Eventos--------------------------------
     public void eventoFicha(EventHandler<MouseEvent> e) {
-        eventoFicha = e;
     }
 
     public void clicPozo(EventHandler<MouseEvent> e) {
@@ -453,65 +342,31 @@ public class PartidaView extends ObservableMVC implements ObservadorMVC {
     }
 
     //--------------------------------Metodos Observador--------------------------------
-
     public void quitarFichaMazo(Canvas ficha) {
         panelJugadorActual.getChildren().remove(ficha);
     }
 
-    public void agregarFichaTablero(FichaDTO ficha, boolean izquierda) {
-        if (modelo.getTablero().tableroVacio()) {
-            insertarPrimeraFicha(ficha);
-            return;
-        }
-
-        if (izquierda) {
-            if (modelo.es1raFichaDespuesDeMulaIzq()) {
-                insertarFichaDespuesMula(ficha, true);
-            } else {
-                insertarFichaExtremoIzq(ficha);
-            }
-            return;
-        }
-
-        if (modelo.es1raFichaDespuesDeMulaDer()) {
-            insertarFichaDespuesMula(ficha, false);
-        } else {
-            insertarFichaExtremoDer(ficha);
-        }
-
-    }
 ////////////////////////////////////
-    private void cargarEventos(){
-        pozoIndicator.setOnMouseClicked(this::agarrarPozo);
-    }
-    
-    
-    private void agarrarPozo(MouseEvent e){
-        EventoMVC<String> evento = new EventoMVC("agarrarFichaPozo", "Agarra del pozo crack");
-        notificarObservadores(evento);
-    }
-    
-    
-//////////////////////////////////
-    @Override
-    public void actualizar(EventoMVC<?> evento) {
-        Consumer<EventoMVC<?>> manejador = manejadores.get(evento.getTipo());
-        if (manejador != null) {
-            manejador.accept(evento);
-        } else {
-            System.out.println("Evento desconocido: " + evento.getTipo());
+
+    private void seleccionarFicha(MouseEvent e) {
+        if (!modelo.esMiTurno) {
+            return;
         }
-
+        Canvas dibujo = (Canvas) e.getSource();
+//        EventoMVC<Canvas> evento = new EventoMVC<>("evaluarFichaSeleccionada", dibujo);
+//        notificarObservadores(evento);
+        modelo.agregarObserver(this);
     }
 
-    private void posiblesJugadas(EventoMVC<?> evento) {
-        System.out.println("");
+    
+    public void dibujarJugadas(JugadaValidaDTO jugada, FichaDTO ficha){
+        this.dibujoTablero.colocarJugadas(jugada, ficha);
     }
+//////////////////////////////////
+    private void addFichaMazo() {
+        FichaDTO ficha = null;
+        BuilderFichaMazo dibujaFicha = new BuilderFichaMazo();
 
-    private void addFichaMazo(EventoMVC<?> evento) {
-        FichaDTO ficha = (FichaDTO) evento.getData();
-        DominoMazo dibujaFicha = new DominoMazo();
-        
         dibujaFicha.construirVertical(ficha);
         Canvas dibujo = dibujaFicha.resultado();
         modelo.agregarMapeoFichas(dibujo, ficha);
@@ -519,23 +374,58 @@ public class PartidaView extends ObservableMVC implements ObservadorMVC {
 
     }
 
-    private void addFichasMazo(EventoMVC<?> evento) {
-        List<FichaDTO> fichas = (List<FichaDTO>) evento.getData();
-        DominoMazo dibujaFicha = new DominoMazo();
+    private void addFichasMazo() {
+        List<FichaDTO> fichas = null;
+        BuilderFichaMazo dibujaFicha = new BuilderFichaMazo();
 
         for (FichaDTO ficha : fichas) {
             dibujaFicha.construirVertical(ficha);
             Canvas dibujo = dibujaFicha.resultado();
+            dibujo.setOnMouseClicked(this::seleccionarFicha);
             modelo.agregarMapeoFichas(dibujo, ficha);
             agregarDominoMazo(dibujo);
         }
 
     }
-
-    private void addFichaTablero(EventoMVC<?> evento) {
-
-    }
-    private void prepararTurno(EventoMVC<?> evento){
+    
+    public void dibujar(){
+        FichaDTO ficha = new FichaDTO(4, 4);
+        dibujoTablero.dibujarXCosa(ficha);
         
+    }
+    
+    public void btnEjemplo(EventHandler<MouseEvent> e){
+        btnEjemplo.setOnMouseClicked(e);
+    }
+    public void evaluarFicha(EventHandler<MouseEvent> e){
+        this.evaluarFicha = e;
+    }
+
+    @Override
+    public void avisarJugadaRealizada(JugadaRealizadaDTO jugadaDTO) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void avisarFichaSeleccionada(FichaDTO contexto) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void avisarDarFichas(List<FichaDTO> fichas) {
+        System.out.println("Dibuja");
+        BuilderFichaMazo dibujaFicha = new BuilderFichaMazo();
+        for (FichaDTO ficha : fichas) {
+            dibujaFicha.construirVertical(ficha);
+            Canvas dibujo = dibujaFicha.resultado();
+            dibujo.setOnMouseClicked(evaluarFicha);
+            modelo.agregarMapeoFichas(dibujo, ficha);
+            agregarDominoMazo(dibujo);
+        }
+    }
+
+    @Override
+    public void avisarDarFicha(FichaDTO ficha) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

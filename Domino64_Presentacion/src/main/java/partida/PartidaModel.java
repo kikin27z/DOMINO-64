@@ -2,22 +2,20 @@ package partida;
 
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
+import entidadesDTO.JugadaDTO;
+import entidadesDTO.JugadaRealizadaDTO;
+import entidadesDTO.JugadaValidaDTO;
 import entidadesDTO.JugadorDTO;
-import entidadesDTO.PartidaDTO;
-import entidadesDTO.PozoDTO;
-import entidadesDTO.TableroDTO;
+import eventosPartida.EventosPartida;
+import eventosPartida.ObserverPartida;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import observer_logica.EventoLogica;
-import observer_logica.ObservableLogica;
-import observer_logica.ObservadorLogica;
-import observer_MVC.EventoMVC;
-import observer_MVC.ObservableMVC;
-
+import presentacion_utilities.NotificadorEvento;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,55 +23,62 @@ import observer_MVC.ObservableMVC;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class PartidaModel extends ObservableMVC implements ObservableLogica{
-    private List<ObservadorLogica> observadores = new ArrayList<>();
+public class PartidaModel implements EventosPartida {
+
+    private static final Logger logger = Logger.getLogger(PartidaModel.class.getName());
     private JugadorDTO jugador;
-    private PartidaDTO partida;
-    private TableroDTO tablero = new TableroDTO();
-    private PozoDTO pozo;
     private Map<Canvas, FichaDTO> mapeoFichas;
+    private NotificadorEvento notificador;
+    private final List<ObserverPartida> vistaObservers;
+
+    public boolean esMiTurno;
+    public boolean primeraJugadaHecha;
+    public JugadaDTO jugada;
     
-    public final int JUGADOR_ACTUALIZADO=0;
-    public final int PARTIDA_ACTUALIZADA=1;
-    public final int FICHA_SELECCIONADA=2;
-    
+    public FichaDTO fichaSeleccionada;
+    public JugadaValidaDTO jugadaValida;
+
+    public final int JUGADOR_ACTUALIZADO = 0;
+    public final int PARTIDA_ACTUALIZADA = 1;
+    public final int FICHA_SELECCIONADA = 2;
+
     private final double externalPanelWidth = 1000;
     private final double externalPanelHeight = 700;
     private final String externalPanelStyle = "-fx-background-color: #186F65;";
-    
-    private final double internalPanelWidth = 1800;
-    private final double internalPanelHeight = 1500;
+
+    private final double internalPanelWidth = 830;
+    private final double internalPanelHeight = 550;
     private final String internalPanelStyle = "-fx-background-color: #B5CB99;";
-    
+
     private final double scrollPanelLayoutX = 85;
     private final double scrollPanelLayoutY = 75;
     private final double scrollPanelWidth = 830;
     private final double scrollPanelHeight = 550;
     private final String scrollPanelStyle = "-fx-background-color: transparent; "
             + "-fx-background: transparent;";
-    private final ScrollBarPolicy scrollPanelHbarPolicy = ScrollBarPolicy.ALWAYS;
-    private final ScrollBarPolicy scrollPanelVbarPolicy = ScrollBarPolicy.ALWAYS;
-    
+    private final ScrollBarPolicy scrollPanelHbarPolicy = ScrollBarPolicy.NEVER;
+    private final ScrollBarPolicy scrollPanelVbarPolicy = ScrollBarPolicy.NEVER;
+
     private final double imageViewWidth = 106.0;
     private final double imageViewLayoutX = 547.0;
     private final double imageViewLayoutY = 419.0;
     private final boolean imgViewpickOnBounds = true;
     private final boolean imgViewpreserveRatio = true;
     private final String imageViewResourceName = "/dominos/0-2.png";
-    
+
     private final String buttonText = "Clickea";
     private final double buttonLayoutX = 20;
     private final double buttonLayoutY = 20;
-    
+
     private final double player1PanelLayoutX = 164.0;
     private final double player1PanelLayoutY = 598.0;
     private final double player1PanelWidth = 630.0;
     private final double player1PanelHeight = 92.0;
-    private final String player1PanelStyle ="-fx-background-color: #B2533E;"
+    private final String player1PanelStyle = "-fx-background-color: #B2533E;"
             + " -fx-background-radius: 20;"
             + " -fx-border-color: #000000;"
             + " -fx-border-radius: 20;";
-    
+
     private final double imageViewBottomWidth = 90.0;
     private final double imageViewBottomHeight = 150.0;
     private final double imageViewBottomLayoutX = 81.0;
@@ -82,89 +87,118 @@ public class PartidaModel extends ObservableMVC implements ObservableLogica{
     private final boolean imgViewBttmpreserveRatio = true;
     private final double imgViewBttmRotate = 90.0;
     private final String imgViewBttmResourceName = "/dominos/0-5.png";
-    
-    
+
     public PartidaModel() {
+        notificador = NotificadorEvento.getInstance();
         mapeoFichas = new HashMap<>();
-        List<FichaDTO> fichas = new ArrayList<>();
-        fichas.add(new FichaDTO(3,2));
-        
+        this.esMiTurno = true;
+        this.jugada = new JugadaDTO(6, 0);
+        vistaObservers = new ArrayList<>();
+    }
+    // ------------------------------Notificadores a Vista-----------------------------------------------------
+    
+    @Override
+    public void agregarObserver(ObserverPartida observador) {
+        this.vistaObservers.add(observador);
     }
 
+    @Override
+    public void quitarObserver(ObserverPartida observador) {
+        this.vistaObservers.remove(observador);
+    }
 
-    public PartidaModel(JugadorDTO jugador, PartidaDTO partida) {
-        mapeoFichas = new HashMap<>();
-//        mapeoFichasJugadas = new HashMap<>();
-        this.jugador = jugador;
-        this.partida = partida;
-        List<FichaDTO> fichas = new ArrayList<>();
-        fichas.add(new FichaDTO(3,2));
-        
-        this.agregarFichas(fichas);
+    @Override
+    public void avisarJugadaRealizada(JugadaRealizadaDTO jugadaDTO) {
+        for(var observer : vistaObservers){
+            observer.avisarJugadaRealizada(jugadaDTO);
+        }
     }
-    
 
-    
-     //--------------Métodos notificadores-------------------
-    public void agregarFichas(List<FichaDTO> fichas){
-        EventoMVC<List<FichaDTO>> evento = new EventoMVC<>("fichasMazo", fichas);
-        this.notificarObservadores(evento);
+    @Override
+    public void avisarFichaSeleccionada(FichaDTO ficha) {
+        for(var observer : vistaObservers){
+            observer.avisarFichaSeleccionada(ficha);
+        }
     }
-    public void agregarFicha(FichaDTO ficha){
-        EventoMVC<FichaDTO> evento = new EventoMVC<>("fichaMazo", ficha);
-        this.notificarObservadores(evento);
+
+    @Override
+    public void avisarDarFichas(List<FichaDTO> fichas) {
+        for(var observer : vistaObservers){
+            observer.avisarDarFichas(fichas);
+        }
     }
-    
-    public void agregarFichaAlTablero(FichaDTO ficha, TableroDTO tablero, boolean izquierda){
-        this.tablero = tablero;
-//        notificarAgregarFichaAlTablero(ficha, izquierda);
+
+    @Override
+    public void avisarDarFicha(FichaDTO ficha) {
+        for(var observer : vistaObservers){
+            observer.avisarDarFicha(ficha);
+        }
     }
+    //--------------Métodos notificadores de logica-------------------
+     
+    ///---------------------------------Eventos para logica-----------------------------------------------------------------
     
     
     
-     //-----------------------------------------------------
     
-    public void insertarIzqTablero(FichaDTO ficha){
+    //-----------------------------------------------------
+    public void insertarIzqTablero(FichaDTO ficha) {
 //        tablero.setExtremoIzq(ficha);
     }
-    
-    
-    public void agregarMapeoFichas(Canvas dibujo, FichaDTO ficha){
+
+    public void agregarMapeoFichas(Canvas dibujo, FichaDTO ficha) {
         mapeoFichas.put(dibujo, ficha);
     }
-    
-    public boolean es1raFichaDespuesDeMulaIzq(){
+
+    public FichaDTO obtenerFicha(Canvas dibujo) {
+        this.fichaSeleccionada = mapeoFichas.get(dibujo);
+        return fichaSeleccionada;
+    }
+
+    public boolean es1raFichaDespuesDeMulaIzq() {
 //        return tablero.getExtremoIzq() == null;
-return false;
+        return false;
     }
-    public boolean es1raFichaDespuesDeMulaDer(){
+
+    public boolean es1raFichaDespuesDeMulaDer() {
 //        return tablero.getExtremoDer() == null;
-return false;
+        return false;
     }
-    
-    public void quitarMapeoFichas(Canvas dibujo){
+
+    public void quitarMapeoFichas(Canvas dibujo) {
         mapeoFichas.remove(dibujo);
     }
-    
-    
-    public PartidaDTO getPartida() {
-        return partida;
+
+    public JugadaDTO getJugada() {
+        return jugada;
     }
-    
-    
-    public String obtenerNumeroFichaCuenta(CuentaDTO cuenta){
+
+    public void setJugada(JugadaDTO jugada) {
+        this.jugada = jugada;
+    }
+
+    public boolean esMiTurno() {
+        return esMiTurno;
+    }
+
+    public void setEsMiTurno(boolean esMiTurno) {
+        this.esMiTurno = esMiTurno;
+    }
+
+    public String obtenerNumeroFichaCuenta(CuentaDTO cuenta) {
 //        return String.valueOf(cuenta.getJugador().numFichas());
-return null;
+        return null;
     }
-    public List<Canvas> obtenerDibujos(){
+
+    public List<Canvas> obtenerDibujos() {
         List<Canvas> dibujosFicha = new ArrayList<>(mapeoFichas.keySet());
         return dibujosFicha;
     }
-    
-    public FichaDTO obtenerFichaExacta(Canvas dibujo){
+
+    public FichaDTO obtenerFichaExacta(Canvas dibujo) {
         return mapeoFichas.get(dibujo);
     }
-    
+
     public Map<Canvas, FichaDTO> getMapeoFichas() {
         return mapeoFichas;
     }
@@ -172,32 +206,19 @@ return null;
     public void setMapeoFichas(Map<Canvas, FichaDTO> mapeoFichas) {
         this.mapeoFichas = mapeoFichas;
     }
-    
-    public void setGame(PartidaDTO partida) {
-        this.partida = partida;
-//        this.notifyObservers(this, PARTIDA_ACTUALIZADA);
-    }
-    
+
     public JugadorDTO getJugador() {
         return jugador;
     }
 
-    public TableroDTO getTablero() {
-        return tablero;
-    }
-    
-    
-    
-    
-    public List<FichaDTO> getFichasDelJugador(){
+    public List<FichaDTO> getFichasDelJugador() {
         return jugador.getFichas();
     }
 
     public void setJugador(JugadorDTO jugador) {
         this.jugador = jugador;
-//        this.notifyObservers(this, JUGADOR_ACTUALIZADO);
     }
-    
+
     public double getExternalPanelWidth() {
         return externalPanelWidth;
     }
@@ -206,6 +227,18 @@ return null;
         return externalPanelHeight;
     }
 
+    
+    public void actualizarJugada(int num, int opcion){
+        if(opcion == 0){
+            this.jugada.setIzquierda(num);
+            this.jugada.setDerecha(num);
+        }else if(opcion == 1){
+            this.jugada.setIzquierda(num);
+        }else{
+            this.jugada.setDerecha(num);
+        }
+    }
+    
     public String getExternalPanelStyle() {
         return externalPanelStyle;
     }
@@ -261,6 +294,7 @@ return null;
     public double getImageViewLayoutY() {
         return imageViewLayoutY;
     }
+
     public boolean isImgViewPickedOnBounds() {
         return imgViewpickOnBounds;
     }
@@ -337,22 +371,5 @@ return null;
         return imgViewBttmResourceName;
     }
 
-    
-    // Notificaciones a lógica
-    @Override
-    public void agregarObservador(ObservadorLogica observador) {
-        observadores.add(observador);
-    }
 
-    @Override
-    public void eliminarObservador(ObservadorLogica observador) {
-         observadores.remove(observador);
-    }
-
-    @Override
-    public void notificarObservadores(EventoLogica<?> evento) {
-        for (ObservadorLogica observador : observadores) {
-            observador.notificar(evento);
-        }
-    }
 }

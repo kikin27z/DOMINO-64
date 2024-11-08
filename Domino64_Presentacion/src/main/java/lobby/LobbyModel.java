@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.layout.AnchorPane;
-import presentacion_observers.ObservableLobby;
 
 /**
  * Modelo para el lobby del juego. Se encarga de manejar la lógica de negocio,
@@ -20,7 +19,7 @@ import presentacion_observers.ObservableLobby;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class LobbyModel extends ObservableLobby {
+public class LobbyModel  {
 
     private CuentaDTO cuentaActual;  // Cuenta del jugador actual
     private List<CuentaDTO> cuentasJugadoresOnline;  // Lista de cuentas de jugadores en línea
@@ -80,7 +79,7 @@ public class LobbyModel extends ObservableLobby {
      * @param cuenta la cuenta del jugador cuyo nombre se actualizará.
      */
     public void actualizarNombreOtroJugador(CuentaDTO cuenta) {
-        notificarActualizarNombreOtroJugador(cuenta);  // Notifica a los observadores sobre el cambio
+//////////////////////        notificarActualizarNombreOtroJugador(cuenta);  // Notifica a los observadores sobre el cambio
     }
 
     public void iniciarPartida() {
@@ -147,7 +146,7 @@ public class LobbyModel extends ObservableLobby {
      */
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
-        this.notificarActualizarMensaje();  // Notifica a los observadores sobre el cambio
+//////////////////////////////        this.notificarActualizarMensaje();  // Notifica a los observadores sobre el cambio
     }
 
     /**

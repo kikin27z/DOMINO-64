@@ -35,8 +35,8 @@ public class InicioControl {
      * correspondientes del controlador.
      */
     private void cargarEventos() {
-        view.modoOffline(this::irModoOffline);  // Asigna el evento para el modo Offline.
-        view.modoOnline(this::irModoOnline);    // Asigna el evento para el modo Online.
+        view.modoJugar(this::modoJugar);  // Asigna el evento para el modo Offline.
+        view.mostrarCreditos(this::mostrarCreditos);    // Asigna el evento para el modo Online.
     }
 
     /**
@@ -45,18 +45,13 @@ public class InicioControl {
      * 
      * @param e el evento de ratón que indica que se ha hecho clic en el botón.
      */
-    private void irModoOffline(MouseEvent e) {
-        this.modelo.irModoOffline();
+    private void modoJugar(MouseEvent e) {
+        this.modelo.avisarModoJugar();
 
     }
 
-    /**
-     * Método que maneja el evento cuando se selecciona el modo "Online".
-     * Invoca el método correspondiente en el modelo.
-     * 
-     * @param e el evento de ratón que indica que se ha hecho clic en el botón.
-     */
-    private void irModoOnline(MouseEvent e) {
-        this.modelo.irModoOnline();
+
+    private void mostrarCreditos(MouseEvent e) {
+        this.modelo.avisarMostrarCreditos();
     }
 }

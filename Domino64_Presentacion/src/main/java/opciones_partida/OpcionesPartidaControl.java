@@ -18,9 +18,9 @@ public class OpcionesPartidaControl {
     
     
     public OpcionesPartidaControl(OpcionesPartidaView view, OpcionesPartidaModel modelo) {
-          this.view = view;
+        this.view = view;
         this.modelo = modelo;
-        cargarEventos();  // Configura los eventos de los botones.
+        cargarEventos();
     }
 
     /**
@@ -31,6 +31,9 @@ public class OpcionesPartidaControl {
     private void cargarEventos() {
         view.crearNuevaPartida(this::crearNuevaPartida);  // Asigna el evento para el modo Offline.
         view.unirsePartida(this::unirsePartida);    // Asigna el evento para el modo Online.
+        view.volverInicio(this::mostrarInicio);    // Asigna el evento para el modo Online.
+        view.buscarPartida(this::buscarPartida);    // Asigna el evento para el modo Online.
+        view.cancelarBuscarPartida(this::cancelarBuscarPartida);    // Asigna el evento para el modo Online.
     }
 
 
@@ -41,5 +44,15 @@ public class OpcionesPartidaControl {
 
     private void unirsePartida(MouseEvent e) {
         view.mostrarVentanaBuscarPartida();
+    }
+    
+    private void mostrarInicio(MouseEvent e){
+        modelo.avisarMostrarInicio();
+    }
+    private void buscarPartida(MouseEvent e){
+        System.out.println(view.obtenerCodigo());
+    }
+    private void cancelarBuscarPartida(MouseEvent e){
+        view.cerrarVentanaBuscarPartida();
     }
 }
