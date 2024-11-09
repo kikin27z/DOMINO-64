@@ -5,5 +5,11 @@
 
 module BusExample {
     requires java.logging;
-    requires Event;
+    requires Evento;
+    requires PublicadorSuscriptor;
+    
+    exports eventBus;
+    exports exceptions;
+    
+    uses domino64.eventos.base.Evento;
 }
