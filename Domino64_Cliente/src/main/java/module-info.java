@@ -6,12 +6,8 @@
 module Client {
     requires Observer;
     requires Evento;
-    requires Dominio;
-    requires Excepciones;
     requires java.logging;
-    requires java.desktop;
     
-    uses java.awt.event.ActionEvent;
     uses java.util.logging.Level;
     uses java.util.logging.Logger;
     

@@ -6,9 +6,6 @@ package implementacion;
 
 import abstraccion.ICliente;
 import domino64.eventos.base.Evento;
-import domino64.eventos.base.error.EventoError;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -19,8 +16,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import observer.Observable;
 import observer.Observer;
 
@@ -136,14 +131,14 @@ public class Client extends Observable<Evento> implements ICliente{
         }
     }
     
-    private void reconexionProgramada(){
-        if(running && !connected){ 
-            ejecutorReconexion.schedule(() -> {
-                System.out.println("intentando reconectar...");
-                conectarCliente();
-            }, 5, TimeUnit.SECONDS);
-        }
-    }
+//    private void reconexionProgramada(){
+//        if(running && !connected){ 
+//            ejecutorReconexion.schedule(() -> {
+//                System.out.println("intentando reconectar...");
+//                conectarCliente();
+//            }, 5, TimeUnit.SECONDS);
+//        }
+//    }
     
     private void enviarSuscripciones(){
         if(suscripcionesEventos != null && !suscripcionesEventos.isEmpty()){
@@ -213,10 +208,6 @@ public class Client extends Observable<Evento> implements ICliente{
     }
     
     private void manejarEvento(Evento evento){
-//        if(evento instanceof EventoError eventoError){
-//            evento = eventoError;
-//        }else if( evento instanceof EventoLogico eventoLogico)
-//            evento = eventoLogico;
         System.out.println("mensaje recibido " + evento);
         
         notifyObservers(evento.getTipo(), evento);
@@ -235,17 +226,6 @@ public class Client extends Observable<Evento> implements ICliente{
         //reconexionProgramada();
     }
     
-//    private void closeClient() {
-//        try {
-//            if (socket != null) {
-//                socket.close();
-//                System.out.println("se cerro el cliente");
-//            }
-//
-//        } catch (IOException ex) {
-//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, ex.getMessage());
-//        }
-//    }
 
     @Override
     public void agregarSuscripcion(Evento evento, Observer ob) {
