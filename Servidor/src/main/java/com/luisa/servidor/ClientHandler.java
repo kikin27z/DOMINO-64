@@ -4,57 +4,134 @@
  */
 package com.luisa.servidor;
 
-import event.Event;
+import domino64.eventos.base.Evento;
+import domino64.eventos.base.error.EventoError;
+import domino64.eventos.base.error.TipoError;
 import eventBus.BusCore;
 import eventBus.Publisher;
 import eventBus.Subscriber;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import eventos.EventoJugador;
+import eventos.EventoLogico;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import tiposLogicos.TipoLogicaLobby;
+import tiposLogicos.TiposJugador;
 
 /**
  *
  * @author luisa M
+ * @deprecated Ya no se usa esta clase
  */
-public class ClientHandler extends Publisher implements Runnable, Subscriber,Comparable<ClientHandler>{
+public class ClientHandler extends Publisher implements Subscriber<EventoLogico>{
     private final Socket clientSocket;
-    private DataInputStream input;
-    private DataOutputStream output;
+    private ObjectInputStream input;
+    private ObjectOutputStream output;
+    private int clientId;
     private String clientName;
-    private final int clientId;
+    private EventoLogico evento;
     
-    public ClientHandler(BusCore bus, Socket clientSocket, int id){
+    public ClientHandler(BusCore bus, Socket clientSocket){
         super(bus);
         this.clientSocket = clientSocket;
-        clientId = id;
-        initiStream();
     }
     
     private void initiStream(){
         try {
-            input = new DataInputStream(clientSocket.getInputStream());
-            output = new DataOutputStream(clientSocket.getOutputStream());
+            System.out.println("antes init");
+            input = new ObjectInputStream(clientSocket.getInputStream());
+            System.out.println("mmm");
+            output = new ObjectOutputStream(clientSocket.getOutputStream());
+            System.out.println("after init");
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    
-    @Override
-    public void run() {
+    public void init(){
         try {
+            initiStream();
             output.writeUTF("hola desde el server");
+            System.out.println("se envio el mensaje ");
             output.flush();
-            
 
-        } catch (IOException ex) {
+            clientId = input.readInt();
+
+            this.setId(clientId);
+            
+            recibirEventos();
+
+        } catch (IOException | ClassNotFoundException ex) {
             closeClientSocket();
         }
     }
     
+    /**
+     * eventos que le envia el cliente
+     * @throws IOException
+     * @throws ClassNotFoundException 
+     */
+    private void recibirEventos() throws IOException, ClassNotFoundException{
+        ClientHandler handler = this;
+        new Thread(new Runnable() {
+            EventoLogico eventoCliente;
+            @Override
+            public void run() {
+                try {
+                    while ((eventoCliente = (EventoLogico) input.readObject()) != null) {
+                        publicarEvento(eventoCliente.getTipo(),eventoCliente);//envia el evento al bus
+                        if (eventoCliente.getTipo().equals(TiposJugador.UNIRSE_PARTIDA)) {
+                            /*
+                            si el evento que le envio el cliente es para unirse a una partida,
+                            se agrega este suscriptor (la clase en si) a la lista de espera
+                            a que se publique un evento de tipo unirse partida
+                            */
+                            //waitEvent(handler, eventoCliente);
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException ex) {
+                    
+                    Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }).start();
+    }
+    
+    private void notificarError(TipoError tipo, String msjError){
+        EventoError error = new EventoError(tipo, msjError);
+    }
+    
+    /**
+     * metodo para enviarle al cliente medianete el socket,
+     * los eventos que llegan del bus
+     */
+//    @Override
+    public void run() {
+        enviarEvento(this.evento);
+    }
+    
+    private void enviarEvento(Evento evento){
+        try {
+            output.writeObject(evento);
+        } catch (IOException ex) {
+            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, ex.getMessage());
+        }
+        System.out.println("-----------------------");
+        System.out.println("Desde cliente " + clientId);
+        System.out.println("evento recibido: " + evento.getInfo());
+        System.out.println("-----------------------");
+    }
+    
+    /**
+     * cierra el socket en caso de que ocurra un error
+     * Normalmente se usa cuando se termina la ejecucion del
+     * proyecto
+     */
     private void closeClientSocket(){
         try {
             clientSocket.close();
@@ -65,27 +142,30 @@ public class ClientHandler extends Publisher implements Runnable, Subscriber,Com
     }
 
     @Override
-    public void catchEvent(Event event) {
-        String eventInfo = (String)event.getInfo();
-        try {
-            output.writeUTF(eventInfo);
-        } catch (IOException ex) {
-            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println("-----------------------");
-        System.out.println("Desde cliente "+clientName);
-        System.out.println("evento recibido: "+eventInfo);
-        System.out.println("-----------------------");
+    public int compareTo(Subscriber handler) {
+        return Integer.compare(clientId, handler.getSubscriberId());
     }
 
     @Override
-    public String getName() {
-        return this.clientName;
+    public int getIdPublicador() {
+        return clientId;
     }
-
+    
     @Override
-    public int compareTo(ClientHandler handler) {
-        return Integer.compare(this.clientId, handler.clientId);
+    public int getSubscriberId(){
+        return clientId;
+    }
+    
+    /**
+     * este metodo es llamado por el mensajero del bus para recibir el evento.
+     * Con el evento del parametro se inicializa el evento de la clase, el cual
+     * se va a enviar al cliente por el socket
+     *
+     * @param event Evento enviado desde el bus
+     */
+    @Override
+    public void recibirEvento(Evento evento) {
+        this.evento = (EventoLogico)evento;
     }
 
 }
