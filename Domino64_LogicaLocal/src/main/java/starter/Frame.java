@@ -38,7 +38,7 @@ public class Frame extends javax.swing.JFrame implements Suscriptor<EventoMVC>{
                     TipoLobbyMVC.ACTUALIZAR_AVATARES,
                     TipoLobbyMVC.ACTUALIZAR_USERNAME,
                     TipoLobbyMVC.INICIO_PARTIDA,
-                    TipoLobbyMVC.JUGADOR_LISTO,
+                    TipoLobbyMVC.ACTUALIZAR_JUGADORES_LISTOS,
                     TipoLobbyMVC.JUGADOR_NUEVO,
                     TipoLobbyMVC.JUGADOR_SALIO
             ));

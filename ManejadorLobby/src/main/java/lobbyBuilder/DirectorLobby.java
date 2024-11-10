@@ -21,11 +21,8 @@ public class DirectorLobby extends DirectorEventos<BuilderEventoLobby> {
      * 
      * @param builder 
      */
-    public DirectorLobby(BuilderEventoLobby builder){
+    public DirectorLobby(BuilderEventoLobby builder, int idPublicador){
         super(builder);
-    }
-    
-    public void setIdPublicador(int idPublicador){
         this.idPublicador = idPublicador;
     }
     
@@ -43,30 +40,28 @@ public class DirectorLobby extends DirectorEventos<BuilderEventoLobby> {
         return builder.construirEvento();
     }
     
-    public EventoLobby crearEventoJugadorListo(Cuenta jugador){
+    public EventoLobby crearEventoActualizarJugadoresListos(Cuenta jugador){
         builder.setIdPublicador(jugador.getId());
         builder.setInfo(jugador);
-        builder.setTipo(TipoLogicaLobby.JUGADOR_LISTO);
+        builder.setTipo(TipoLogicaLobby.ACTUALIZAR_JUGADORES_LISTO);
         return builder.construirEvento();
     }
     
-    public EventoLobby crearEventoActualizarAvatares(Cuenta cuentaActualizada, Cuenta publicador){
-        builder.setIdPublicador(publicador.getId());
+    public EventoLobby crearEventoActualizarAvatares(Cuenta cuentaActualizada){
+        builder.setIdPublicador(cuentaActualizada.getId());
         builder.setInfo(cuentaActualizada);
-        builder.setPublicador(publicador);
         builder.setTipo(TipoLogicaLobby.ACTUALIZAR_AVATARES);
         return builder.construirEvento();
     }
     
-    public EventoLobby crearEventoActualizarUsername(Cuenta cuentaActualizada, Cuenta publicador){
-        builder.setIdPublicador(publicador.getId());
+    public EventoLobby crearEventoActualizarUsername(Cuenta cuentaActualizada){
+        builder.setIdPublicador(cuentaActualizada.getId());
         builder.setInfo(cuentaActualizada);
-        builder.setPublicador(publicador);
         builder.setTipo(TipoLogicaLobby.ACTUALIZAR_USERNAME);
         return builder.construirEvento();
     }
     
-    public EventoLobby crearEventoPartidaEncontrada(Partida partidaEncontrada, Cuenta jugador){
+    public EventoLobby crearEventoPartidaEncontrada(Partida partidaEncontrada){
         builder.setIdPublicador(idPublicador);
         builder.agregarPartida(partidaEncontrada);
         builder.setTipo(TipoLogicaLobby.PARTIDA_ENCONTRADA);

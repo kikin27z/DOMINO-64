@@ -21,7 +21,6 @@ public abstract class ObservadorLobby implements Observer<Evento> {
     protected Map<Enum<?>, Consumer<Evento>> consumers;
     protected static final List<Enum<?>> eventos = new ArrayList<>(
             List.of(
-                    TipoError.ERROR_LOGICO,
                     TipoError.ERROR_DE_SERVIDOR,
                     TiposJugador.ABANDONAR_PARTIDA,
                     TiposJugador.CAMBIAR_AVATAR,
@@ -44,6 +43,10 @@ public abstract class ObservadorLobby implements Observer<Evento> {
         consumers.putIfAbsent(TiposJugador.ABANDONAR_PARTIDA, this::removerJugador);
         consumers.putIfAbsent(TiposJugador.UNIRSE_PARTIDA, this::unirsePartida);
         consumers.putIfAbsent(TiposJugador.CREAR_PARTIDA, this::crearPartida);
+        consumers.putIfAbsent(TiposJugador.CAMBIAR_USERNAME, this::cambiarUsername);
+        consumers.putIfAbsent(TiposJugador.CAMBIAR_AVATAR, this::cambiarAvatar);
+        consumers.putIfAbsent(TiposJugador.JUGADOR_LISTO, this::jugadorListo);
+        consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
     }
     
     public void agregarEvento(Enum<?> evento, Consumer<Evento> consumer){
@@ -54,4 +57,8 @@ public abstract class ObservadorLobby implements Observer<Evento> {
     public abstract void removerJugador(Evento evento);
     public abstract void unirsePartida(Evento evento);
     public abstract void crearPartida(Evento evento);
+    public abstract void cambiarUsername(Evento evento);
+    public abstract void cambiarAvatar(Evento evento);
+    public abstract void jugadorListo(Evento evento);
+    public abstract void manejarError(Evento evento);
 }

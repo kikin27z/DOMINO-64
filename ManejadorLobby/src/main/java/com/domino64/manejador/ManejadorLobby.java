@@ -16,6 +16,8 @@ import eventos.EventoLobby;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import lobbyBuilder.BuilderEventoLobby;
+import lobbyBuilder.DirectorLobby;
 import tiposLogicos.TipoLogicaLobby;
 
 /**
@@ -24,18 +26,21 @@ import tiposLogicos.TipoLogicaLobby;
  */
 public class ManejadorLobby extends ObservadorLobby{
     private List<Partida> partidas;
+    private static DirectorLobby director;
     private Partida partida;
-    private int id;
-    private static ICliente cliente;
+    private static int id;
+    private ICliente cliente;
+    private List<Cuenta> jugadoresListos;
     
     public ManejadorLobby() {
         partidas = new CopyOnWriteArrayList<>();
         consumers = new ConcurrentHashMap<>();
+        jugadoresListos = new CopyOnWriteArrayList<>();
         setConsumers();
     }
     
     private void init(ICliente client){
-        cliente = client;
+        this.cliente = client;
         cliente.establecerSuscripciones(eventos);
     }
     
@@ -65,14 +70,7 @@ public class ManejadorLobby extends ObservadorLobby{
                 /*si aun hay jugadores en la partida,
                 crea un evento de que el jugador salio para notificar al
                 resto de jugadores*/
-                EventoLobby ev = new EventoLobby(TipoLogicaLobby.JUGADOR_SALIO);
-                ev.agregarInfo(jugador);//se agrega el jugador que salio
-                /*
-                se le asigna el id del jugador que salio
-                para que a el no le llegue la notificacion
-                */
-                ev.setIdPublicador(jugador.getId());
-
+                EventoLobby ev = director.crearEventoJugadorSalio(jugador);
                 cliente.enviarEvento(ev);
             }
         }
@@ -97,18 +95,14 @@ public class ManejadorLobby extends ObservadorLobby{
         if(this.partida != null){
             Partida p = eventoJ.getPartida();
             if(partida.getCodigoPartida().equals(p.getCodigoPartida())){
+                
                 partida.agregarJugador(jugador);
-                EventoLobby ev = new EventoLobby(TipoLogicaLobby.PARTIDA_ENCONTRADA);
-                ev.agregarPartida(partida);
-                System.out.println("jugadores en partida desde el manejador lobby: "+partida.getJugadores());
-                ev.setIdPublicador(id);
+                EventoLobby ev = director.crearEventoPartidaEncontrada(partida);
 
                 cliente.enviarEvento(ev);
                 System.out.println("se unio a partida");
-
-                EventoLobby ev2 = new EventoLobby(TipoLogicaLobby.JUGADOR_NUEVO);
-                ev2.agregarInfo(jugador);
-                ev2.setIdPublicador(jugador.getId());
+                
+                EventoLobby ev2 = director.crearEventoJugadorNuevo(jugador);
                 cliente.enviarEvento(ev2);
                 System.out.println("se notifico a otros jugadores");
             }else{
@@ -140,10 +134,63 @@ public class ManejadorLobby extends ObservadorLobby{
             c.addObserver(suscripcion, manejador);
         }
         
-        cliente = c;
-        manejador.init(cliente);
+        //cliente = c;
+        manejador.init(c);
         
         c.iniciar();
+        
+        id = c.getClientId();
+        
+        director = new DirectorLobby(new BuilderEventoLobby(), id);
+    }
+
+    @Override
+    public void cambiarUsername(Evento evento) {
+        EventoJugador evJ = (EventoJugador)evento;
+        Cuenta jActualizado = evJ.getJugador();
+        
+        Cuenta j = partida.buscarJugador(jActualizado);
+        if(j != null){
+            j.setUsername(jActualizado.getUsername());
+        }
+        System.out.println("jugadores en partida con jugador act: "+partida.getJugadores());
+        
+        EventoLobby evLobby = director.crearEventoActualizarUsername(j);
+        cliente.enviarEvento(evLobby);
+    }
+
+    @Override
+    public void cambiarAvatar(Evento evento) {
+        EventoJugador evJ = (EventoJugador)evento;
+        Cuenta jActualizado = evJ.getJugador();
+        
+        Cuenta j = partida.buscarJugador(jActualizado);
+        if(j != null){
+            j.setAvatarUrl(jActualizado.getAvatarUrl());
+        }
+        System.out.println("avatar nuevo: "+j.getAvatarUrl());
+        System.out.println("jugadores en partida con jugador act: "+partida.getJugadores());
+        
+        EventoLobby evLobby = director.crearEventoActualizarAvatares(j);
+        cliente.enviarEvento(evLobby);
+    }
+
+    @Override
+    public void jugadorListo(Evento evento) {
+        EventoJugador evJ = (EventoJugador)evento;
+        Cuenta jugadorL = evJ.getJugador();
+        if(jugadoresListos.contains(jugadorL))
+            jugadoresListos.remove(jugadorL);
+        else 
+            jugadoresListos.add(jugadorL);
+        
+        EventoLobby evL = director.crearEventoActualizarJugadoresListos(jugadorL);
+        cliente.enviarEvento(evL);
+    }
+
+    @Override
+    public void manejarError(Evento evento) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

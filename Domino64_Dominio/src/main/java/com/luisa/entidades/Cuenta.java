@@ -64,7 +64,7 @@ public class Cuenta implements Serializable{
 
     @Override
     public String toString() {
-        return "Cuenta{" + "id=" + id + '}';
+        return "Cuenta{" +"user= " + username + ", id=" + id + '}';
     }
     
 }
