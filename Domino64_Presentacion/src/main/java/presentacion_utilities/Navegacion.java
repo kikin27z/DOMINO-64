@@ -52,25 +52,6 @@ public class Navegacion implements INavegacion {
         }
         return navegacion;
     }
-    
-    /**
-     * Actualiza los modelos, estableciendoles las acciones a ejecutar en cada boton
-     * que tenga la vista asociada a dicho modelo
-     * @param acciones Lista con todas las acciones a establecer en cada modelo,
-     * cada elemnto es una lista con las acciones correspondientes a un modelo en especifico.
-     * La primera lista contiene las acciones a asignarle al modeloInicio,
-     * la segunda lista contiene las acciones a asignarle al modeloLobby,
-     * y la tercera lista contiene las acciones a asignarle al modeloPartida
-     */
-    public void setAcciones(List<List<Accion>> acciones){
-        List<Accion> accionesInicio = acciones.get(0);//acciones para el modeloInicio
-        List<Accion> accionesLobby = acciones.get(1);//acciones para el modeloLobby
-        //List<Accion> accionesPartida = acciones.get(2);
-        
-        //actualizando los modelos, estableciendoles las acciones especificas
-        modeloInicio.setAcciones(accionesInicio);
-        modeloLobby.setAcciones(accionesLobby);
-    }
 
     /**
      * Inicia la aplicación lanzando la clase principal de JavaFX.
@@ -133,7 +114,7 @@ public class Navegacion implements INavegacion {
     public void cambiarPartida() {
         try {
             PartidaView partida = new PartidaView(modeloPartida); // Instancia la vista de la partida
-            modeloPartida.addObserver(partida);
+            //modeloPartida.addObserver(partida);
             partida.iniciarEscena(fondo); // Inicia la escena de la partida
             new PartidaControl(partida, modeloPartida);
         } catch (IOException ex) {

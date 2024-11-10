@@ -4,7 +4,6 @@
  */
 package presentacion_utilities;
 
-import com.mycompany.patrones.command.Accion;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaDTO;
 import java.util.List;
@@ -17,6 +16,11 @@ public class FachadaNavegador {
     private final Navegacion navegador;
     private static FachadaNavegador fachada;
     private boolean appIniciada;
+    private static final int ESCOGER_MODO =3;
+    private static final int LOBBY =2;
+    private static final int PARTIDA =1;
+    private static final int INICIO =0;
+    
     
     private FachadaNavegador(){
         navegador = Navegacion.getInstance();
@@ -29,35 +33,27 @@ public class FachadaNavegador {
         return fachada;
     }
     
-    public void iniciarApp(List<List<Accion>> acciones){
+    public void iniciarApp(){
         if(!appIniciada){
-            setAcciones(acciones);
             navegador.iniciarApp();
         }
     }
     
-    private void setAcciones(List<List<Accion>> acciones){
-        navegador.setAcciones(acciones);
-    }
     
-    public void irInicio(){
-        navegador.cambiarInicio();
-    }
     
-    public void irLobby(){
-        navegador.cambiarLobby();
+    public void cambiarPantalla(int destino){
+        switch(destino){
+            case INICIO -> {
+                navegador.cambiarInicio();
+            }
+            case ESCOGER_MODO -> {
+            }
+            case LOBBY -> {
+                navegador.cambiarLobby();
+            }
+            case PARTIDA -> {
+                navegador.cambiarPartida();
+            }
+        }
     }
-    
-    public void irPartida(){
-        navegador.cambiarPartida();
-    }
-    
-    public void actualizarPartida(PartidaDTO partida){
-        navegador.actualizarPartida(partida);
-    }
-    
-    public void actualizarJugador(JugadorDTO jugador){
-        navegador.actualizarJugador(jugador);
-    }
-    
 }

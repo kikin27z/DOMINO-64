@@ -1,7 +1,6 @@
 package partida;
 
 //import entidades.Ficha;
-import com.mycompany.patrones.observer.Observable;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaDTO;
@@ -22,6 +21,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import observer.Observable;
 import presentacion_utilities.NotificadorPresentacion;
 
 /**
@@ -30,7 +30,7 @@ import presentacion_utilities.NotificadorPresentacion;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class PartidaModel extends Observable<PartidaModel>{
+public class PartidaModel {
     private JugadorDTO jugador;
     private PartidaDTO partida;
     private boolean jugadorEnTurno;
@@ -108,7 +108,7 @@ public class PartidaModel extends Observable<PartidaModel>{
     public void setFichasValidas(List<FichaDTO> fichasValidas){
         if(jugadorEnTurno()){
             this.fichasValidas = fichasValidas;
-            this.notifyObservers(this);
+            //this.notifyObservers(this);
         }
     }
     
@@ -207,7 +207,7 @@ public class PartidaModel extends Observable<PartidaModel>{
     
     public void setGame(PartidaDTO partida) {
         this.partida = partida;
-        this.notifyObservers(this, PARTIDA_ACTUALIZADA);
+        //this.notifyObservers(this, PARTIDA_ACTUALIZADA);
     }
     
     public JugadorDTO getJugador() {
@@ -220,7 +220,7 @@ public class PartidaModel extends Observable<PartidaModel>{
         ponerFichaEnTablero(ultimaFicha);
         double imgViewLayoutX = imageViewLayoutX+50;
         //double imgViewLayoutY = imageViewLayoutY+50;
-        this.notifyObservers(this,PARTIDA_ACTUALIZADA);
+        //this.notifyObservers(this,PARTIDA_ACTUALIZADA);
     }
     
     public List<FichaDTO> getFichasDelJugador(){
@@ -229,14 +229,17 @@ public class PartidaModel extends Observable<PartidaModel>{
 
     public void setJugador(JugadorDTO jugador) {
         this.jugador = jugador;
-        this.notifyObservers(this, JUGADOR_ACTUALIZADO);
+        //this.notifyObservers(this, JUGADOR_ACTUALIZADO);
     }
     
     
     public void setFichaSeleccionada(FichaDTO ficha){
         fichaSeleccionada = ficha;
-        notificador.notificar(this);
-        this.notifyObservers(this, FICHA_SELECCIONADA);
+//        EventoMVCPartida evento = new EventoMVCPartida();
+//        evento.setPublicador(jugador);
+//        evento.agregarContexto(ficha);
+//        notificador.notificarEvento(evento);
+        //this.notifyObservers(this, FICHA_SELECCIONADA);
     }
     
     public void actualizarMapeoFichasJugadas(Entry<Canvas,FichaDTO> fichasJugadas) {

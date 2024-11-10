@@ -4,39 +4,24 @@
  */
 package inicio;
 
-import com.mycompany.patrones.command.Accion;
 import java.util.List;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 /**
  *
  * @author luisa M
  */
 public class InicioModel {
-    private Accion jugarSolo;
-    private Accion irLobby;
-    private List<Accion> acciones;
     
-    public void setAcciones(List<Accion> acciones){
-        this.acciones = acciones;
-    }
     
-    public List<Accion> getAcciones(){
-        return acciones;
-    }
-    
-    public void setAccionJugarSolo(Accion accion){
-        this.jugarSolo = accion;
-    }
-    
-    public Accion getAccionJugarSolo() {
-        return jugarSolo;
-    }
-    
-    public void setAccionIrLobby(Accion accion){
-        this.irLobby = accion;
-    }
-    
-    public Accion getAccionIrLobby() {
-        return irLobby;
+    public EventHandler<ActionEvent> getEventHandler(){
+        EventHandler<ActionEvent> handler = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                ;
+            }
+        };
+        return handler;
     }
 }

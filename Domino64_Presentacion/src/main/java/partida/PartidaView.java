@@ -1,7 +1,6 @@
 package partida;
 
 //import entidades.Ficha;
-import com.mycompany.patrones.observer.Observer;
 import entidadesDTO.FichaDTO;
 import java.io.IOException;
 import java.util.List;
@@ -28,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import observer.Observer;
 
 /**
  * Clase que representa la vista de la partida en la aplicación. Esta clase se
@@ -38,7 +38,7 @@ import javafx.stage.Stage;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class PartidaView implements Observer<PartidaModel>{
+public class PartidaView {
     private boolean fichasCreadas;
     private PartidaModel modelo;
     private AnchorPane panelExterior; // Panel exterior que contiene todos los elementos visuales
@@ -402,31 +402,36 @@ public class PartidaView implements Observer<PartidaModel>{
     }
     
 
-    @Override
-    public void update(PartidaModel observable, Object ... context) {
-        int accion = (int)context[0];
-        if(accion == observable.JUGADOR_ACTUALIZADO){
-            System.out.println("jugador actualiazdooo");
-            if(!fichasCreadas){
-                System.out.println("fichas nooo creadas");
-            }else{
-                //falta cambiar esto:
-                //distinguir las actualizaciones del jugador,
-                //cuando se le agrega y cuando se le quita una ficha
-                //para que se pinten y borren las fichas del panel
-                List<FichaDTO> fichasActuales = modelo.getJugador().getFichas();
-                FichaDTO nuevaFicha = fichasActuales.getLast();
-                Platform.runLater(()->{
-                    Canvas canva = crearDomino(nuevaFicha.getIzquierda(), nuevaFicha.getDerecha(), modelo.getEventHandler());
-                    modelo.getMapeoFichas().put(canva,nuevaFicha);
-                });
-                System.out.println("fichas creadas?");
-            }
-        }else if(accion == observable.PARTIDA_ACTUALIZADA){
-            System.out.println("partidaaaaa actualizadaaaaaaaa");
-        }else if(accion == observable.FICHA_SELECCIONADA){
-            System.out.println("hola");
-        }
+//    @Override
+//    public void update(PartidaModel observable, Object ... context) {
+//        int accion = (int)context[0];
+//        if(accion == observable.JUGADOR_ACTUALIZADO){
+//            System.out.println("jugador actualiazdooo");
+//            if(!fichasCreadas){
+//                System.out.println("fichas nooo creadas");
+//            }else{
+//                //falta cambiar esto:
+//                //distinguir las actualizaciones del jugador,
+//                //cuando se le agrega y cuando se le quita una ficha
+//                //para que se pinten y borren las fichas del panel
+//                List<FichaDTO> fichasActuales = modelo.getJugador().getFichas();
+//                FichaDTO nuevaFicha = fichasActuales.getLast();
+//                Platform.runLater(()->{
+//                    Canvas canva = crearDomino(nuevaFicha.getIzquierda(), nuevaFicha.getDerecha(), modelo.getEventHandler());
+//                    modelo.getMapeoFichas().put(canva,nuevaFicha);
+//                });
+//                System.out.println("fichas creadas?");
+//            }
+//        }else if(accion == observable.PARTIDA_ACTUALIZADA){
+//            System.out.println("partidaaaaa actualizadaaaaaaaa");
+//        }else if(accion == observable.FICHA_SELECCIONADA){
+//            System.out.println("hola");
+//        }
+//    }
+
+    //@Override
+    public void update(PartidaModel observable) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

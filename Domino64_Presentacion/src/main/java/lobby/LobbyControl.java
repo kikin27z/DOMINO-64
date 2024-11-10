@@ -44,14 +44,14 @@ public class LobbyControl  {
                 @Override
                 protected Void call() throws Exception {
                     String username = view.getUsername();
-                    JugadorDTO jugador = new JugadorDTO(username);
-                    modelo.setJugador(jugador);
+                    //JugadorDTO jugador = new JugadorDTO(username);
+                    //modelo.setJugador(jugador);
                     
                     Platform.runLater(() -> {
-                        modelo.getAcciones().get(0).ejecutarAccion();
+                        //modelo.getAcciones().get(0).ejecutarAccion();
                     });
                     
-                    modelo.getAcciones().get(1).ejecutarAccion();
+                   // modelo.getAcciones().get(1).ejecutarAccion();
                     return null;   
                 }
                 

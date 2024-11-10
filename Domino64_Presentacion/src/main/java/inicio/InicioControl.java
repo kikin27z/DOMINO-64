@@ -13,7 +13,7 @@ import presentacion_utilities.NotificadorPresentacion;
  * @author José Karim Franco Valencia - 00000245138
  */
 public class InicioControl {
-
+    
     private final NotificadorPresentacion notificador;
     private InicioModel modelo;
     private InicioView vista;
@@ -36,9 +36,9 @@ public class InicioControl {
             @Override
             public void handle(ActionEvent t) {
                 //accion asociada al boton de jugar solo
-                modelo.getAcciones().forEach(action->{
-                    action.ejecutarAccion();
-                });
+//                modelo.getAcciones().forEach(action->{
+//                    action.ejecutarAccion();
+//                });
             }
         };
         return handler;

@@ -1,6 +1,5 @@
 package lobby;
 
-import com.mycompany.patrones.observer.Observer;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -19,6 +18,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import observer.Observer;
 
 /**
  *
@@ -26,7 +26,7 @@ import javafx.stage.Stage;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class LobbyView implements Observer<LobbyModel>{
+public class LobbyView {
     private LobbyModel modelo;
     
     private StackPane ajustesStackPane;
@@ -135,8 +135,8 @@ public class LobbyView implements Observer<LobbyModel>{
         fondo.show();
     }
 
-    @Override
-    public void update(LobbyModel observable, Object ... context) {
+    //@Override
+    public void update(LobbyModel observable) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
