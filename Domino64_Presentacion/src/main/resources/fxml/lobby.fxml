@@ -3,7 +3,6 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -41,19 +40,16 @@
                         <Image url="@../avatar/ave.png" />
                      </image>
                   </ImageView>
-                  <TextField alignment="CENTER" layoutX="15.0" layoutY="180.0" maxHeight="40.0" maxWidth="192.0" minHeight="40.0" minWidth="192.0" prefHeight="40.0" prefWidth="192.0" promptText="Username" style="-fx-background-radius: 20;">
-                     <font>
-                        <Font name="Verdana" size="24.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </TextField>
                   <ImageView fitHeight="150.0" fitWidth="40.0" layoutX="148.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/listo.png" />
                      </image>
                   </ImageView>
+                  <Label alignment="CENTER" layoutX="15.0" layoutY="180.0" maxWidth="192.0" minWidth="192.0" prefWidth="192.0" style="-fx-background-color: #D9D9D9; -fx-background-radius: 20; -fx-padding: 6 4;" text="Karim D Luffy" textFill="#2f1c1c">
+                     <font>
+                        <Font name="Russo One" size="20.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
             <AnchorPane maxHeight="278.0" maxWidth="222.0" minHeight="278.0" minWidth="222.0" prefHeight="278.0" prefWidth="222.0">

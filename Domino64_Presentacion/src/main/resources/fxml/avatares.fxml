@@ -27,20 +27,20 @@
          <children>
             <ImageView fitHeight="135.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
                <image>
-                  <Image url="@../avatar/gato.png" />
+                  <Image url="@../avatar/panda.png" />
                </image>
                <effect>
-                  <ColorAdjust saturation="-0.76" />
+                  <ColorAdjust />
                </effect>
             </ImageView>
             <ImageView fitHeight="135.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1">
                <image>
-                  <Image url="@../avatar/gato.png" />
+                  <Image url="@../avatar/jaguar.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="135.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <image>
-                  <Image url="@../avatar/gato.png" />
+                  <Image url="@../avatar/kiwi.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="135.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
@@ -53,12 +53,12 @@
             </ImageView>
             <ImageView fitHeight="135.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <image>
-                  <Image url="@../avatar/gato.png" />
+                  <Image url="@../avatar/venado.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="135.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <image>
-                  <Image url="@../avatar/gato.png" />
+                  <Image url="@../avatar/mariposa.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -66,17 +66,17 @@
             </ImageView>
             <ImageView fitHeight="135.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <image>
-                  <Image url="@../avatar/gato.png" />
+                  <Image url="@../avatar/tortuga.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="135.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2">
                <image>
-                  <Image url="@../avatar/gato.png" />
+                  <Image url="@../avatar/serpiente.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="135.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../avatar/gato.png" />
+                  <Image url="@../avatar/ave.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />

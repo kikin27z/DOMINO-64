@@ -5,7 +5,7 @@
 package logicaPartida;
 
 import abstraccion.ICliente;
-import com.luisa.entidades.Jugador;
+import entidades.Jugador;
 import domino64.eventos.base.Evento;
 import eventos.EventoPartida;
 import logicaNotificacionEventos.PublicadorEventos;

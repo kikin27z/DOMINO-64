@@ -33,7 +33,7 @@ import tiposLogicos.TipoSuscripcion;
  * 
  * @author luisa M
  */
-public class HiloComponente  implements Runnable, Subscriber<Evento>{
+public class HiloComponente  implements Runnable, Subscriber{
     private final Socket socket;
     private ObjectInputStream input;
     private ObjectOutputStream output;

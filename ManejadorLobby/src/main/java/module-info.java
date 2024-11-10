@@ -1,14 +1,12 @@
 module ManejadorLobby {
     requires EventoLogico;
-    requires Domino64_EventBuilder;
-    requires Domino64_Cliente;
-    requires Domino64.Dominio;
-    requires Observer;
+    requires Excepciones;
     requires Evento;
-    
+    requires Client;
+    requires Observer;
+    requires Domino64_EventBuilder;
     
     uses abstraccion.ICliente;
     uses implementacion.Client;
     uses observer.Observer;
-    
 }

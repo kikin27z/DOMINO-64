@@ -1,9 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package eventos;
 
+import entidades.Cuenta;
+import entidades.Ficha;
+import entidades.Partida;
 import tiposLogicos.TiposJugador;
 
 
@@ -19,7 +18,7 @@ import tiposLogicos.TiposJugador;
  * @author luisa M
  * @author karim F
  */
-public class EventoJugador{}/* extends EventoLogico<Ficha>{
+public class EventoJugador extends EventoLogico<Ficha>{
     private Ficha context;
     private TiposJugador tipo;
     private Cuenta jugador;
@@ -75,4 +74,4 @@ public class EventoJugador{}/* extends EventoLogico<Ficha>{
         sb.append('}');
         return sb.toString();
     }    
-}*/
+}

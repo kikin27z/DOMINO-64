@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.luisa.servidor;
 
 import domino64.eventos.base.Evento;
@@ -26,9 +22,8 @@ import tiposLogicos.TiposJugador;
 /**
  *
  * @author luisa M
- * @deprecated Ya no se usa esta clase
  */
-public class ClientHandler extends Publisher implements Subscriber<EventoLogico>{
+public class ClientHandler extends Publisher implements Subscriber{
     private final Socket clientSocket;
     private ObjectInputStream input;
     private ObjectOutputStream output;
@@ -141,7 +136,6 @@ public class ClientHandler extends Publisher implements Subscriber<EventoLogico>
         }
     }
 
-    @Override
     public int compareTo(Subscriber handler) {
         return Integer.compare(clientId, handler.getSubscriberId());
     }
@@ -151,7 +145,6 @@ public class ClientHandler extends Publisher implements Subscriber<EventoLogico>
         return clientId;
     }
     
-    @Override
     public int getSubscriberId(){
         return clientId;
     }
@@ -163,7 +156,6 @@ public class ClientHandler extends Publisher implements Subscriber<EventoLogico>
      *
      * @param event Evento enviado desde el bus
      */
-    @Override
     public void recibirEvento(Evento evento) {
         this.evento = (EventoLogico)evento;
     }

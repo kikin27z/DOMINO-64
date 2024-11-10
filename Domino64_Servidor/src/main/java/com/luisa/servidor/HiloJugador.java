@@ -22,7 +22,7 @@ import tiposLogicos.TipoSuscripcion;
  *
  * @author luisa M
  */
-public class HiloJugador implements Runnable, Subscriber<EventoLogico>{
+public class HiloJugador implements Runnable, Subscriber{
     private final int id;
     private Socket socket;
     private final Publicador publicador;
