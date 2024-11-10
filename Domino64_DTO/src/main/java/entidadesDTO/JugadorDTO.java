@@ -12,25 +12,18 @@ import java.util.List;
  * @author luisa M
  */
 public class JugadorDTO {
-    private String username;
+    private CuentaDTO cuenta;
     private List<FichaDTO> fichas;
     private FichaDTO fichaSeleccionada;
 
-    public JugadorDTO(String username){
-        this.username = username;
+    public JugadorDTO(CuentaDTO cuenta){
+        this.cuenta = cuenta;
         fichas= new ArrayList<>();
     }
     public JugadorDTO(){
         fichas = new ArrayList<>();
     }
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
+    
     public List<FichaDTO> getFichas() {
         return fichas;
     }
@@ -50,12 +43,16 @@ public class JugadorDTO {
     public void removerFicha(FichaDTO ficha){
         this.fichas.remove(ficha);
     }
+    
+    public CuentaDTO getCuenta(){
+        return cuenta;
+    }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Jugador{");
-        sb.append("username=").append(username);
+        sb.append("username=").append(cuenta.getUsername());
         sb.append('}');
         return sb.toString();
     }
