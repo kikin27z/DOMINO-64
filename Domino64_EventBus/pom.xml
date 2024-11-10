@@ -6,14 +6,15 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <dependencies>
+        
         <dependency>
             <groupId>com.domino64</groupId>
-            <artifactId>Evento</artifactId>
+            <artifactId>PublicadorSuscriptor</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.domino64</groupId>
-            <artifactId>PublicadorSuscriptor</artifactId>
+            <artifactId>Domino64_Evento</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

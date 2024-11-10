@@ -1,13 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.domino64.manejador;
 
 import abstraccion.ICliente;
 import implementacion.Client;
-import com.luisa.entidades.Cuenta;
-import com.luisa.entidades.Partida;
+import entidades.Cuenta;
+import entidades.Partida;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.EventoError;
 import domino64.eventos.base.error.TipoError;

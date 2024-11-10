@@ -10,4 +10,5 @@ module EventoLogico{
     
     exports eventos;
     exports tiposLogicos;
+    requires Domino64.Dominio;
 }

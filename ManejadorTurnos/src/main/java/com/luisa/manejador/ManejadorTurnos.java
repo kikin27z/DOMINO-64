@@ -4,8 +4,8 @@
 
 package com.luisa.manejador;
 
-import com.luisa.entidades.Ficha;
-import com.luisa.entidades.Jugador;
+import entidades.Ficha;
+import entidades.Jugador;
 import com.luisa.excepcionesLogica.LogicException;
 import java.util.ArrayList;
 import java.util.Collections;

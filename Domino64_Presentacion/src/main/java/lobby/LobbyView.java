@@ -26,7 +26,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import observer.Observer;
 
 /**
  * La clase LobbyView gestiona la interfaz gráfica (GUI) de la pantalla de lobby
@@ -185,7 +184,7 @@ public class LobbyView {
     private void colocarJugadorLocal(CuentaDTO cuenta) {
         AnchorPane panelJugador = new AnchorPane();
         panelJugador.setPrefSize(222, 278);
-        avatarUsuarioActual = ponerAvatar(cuenta.getAvatar());
+//        avatarUsuarioActual = ponerAvatar(cuenta.getAvatar());
         avatarUsuarioActual.setCursor(Cursor.HAND);
 
         txtUsuario = new TextField();
@@ -212,7 +211,7 @@ public class LobbyView {
         AnchorPane panelJugador = new AnchorPane();
         panelJugador.setPrefSize(222, 278);
 
-        ImageView avatarView = ponerAvatar(cuenta.getAvatar());
+//        ImageView avatarView = ponerAvatar(cuenta.getAvatar());
 
         Label lblUsuario = new Label("...");
         lblUsuario.setAlignment(javafx.geometry.Pos.CENTER);
@@ -224,7 +223,7 @@ public class LobbyView {
         lblUsuario.setFont(Font.font("Russo One", 20));
         lblUsuario.setId("nombre");
 
-        panelJugador.getChildren().addAll(avatarView, lblUsuario);
+//        panelJugador.getChildren().addAll(avatarView, lblUsuario);
         jugadoresContenedor.getChildren().add(panelJugador);
         modelo.getPanelesJugadores().put(cuenta.getId(), panelJugador);
     }
@@ -716,7 +715,7 @@ public class LobbyView {
 //    @Override
     public void actualizarAvatarJugador(CuentaDTO cuenta) {
         AnchorPane panelJugador = modelo.obtenerPanelJugador(cuenta.getId());
-        actualizarAvatarJugador(panelJugador, cuenta.getAvatar());
+//        actualizarAvatarJugador(panelJugador, cuenta.getAvatar());
     }
 
     /**
@@ -727,6 +726,6 @@ public class LobbyView {
 //    @Override
     public void actualizarNombreOtroJugador(CuentaDTO cuenta) {
         AnchorPane panelJugador = modelo.obtenerPanelJugador(cuenta.getId());
-        actualizarNombreOtroJugador(panelJugador, cuenta.getNombre());
+//        actualizarNombreOtroJugador(panelJugador, cuenta.getNombre());
     }
 }

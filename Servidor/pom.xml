@@ -12,13 +12,13 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.event.api</groupId>
-            <artifactId>Domino64_EventoLogico</artifactId>
+            <groupId>com.domino64</groupId>
+            <artifactId>PublicadorSuscriptor</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.domino64</groupId>
-            <artifactId>PublicadorSuscriptor</artifactId>
+            <groupId>com.evento.logico</groupId>
+            <artifactId>Domino64_EventoLogico</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

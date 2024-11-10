@@ -1,11 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.luisa.manejador;
 
-import com.luisa.entidades.Ficha;
-import com.luisa.entidades.Tablero;
+import entidades.Ficha;
+import entidades.Tablero;
 
 /**
  *

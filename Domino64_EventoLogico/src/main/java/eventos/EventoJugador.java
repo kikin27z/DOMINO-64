@@ -4,9 +4,6 @@
  */
 package eventos;
 
-import com.luisa.entidades.Cuenta;
-import com.luisa.entidades.Ficha;
-import com.luisa.entidades.Partida;
 import tiposLogicos.TiposJugador;
 
 
@@ -22,7 +19,7 @@ import tiposLogicos.TiposJugador;
  * @author luisa M
  * @author karim F
  */
-public class EventoJugador extends EventoLogico<Ficha>{
+public class EventoJugador{}/* extends EventoLogico<Ficha>{
     private Ficha context;
     private TiposJugador tipo;
     private Cuenta jugador;
@@ -78,4 +75,4 @@ public class EventoJugador extends EventoLogico<Ficha>{
         sb.append('}');
         return sb.toString();
     }    
-}
+}*/

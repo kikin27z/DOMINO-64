@@ -30,7 +30,7 @@ public class PartidaControl {
         this.view = view;
         this.modelo = modelo;
 
-        CuentaDTO cuenta = new CuentaDTO(0, "/avatar/tortuga.png", "Karim"); //Quitar esto es harcodeo----------------------------------------------
+//        CuentaDTO cuenta = new CuentaDTO(0, "/avatar/tortuga.png", "Karim"); //Quitar esto es harcodeo----------------------------------------------
 //        view.insertarMesaAba(cuenta);//Quitar esto es harcodeo--------------------------------------------------------------------------------------
         cargarEventos();
     }

@@ -7,13 +7,13 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>Dominio</artifactId>
-            <version>${project.version}</version>
+            <groupId>Arquitectura_Software</groupId>
+            <artifactId>Domino64_Dominio</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.event.api</groupId>
-            <artifactId>Event</artifactId>
+            <groupId>com.domino64</groupId>
+            <artifactId>Domino64_Evento</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
