@@ -1,98 +1,49 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package entidadesDTO;
 
 /**
- * Clase que representa una cuenta de jugador en el sistema.
- * Contiene información básica sobre el jugador, incluyendo su
- * identificador, avatar y nombre.
- * 
- * @author Luisa Fernanda Morales Espinoza - 00000233450
- * @author Paul Alejandro Vázquez Cervantes - 00000241400
- * @author José Karim Franco Valencia - 00000245138
+ *
+ * @author luisa M
  */
 public class CuentaDTO {
-    private Integer id;       
-    private String avatar;
-    private String nombre;
-    private JugadorDTO jugador;
+    private int id;
+    private String username;
+    private String avatarUrl;
 
-    public CuentaDTO() {
-    }
-
-    /**
-     * Constructor de la clase CuentaDTO que permite inicializar
-     * todos los atributos de la cuenta.
-     * 
-     * @param id el identificador único de la cuenta.
-     * @param avatar la ruta del avatar del jugador.
-     * @param nombre el nombre del jugador.
-     */
-    public CuentaDTO(int id, String avatar, String nombre) {
-        this.id = id;
-        this.avatar = avatar;
-        this.nombre = nombre;
-    }
-    
-    /**
-     * Obtiene la ruta del avatar del jugador.
-     * 
-     * @return la ruta del avatar.
-     */
-    public String getAvatar() {
-        return avatar;
-    }
-
-    /**
-     * Establece la ruta del avatar del jugador.
-     * 
-     * @param avatar la nueva ruta del avatar.
-     */
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    /**
-     * Obtiene el nombre del jugador.
-     * 
-     * @return el nombre del jugador.
-     */
-    public String getNombre() {
-        return nombre;
-    }
-
-    /**
-     * Establece el nombre del jugador.
-     * 
-     * @param nombre el nuevo nombre del jugador.
-     */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    /**
-     * Obtiene el identificador único de la cuenta.
-     * 
-     * @return el identificador de la cuenta.
-     */
     public int getId() {
         return id;
     }
 
-    /**
-     * Establece el identificador único de la cuenta.
-     * 
-     * @param id el nuevo identificador de la cuenta.
-     */
     public void setId(int id) {
         this.id = id;
     }
 
-    public JugadorDTO getJugador() {
-        return jugador;
+    public String getUsername() {
+        return username;
     }
 
-    public void setJugador(JugadorDTO jugador) {
-        this.jugador = jugador;
+    public void setUsername(String username) {
+        this.username = username;
     }
-    
-    
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("CuentaDTO{");
+        sb.append("username=").append(username);
+        sb.append(", avatarUrl=").append(avatarUrl);
+        sb.append('}');
+        return sb.toString();
+    }
 }

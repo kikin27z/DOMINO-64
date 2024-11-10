@@ -3,7 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/module-info.java to edit this template
  */
 
-module ObserverAPI {
+module Observer {
+    requires Evento;
+    
     exports observer;
     
 }

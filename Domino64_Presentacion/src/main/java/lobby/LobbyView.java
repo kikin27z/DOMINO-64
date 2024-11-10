@@ -26,6 +26,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import observer.Observer;
 
 /**
  * La clase LobbyView gestiona la interfaz gráfica (GUI) de la pantalla de lobby
