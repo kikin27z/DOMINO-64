@@ -4,6 +4,7 @@
  */
 package entidades;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
@@ -11,7 +12,7 @@ import java.util.Random;
  *
  * @author luisa M
  */
-public class Partida {
+public class Partida implements Serializable{
     private List<Cuenta> jugadores;
     private int fichasPorJugador;
     private String codigoPartida;
@@ -26,7 +27,13 @@ public class Partida {
         this.codigoPartida = codigoPartida;
     }
 
-    
+    public Cuenta buscarJugador(Cuenta jugador){
+        for (Cuenta j : jugadores) {
+            if(j.getId() == jugador.getId())
+                return j;
+        }
+        return null;
+    }
     
     private void setCodigo(){
         Random rnd = new Random();

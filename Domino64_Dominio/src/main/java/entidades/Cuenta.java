@@ -1,12 +1,13 @@
 package entidades;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  *
  * @author luisa M
  */
-public class Cuenta {
+public class Cuenta implements Serializable{
     private String username;
     private String avatarUrl;
     private final int id;

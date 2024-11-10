@@ -20,6 +20,10 @@ import tiposLogicos.TiposJugador;
 public class BuilderEventoJugador implements EventBuilder<Ficha> {
     private EventoJugador evento;
     
+    public BuilderEventoJugador(){
+        evento = new EventoJugador();
+    }
+    
     public void setPartida(Partida partida){
         evento.setPartida(partida);
     }

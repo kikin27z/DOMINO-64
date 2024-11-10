@@ -13,6 +13,10 @@ import tiposLogicos.TipoLogicaLobby;
 public class BuilderEventoLobby implements EventBuilder<Cuenta>{
     private EventoLobby evento;
     
+    public BuilderEventoLobby(){
+        evento = new EventoLobby();
+    }
+    
     @Override
     public void setTipo(Enum<?> tipo) {
         this.evento.setTipo((TipoLogicaLobby)tipo);

@@ -16,6 +16,10 @@ public class BuilderEventoSuscripcion implements EventBuilder<Enum<?>>{
     private EventoSuscripcion evento;
     private TipoSuscripcion tipo;
     
+    public BuilderEventoSuscripcion(){
+        evento = new EventoSuscripcion();
+    }
+    
     @Override
     public void setTipo(Enum<?> tipo) {
         this.tipo = (TipoSuscripcion)tipo;

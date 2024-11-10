@@ -5,6 +5,7 @@ module ManejadorLobby {
     requires Client;
     requires Observer;
     requires Domino64_EventBuilder;
+    requires Domino64_Dominio;
     
     uses abstraccion.ICliente;
     uses implementacion.Client;
