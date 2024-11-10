@@ -1,6 +1,10 @@
 package presentacion_utilities;
+import eventosOpcionesPartida.EventosOpcionesPartida;
+import eventosOpcionesPartida.ObserverOpcionesPartida;
 import eventosPantallas.EventosPantallas;
 import eventosPantallas.ObserverPantalla;
+import eventosPartida.EventosPartida;
+import eventosPartida.ObserverPartida;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,11 +14,14 @@ import java.util.List;
  */
 public class NotificadorEvento implements EventosPantallas{
     private static NotificadorEvento notificarEvento; // Instancia única de Navegacion
-    private List<ObserverPantalla> observers;
+    private List<ObserverPantalla> observersDisplay;
+    
+    private EventosOpcionesPartida opciones;
+    private EventosPartida partida;
 
     // Constructor privado para evitar instanciación externa
     private NotificadorEvento() {
-        observers = new ArrayList<>();
+        observersDisplay = new ArrayList<>();
     }
 
     /**
@@ -31,35 +38,56 @@ public class NotificadorEvento implements EventosPantallas{
 
     @Override
     public void agregarObserver(ObserverPantalla observador) {
-        observers.add(observador);
+        observersDisplay.add(observador);
     }
 
     @Override
     public void quitarObserver(ObserverPantalla observador) {
-        observers.remove(observador);
+        observersDisplay.remove(observador);
     }
 
     @Override
     public void avisarMostrarInicio() {
-        for(var observer : observers){
+        for(var observer : observersDisplay){
             observer.avisarMostrarInicio();
         }
     }
 
     @Override
     public void avisarMostrarPartida() {
-        for(var observer : observers){
+        for(var observer : observersDisplay){
             observer.avisarMostrarPartida();
         }
     }
 
     @Override
     public void avisarMostrarOpcionesPartida() {
-        for(var observer : observers){
+        for(var observer : observersDisplay){
             observer.avisarMostrarOpcionesPartida();
         }
     }
-    
-  
 
+    public EventosOpcionesPartida getOpciones() {
+        return opciones;
+    }
+
+    public void setOpciones(EventosOpcionesPartida opciones) {
+        this.opciones = opciones;
+    }
+
+    public EventosPartida getPartida() {
+        return partida;
+    }
+
+    public void setPartida(EventosPartida partida) {
+        this.partida = partida;
+    }
+    
+    public void asignarObserverOpcionesPartida(ObserverOpcionesPartida observer){
+        opciones.agregarObserver(observer);
+    }
+    
+    public void asignarObserverPartida(ObserverPartida observer){
+        partida.agregarObserver(observer);
+    }
 }

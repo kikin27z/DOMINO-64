@@ -22,6 +22,12 @@ public class Partida {
         setCodigo();
     }
 
+    public Partida(String codigoPartida) {
+        this.codigoPartida = codigoPartida;
+    }
+
+    
+    
     private void setCodigo(){
         Random rnd = new Random();
         StringBuilder builder = new StringBuilder();

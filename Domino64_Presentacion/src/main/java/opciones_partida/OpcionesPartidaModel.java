@@ -1,6 +1,5 @@
 package opciones_partida;
 
-import eventosInicio.ObserverInicio;
 import eventosOpcionesPartida.EventosOpcionesPartida;
 import eventosOpcionesPartida.ObserverOpcionesPartida;
 import java.util.ArrayList;
@@ -17,6 +16,7 @@ public class OpcionesPartidaModel implements EventosOpcionesPartida{
     private final NotificadorEvento notificador;
     private final List<ObserverOpcionesPartida> observers;
     private String codigoPartida;
+    
     public OpcionesPartidaModel() {
         notificador = NotificadorEvento.getInstance();
         observers = new ArrayList<>();
@@ -29,14 +29,24 @@ public class OpcionesPartidaModel implements EventosOpcionesPartida{
     @Override
     public void avisarCrearPartida() {
         for(var observer : observers){
-            observer.avisarCrearPartida();
+            observer.crearPartida();
         }
+    }
+    
+    @Override
+    public void agregarObserver(ObserverOpcionesPartida observador) {
+        this.observers.add(observador);
     }
 
     @Override
-    public void avisarBuscarPartida(String codigoPartida) {
+    public void quitarObserver(ObserverOpcionesPartida observador) {
+        this.observers.remove(observador);
+    }
+    
+    @Override
+    public void avisarBuscarPartida() {
         for(var observer : observers){
-            observer.avisarBuscarPartida(codigoPartida);
+            observer.buscarPartida(codigoPartida);
         }
     }
 
@@ -47,7 +57,4 @@ public class OpcionesPartidaModel implements EventosOpcionesPartida{
     public void setCodigoPartida(String codigoPartida) {
         this.codigoPartida = codigoPartida;
     }
-    
-    
-    
 }

@@ -35,38 +35,14 @@ public class LobbyControl {
      */
     private void cargarEventos() {
         view.mostrarConfiguracion(this::abrirConfiguracion);  // Evento para abrir la configuración
-        view.confirmarTexto(this::seleccionNombreUsuario);  // Evento para confirmar el nombre de usuario
         view.mostrarAvatares(this::abrirAvatares);  // Evento para abrir la selección de avatares
         view.abandonarPartida(this::abandonarPartida);  // Evento para abandonar la partida
         view.iniciarPartida(this::iniciarPartida);  // Evento para iniciar la partida
-        view.confirmarCambiosPartida(this::guardarConfiguracionPartida);  // Evento para guardar cambios en la configuración
-        view.cancelarCambiosPartida(this::cancelarConfiguracionPartida);  // Evento para cancelar cambios en la configuración
+//        view.confirmarCambiosPartida(this::guardarConfiguracionPartida);  // Evento para guardar cambios en la configuración
+//        view.cancelarCambiosPartida(this::cancelarConfiguracionPartida);  // Evento para cancelar cambios en la configuración
     }
     
     //-------------------Eventos-------------------
-    // protected EventHandler<ActionEvent> getHandlerIniciar() {
-    //     EventHandler<ActionEvent> handler = (ActionEvent t) -> {
-    //         Task<Void> longTask = new Task<Void>() {
-    //             @Override
-    //             protected Void call() throws Exception {
-    //                 String username = view.getUsername();
-    //                 JugadorDTO jugador = new JugadorDTO(username);
-    //                 modelo.setJugador(jugador);
-                    
-    //                 Platform.runLater(() -> {
-    //                     modelo.getAcciones().get(0).ejecutarAccion();
-    //                 });
-                    
-    //                 modelo.getAcciones().get(1).ejecutarAccion();
-    //                 return null;   
-    //             }
-                
-    //         };
-            
-    //         new Thread(longTask).start();
-    //     };
-    //     return handler;
-    // }
     /**
      * Evento que se ejecuta al guardar la configuración de la partida.
      * Actualmente imprime un mensaje en la consola, pero puede extenderse para guardar los cambios en el modelo.
@@ -124,7 +100,7 @@ public class LobbyControl {
      * @param e el evento de ratón que activa esta acción.
      */
     private void abrirAvatares(MouseEvent e) {
-        view.mostrarVentanaAvatares(); 
+        view.mostrarVentanaAvatares();
         System.out.println("Avatares"); //-------------------------------------------------Le falta aun
     }
     
@@ -152,29 +128,10 @@ public class LobbyControl {
             TextField txtUsuario = (TextField) e.getSource();  // Obtiene el campo de texto
             txtUsuario.getParent().requestFocus();  // Quita el foco del campo de texto
             txtUsuario.setOnMouseExited(null);  // Desactiva el evento de salida del ratón
-            logicaNombreUsuario(txtUsuario.getText());  // Llama a la lógica de validación del nombre
+//            logicaNombreUsuario(txtUsuario.getText());  // Llama a la lógica de validación del nombre
         }
     }
 
     //-------------------Lógica de control-------------------
-    
-    /**
-     * Lógica que valida y actualiza el nombre de usuario.
-     * Verifica si los caracteres son válidos, si el nombre no está repetido, y si es válido lo asigna en el modelo.
-     *
-     * @param nombre el nombre de usuario ingresado por el usuario.
-     */
-    private void logicaNombreUsuario(String nombre) {
-        if(nombre == null){
-            modelo.sonCaracteresValidosNombre("");
-        }else{
-            modelo.sonCaracteresValidosNombre(nombre);  // Valida los caracteres del nombre
-        }
-        if (modelo.getMensaje() == null) {
-            modelo.validarNombreNoRepetido(nombre);  // Verifica que el nombre no esté repetido
-        }
-        if (modelo.getMensaje() == null) {
-            modelo.asignarNombreUsuarioActual(nombre);  // Asigna el nombre si es válido
-        }
-    }
+
 }

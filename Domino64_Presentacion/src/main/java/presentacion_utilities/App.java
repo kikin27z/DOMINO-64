@@ -15,7 +15,7 @@ public class App extends Application{
     @Override
     public void start(Stage stage) throws Exception {
         Navegacion.getInstance().setFondo(stage);
-        Navegacion.getInstance().cambiarInicio();
+        Navegacion.getInstance().cambiarLobby();
         Image icon = new Image(getClass().getResourceAsStream("/images/logo.png"));
         stage.getIcons().add(icon);
         stage.setTitle("Domino 64");

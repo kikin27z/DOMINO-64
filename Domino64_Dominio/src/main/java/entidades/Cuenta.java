@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidades;
 
 import java.util.Objects;
@@ -13,13 +9,14 @@ import java.util.Objects;
 public class Cuenta {
     private String username;
     private String avatarUrl;
-    private final String id;
+    private final int id;
+    private Jugador jugador;
 
-    public Cuenta(String id) {
+    public Cuenta(int id) {
         this.id = id;
     }
 
-    public String getId(){
+    public int getId(){
         return id;
     }
     
@@ -39,6 +36,16 @@ public class Cuenta {
         this.avatarUrl = avatarUrl;
     }
 
+    public Jugador getJugador() {
+        return jugador;
+    }
+
+    public void setJugador(Jugador jugador) {
+        this.jugador = jugador;
+    }
+
+    
+    
     @Override
     public int hashCode() {
         int hash = 7;

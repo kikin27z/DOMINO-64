@@ -49,10 +49,10 @@ public class LobbyModel  {
         avatares = new String[]{
             "/avatar/ave.png",
             "/avatar/gato.png",
+            "/avatar/panda.png",
             "/avatar/jaguar.png",
             "/avatar/kiwi.png",
             "/avatar/mariposa.png",
-            "/avatar/panda.png",
             "/avatar/serpiente.png",
             "/avatar/tortuga.png",
             "/avatar/venado.png"
@@ -61,18 +61,7 @@ public class LobbyModel  {
         cuentasJugadoresOnline = new ArrayList<>();
         cuentaActual = new CuentaDTO(0, "/avatar/venado.png", mensaje);
     }
-
     //--------------Métodos notificadores-------------------
-    /**
-     * Asigna el nombre de usuario actual y notifica a los observadores.
-     *
-     * @param nombre el nombre de usuario a asignar.
-     */
-    public void asignarNombreUsuarioActual(String nombre) {
-        cuentaActual.setNombre(nombre);  // Asigna el nombre a la cuenta actual
-        // Aquí se debe agregar la lógica para notificar a los demás jugadores
-    }
-
     /**
      * Actualiza el nombre de otro jugador en la vista.
      *
@@ -104,31 +93,7 @@ public class LobbyModel  {
         }
     }
 
-    /**
-     * Valida que el nombre de usuario no esté repetido entre los jugadores en
-     * línea.
-     *
-     * @param nombre el nombre a validar.
-     */
-    public void validarNombreNoRepetido(String nombre) {
-        for (CuentaDTO cuentaDTO : cuentasJugadoresOnline) {
-            if (cuentaDTO.getNombre().equalsIgnoreCase(nombre)) {
-                setMensaje("Ya tiene un usuario ese nombre");
-                return;
-            }
-        }
-        this.mensaje = null;
-    }
-
     //--------------GETTERS && SETTERS-------------------
-    /**
-     * Devuelve el nombre del usuario actual.
-     *
-     * @return el nombre del usuario actual.
-     */
-    public String devolverNombreUsuarioActual() {
-        return this.cuentaActual.getNombre();
-    }
 
     /**
      * Obtiene el mensaje de error o información actual.

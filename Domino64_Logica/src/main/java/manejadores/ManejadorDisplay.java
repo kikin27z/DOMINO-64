@@ -13,16 +13,21 @@ import presentacion_utilities.NotificadorEvento;
  */
 public final class ManejadorDisplay implements ObserverPantalla{
     private final NotificadorEvento notificador;
+    private final ManejadorModelo modeloLogica;
     private INavegacion navegacion;
     //private ICliente cliente;
 
     public ManejadorDisplay() {
         notificador = NotificadorEvento.getInstance();
+        modeloLogica = Control.obtenerManejadorModelo();
+        
+        
         notificador.agregarObserver(this);
         iniciarJuego();
     }
 
     public void iniciarJuego(){
+        System.out.println(Thread.currentThread());
         navegacion = Navegacion.getInstance();
         navegacion.iniciarApp();
         try {
@@ -34,6 +39,7 @@ public final class ManejadorDisplay implements ObserverPantalla{
 
     @Override
     public void avisarMostrarInicio() {
+        
         navegacion.cambiarInicio();
     }
 
@@ -45,6 +51,7 @@ public final class ManejadorDisplay implements ObserverPantalla{
     @Override
     public void avisarMostrarOpcionesPartida() {
         navegacion.cambiarOpcionesPartida();
+        modeloLogica.crearObserverOpcionesPartida();
     }
     
 }
