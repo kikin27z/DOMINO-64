@@ -3,9 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/module-info.java to edit this template
  */
 
-module Observer {
+module ManejadorPartida {
+    requires EventoLogico;
+    requires Dominio;
     requires Evento;
-    
-    exports observer;
-    
+    requires Client;
+    requires Observer;
 }

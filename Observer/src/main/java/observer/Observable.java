@@ -4,35 +4,43 @@
  */
 package observer;
 
+import domino64.eventos.base.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
  * @author luisa M
+ * @param <T>
  */
-public class Observable<T> {
-    private Map<CategoriaEvento, List<Observer>> observers;
+public class Observable<T extends Evento> {
+    private final Map<Enum<?>, List<Observer>> observers;
     //private boolean estado;
 
     public Observable() {
-        this.observers = new ArrayList<>();
+        this.observers = new ConcurrentHashMap<>();
     }
 
-    public void addObserver(Observer<T> ob) {
-        this.observers.add(ob);
+    public void addObserver(Enum<?> tipo, Observer ob) {
+        observers.merge(tipo, new ArrayList<>(List.of(ob)), (lista, nuevaLista) -> {
+            lista.add(ob);
+            return lista;
+        });
     }
 
-    public void removeObserver(Observer<T> ob) {
-        this.observers.remove(ob);
+    public void removeObserver(Enum<?> tipo, Observer ob) {
+        observers.computeIfPresent(tipo, (cat, obs) -> {
+            obs.remove(ob);
+            return obs;
+        });
     }
 
-    public void notifyObservers(T o){
+    public void notifyObservers(Enum<?> tipo, T o){
         if (!this.observers.isEmpty()) {
-            this.observers.forEach(ob -> {
-                ob.update(o);
-            });
+            if(observers.containsKey(tipo))
+                observers.get(tipo).forEach(ob -> ob.update(o));
         }
     }
 }

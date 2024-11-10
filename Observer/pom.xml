@@ -11,4 +11,11 @@
         <exec.mainClass>com.mycompany.observerapi.ObserverAPI</exec.mainClass>
     </properties>
     <name>Observer</name>
+    <dependencies>
+        <dependency>
+            <groupId>com.domino64</groupId>
+            <artifactId>Evento</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>
