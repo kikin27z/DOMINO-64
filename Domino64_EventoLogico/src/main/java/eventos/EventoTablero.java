@@ -5,8 +5,8 @@
 package eventos;
 
 //import categorias.CategoriaEvento;
-import com.luisa.entidades.Cuenta;
-import com.luisa.entidades.Ficha;
+import entidades.Cuenta;
+import entidades.Ficha;
 import com.luisa.excepcionesLogica.LogicException;
 import java.util.ArrayList;
 import java.util.List;

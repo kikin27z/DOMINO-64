@@ -5,7 +5,7 @@
 package starter;
 
 import com.domino64.base.Publicador;
-import com.luisa.entidades.Cuenta;
+import entidades.Cuenta;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.PartidaDTO;
 import implementacion.Client;

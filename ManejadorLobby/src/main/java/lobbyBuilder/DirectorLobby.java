@@ -5,8 +5,8 @@
 package lobbyBuilder;
 
 import builder.DirectorEventos;
-import com.luisa.entidades.Cuenta;
-import com.luisa.entidades.Partida;
+import entidades.Cuenta;
+import entidades.Partida;
 import eventos.EventoLobby;
 import tiposLogicos.TipoLogicaLobby;
 

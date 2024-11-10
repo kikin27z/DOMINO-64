@@ -5,8 +5,8 @@
 
 module ManejadorPartida {
     requires EventoLogico;
-    requires Dominio;
     requires Evento;
     requires Client;
     requires Observer;
+    requires Domino64.Dominio;
 }

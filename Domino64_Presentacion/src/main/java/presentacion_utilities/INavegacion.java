@@ -1,8 +1,7 @@
 package presentacion_utilities;
 
-import entidadesDTO.JugadorDTO;
-import entidadesDTO.PartidaDTO;
-import partida.PartidaModel;
+
+
 
 /**
  * Interfaz que define los métodos para la navegación entre diferentes vistas
@@ -36,12 +35,5 @@ public interface INavegacion {
      */
     public void cambiarPartida();
     
-    /**
-     * Actualiza la vista de la partida.
-     * @param partidaActualizada
-     */
-    public void actualizarPartida(PartidaDTO partidaActualizada);
-    public void actualizarJugador(JugadorDTO jugadorActualizado);
-    
-    //public void quitarFicha()
+    public void cambiarOpcionesPartida();
 }

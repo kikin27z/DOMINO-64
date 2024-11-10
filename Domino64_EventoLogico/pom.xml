@@ -13,13 +13,18 @@
     <name>Domino64_EventoLogico</name>
     <dependencies>
         <dependency>
-            <groupId>com.luisa</groupId>
-            <artifactId>Dominio</artifactId>
+            <groupId>Arquitectura_Software</groupId>
+            <artifactId>Domino64_Dominio</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.domino64</groupId>
-            <artifactId>Evento</artifactId>
+            <artifactId>Domino64_Evento</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.luisa</groupId>
+            <artifactId>Excepciones</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

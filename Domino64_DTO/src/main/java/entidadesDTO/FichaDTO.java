@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidadesDTO;
 
 /**
@@ -9,14 +5,12 @@ package entidadesDTO;
  * @author luisa M
  */
 public class FichaDTO {
-    public final int ORIENTACION_VERTICAL = 0;
-    public final int ORIENTACION_HORIZONTAL = 1;
-    private int orientacion;
     private int izquierda;
     private int derecha;
-
-    public int getOrientacion() {
-        return orientacion;
+    
+    public FichaDTO(int izquierda, int derecha) {
+        this.izquierda = izquierda;
+        this.derecha = derecha;
     }
     
     public boolean esMula() {
@@ -29,11 +23,6 @@ public class FichaDTO {
         derecha = aux;
     }
 
-    public void setOrientacion(int orientacion) {
-        this.orientacion = orientacion;
-    }
-
-    
     public int getIzquierda() {
         return izquierda;
     }
@@ -54,8 +43,7 @@ public class FichaDTO {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Ficha{");
-        sb.append("orientacion=").append(orientacion);
-        sb.append(", izquierda=").append(izquierda);
+        sb.append("izquierda=").append(izquierda);
         sb.append(", derecha=").append(derecha);
         sb.append('}');
         return sb.toString();

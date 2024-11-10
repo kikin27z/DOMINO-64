@@ -1,13 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package logicaLobby;
 
 import builder.DirectorEventos;
-import com.luisa.entidades.Cuenta;
-import com.luisa.entidades.Ficha;
-import com.luisa.entidades.Partida;
+import entidades.Cuenta;
+import entidades.Ficha;
+import entidades.Partida;
 import eventos.EventoJugador;
 import tiposLogicos.TiposJugador;
 

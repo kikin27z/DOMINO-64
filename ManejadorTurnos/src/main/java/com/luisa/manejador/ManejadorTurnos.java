@@ -4,8 +4,8 @@
 
 package com.luisa.manejador;
 
-import com.luisa.entidades.Ficha;
-import com.luisa.entidades.Jugador;
+import entidades.Ficha;
+import entidades.Jugador;
 import com.luisa.excepcionesLogica.LogicException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,26 +27,25 @@ public class ManejadorTurnos {
         
     }
     
-    public void designarTurnos()throws LogicException{
-        Jugador primero = designarPrimerTurno();
+    public void designarTurnos(){
+//        Jugador primero = designarPrimerTurno();
     }
     
-    private Jugador designarPrimerTurno()throws LogicException{
-        List<Ficha> mulasJugadores = new ArrayList<>();
-        List<Jugador> jugadoresConMula = new ArrayList<>();
-        for(Jugador jugador: jugadores){
-            Ficha mayorMula = jugador.obtenerMayorMula();
-            if(mayorMula!=null){
-                jugadoresConMula.add(jugador);
-                mulasJugadores.add(mayorMula);
-            }
-        }
-        
-        if(!mulasJugadores.isEmpty()){
-            int index = mulasJugadores.indexOf(Collections.max(mulasJugadores));
-            return jugadoresConMula.get(index);
-        }
-        throw new LogicException();
-    }
+//    private Jugador designarPrimerTurno(){
+//        List<Ficha> mulasJugadores = new ArrayList<>();
+//        List<Jugador> jugadoresConMula = new ArrayList<>();
+//        for(Jugador jugador: jugadores){
+//            Ficha mayorMula = jugador.obtenerMayorMula();
+//            if(mayorMula!=null){
+//                jugadoresConMula.add(jugador);
+//                mulasJugadores.add(mayorMula);
+//            }
+//        }
+//        
+//        if(!mulasJugadores.isEmpty()){
+//            int index = mulasJugadores.indexOf(Collections.max(mulasJugadores));
+//            return jugadoresConMula.get(index);
+//        }
+//    }
     
 }

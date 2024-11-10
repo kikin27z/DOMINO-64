@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidadesDTO;
 
 /**
@@ -12,6 +8,17 @@ public class CuentaDTO {
     private int id;
     private String username;
     private String avatarUrl;
+
+    public CuentaDTO(int id, String username, String avatarUrl) {
+        this.id = id;
+        this.username = username;
+        this.avatarUrl = avatarUrl;
+    }
+
+    public CuentaDTO() {
+    }
+    
+    
 
     public int getId() {
         return id;

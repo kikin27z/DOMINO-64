@@ -1,13 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.luisa.manejador;
 
-import com.luisa.entidades.Ficha;
-import com.luisa.entidades.Pozo;
-import com.luisa.excepcionesDominio.DominioException;
-import com.luisa.excepcionesLogica.LogicException;
+import entidades.Ficha;
+import entidades.Pozo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,15 +48,11 @@ public class ManejadorPozo {
     /**
      * Saca una ficha del pozo
      * @return la ficha obtenida
-     * @throws LogicException si hubo un error al jalar la ficha
      */
-    public Ficha jalarFicha()throws LogicException{
-        try {
-            Ficha ficha = pozo.jalarFicha();
-            return ficha;
-        } catch (DominioException ex) {
-            throw new LogicException(ex.getMessage());
-        }
+    public Ficha jalarFicha(){
+        Ficha ficha;
+        ficha = pozo.jalarFicha();
+        return ficha;
     }
     
     /**
@@ -78,9 +68,8 @@ public class ManejadorPozo {
      * El metodo se usa al inicio de la partida para darle las fichas a cada jugador
      * @param cantidadFichas numero de fichas a repartir por jugador
      * @return una lista con las fichas para un jugador
-     * @throws LogicException si hubo un error al obtener las fichas
      */
-    public List<Ficha> repartirFichas(int cantidadFichas) throws LogicException{
+    public List<Ficha> repartirFichas(int cantidadFichas){
         List<Ficha> fichas = new ArrayList<>();
         for (int i = 0; i < cantidadFichas; i++) {
             fichas.add(jalarFicha());

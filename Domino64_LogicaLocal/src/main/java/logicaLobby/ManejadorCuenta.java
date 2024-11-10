@@ -6,8 +6,8 @@ package logicaLobby;
 
 import abstraccion.ICliente;
 import com.domino64.base.Suscriptor;
-import com.luisa.entidades.Cuenta;
-import com.luisa.entidades.Partida;
+import entidades.Cuenta;
+import entidades.Partida;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.TipoError;
 import entidadesDTO.CuentaDTO;

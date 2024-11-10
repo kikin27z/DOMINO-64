@@ -16,12 +16,10 @@ public class PartidaDTO {
     private int cantidadJugadores;
     private int fichasPorJugador;
     private String codigoPartida;
-    private TableroDTO tablero;
     private PozoDTO pozo;
 
     public PartidaDTO(){
         this.pozo = new PozoDTO();
-        this.tablero = new TableroDTO();
         this.jugadores = new ArrayList<>();
     }
     
@@ -31,14 +29,6 @@ public class PartidaDTO {
 
     public void setPozo(PozoDTO pozo) {
         this.pozo = pozo;
-    }
-
-    public TableroDTO getTablero() {
-        return tablero;
-    }
-
-    public void setTablero(TableroDTO tablero) {
-        this.tablero = tablero;
     }
 
     public String getCodigoPartida() {
@@ -81,7 +71,6 @@ public class PartidaDTO {
         sb.append(", cantidadJugadores=").append(cantidadJugadores).append("\n");
         sb.append(", fichasPorJugador=").append(fichasPorJugador).append("\n");
         sb.append(", codigoPartida=").append(codigoPartida).append("\n");
-        sb.append(", tablero=").append(tablero).append("\n");
         sb.append(", pozo=").append(pozo).append("\n");
         sb.append('}');
         return sb.toString();

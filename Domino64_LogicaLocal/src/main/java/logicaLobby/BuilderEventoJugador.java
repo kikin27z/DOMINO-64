@@ -5,9 +5,9 @@
 package logicaLobby;
 
 import builder.EventBuilder;
-import com.luisa.entidades.Cuenta;
-import com.luisa.entidades.Ficha;
-import com.luisa.entidades.Partida;
+import entidades.Cuenta;
+import entidades.Ficha;
+import entidades.Partida;
 import eventos.EventoJugador;
 import tiposLogicos.TiposJugador;
 

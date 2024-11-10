@@ -1,43 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" maxHeight="700.0" maxWidth="1000.0" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #B2533E;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23" fx:controller="lobby.LobbyControl">
+<AnchorPane id="AnchorPane" maxHeight="700.0" maxWidth="1000.0" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #B2533E;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lobby.LobbyControl">
    <children>
-      <StackPane layoutX="874.0" layoutY="46.0" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" onDragDetected="#abrirAjustes" prefHeight="60.0" prefWidth="60.0">
+      <Label alignment="CENTER" layoutX="60.0" layoutY="100.0" prefWidth="855.0" text="1/3 listos para iniciar" textFill="#2f1c1c">
+         <font>
+            <Font name="Verdana Bold" size="48.0" />
+         </font>
+      </Label>
+       <Button fx:id="btnJugar" layoutX="49.0" layoutY="562.0" maxHeight="70.0" minHeight="-Infinity" mnemonicParsing="false" prefWidth="420.0" style="-fx-background-color: #2F1C1C; -fx-background-radius: 20;" text="Abandonar partida" textFill="WHITE">
+         <font>
+            <Font name="Russo One" size="37.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Label alignment="CENTER" layoutX="72.0" layoutY="496.0" prefWidth="855.0" text="Fin del juego" textFill="#2e1c1cb9">
+         <font>
+            <Font name="Verdana Bold" size="33.0" />
+         </font>
+      </Label>
+      <HBox layoutX="30.0" layoutY="216.0" maxHeight="278.0" maxWidth="942.0" minHeight="278.0" minWidth="942.0" prefHeight="278.0" prefWidth="942.0" spacing="18.0">
          <children>
-            <Rectangle arcHeight="100.0" arcWidth="100.0" fill="#eae8e8" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
-            <ImageView fitHeight="44.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
+            <AnchorPane maxHeight="278.0" maxWidth="222.0" minHeight="278.0" minWidth="222.0" prefHeight="278.0" prefWidth="222.0">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="41.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../avatar/ave.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="150.0" fitWidth="40.0" layoutX="148.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/listo.png" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" layoutX="15.0" layoutY="180.0" maxWidth="192.0" minWidth="192.0" prefWidth="192.0" style="-fx-background-color: #D9D9D9; -fx-background-radius: 20; -fx-padding: 6 4;" text="Karim D Luffy" textFill="#2f1c1c">
+                     <font>
+                        <Font name="Russo One" size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane maxHeight="278.0" maxWidth="222.0" minHeight="278.0" minWidth="222.0" prefHeight="278.0" prefWidth="222.0">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="41.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../avatar/ave.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="150.0" fitWidth="40.0" layoutX="148.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/listo.png" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" layoutX="15.0" layoutY="180.0" maxWidth="192.0" minWidth="192.0" prefWidth="192.0" style="-fx-background-color: #D9D9D9; -fx-background-radius: 20; -fx-padding: 6 4;" text="Karim D Luffy" textFill="#2f1c1c">
+                     <font>
+                        <Font name="Russo One" size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane maxHeight="278.0" maxWidth="222.0" minHeight="278.0" minWidth="222.0" prefHeight="278.0" prefWidth="222.0">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="41.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../avatar/ave.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="150.0" fitWidth="40.0" layoutX="148.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/listo.png" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" layoutX="15.0" layoutY="180.0" maxWidth="192.0" minWidth="192.0" prefWidth="192.0" style="-fx-background-color: #D9D9D9; -fx-background-radius: 20; -fx-padding: 6 4;" text="Karim D Luffy" textFill="#2f1c1c">
+                     <font>
+                        <Font name="Russo One" size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane maxHeight="278.0" maxWidth="222.0" minHeight="278.0" minWidth="222.0" prefHeight="278.0" prefWidth="222.0">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="41.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../avatar/ave.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="150.0" fitWidth="40.0" layoutX="148.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/listo.png" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" layoutX="15.0" layoutY="180.0" maxWidth="192.0" minWidth="192.0" prefWidth="192.0" style="-fx-background-color: #D9D9D9; -fx-background-radius: 20; -fx-padding: 6 4;" text="Karim D Luffy" textFill="#2f1c1c">
+                     <font>
+                        <Font name="Russo One" size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </children>
+      </HBox>
+      <Button fx:id="btnJugar1" layoutX="507.0" layoutY="562.0" maxHeight="70.0" minHeight="-Infinity" mnemonicParsing="false" prefWidth="420.0" style="-fx-background-color: #D9D9D9; -fx-background-radius: 20;" text="Iniciar partida" textFill="#2f1c1c">
+         <font>
+            <Font name="Russo One" size="37.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <StackPane layoutX="874.0" layoutY="46.0" maxHeight="60.0" maxWidth="60.0" prefHeight="60.0" prefWidth="60.0">
+         <children>
+            <Button maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" style="-fx-border-color: #000000; -fx-border-radius: 100; -fx-background-radius: 100;">
+               <effect>
+                  <DropShadow />
+               </effect></Button>
+            <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" style="-fx-fit-height: 40; -fx-fit-width: 40;">
                <image>
                   <Image url="@../images/iconAjustes.png" />
                </image>
             </ImageView>
          </children>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </StackPane>
-      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="399.0" layoutY="192.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../avatar/gato.png" />
-         </image>
-      </ImageView>
-      <TextField alignment="CENTER" layoutX="370.0" layoutY="342.0" prefHeight="41.0" prefWidth="208.0" promptText="Username" style="-fx-padding: 10 0;">
+      <Label alignment="CENTER" layoutX="30.0" layoutY="46.0" maxHeight="30.0" maxWidth="192.0" minWidth="192.0" prefHeight="30.0" prefWidth="192.0" style="-fx-background-color: #D9D9D9; -fx-background-radius: 20;" text="xxx-xxx" textFill="#2f1c1c">
          <font>
-            <Font name="Lucida Console" size="18.0" />
+            <Font name="Russo One" size="20.0" />
          </font>
-      </TextField>
-      <Button layoutX="701.0" layoutY="542.0" mnemonicParsing="false" onAction="#iniciarPartida" text="Iniciar partida" />
-      <Button layoutX="250.0" layoutY="542.0" mnemonicParsing="false" onAction="#abandonarPartida" text="Abandonar partida" />
-      <Label layoutX="250.0" layoutY="106.0" text="Jugando contra la maquina">
+      </Label>
+      <Label alignment="CENTER" layoutX="30.0" layoutY="21.0" maxHeight="30.0" maxWidth="192.0" minWidth="192.0" prefHeight="30.0" prefWidth="192.0" text="Código de la partida" textFill="#2f1c1c">
          <font>
-            <Font name="Verdana Bold" size="27.0" />
+            <Font name="Russo One" size="15.0" />
          </font>
       </Label>
    </children>
