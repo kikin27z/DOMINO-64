@@ -7,9 +7,6 @@ import entidadesDTO.FichaDTO;
  * @author karim
  */
 public abstract class BuilderFicha<T> {
-
-
-    
     public enum Orientation {
         HORIZONTAL,
         VERTICAL

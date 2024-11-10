@@ -5,7 +5,6 @@ import inicio.InicioModel;
 import inicio.InicioView;
 import java.io.IOException;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.stage.Stage;
 import lobby.LobbyControl;
 import lobby.LobbyModel;
@@ -29,12 +28,13 @@ import partida.PartidaView;
 public class Navegacion implements INavegacion {
     private Stage fondo; // La ventana principal de la aplicación
     private static Navegacion navegacion; // Instancia única de Navegacion
-    private PartidaModel partidaModel;
     private InicioModel partidaInicio;
     private Thread hiloApp;
+    private NotificadorEvento notificador;
 
     // Constructor privado para evitar instanciación externa
     private Navegacion() {
+        notificador = NotificadorEvento.getInstance();
     }
 
     /**
@@ -107,7 +107,7 @@ public class Navegacion implements INavegacion {
     @Override
     public void cambiarPartida() {
         PartidaModel modeloPartida = new PartidaModel();
-
+        notificador.setPartida(modeloPartida);
         try {
             PartidaView partida = new PartidaView(modeloPartida); // Instancia la vista de la partida
             partida.iniciarEscena(fondo); // Inicia la escena de la partida
@@ -121,6 +121,7 @@ public class Navegacion implements INavegacion {
     public void cambiarOpcionesPartida() {
         try {
             OpcionesPartidaModel modelo = new OpcionesPartidaModel();
+            notificador.setOpciones(modelo);
             OpcionesPartidaView view = new OpcionesPartidaView(modelo); // Instancia la vista de la partida
             view.iniciarEscena(fondo); // Inicia la escena de la partida
             OpcionesPartidaControl control = new OpcionesPartidaControl(view, modelo);

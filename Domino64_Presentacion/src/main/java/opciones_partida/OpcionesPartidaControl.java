@@ -50,7 +50,8 @@ public class OpcionesPartidaControl {
         modelo.avisarMostrarInicio();
     }
     private void buscarPartida(MouseEvent e){
-        System.out.println(view.obtenerCodigo());
+        modelo.setCodigoPartida(view.obtenerCodigo());
+        modelo.avisarBuscarPartida();
     }
     private void cancelarBuscarPartida(MouseEvent e){
         view.cerrarVentanaBuscarPartida();

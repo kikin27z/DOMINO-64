@@ -35,8 +35,8 @@ public class BuilderFichaMazo extends BuilderFicha {
     }
 
     private Canvas dibujarFicha(int izquierda, int derecha, Orientation orientation) {
-        int width = orientation == Orientation.HORIZONTAL ? 90 : 50;
-        int height = orientation == Orientation.HORIZONTAL ? 50 : 90;
+        int width = orientation == Orientation.HORIZONTAL ? 88 : 52;
+        int height = orientation == Orientation.HORIZONTAL ? 52 : 88;
         Canvas ficha = new Canvas(width, height);
         GraphicsContext gc = ficha.getGraphicsContext2D();
 
@@ -66,12 +66,12 @@ public class BuilderFichaMazo extends BuilderFicha {
 
     private void dibujarPuntos(GraphicsContext gc, int valor, int offsetX, int offsetY, Orientation orientation) {
         gc.setFill(Color.BLACK);
-        int grosorBolita = 7;
-        int grosorBola1 = 10;
-        int grosorBola2 = 9;
+        int grosorBolita = 6; // Reducido ligeramente para mantener la proporción
+        int grosorBola1 = 9;  // Reducido ligeramente para mantener la proporción
+        int grosorBola2 = 8;  // Reducido ligeramente para mantener la proporción
 
-        int ancho = orientation == Orientation.HORIZONTAL ? 45 : 50;
-        int alto = orientation == Orientation.HORIZONTAL ? 50 : 45;
+        int ancho = orientation == Orientation.HORIZONTAL ? 44 : 52;  // Mitad del ancho total para fichas horizontales
+        int alto = orientation == Orientation.HORIZONTAL ? 52 : 44;   // Mitad del alto total para fichas verticales
 
         switch (valor) {
             case 0 -> {

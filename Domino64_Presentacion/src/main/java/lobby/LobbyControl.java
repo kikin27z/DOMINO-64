@@ -44,29 +44,6 @@ public class LobbyControl {
     }
     
     //-------------------Eventos-------------------
-    // protected EventHandler<ActionEvent> getHandlerIniciar() {
-    //     EventHandler<ActionEvent> handler = (ActionEvent t) -> {
-    //         Task<Void> longTask = new Task<Void>() {
-    //             @Override
-    //             protected Void call() throws Exception {
-    //                 String username = view.getUsername();
-    //                 JugadorDTO jugador = new JugadorDTO(username);
-    //                 modelo.setJugador(jugador);
-                    
-    //                 Platform.runLater(() -> {
-    //                     modelo.getAcciones().get(0).ejecutarAccion();
-    //                 });
-                    
-    //                 modelo.getAcciones().get(1).ejecutarAccion();
-    //                 return null;   
-    //             }
-                
-    //         };
-            
-    //         new Thread(longTask).start();
-    //     };
-    //     return handler;
-    // }
     /**
      * Evento que se ejecuta al guardar la configuración de la partida.
      * Actualmente imprime un mensaje en la consola, pero puede extenderse para guardar los cambios en el modelo.

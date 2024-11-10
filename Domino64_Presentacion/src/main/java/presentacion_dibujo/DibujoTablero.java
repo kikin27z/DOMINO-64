@@ -29,19 +29,6 @@ public class DibujoTablero extends AnchorPane {
         this.trenFichas = new ArrayDeque<>();
     }
 
-    public void dibujarXCosa(FichaDTO ficha) {
-        BuilderFichaTablero plantilla = new BuilderFichaTablero();
-        plantilla.construirHorizontal(ficha);
-        DibujoFicha dibujo = plantilla.resultado();
-
-        double layoutY = ((height / 2) - 20);
-        double layoutX = (width / 2) - 36 + (72 * DibujoTablero.num);
-        dibujo.setLayoutX(layoutX);
-        dibujo.setLayoutY(layoutY);
-        DibujoTablero.num += 1; 
-        System.out.println(DibujoTablero.num );
-        this.getChildren().add(dibujo);
-    }
 
     public void dibujarPrimeraFicha(FichaDTO ficha) {
         BuilderFichaTablero plantilla = new BuilderFichaTablero();

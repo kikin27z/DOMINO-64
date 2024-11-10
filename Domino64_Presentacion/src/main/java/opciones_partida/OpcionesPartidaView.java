@@ -2,8 +2,6 @@ package opciones_partida;
 
 import java.io.IOException;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.effect.BoxBlur;
@@ -262,7 +260,6 @@ public class OpcionesPartidaView {
         btnVolver.setOnMouseClicked(e);
     }
     public void buscarPartida(EventHandler<MouseEvent> e){
-        
         btnBuscarPartida.setOnMouseClicked(e);
     }
     public void cancelarBuscarPartida(EventHandler<MouseEvent> e){

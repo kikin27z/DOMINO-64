@@ -1,23 +1,16 @@
 package partida;
 
-//import entidades.Ficha;
-import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.JugadaValidaDTO;
+import entidadesDTO.PosicionDTO;
 import eventosPartida.ObserverPartida;
-
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -26,17 +19,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import presentacion_dibujo.DibujoTablero;
 import presentacion_dibujo.BuilderFichaMazo;
-import presentacion_dibujo.DibujoJugada;
+import presentacion_dibujo.DibujoTablero2;
 
 /**
  * Clase que representa la vista de la partida en la aplicación. Esta clase se
@@ -51,22 +41,20 @@ public class PartidaView implements ObserverPartida {
 
     private static final Logger logger = Logger.getLogger(PartidaView.class.getName());
     private final PartidaModel modelo;
-    private AnchorPane panelExterior;
-    private AnchorPane panelInterior;
-    private HBox panelJugadorActual;
-    private ScrollPane scrollPanel;
-    private Button btnEjemplo;
+    private AnchorPane containerGameBoard;
+    private HBox bottomPlayer;
     public Deque<Canvas> trenFichasDibujos;
-    private StackPane pozoIndicator;
-    private DibujoTablero dibujoTablero;
+    private StackPane pozoIndicador;
+    private StackPane surrenderButton;
+    private StackPane pauseButton;
+    private DibujoTablero2 gameBoard;
     private EventHandler<MouseEvent> evaluarFicha;
+    private EventHandler<MouseEvent> colocarFicha;
 
     public PartidaView(PartidaModel modelo) {
         this.modelo = modelo;
         trenFichasDibujos = new ArrayDeque<>();
-
         this.modelo.agregarObserver(this);
-
     }
 
     /**
@@ -76,331 +64,272 @@ public class PartidaView implements ObserverPartida {
      * @throws IOException Si ocurre un error al cargar los recursos necesarios.
      */
     public void iniciarEscena(Stage fondo) throws IOException {
-        crearComponentes(); // Aseguramos que los componentes sean creados antes de iniciar la escena
-        Scene scene = new Scene(panelExterior); // Usamos panelExterior como la raíz
+        Scene scene = new Scene(createGameInterface()); // Usamos panelExterior como la raíz
         fondo.setScene(scene);
         fondo.show();
-
-        Platform.runLater(() -> {
-            scrollPanel.setHvalue(0.5); // Centrar horizontalmente
-            scrollPanel.setVvalue(0.5); // Centrar verticalmente
-        });
-
-    }
-
-    /**
-     * Crea y configura los componentes de la interfaz de usuario. Esto incluye
-     * el AnchorPane principal, el ScrollPane y los elementos internos.
-     */
-    private void crearComponentes() {
-        // Creando el AnchorPane exterior
-        panelExterior = new AnchorPane();
-        panelExterior.setPrefSize(modelo.getExternalPanelWidth(), modelo.getExternalPanelHeight());
-        panelExterior.setStyle(modelo.getExternalPanelStyle());
-
-        // Creando el ScrollPane
-        scrollPanel = new ScrollPane();
-        scrollPanel.setLayoutX(modelo.getScrollPanelLayoutX());
-        scrollPanel.setLayoutY(modelo.getScrollPanelLayoutY());
-        scrollPanel.setPrefSize(modelo.getScrollPanelWidth(), modelo.getScrollPanelHeight());
-        scrollPanel.setFitToWidth(true);  // Ajustar el ancho del contenido al ScrollPane
-        scrollPanel.setFitToHeight(true);
-        scrollPanel.setStyle(modelo.getScrollPanelStyle());
-        scrollPanel.setHbarPolicy(modelo.getScrollPanelHbarPolicy()); // Mostrar barra horizontal
-        scrollPanel.setVbarPolicy(modelo.getScrollPanelVbarPolicy()); // Mostrar barra vertical
-
-        // Creando el AnchorPane interno dentro del ScrollPane
-//        panelInterior = new AnchorPane();
-//        panelInterior.setMinSize(modelo.getInternalPanelWidth(), modelo.getInternalPanelHeight()); // Establecemos el tamaño mínimo
-//        panelInterior.setStyle(modelo.getInternalPanelStyle());
-        dibujoTablero = new DibujoTablero(evaluarFicha, modelo.getInternalPanelWidth(), modelo.getInternalPanelHeight());
-//        dibujoTablero.setPrefSize(modelo.getInternalPanelWidth(), modelo.getInternalPanelHeight()); // Establecemos el tamaño mínimo
-        dibujoTablero.setStyle(modelo.getInternalPanelStyle());
-        dibujoTablero.prefWidthProperty().bind(scrollPanel.widthProperty());
-        dibujoTablero.prefHeightProperty().bind(scrollPanel.heightProperty());
-        
-        
-        // Creando el ImageView para la imagen dentro del ScrollPane
-        ImageView imageView = new ImageView();
-        imageView.setFitWidth(modelo.getImageViewWidth());
-        imageView.setLayoutX(modelo.getImageViewLayoutX());
-        imageView.setLayoutY(modelo.getImageViewLayoutY());
-        imageView.setPickOnBounds(modelo.isImgViewPickedOnBounds()); // Permite que la imagen sea seleccionable
-        imageView.setPreserveRatio(modelo.isImgViewRatioPreserved()); // Mantiene la proporción de la imagen
-        imageView.setImage(new Image(getClass().getResourceAsStream(modelo.getImageViewResourceName()))); // Ruta de la imagen
-
-        btnEjemplo = new Button();
-        btnEjemplo.setText(modelo.getButtonText());
-        btnEjemplo.setLayoutX(modelo.getButtonLayoutX());
-        btnEjemplo.setLayoutY(modelo.getButtonLayoutY());
-
-        // Añadir el ImageView al panel interior
-        // Asignando el contenido del ScrollPane
-//        scrollPanel.setContent(panelInterior);
-        scrollPanel.setContent(dibujoTablero);
-        crearPozo();
-
-        // Añadiendo el ScrollPane al AnchorPane principal
-        panelExterior.getChildren().addAll(btnEjemplo, scrollPanel, pozoIndicator);
-    }
-
-    private void crearPozo() {
-        pozoIndicator = new StackPane();
-        pozoIndicator.setLayoutX(23);
-        pozoIndicator.setLayoutY(546);
-
-        ImageView pozoImage = new ImageView(new Image(getClass().getResourceAsStream("/images/pozoIndicador.png")));
-        pozoImage.setFitHeight(130);
-        pozoImage.setFitWidth(78);
-
-        Label pozoLabel = new Label("14");
-        pozoLabel.setTextFill(Color.web("#790000"));
-        pozoLabel.setFont(new Font("Russo One", 23));
-        pozoLabel.setUnderline(true);
-        pozoLabel.setTranslateY(-30);
-
-        pozoIndicator.getChildren().addAll(pozoImage, pozoLabel);
-        pozoIndicator.setCursor(Cursor.HAND);
     }
 
     public void agregarDominoMazo(Canvas ficha) {
         ficha.setVisible(true);
-        panelJugadorActual.getChildren().add(ficha);
+        bottomPlayer.getChildren().add(ficha);
     }
 
-    public void agregarDominoTablero(Canvas ficha) {
-        panelInterior.getChildren().add(ficha);
+    public void quitarFichaMazo(Canvas ficha) {
+        bottomPlayer.getChildren().remove(ficha);
     }
 
+    private AnchorPane createGameInterface() {
+        // Main container
+        AnchorPane root = new AnchorPane();
+        root.setId("AnchorPane");
+        root.setPrefSize(1000, 700);
+        root.setMinSize(1000, 700);
+        root.setMaxSize(1000, 700);
+        root.setStyle("-fx-background-color: #186F65;");
 
-    private void insertarMesaIzq(CuentaDTO cuenta) {
-        AnchorPane mazoIzq;
-        mazoIzq = new AnchorPane();
-        mazoIzq.setId("jugador3");
-        mazoIzq.setLayoutX(10);
-        mazoIzq.setLayoutY(210);
-        mazoIzq.setPrefSize(98, 234);
-        mazoIzq.setMinSize(98, 234);
-        mazoIzq.setMaxSize(98, 234);
-        mazoIzq.setStyle("-fx-background-color: #B2533E; -fx-background-radius: 20; -fx-border-color: #000000; -fx-border-radius: 20;");
-        ImageView leftBirdImageView = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
-        leftBirdImageView.setId("jugador3");
-        leftBirdImageView.setFitHeight(114);
-        leftBirdImageView.setFitWidth(114);
-        leftBirdImageView.setLayoutX(-6);
-        leftBirdImageView.setLayoutY(-34);
-        leftBirdImageView.setPickOnBounds(true);
-        leftBirdImageView.setPreserveRatio(true);
-        mazoIzq.getChildren().add(leftBirdImageView);
+        // Create all components
+        containerGameBoard = createGameBoard();
+        AnchorPane topPlayer = createTopPlayer();
+        AnchorPane rightPlayer = createRightPlayer();
+        AnchorPane leftPlayer = createLeftPlayer();
+        createBottomPlayer();
+        AnchorPane topOptions = createTopOptions();
+        createDeckIndicator();
+        ImageView playerAvatar = createPlayerAvatar();
 
-        ImageView leftDeckImageView = new ImageView(new Image(getClass().getResourceAsStream("/images/mazoJugador.png")));
-        leftDeckImageView.setFitHeight(100);
-        leftDeckImageView.setFitWidth(58);
-        leftDeckImageView.setLayoutX(31);
-        leftDeckImageView.setLayoutY(86);
-        leftDeckImageView.setPickOnBounds(true);
-        leftDeckImageView.setPreserveRatio(true);
-        leftDeckImageView.setRotate(90);
-        mazoIzq.getChildren().add(leftDeckImageView);
+        // Add all components to root
+        root.getChildren().addAll(
+                containerGameBoard,
+                topPlayer,
+                rightPlayer,
+                leftPlayer,
+                bottomPlayer,
+                topOptions,
+                pozoIndicador,
+                playerAvatar
+        );
 
-        Label leftPlayerCountLabel = new Label(cuenta.getAvatar());
-        leftPlayerCountLabel.setAlignment(Pos.CENTER);
-        leftPlayerCountLabel.setLayoutX(12);
-        leftPlayerCountLabel.setLayoutY(159);
-        leftPlayerCountLabel.setPrefSize(60, 60);
-        leftPlayerCountLabel.setMinSize(60, 60);
-        leftPlayerCountLabel.setMaxSize(60, 60);
-        leftPlayerCountLabel.setTextFill(Color.WHITE);
-        leftPlayerCountLabel.setFont(new Font("Verdana Bold", 40));
-        mazoIzq.getChildren().add(leftPlayerCountLabel);
-
-        panelExterior.getChildren().add(mazoIzq);
+        return root;
     }
 
-    private void insertarMesaDer(CuentaDTO cuenta) {
-        AnchorPane mazoDer = new AnchorPane();
-        mazoDer.setId("jugador4");
-        mazoDer.setLayoutX(892);
-        mazoDer.setLayoutY(210);
-        mazoDer.setPrefSize(98, 234);
-        mazoDer.setMinSize(98, 234);
-        mazoDer.setMaxSize(98, 234);
-        mazoDer.setStyle("-fx-background-color: #B2533E; -fx-background-radius: 20; -fx-border-color: #000000; -fx-border-radius: 20;");
+    private AnchorPane createGameBoard() {
+        // Game board background
+        containerGameBoard = new AnchorPane();
+        containerGameBoard.setLayoutX(80);
+        containerGameBoard.setLayoutY(63);
+        containerGameBoard.setPrefSize(840, 560);
+        containerGameBoard.setStyle("-fx-background-color: fff;");
 
-        Label rightPlayerCountLabel = new Label(modelo.obtenerNumeroFichaCuenta(cuenta));
-        rightPlayerCountLabel.setAlignment(Pos.CENTER);
-        rightPlayerCountLabel.setLayoutX(21);
-        rightPlayerCountLabel.setLayoutY(162);
-        rightPlayerCountLabel.setPrefSize(60, 60);
-        rightPlayerCountLabel.setMinSize(60, 60);
-        rightPlayerCountLabel.setMaxSize(60, 60);
-        rightPlayerCountLabel.setTextFill(Color.WHITE);
-        rightPlayerCountLabel.setFont(new Font("Verdana Bold", 40));
-        mazoDer.getChildren().add(rightPlayerCountLabel);
+        // Inner white game board
+        gameBoard = new DibujoTablero2(evaluarFicha);
+        gameBoard.setLayoutX(60);
+        gameBoard.setLayoutY(40);
 
-        ImageView rightDeckImageView = new ImageView(new Image(getClass().getResourceAsStream("/images/mazoJugador.png")));
-        rightDeckImageView.setFitHeight(100);
-        rightDeckImageView.setFitWidth(58);
-        rightDeckImageView.setLayoutX(10);
-        rightDeckImageView.setLayoutY(86);
-        rightDeckImageView.setPickOnBounds(true);
-        rightDeckImageView.setPreserveRatio(true);
-        rightDeckImageView.setRotate(-90);
-        mazoDer.getChildren().add(rightDeckImageView);
-
-        ImageView rightBirdImageView = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar())));
-        rightBirdImageView.setFitHeight(114);
-        rightBirdImageView.setFitWidth(114);
-        rightBirdImageView.setLayoutX(-13);
-        rightBirdImageView.setLayoutY(-34);
-        rightBirdImageView.setPickOnBounds(true);
-        rightBirdImageView.setPreserveRatio(true);
-        mazoDer.getChildren().add(rightBirdImageView);
-
-        panelExterior.getChildren().add(mazoDer);
+        containerGameBoard.getChildren().add(gameBoard);
+        return containerGameBoard;
     }
 
-    private void insertarMesaArr(CuentaDTO cuenta) {
-        AnchorPane mazoArr = new AnchorPane();
-        mazoArr.setId("jugador3");
-        mazoArr.setLayoutX(366);
-        mazoArr.setLayoutY(10);
-        mazoArr.setPrefSize(268, 98);
-        mazoArr.setMinSize(268, 98);
-        mazoArr.setMaxSize(268, 98);
-        mazoArr.setStyle("-fx-background-color: #B2533E; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #000000;");
+    private AnchorPane createTopPlayer() {
+        AnchorPane topPlayer = new AnchorPane();
+        topPlayer.setId("jugador3");
+        topPlayer.setLayoutX(366);
+        topPlayer.setLayoutY(0);
+        topPlayer.setPrefSize(268, 98);
+        topPlayer.setMinSize(268, 98);
+        topPlayer.setMaxSize(268, 98);
+        topPlayer.setStyle("-fx-background-color: #B2533E; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #000000;");
 
-        ImageView deckImageView = new ImageView(new Image(getClass().getResourceAsStream("/images/mazoJugador.png")));
-        deckImageView.setFitHeight(100);
-        deckImageView.setFitWidth(58);
-        deckImageView.setLayoutX(93);
-        deckImageView.setLayoutY(5);
-        deckImageView.setPickOnBounds(true);
-        deckImageView.setPreserveRatio(true);
-        deckImageView.setRotate(180);
-        mazoArr.getChildren().add(deckImageView);
+        ImageView playerDeck = new ImageView(new Image(getClass().getResourceAsStream("/images/mazoJugador.png")));
+        playerDeck.setFitHeight(88);
+        playerDeck.setFitWidth(50);
+        playerDeck.setLayoutX(109);
+        playerDeck.setLayoutY(7);
+        playerDeck.setRotate(180);
 
-        ImageView birdImageView = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar())));
-        birdImageView.setFitHeight(114);
-        birdImageView.setFitWidth(114);
-        birdImageView.setLayoutX(-64);
-        birdImageView.setLayoutY(-5);
-        birdImageView.setPickOnBounds(true);
-        birdImageView.setPreserveRatio(true);
-        mazoArr.getChildren().add(birdImageView);
+        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
+        playerAvatar.setFitHeight(100);
+        playerAvatar.setFitWidth(100);
+        playerAvatar.setLayoutX(-64);
+        playerAvatar.setLayoutY(1);
 
-        Label playerCountLabel = new Label(modelo.obtenerNumeroFichaCuenta(cuenta));
-        playerCountLabel.setAlignment(Pos.CENTER);
-        playerCountLabel.setLayoutX(167);
-        playerCountLabel.setLayoutY(27);
-        playerCountLabel.setPrefSize(60, 60);
-        playerCountLabel.setMinSize(60, 60);
-        playerCountLabel.setMaxSize(60, 60);
-        playerCountLabel.setTextFill(Color.WHITE);
-        playerCountLabel.setFont(new Font("Verdana Bold", 40));
-        mazoArr.getChildren().add(playerCountLabel);
+        Label cardCount = new Label("6");
+        cardCount.setAlignment(javafx.geometry.Pos.CENTER);
+        cardCount.setLayoutX(167);
+        cardCount.setLayoutY(22);
+        cardCount.setPrefSize(60, 60);
+        cardCount.setTextFill(javafx.scene.paint.Color.WHITE);
+        cardCount.setFont(Font.font("Verdana Bold", 40));
 
-        panelExterior.getChildren().add(mazoArr);
+        topPlayer.getChildren().addAll(playerDeck, playerAvatar, cardCount);
+        return topPlayer;
     }
 
-    public void insertarMesaAba(CuentaDTO cuenta) {
-        panelJugadorActual = new HBox();
-        panelJugadorActual.setSpacing(10);
-        panelJugadorActual.setLayoutX(modelo.getPlayer1PanelLayoutX());
-        panelJugadorActual.setLayoutY(modelo.getPlayer1PanelLayoutY());
-        panelJugadorActual.setPrefSize(modelo.getPlayer1PanelWidth(), modelo.getPlayer1PanelHeight());
-        panelJugadorActual.setMinSize(modelo.getPlayer1PanelWidth(), modelo.getPlayer1PanelHeight());
-        panelJugadorActual.setMaxSize(modelo.getPlayer1PanelWidth(), modelo.getPlayer1PanelHeight());
-        panelJugadorActual.setPadding(new Insets(-12.0, 0, 0, 20.0));
-        panelJugadorActual.setStyle(modelo.getPlayer1PanelStyle());
-        ImageView avatarImg = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar())));
-        avatarImg.setFitHeight(150);
-        avatarImg.setFitWidth(150);
-        avatarImg.setLayoutX(835);
-        avatarImg.setLayoutY(536);
-        avatarImg.setPickOnBounds(true);
-        avatarImg.setPreserveRatio(true);
+    private AnchorPane createRightPlayer() {
+        AnchorPane rightPlayer = new AnchorPane();
+        rightPlayer.setId("jugador4");
+        rightPlayer.setLayoutX(892);
+        rightPlayer.setLayoutY(210);
+        rightPlayer.setPrefSize(98, 234);
+        rightPlayer.setStyle("-fx-background-color: #B2533E; -fx-background-radius: 20; -fx-border-color: #000000; -fx-border-radius: 20;");
 
-        panelExterior.getChildren().add(avatarImg);
-        panelExterior.getChildren().add(panelJugadorActual);
+        Label cardCount = new Label("6");
+        cardCount.setAlignment(javafx.geometry.Pos.CENTER);
+        cardCount.setLayoutX(21);
+        cardCount.setLayoutY(162);
+        cardCount.setPrefSize(60, 60);
+        cardCount.setTextFill(javafx.scene.paint.Color.WHITE);
+        cardCount.setFont(Font.font("Verdana Bold", 40));
+
+        ImageView playerDeck = new ImageView(new Image(getClass().getResourceAsStream("/images/mazoJugador.png")));
+        playerDeck.setFitHeight(88);
+        playerDeck.setFitWidth(50);
+        playerDeck.setLayoutX(24);
+        playerDeck.setLayoutY(95);
+        playerDeck.setRotate(-90);
+
+        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
+        playerAvatar.setFitHeight(114);
+        playerAvatar.setFitWidth(114);
+        playerAvatar.setLayoutX(-13);
+        playerAvatar.setLayoutY(-34);
+
+        rightPlayer.getChildren().addAll(cardCount, playerDeck, playerAvatar);
+        return rightPlayer;
     }
 
-    public void insertarAlTablero(double coordenaX, double coordenadaY, Canvas dibujo, FichaDTO ficha) {
-        dibujo.setLayoutX(coordenaX);
-        dibujo.setLayoutY(coordenadaY);
-        panelInterior.getChildren().add(dibujo);
+    private AnchorPane createLeftPlayer() {
+        AnchorPane leftPlayer = new AnchorPane();
+        leftPlayer.setId("jugador3");
+        leftPlayer.setLayoutX(10);
+        leftPlayer.setLayoutY(210);
+        leftPlayer.setPrefSize(98, 234);
+        leftPlayer.setStyle("-fx-background-color: #B2533E; -fx-background-radius: 20; -fx-border-color: #000000; -fx-border-radius: 20;");
 
-        System.out.println(trenFichasDibujos.size());
+        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
+        playerAvatar.setId("jugador3");
+        playerAvatar.setFitHeight(114);
+        playerAvatar.setFitWidth(114);
+        playerAvatar.setLayoutX(-6);
+        playerAvatar.setLayoutY(-34);
+
+        ImageView playerDeck = new ImageView(new Image(getClass().getResourceAsStream("/images/mazoJugador.png")));
+        playerDeck.setFitHeight(88);
+        playerDeck.setFitWidth(50);
+        playerDeck.setLayoutX(25);
+        playerDeck.setLayoutY(86);
+        playerDeck.setRotate(90);
+
+        Label cardCount = new Label("6");
+        cardCount.setAlignment(javafx.geometry.Pos.CENTER);
+        cardCount.setLayoutX(16);
+        cardCount.setLayoutY(159);
+        cardCount.setPrefSize(60, 60);
+        cardCount.setTextFill(javafx.scene.paint.Color.WHITE);
+        cardCount.setFont(Font.font("Verdana Bold", 40));
+
+        leftPlayer.getChildren().addAll(playerAvatar, playerDeck, cardCount);
+        return leftPlayer;
+    }
+
+    private void createBottomPlayer() {
+        bottomPlayer = new HBox();
+        bottomPlayer.setAlignment(javafx.geometry.Pos.CENTER);
+        bottomPlayer.setLayoutX(164);
+        bottomPlayer.setLayoutY(598);
+        bottomPlayer.setPrefSize(630, 92);
+        bottomPlayer.setSpacing(20);
+        bottomPlayer.setStyle("-fx-background-color: #B2533E; -fx-border-color: #000000; -fx-border-radius: 20; -fx-background-radius: 20;");
+        bottomPlayer.setPadding(new Insets(0, 0, -12, 20));
+
+        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
+        playerAvatar.setFitHeight(140);
+        playerAvatar.setFitWidth(140);
+        playerAvatar.setLayoutX(856);
+        playerAvatar.setLayoutY(553);
+
+    }
+
+    private AnchorPane createTopOptions() {
+        AnchorPane topOptions = new AnchorPane();
+
+        // Surrender button
+        surrenderButton = createIconButton("/images/rendirse.png", 15, 12);
+
+        // Pause button
+        pauseButton = createIconButton("/images/btnPausa.png", 930, 12);
+
+        topOptions.getChildren().addAll(surrenderButton, pauseButton);
+        return topOptions;
+    }
+
+    private void createDeckIndicator() {
+        pozoIndicador = new StackPane();
+        pozoIndicador.setLayoutX(23);
+        pozoIndicador.setLayoutY(546);
+
+        ImageView deckImage = new ImageView(new Image(getClass().getResourceAsStream("/images/pozoIndicador.png")));
+        deckImage.setFitHeight(130);
+        deckImage.setFitWidth(78);
+
+        Label deckLabel = new Label("jo");
+        deckLabel.setTextFill(javafx.scene.paint.Color.valueOf("#790000"));
+        deckLabel.setFont(Font.font("Russo One", 23));
+        deckLabel.setUnderline(true);
+        deckLabel.setTranslateY(-30);
+
+        pozoIndicador.getChildren().addAll(deckImage, deckLabel);
+        pozoIndicador.setCursor(Cursor.HAND);
+    }
+
+    private ImageView createPlayerAvatar() {
+        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/jaguar.png")));
+        playerAvatar.setFitHeight(140);
+        playerAvatar.setFitWidth(140);
+        playerAvatar.setLayoutX(856);
+        playerAvatar.setLayoutY(553);
+        return playerAvatar;
+    }
+
+    private StackPane createIconButton(String imageUrl, double x, double y) {
+        StackPane buttonContainer = new StackPane();
+        buttonContainer.setLayoutX(x);
+        buttonContainer.setLayoutY(y);
+        buttonContainer.setPrefSize(60, 60);
+        buttonContainer.setCursor(Cursor.HAND);
+
+        Button button = new Button();
+        button.setPrefSize(60, 60);
+        button.setStyle("-fx-background-radius: 100; -fx-background-color: #d9d9d9; -fx-border-color: #2F1C1C; -fx-border-radius: 90;");
+
+        ImageView icon = new ImageView(new Image(getClass().getResourceAsStream(imageUrl)));
+        icon.setFitHeight(40);
+        icon.setFitWidth(40);
+
+        buttonContainer.getChildren().addAll(button, icon);
+        return buttonContainer;
     }
 
     //--------------------------------Eventos--------------------------------
-    public void eventoFicha(EventHandler<MouseEvent> e) {
+    public void evaluarFicha(EventHandler<MouseEvent> e) {
+        this.evaluarFicha = e;
+    }
+    public void procesarJugada(EventHandler<MouseEvent> e) {
+        colocarFicha = e;
     }
 
     public void clicPozo(EventHandler<MouseEvent> e) {
-        pozoIndicator.setOnMouseClicked(e);
+        pozoIndicador.setOnMouseClicked(e);
+    }
+
+    public void clicPausa(EventHandler<MouseEvent> e) {
+        pauseButton.setOnMouseClicked(e);
+    }
+
+    public void clicRendirse(EventHandler<MouseEvent> e) {
+        surrenderButton.setOnMouseClicked(e);
     }
 
     //--------------------------------Metodos Observador--------------------------------
-    public void quitarFichaMazo(Canvas ficha) {
-        panelJugadorActual.getChildren().remove(ficha);
-    }
-
-////////////////////////////////////
-
-    private void seleccionarFicha(MouseEvent e) {
-        if (!modelo.esMiTurno) {
-            return;
-        }
-        Canvas dibujo = (Canvas) e.getSource();
-//        EventoMVC<Canvas> evento = new EventoMVC<>("evaluarFichaSeleccionada", dibujo);
-//        notificarObservadores(evento);
-        modelo.agregarObserver(this);
-    }
-
-    
-    public void dibujarJugadas(JugadaValidaDTO jugada, FichaDTO ficha){
-        this.dibujoTablero.colocarJugadas(jugada, ficha);
-    }
-//////////////////////////////////
-    private void addFichaMazo() {
-        FichaDTO ficha = null;
-        BuilderFichaMazo dibujaFicha = new BuilderFichaMazo();
-
-        dibujaFicha.construirVertical(ficha);
-        Canvas dibujo = dibujaFicha.resultado();
-        modelo.agregarMapeoFichas(dibujo, ficha);
-        agregarDominoMazo(dibujo);
-
-    }
-
-    private void addFichasMazo() {
-        List<FichaDTO> fichas = null;
-        BuilderFichaMazo dibujaFicha = new BuilderFichaMazo();
-
-        for (FichaDTO ficha : fichas) {
-            dibujaFicha.construirVertical(ficha);
-            Canvas dibujo = dibujaFicha.resultado();
-            dibujo.setOnMouseClicked(this::seleccionarFicha);
-            modelo.agregarMapeoFichas(dibujo, ficha);
-            agregarDominoMazo(dibujo);
-        }
-
-    }
-    
-    public void dibujar(){
-        FichaDTO ficha = new FichaDTO(4, 4);
-        dibujoTablero.dibujarXCosa(ficha);
-        
-    }
-    
-    public void btnEjemplo(EventHandler<MouseEvent> e){
-        btnEjemplo.setOnMouseClicked(e);
-    }
-    public void evaluarFicha(EventHandler<MouseEvent> e){
-        this.evaluarFicha = e;
-    }
-
     @Override
     public void avisarJugadaRealizada(JugadaRealizadaDTO jugadaDTO) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -426,6 +355,15 @@ public class PartidaView implements ObserverPartida {
 
     @Override
     public void avisarDarFicha(FichaDTO ficha) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        BuilderFichaMazo dibujaFicha = new BuilderFichaMazo();
+        dibujaFicha.construirVertical(ficha);
+        Canvas dibujo = dibujaFicha.resultado();
+        dibujo.setOnMouseClicked(evaluarFicha);
+        modelo.agregarMapeoFichas(dibujo, ficha);
+        agregarDominoMazo(dibujo);
+    }
+    
+    public void dibujarFicha(FichaDTO ficha){
+        gameBoard.dibujarFicha(ficha, 300, 270, PosicionDTO.DERECHA);
     }
 }

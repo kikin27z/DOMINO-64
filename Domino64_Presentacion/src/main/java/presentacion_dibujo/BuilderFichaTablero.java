@@ -33,8 +33,8 @@ public class BuilderFichaTablero extends BuilderFicha<DibujoFicha> {
     }
     
     public DibujoFicha dibujarFicha(int izquierda, int derecha, Orientation orientation) {
-        int width = orientation == Orientation.HORIZONTAL ? 72 : 40;
-        int height = orientation == Orientation.HORIZONTAL ? 40 : 72;
+        int width = orientation == Orientation.HORIZONTAL ? 60 : 30;
+        int height = orientation == Orientation.HORIZONTAL ? 30 : 60;
         
         // Create new DibujoFicha with the proper dimensions
         ficha.definirAncho(width);
@@ -44,7 +44,7 @@ public class BuilderFichaTablero extends BuilderFicha<DibujoFicha> {
 
         // Dibujar el fondo de la ficha
         gc.setFill(Color.WHITE);
-        gc.fillRoundRect(0, 0, width, height, 8, 8);
+        gc.fillRoundRect(0, 0, width, height, 6, 6); // Reducido el radio de las esquinas a 6
 
         // Dibujar la línea divisoria
         gc.setStroke(Color.BLACK);
@@ -68,12 +68,12 @@ public class BuilderFichaTablero extends BuilderFicha<DibujoFicha> {
 
     private void dibujarPuntos(GraphicsContext gc, int valor, int offsetX, int offsetY, Orientation orientation) {
         gc.setFill(Color.BLACK);
-        int grosorBolita = 7;
-        int grosorBola1 = 9;
-        int grosorBola2 = 8;
+        int grosorBolita = 4;  // Reducido para mantener proporción
+        int grosorBola1 = 6;   // Reducido para mantener proporción
+        int grosorBola2 = 5;   // Reducido para mantener proporción
 
-        int ancho = orientation == Orientation.HORIZONTAL ? 36 : 40;
-        int alto = orientation == Orientation.HORIZONTAL ? 40 : 36;
+        int ancho = orientation == Orientation.HORIZONTAL ? 30 : 30;  // Mitad del ancho total para fichas horizontales
+        int alto = orientation == Orientation.HORIZONTAL ? 30 : 30;   // Mitad del alto total para fichas verticales
 
         switch (valor) {
             case 0 -> {
