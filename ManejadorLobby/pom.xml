@@ -1,35 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.luisa</groupId>
-    <artifactId>Logica</artifactId>
+    <groupId>com.domino64</groupId>
+    <artifactId>ManejadorLobby</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>Dominio</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>Excepciones</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.event.api</groupId>
-            <artifactId>Event</artifactId>
+            <artifactId>Domino64_EventoLogico</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Domino64_EventBuilder</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.client</groupId>
-            <artifactId>Client</artifactId>
+            <artifactId>Domino64_Cliente</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
-        <exec.mainClass>com.luisa.logicaJugador.ManejadorJugador</exec.mainClass>
+        <exec.mainClass>com.domino64.manejador.ManejadorLobby</exec.mainClass>
     </properties>
 </project>
