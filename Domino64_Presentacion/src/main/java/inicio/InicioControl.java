@@ -3,54 +3,54 @@ package inicio;
 import javafx.scene.input.MouseEvent;
 
 /**
- * La clase InicioControl actúa como el controlador del patrón MVC (Modelo-Vista-Controlador) 
- * para la pantalla de inicio del juego de dominó. Su función principal es gestionar la 
- * interacción entre la vista (InicioView) y el modelo (InicioModel), manejando los eventos 
- * de los botones que permiten seleccionar el modo de juego.
+ * Controlador para la pantalla de inicio que gestiona los eventos de interacción
+ * del usuario, como iniciar el modo de juego o mostrar los créditos.
  * 
  * @author Luisa Fernanda Morales Espinoza - 00000233450
- * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
 public class InicioControl {
-    private InicioView view;
-    private InicioModel modelo;
+    private final InicioView view;
+    private final InicioModel modelo;
 
     /**
-     * Constructor que inicializa el controlador con la vista y el modelo.
-     * También carga los eventos asociados a la vista.
+     * Constructor que inicializa el controlador con una vista y un modelo.
+     * Configura los eventos de la vista que son manejados por esta clase.
      * 
-     * @param view la vista de inicio que será controlada.
-     * @param modelo el modelo de datos asociado a la vista.
+     * @param view la vista de la pantalla de inicio
+     * @param modelo el modelo asociado a la pantalla de inicio
      */
     public InicioControl(InicioView view, InicioModel modelo) {
         this.view = view;
         this.modelo = modelo;
-        cargarEventos();  // Configura los eventos de los botones.
+        cargarEventos(); 
     }
 
     /**
-     * Método privado que configura los eventos para los botones de la vista.
-     * Asocia las acciones de "modo Offline" y "modo Online" con los métodos
-     * correspondientes del controlador.
+     * Asigna los eventos de la vista a sus respectivos métodos manejadores,
+     * permitiendo que el controlador gestione la lógica cuando ocurren.
      */
     private void cargarEventos() {
-        view.modoJugar(this::modoJugar);  // Asigna el evento para el modo Offline.
-        view.mostrarCreditos(this::mostrarCreditos);    // Asigna el evento para el modo Online.
+        view.modoJugar(this::modoJugar);
+        view.mostrarCreditos(this::mostrarCreditos);
     }
 
     /**
-     * Método que maneja el evento cuando se selecciona el modo "Offline".
-     * Invoca el método correspondiente en el modelo.
+     * Maneja el evento de iniciar el modo de juego. Llama al modelo para 
+     * notificar que se debe activar el modo de juego.
      * 
-     * @param e el evento de ratón que indica que se ha hecho clic en el botón.
+     * @param e el evento de ratón que activa este método
      */
     private void modoJugar(MouseEvent e) {
         this.modelo.avisarModoJugar();
-
     }
 
-
+    /**
+     * Maneja el evento de mostrar los créditos. Llama al modelo para notificar
+     * que se deben mostrar los créditos en la vista.
+     * 
+     * @param e el evento de ratón que activa este método
+     */
     private void mostrarCreditos(MouseEvent e) {
         this.modelo.avisarMostrarCreditos();
     }

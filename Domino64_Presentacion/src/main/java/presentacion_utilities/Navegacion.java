@@ -22,19 +22,19 @@ import partida.PartidaView;
  * instancia de navegación a lo largo de la aplicación.
  *
  * @author Luisa Fernanda Morales Espinoza - 00000233450
- * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
 public class Navegacion implements INavegacion {
-    private Stage fondo; // La ventana principal de la aplicación
-    private static Navegacion navegacion; // Instancia única de Navegacion
-    private InicioModel partidaInicio;
+    private Stage fondo;
+    private static Navegacion navegacion;
     private Thread hiloApp;
-    private NotificadorEvento notificador;
+    private final INotificadorEvento notificador;
+    private final MediadorModelos mediador;
 
     // Constructor privado para evitar instanciación externa
     private Navegacion() {
         notificador = NotificadorEvento.getInstance();
+        mediador = MediadorModelos.getInstance();
     }
 
     /**
@@ -58,10 +58,6 @@ public class Navegacion implements INavegacion {
         hiloApp.start();
     }
     
-    /**
-     * Cambia la vista a la vista de inicio.
-     *
-     */
     @Override
     public void cambiarInicio() {
         InicioModel modeloInicio = new InicioModel();
@@ -74,11 +70,6 @@ public class Navegacion implements INavegacion {
         }
     }
 
-    /**
-     * Cambia la vista a la vista del lobby.
-     *
-     * @throws IOException Si ocurre un error al cargar la vista del lobby.
-     */
     @Override
     public void cambiarLobby() {
         LobbyModel modeloLobby = new LobbyModel();
@@ -91,23 +82,14 @@ public class Navegacion implements INavegacion {
         }
     }
 
-    /**
-     * Establece la ventana principal de la aplicación.
-     *
-     * @param fondo La ventana principal (Stage) donde se mostrará la escena.
-     */
     public void setFondo(Stage fondo) {
         this.fondo = fondo; // Asigna la ventana principal
     }
 
-    /**
-     * Cambia la vista a la vista de la partida.
-     *
-     */
     @Override
     public void cambiarPartida() {
         PartidaModel modeloPartida = new PartidaModel();
-        notificador.setPartida(modeloPartida);
+        notificador.asignarObservablePartida(modeloPartida);
         try {
             PartidaView partida = new PartidaView(modeloPartida); // Instancia la vista de la partida
             partida.iniciarEscena(fondo); // Inicia la escena de la partida
@@ -121,7 +103,8 @@ public class Navegacion implements INavegacion {
     public void cambiarOpcionesPartida() {
         try {
             OpcionesPartidaModel modelo = new OpcionesPartidaModel();
-            notificador.setOpciones(modelo);
+            notificador.asignarObservableOpcionesPartida(modelo);
+            mediador.setModeloOpciones(modelo);
             OpcionesPartidaView view = new OpcionesPartidaView(modelo); // Instancia la vista de la partida
             view.iniciarEscena(fondo); // Inicia la escena de la partida
             OpcionesPartidaControl control = new OpcionesPartidaControl(view, modelo);

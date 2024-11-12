@@ -1,23 +1,28 @@
 package presentacion_utilities;
-import eventosOpcionesPartida.EventosOpcionesPartida;
+
+import eventosLobby.ObservableLobby;
+import eventosLobby.ObserverLobby;
 import eventosOpcionesPartida.ObserverOpcionesPartida;
-import eventosPantallas.EventosPantallas;
 import eventosPantallas.ObserverPantalla;
-import eventosPartida.EventosPartida;
 import eventosPartida.ObserverPartida;
 import java.util.ArrayList;
 import java.util.List;
+import eventosOpcionesPartida.ObservableOpcionesPartida;
+import eventosPantallas.ObservablePantallas;
+import eventosPartida.ObservablePartida;
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
-public class NotificadorEvento implements EventosPantallas{
+public class NotificadorEvento implements INotificadorEvento, ObservablePantallas {
+
     private static NotificadorEvento notificarEvento; // Instancia única de Navegacion
-    private List<ObserverPantalla> observersDisplay;
-    
-    private EventosOpcionesPartida opciones;
-    private EventosPartida partida;
+    private final List<ObserverPantalla> observersDisplay;
+    private ObservableOpcionesPartida opciones;
+    private ObservablePartida partida;
+    private ObservableLobby lobby;
 
     // Constructor privado para evitar instanciación externa
     private NotificadorEvento() {
@@ -48,46 +53,69 @@ public class NotificadorEvento implements EventosPantallas{
 
     @Override
     public void avisarMostrarInicio() {
-        for(var observer : observersDisplay){
+        for (var observer : observersDisplay) {
             observer.avisarMostrarInicio();
         }
     }
 
     @Override
+    public void avisarMostrarCreditos() {
+        for (var observer : observersDisplay) {
+            observer.avisarMostrarCreditos();
+        }
+    }
+
+    @Override
     public void avisarMostrarPartida() {
-        for(var observer : observersDisplay){
+        for (var observer : observersDisplay) {
             observer.avisarMostrarPartida();
         }
     }
 
     @Override
     public void avisarMostrarOpcionesPartida() {
-        for(var observer : observersDisplay){
+        for (var observer : observersDisplay) {
             observer.avisarMostrarOpcionesPartida();
         }
     }
 
-    public EventosOpcionesPartida getOpciones() {
-        return opciones;
+    @Override
+    public void avisarMostrarFinJuego() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public void setOpciones(EventosOpcionesPartida opciones) {
-        this.opciones = opciones;
+    @Override
+    public void avisarMostrarLobby() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    //-------------------Metodos de INotificarEventos---------------------
+    @Override
+    public void asignarObservableOpcionesPartida(ObservableOpcionesPartida observable) {
+        this.opciones = observable;
     }
 
-    public EventosPartida getPartida() {
-        return partida;
+    @Override
+    public void asignarObservablePartida(ObservablePartida observable) {
+        this.partida = observable;
     }
 
-    public void setPartida(EventosPartida partida) {
-        this.partida = partida;
+    @Override
+    public void asignarObservableLobby(ObservableLobby observable) {
+        this.lobby = observable;
     }
-    
-    public void asignarObserverOpcionesPartida(ObserverOpcionesPartida observer){
+
+    @Override
+    public void asignarObserverLobby(ObserverLobby observer) {
+        lobby.agregarObserver(observer);
+    }
+
+    @Override
+    public void asignarObserverOpcionesPartida(ObserverOpcionesPartida observer) {
         opciones.agregarObserver(observer);
     }
-    
-    public void asignarObserverPartida(ObserverPartida observer){
+
+    @Override
+    public void asignarObserverPartida(ObserverPartida observer) {
         partida.agregarObserver(observer);
     }
 }
