@@ -2,6 +2,8 @@ package lobby;
 
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.PartidaDTO;
+import eventosLobby.ObservableLobby;
+import eventosLobby.ObservableLobbyMVC;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,10 +18,9 @@ import javafx.scene.layout.AnchorPane;
  * lobby.
  *
  * @author Luisa Fernanda Morales Espinoza - 00000233450
- * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class LobbyModel  {
+public class LobbyModel implements  ObservableLobbyMVC {
 
     private CuentaDTO cuentaActual;  // Cuenta del jugador actual
     private List<CuentaDTO> cuentasJugadoresOnline;  // Lista de cuentas de jugadores en línea
@@ -61,6 +62,7 @@ public class LobbyModel  {
         cuentasJugadoresOnline = new ArrayList<>();
         cuentaActual = new CuentaDTO(0, "/avatar/venado.png", mensaje);
     }
+
     //--------------Métodos notificadores-------------------
     /**
      * Actualiza el nombre de otro jugador en la vista.
@@ -94,7 +96,6 @@ public class LobbyModel  {
     }
 
     //--------------GETTERS && SETTERS-------------------
-
     /**
      * Obtiene el mensaje de error o información actual.
      *
@@ -223,4 +224,40 @@ public class LobbyModel  {
     public String[] getAvatares() {
         return avatares;
     }
+    //---------------------Eventos Modelo a vista--------------------------------
+    @Override
+    public void agregarObserver(ObservableLobbyMVC observador) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void quitarObserver(ObservableLobbyMVC observador) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarNuevoJugador(CuentaDTO cuenta) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarQuitarJugador(CuentaDTO cuenta) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarAvatarJugador(CuentaDTO cuenta) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarJugadorListo(CuentaDTO cuenta) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarJugadorNoListo(CuentaDTO cuenta) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }

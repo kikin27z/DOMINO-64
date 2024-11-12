@@ -1,8 +1,5 @@
 package presentacion_utilities;
 
-
-
-
 /**
  * Interfaz que define los métodos para la navegación entre diferentes vistas
  * de la aplicación. Esta interfaz establece un contrato para las clases que
@@ -10,30 +7,37 @@ package presentacion_utilities;
  * para iniciar la aplicación y cambiar entre diferentes escenas.
  * 
  * @author Luisa Fernanda Morales Espinoza - 00000233450
- * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
 public interface INavegacion {
-    
+
     /**
-     * Inicia la aplicación lanzando la interfaz gráfica.
+     * Método para iniciar la aplicación.
+     * Este método debería configurar la escena inicial y mostrar la vista principal.
      */
     public void iniciarApp();
 
     /**
-     * Cambia la vista a la pantalla de inicio.
+     * Método para cambiar la vista a la pantalla de inicio.
+     * Este método debería gestionar la transición de la vista actual a la vista de inicio.
      */
     public void cambiarInicio();
 
     /**
-     * Cambia la vista a la pantalla del lobby.
+     * Método para cambiar la vista a la pantalla de lobby.
+     * Este método debería gestionar la transición de la vista actual a la vista del lobby.
      */
     public void cambiarLobby();
 
     /**
-     * Cambia la vista a la pantalla de partida.
+     * Método para cambiar la vista a la pantalla de partida.
+     * Este método debería gestionar la transición de la vista actual a la vista de partida.
      */
     public void cambiarPartida();
     
+    /**
+     * Método para cambiar la vista a la pantalla de opciones de partida.
+     * Este método debería gestionar la transición de la vista actual a la vista de opciones de partida.
+     */
     public void cambiarOpcionesPartida();
 }

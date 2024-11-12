@@ -13,9 +13,8 @@ import presentacion_utilities.NotificadorEvento;
  */
 public final class ManejadorDisplay implements ObserverPantalla{
     private final NotificadorEvento notificador;
-    private final ManejadorModelo modeloLogica;
+    private final MediadorManejadores modeloLogica;
     private INavegacion navegacion;
-    //private ICliente cliente;
 
     public ManejadorDisplay() {
         notificador = NotificadorEvento.getInstance();
@@ -37,6 +36,7 @@ public final class ManejadorDisplay implements ObserverPantalla{
         }
     }
 
+    //------------------------Eventos de cambiar pantallas--------------------
     @Override
     public void avisarMostrarInicio() {
         
@@ -52,6 +52,19 @@ public final class ManejadorDisplay implements ObserverPantalla{
     public void avisarMostrarOpcionesPartida() {
         navegacion.cambiarOpcionesPartida();
         modeloLogica.crearObserverOpcionesPartida();
+    }
+
+    @Override
+    public void avisarMostrarCreditos() {
+    }
+
+    @Override
+    public void avisarMostrarFinJuego() {
+    }
+
+    @Override
+    public void avisarMostrarLobby() {
+        navegacion.cambiarLobby();
     }
     
 }

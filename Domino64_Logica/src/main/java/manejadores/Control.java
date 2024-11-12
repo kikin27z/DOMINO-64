@@ -4,30 +4,41 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- *
- * @author karim
+ * Clase que actúa como controlador central del juego. Es responsable de la
+ * inicialización de los manejadores y la gestión del hilo principal donde
+ * se ejecutan las operaciones lógicas del juego.
+ * 
+ * Se implementa el patrón Singleton, asegurando que solo haya una instancia
+ * del controlador en toda la ejecución de la aplicación.
+ * 
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class Control {
 
     private static ManejadorCuenta cuenta;
     private static ManejadorDisplay display;
-    private static ManejadorModelo modelo;
+    private static MediadorManejadores modelo;
     private static Control principal;
     private static ExecutorService hiloPrincipal;
 
-    // Constructor privado para evitar instanciación externa
+    /**
+     * Constructor privado que inicializa los manejadores del juego y el hilo
+     * principal que ejecutará las operaciones lógicas. Este método se ejecuta
+     * en un solo hilo creado específicamente para la lógica principal del juego.
+     */
     private Control() {
         // Crear un único hilo que actuará como nuestro hilo principal
         hiloPrincipal = Executors.newSingleThreadExecutor(r -> {
             Thread thread = new Thread(r);
             thread.setName("MainLogicThread");
-            
             return thread;
         });
         hiloPrincipal.execute(() -> {
             try {
+                // Inicializar los manejadores
                 cuenta = new ManejadorCuenta();
-                modelo = new ManejadorModelo();
+                modelo = new MediadorManejadores();
                 display = new ManejadorDisplay();
                 System.out.println("Manejadores iniciados en: " + Thread.currentThread().getName());
             } catch (Exception e) {
@@ -37,9 +48,10 @@ public class Control {
     }
 
     /**
-     * Obtiene la instancia única de Navegacion.
-     *
-     * @return La instancia de Navegacion.
+     * Obtiene la instancia única de la clase {@link Control}. Si la instancia
+     * no existe, se crea una nueva.
+     * 
+     * @return La instancia de {@link Control}.
      */
     public static Control iniciarJuego() {
         if (principal == null) {
@@ -48,27 +60,49 @@ public class Control {
         return principal;
     }
 
+    /**
+     * Obtiene la instancia principal del controlador.
+     * 
+     * @return La instancia principal del controlador.
+     */
     public static Control obtenerPrincipal() {
         return principal;
     }
 
+    /**
+     * Obtiene el manejador de cuentas.
+     * 
+     * @return El manejador de cuentas.
+     */
     public static ManejadorCuenta obtenerManejadorCuenta() {
         return cuenta;
     }
 
+    /**
+     * Obtiene el manejador de la visualización (display).
+     * 
+     * @return El manejador de display.
+     */
     public static ManejadorDisplay obtenerManejadorDisplay() {
         return display;
     }
 
-    public static ManejadorModelo obtenerManejadorModelo() {
+    /**
+     * Obtiene el mediador de los manejadores, el cual coordina las interacciones
+     * entre los diferentes componentes lógicos del juego.
+     * 
+     * @return El mediador de manejadores.
+     */
+    public static MediadorManejadores obtenerManejadorModelo() {
         return modelo;
     }
 
+    /**
+     * Obtiene el servicio de ejecución que maneja el hilo principal del juego.
+     * 
+     * @return El servicio de ejecución para el hilo principal.
+     */
     public static ExecutorService getHiloPrincipal() {
         return hiloPrincipal;
-    }
-
-    public static void setHiloPrincipal(ExecutorService hiloPrincipal) {
-        Control.hiloPrincipal = hiloPrincipal;
     }
 }

@@ -1,5 +1,6 @@
 package opciones_partida;
 
+import eventosOpcionesPartida.ObserverOpcionesMVC;
 import java.io.IOException;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -20,19 +21,24 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 
 /**
+ * Clase OpcionesPartidaView representa la interfaz gráfica para las opciones de
+ * partida en el juego. Proporciona botones para iniciar una nueva partida,
+ * unirse a una existente, y volver a la pantalla principal. Incluye la
+ * capacidad de mostrar una ventana modal para ingresar un código de partida.
  *
  * @author Luisa Fernanda Morales Espinoza - 00000233450
- * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class OpcionesPartidaView {
+public class OpcionesPartidaView implements ObserverOpcionesMVC {
+    // Modelo asociado para la vista
+    private final OpcionesPartidaModel modelo;
 
-    private OpcionesPartidaModel modelo;
+    // Componentes de la interfaz gráfica
     private AnchorPane panel;
     private Button btnNuevaPartida;
     private Button btnUnirsePartida;
     private ImageView btnVolver;
-    private TextField txtCodigo ;
+    private TextField txtCodigo;
     private AnchorPane fondoBuscarPartida;
     private Stage ventanaBuscarPartida;
     private Stage fondo;
@@ -40,10 +46,23 @@ public class OpcionesPartidaView {
     private Button btnBuscarPartida;
     private Label lblMensajes;
 
+    /**
+     * Constructor de la clase OpcionesPartidaView.
+     * Configura la vista y registra la instancia como observador del modelo.
+     * 
+     * @param modelo Instancia del modelo OpcionesPartidaModel asociada a la vista.
+     */
     public OpcionesPartidaView(OpcionesPartidaModel modelo) {
         this.modelo = modelo;
+        this.modelo.agregarObserver(this);
     }
 
+    /**
+     * Inicializa la escena y la muestra en la ventana principal.
+     *
+     * @param fondo Escenario principal donde se mostrará la interfaz.
+     * @throws IOException Si ocurre un error al cargar recursos externos.
+     */
     public void iniciarEscena(Stage fondo) throws IOException {
         crearComponentes();
         Scene scene = new Scene(panel);
@@ -52,7 +71,11 @@ public class OpcionesPartidaView {
         this.fondo = fondo;
     }
 
-    public void crearComponentes() {
+    /**
+     * Crea y organiza los componentes visuales de la vista, incluyendo
+     * los botones de "Nueva partida" y "Unirse a partida".
+     */
+    private void crearComponentes() {
         panel = new AnchorPane();
         panel.setPrefHeight(700);
         panel.setPrefWidth(1000);
@@ -102,10 +125,17 @@ public class OpcionesPartidaView {
         tilesImage.setRotate(180);
 
         panel.getChildren().addAll(btnVolver, mainHBox, tilesImage);
-        
-        cargarBuscarPartida();
+        cargarBtnModal();
     }
 
+    /**
+     * Crea un panel de opción visual con una imagen y un botón.
+     * 
+     * @param imgPrincipal Ruta de la imagen principal del panel.
+     * @param imgSecundaria Ruta de la imagen secundaria del panel (opcional).
+     * @param btnPanel Botón que representa la acción de la opción.
+     * @return Panel de opción configurado.
+     */
     private AnchorPane crearPanelOpcion(String imgPrincipal, String imgSecundaria, Button btnPanel) {
         AnchorPane pane = new AnchorPane();
         pane.setMaxWidth(370);
@@ -147,8 +177,67 @@ public class OpcionesPartidaView {
         return pane;
     }
 
+        /**
+     * Crea una etiqueta con estilo personalizado.
+     *
+     * @param texto Texto de la etiqueta.
+     * @param posX Posición X de la etiqueta.
+     * @param posY Posición Y de la etiqueta.
+     * @param width Ancho de la etiqueta.
+     * @param height Altura de la etiqueta.
+     * @return Etiqueta configurada.
+     */
+    private Label crearEtiqueta(String text, double x, double y, double width, double height) {
+        Label label = new Label(text);
+        label.setAlignment(javafx.geometry.Pos.CENTER);
+        label.setLayoutX(x);
+        label.setLayoutY(y);
+        label.setPrefHeight(height);
+        label.setPrefWidth(width);
+        label.setTextFill(Color.web("#2e1c1cc7"));
+        label.setFont(new Font("Verdana Bold", 48));
+        return label;
+    }
+
+    /**
+     * Crea un botón con estilo personalizado.
+     *
+     * @param texto Texto del botón.
+     * @param posX Posición X del botón.
+     * @param posY Posición Y del botón.
+     * @param width Ancho del botón.
+     * @param color Color de fondo del botón.
+     * @return Botón configurado.
+     */
+    private Button crearBoton(String text, double x, double y, double width, String color) {
+        Button button = new Button(text);
+        button.setLayoutX(x);
+        button.setLayoutY(y);
+        button.setMaxHeight(65);
+        button.setMinHeight(Double.NEGATIVE_INFINITY);
+        button.setPrefWidth(width);
+        button.setStyle("-fx-background-color: " + color + "; -fx-background-radius: 20;");
+        button.setTextFill(Color.WHITE);
+        button.setFont(new Font("Russo One", 23));
+        button.setCursor(Cursor.HAND);
+        return button;
+    }
+
     //--------------------------------------------------------Modal windows--------------------------------------------------------
-    public void cargarBuscarPartida() {
+    /**
+     * Configura los botones de la ventana modal para buscar una partida.
+     */
+    private void cargarBtnModal() {
+        btnCancelarBuscarPartida = crearBoton("Cancelar", 58, 361, 200, "#5C4033");
+        btnBuscarPartida = crearBoton("Buscar", 321, 361, 200, "#B2533E");
+        btnCancelarBuscarPartida.setId("cancelar");
+        btnBuscarPartida.setId("buscar");
+    }
+
+    /**
+     * Crea y configura la ventana modal para ingresar el código de partida.
+     */
+    private void cargarBuscarPartida() {
         fondoBuscarPartida = new AnchorPane();
         fondoBuscarPartida.setPrefHeight(570);
         fondoBuscarPartida.setPrefWidth(640);
@@ -163,11 +252,6 @@ public class OpcionesPartidaView {
 
         Label titleLabel1 = crearEtiqueta("Ingresa el código", 42, 33, 498, 63);
         Label titleLabel2 = crearEtiqueta("de la partida:", 78, 96, 425, 63);
-
-        btnCancelarBuscarPartida = crearBoton("Cancelar", 58, 361, 200, "#5C4033");
-        btnBuscarPartida = crearBoton("Buscar", 321, 361, 200, "#B2533E");
-        btnCancelarBuscarPartida.setId("cancelar");
-        btnBuscarPartida.setId("buscar");
 
         txtCodigo = new TextField();
         txtCodigo.setAlignment(javafx.geometry.Pos.CENTER);
@@ -207,66 +291,90 @@ public class OpcionesPartidaView {
         ventanaBuscarPartida.setScene(scene);
     }
 
-    private Label crearEtiqueta(String text, double x, double y, double width, double height) {
-        Label label = new Label(text);
-        label.setAlignment(javafx.geometry.Pos.CENTER);
-        label.setLayoutX(x);
-        label.setLayoutY(y);
-        label.setPrefHeight(height);
-        label.setPrefWidth(width);
-        label.setTextFill(Color.web("#2e1c1cc7"));
-        label.setFont(new Font("Verdana Bold", 48));
-        return label;
-    }
 
-    private Button crearBoton(String text, double x, double y, double width, String color) {
-        Button button = new Button(text);
-        button.setLayoutX(x);
-        button.setLayoutY(y);
-        button.setMaxHeight(65);
-        button.setMinHeight(Double.NEGATIVE_INFINITY);
-        button.setPrefWidth(width);
-        button.setStyle("-fx-background-color: " + color + "; -fx-background-radius: 20;");
-        button.setTextFill(Color.WHITE);
-        button.setFont(new Font("Russo One", 23));
-        button.setCursor(Cursor.HAND);
-        return button;
-    }
-
+    /**
+     * Muestra la ventana modal para buscar una partida.
+     */
     public void mostrarVentanaBuscarPartida() {
+        cargarBuscarPartida();
         ventanaBuscarPartida.setResizable(false);
-        txtCodigo.setText("");
-        lblMensajes.setText("****");
-        ventanaBuscarPartida.showAndWait();  // showAndWait hace que sea modal
+        ventanaBuscarPartida.showAndWait();
     }
 
     /**
-    * Cierra la ventana de unirse de la partida.
-    */
+     * Cierra la ventana modal de búsqueda de partida.
+     */
     public void cerrarVentanaBuscarPartida() {
         ventanaBuscarPartida.close();
     }
-    
-    //------------EVENTOS------------
+
+    //------------EVENTOS Control------------
+    /**
+     * Asigna un evento de clic al botón de "Nueva Partida".
+     *
+     * @param e Evento de tipo MouseEvent a asignar al botón.
+     */
     public void crearNuevaPartida(EventHandler<MouseEvent> e) {
         btnNuevaPartida.setOnMouseClicked(e);
     }
 
+    /**
+     * Asigna un evento de clic al botón de "Unirse a Partida".
+     *
+     * @param e Evento de tipo MouseEvent a asignar al botón.
+     */
     public void unirsePartida(EventHandler<MouseEvent> e) {
         btnUnirsePartida.setOnMouseClicked(e);
     }
-    
-    public void volverInicio(EventHandler<MouseEvent> e){
+
+    /**
+     * Asigna un evento de clic al botón de "Volver" para regresar al inicio.
+     *
+     * @param e Evento de tipo MouseEvent a asignar al botón.
+     */
+    public void volverInicio(EventHandler<MouseEvent> e) {
         btnVolver.setOnMouseClicked(e);
     }
-    public void buscarPartida(EventHandler<MouseEvent> e){
+
+    /**
+     * Asigna un evento de clic al botón de "Buscar Partida".
+     *
+     * @param e Evento de tipo MouseEvent a asignar al botón.
+     */
+    public void buscarPartida(EventHandler<MouseEvent> e) {
         btnBuscarPartida.setOnMouseClicked(e);
     }
-    public void cancelarBuscarPartida(EventHandler<MouseEvent> e){
+
+    /**
+     * Asigna un evento de clic al botón de "Cancelar" en la ventana de búsqueda
+     * de partida.
+     *
+     * @param e Evento de tipo MouseEvent a asignar al botón.
+     */
+    public void cancelarBuscarPartida(EventHandler<MouseEvent> e) {
         btnCancelarBuscarPartida.setOnMouseClicked(e);
     }
-    
-    public String obtenerCodigo(){
+
+//----------------------Eventos de Modelo------------------------------------
+    /**
+     * Actualiza el mensaje de aviso en la interfaz.
+     *
+     * @param mensaje Texto del mensaje que se mostrará en la etiqueta de
+     * mensajes.
+     */
+    @Override
+    public void actualizarMensajeAviso(String mensaje) {
+        lblMensajes.setText(mensaje);
+    }
+
+//--------------------Getters-------------------------
+    /**
+     * Obtiene el código ingresado en el campo de texto.
+     *
+     * @return String que representa el texto ingresado en el campo de código.
+     */
+    public String obtenerCodigo() {
         return txtCodigo.getText();
     }
+
 }

@@ -1,8 +1,8 @@
 package lobby;
 
 import entidadesDTO.CuentaDTO;
+import eventosLobby.ObserverLobbyMVC;
 import java.io.IOException;
-import java.util.List;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -27,7 +27,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 /**
  * La clase LobbyView gestiona la interfaz gráfica (GUI) de la pantalla de lobby
@@ -42,7 +41,7 @@ import javafx.stage.StageStyle;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class LobbyView {
+public class LobbyView  implements ObserverLobbyMVC{
 
     private final LobbyModel modelo;
     private AnchorPane panel;
@@ -796,5 +795,25 @@ public class LobbyView {
     public void actualizarNombreOtroJugador(CuentaDTO cuenta) {
         AnchorPane panelJugador = modelo.obtenerPanelJugador(cuenta.getId());
 //        actualizarNombreOtroJugador(panelJugador, cuenta.getNombre());
+    }
+
+    @Override
+    public void actualizarNuevoJugador(CuentaDTO cuenta) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarQuitarJugador(CuentaDTO cuenta) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarJugadorListo(CuentaDTO cuenta) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarJugadorNoListo(CuentaDTO cuenta) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

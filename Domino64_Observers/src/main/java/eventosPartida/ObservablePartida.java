@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author karim
  */
-public interface EventosPartida {
+public interface ObservablePartida {
     
     public void agregarObserver(ObserverPartida observador);
     public void quitarObserver(ObserverPartida observador);

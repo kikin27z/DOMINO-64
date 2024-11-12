@@ -6,13 +6,14 @@ import presentacion_utilities.NotificadorEvento;
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
-public class ManejadorModelo {
+public class MediadorManejadores {
     private final NotificadorEvento notificador;
     private final ExecutorService hiloPrincipal;
     
-    public ManejadorModelo() {
+    public MediadorManejadores() {
         notificador = NotificadorEvento.getInstance();
         hiloPrincipal = Control.getHiloPrincipal();
     }
@@ -23,6 +24,13 @@ public class ManejadorModelo {
     }
     
     private class ControlEventosOpcionesPartida implements ObserverOpcionesPartida{
+        private ManejadorCuenta cuenta;
+        
+        public ControlEventosOpcionesPartida() {
+            cuenta = Control.obtenerManejadorCuenta();
+        }
+        
+        
         @Override
         public void crearPartida() {
             System.out.println("Modo");
@@ -31,8 +39,7 @@ public class ManejadorModelo {
         @Override
         public void buscarPartida(String codigoPartida) {
             hiloPrincipal.execute(() -> {
-                System.out.println("Modo");
-                System.out.println("Ejecutando en: " + Thread.currentThread());
+                cuenta.contruisr(codigoPartida);
             });
         }
     }

@@ -5,7 +5,6 @@ import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.JugadaValidaDTO;
 import entidadesDTO.JugadorDTO;
-import eventosPartida.EventosPartida;
 import eventosPartida.ObserverPartida;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,7 @@ import java.util.Map;
 import javafx.scene.canvas.Canvas;
 import presentacion_utilities.NotificadorEvento;
 import java.util.logging.Logger;
+import eventosPartida.ObservablePartida;
 
 /**
  *
@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class PartidaModel implements EventosPartida {
+public class PartidaModel implements ObservablePartida {
 
     private static final Logger logger = Logger.getLogger(PartidaModel.class.getName());
     private JugadorDTO jugador;
