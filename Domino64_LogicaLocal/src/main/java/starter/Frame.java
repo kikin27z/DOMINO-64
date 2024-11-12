@@ -12,6 +12,8 @@ import entidadesDTO.PartidaDTO;
 import eventos.EventoMVC;
 import eventos.EventoMVCJugador;
 import eventos.EventoMVCLobby;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,11 +66,13 @@ public class Frame extends javax.swing.JFrame implements Suscriptor<EventoMVC>{
     
     private void recibirPartida(EventoMVC evento){
         EventoMVCLobby eventoL = (EventoMVCLobby)evento;
-        PartidaDTO partidaOb = eventoL.getPartida();
         partida = eventoL.getPartida();
         
+        jugador = new JugadorDTO(cuenta);
+        
+        System.out.println("partida: "+partida);
         cambiarVista(true);
-        agregarJugadores(partidaOb.getJugadores());
+        agregarJugadores(partida.getJugadores());
     }
     
     private void recibirJugador(EventoMVC evento){
@@ -77,10 +81,32 @@ public class Frame extends javax.swing.JFrame implements Suscriptor<EventoMVC>{
         areaJugadores.setText(agregarJugador(jugadorNuevo));
     }
     
+    private void removerJugador(EventoMVC evento){
+        EventoMVCLobby eventoL = (EventoMVCLobby)evento;
+        CuentaDTO exjugador = eventoL.getPublicador();
+        CuentaDTO c;
+        
+        for (JugadorDTO j : partida.getJugadores()) {
+            c = j.getCuenta();
+            if(c.getId() == exjugador.getId()){
+                partida.getJugadores().remove(j);
+                break;
+            }
+        }
+        areaJugadores.setText(removerJugador(exjugador));
+    }
+    
+    private void actualizarUsername(EventoMVC evento){
+        EventoMVCLobby eventoL = (EventoMVCLobby)evento;
+        CuentaDTO jugadorActualizado = eventoL.getInfo();
+        actualizarUsername(jugadorActualizado);
+    }
+    
     private void setConsumers(){
         consumers.putIfAbsent(TipoLobbyMVC.PARTIDA_OBTENIDA, this::recibirPartida);
         consumers.putIfAbsent(TipoLobbyMVC.JUGADOR_NUEVO, this::recibirJugador);
-        consumers.putIfAbsent(TipoLobbyMVC.JUGADOR_SALIO, this::recibirPartida);
+        consumers.putIfAbsent(TipoLobbyMVC.JUGADOR_SALIO, this::removerJugador);
+        consumers.putIfAbsent(TipoLobbyMVC.ACTUALIZAR_USERNAME, this::actualizarUsername);
     }
     
     /**
@@ -102,6 +128,11 @@ public class Frame extends javax.swing.JFrame implements Suscriptor<EventoMVC>{
         btnUnirse = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         areaJugadores.setColumns(20);
         areaJugadores.setFont(new java.awt.Font("OCR A Extended", 0, 18)); // NOI18N
@@ -112,6 +143,11 @@ public class Frame extends javax.swing.JFrame implements Suscriptor<EventoMVC>{
         lblJugadores.setText("Jugadores en partida:");
 
         btnSalir.setText("abandonar partida");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         txtUsername.setFont(new java.awt.Font("OCR A Extended", 0, 14)); // NOI18N
         txtUsername.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -142,17 +178,16 @@ public class Frame extends javax.swing.JFrame implements Suscriptor<EventoMVC>{
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(71, 71, 71))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(52, 52, 52)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblJugadores)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(55, 55, 55)
+                                .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -165,26 +200,30 @@ public class Frame extends javax.swing.JFrame implements Suscriptor<EventoMVC>{
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnUnirse)
                             .addComponent(btnListo))))
-                .addContainerGap(163, Short.MAX_VALUE))
+                .addContainerGap(71, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addComponent(lblJugadores)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCrearPartida)
-                    .addComponent(btnUnirse))
-                .addGap(37, 37, 37)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSalir)
-                    .addComponent(btnListo))
-                .addGap(35, 35, 35))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnCrearPartida)
+                            .addComponent(btnUnirse))
+                        .addGap(37, 37, 37)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnSalir)
+                            .addComponent(btnListo))
+                        .addGap(35, 35, 35))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -192,22 +231,25 @@ public class Frame extends javax.swing.JFrame implements Suscriptor<EventoMVC>{
 
     private void txtUsernameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsernameKeyTyped
         // TODO add your handling code here:
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            
-            String usernameNuevo = txtUsername.getText();
-            if(usernameNuevo.isBlank())
-                JOptionPane.showMessageDialog(this, "No puede dejar el username en blanco");
-            else{
-                if(validarUsername(usernameNuevo)){
-                    CuentaDTO cuentaActualizada = new CuentaDTO();
-                    cuentaActualizada.setUsername(usernameNuevo);
-                    EventoMVCJugador evento = new EventoMVCJugador(TipoJugadorMVC.CAMBIAR_USERNAME);
-                    evento.setPublicador(cuenta);
-                    
-                    publicador.publicarEvento(evento.getTipo(), evento);
-                }
-            }
-        }
+//        System.out.println("key typed: "+evt.paramString());
+//        String keyChar = String.valueOf(evt.getKeyChar());
+//        System.out.println("keychar: "+keyChar);
+//        if(keyChar.equals('\n')){
+//            System.out.println("se presiono la tecla: "+evt.getKeyCode());
+//            String usernameNuevo = txtUsername.getText();
+//            if(usernameNuevo.isBlank())
+//                JOptionPane.showMessageDialog(this, "No puede dejar el username en blanco");
+//            else{
+//                if(validarUsername(usernameNuevo)){
+//                    CuentaDTO cuentaActualizada = new CuentaDTO();
+//                    cuentaActualizada.setUsername(usernameNuevo);
+//                    EventoMVCJugador evento = new EventoMVCJugador(TipoJugadorMVC.CAMBIAR_USERNAME);
+//                    evento.setPublicador(cuenta);
+//                    System.out.println("evento enviado: ");
+//                    publicador.publicarEvento(evento.getTipo(), evento);
+//                }
+//            }
+//        }
     }//GEN-LAST:event_txtUsernameKeyTyped
 
     private void btnCrearPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearPartidaActionPerformed
@@ -215,7 +257,11 @@ public class Frame extends javax.swing.JFrame implements Suscriptor<EventoMVC>{
         String username = JOptionPane.showInputDialog(this, "ingresa tu username");
         cuenta.setUsername(username);
         EventoMVCJugador evento = new EventoMVCJugador(TipoJugadorMVC.CREAR_PARTIDA);
+        
+        jugador = new JugadorDTO(cuenta);
+        
         partida = new PartidaDTO();
+        partida.getJugadores().add(jugador);
         partida.setFichasPorJugador(5);//hardcodeado
         evento.setPartida(partida);
         evento.setPublicador(cuenta);
@@ -245,6 +291,27 @@ public class Frame extends javax.swing.JFrame implements Suscriptor<EventoMVC>{
         
     }//GEN-LAST:event_btnUnirseActionPerformed
 
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        // TODO add your handling code here:
+        EventoMVCJugador evento = new EventoMVCJugador(TipoJugadorMVC.ABANDONAR_PARTIDA);
+        evento.setPublicador(cuenta);
+        publicador.publicarEvento(evento.getTipo(), evento);
+        
+        cambiarVista(false);
+        txtUsername.setText("");
+        areaJugadores.setText("");
+    }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        if(evt.getNewState() == java.awt.event.WindowEvent.WINDOW_CLOSING){
+            EventoMVCJugador evento = new EventoMVCJugador(TipoJugadorMVC.ABANDONAR_PARTIDA);
+            evento.setPublicador(cuenta);
+            publicador.publicarEvento(evento.getTipo(), evento);
+        }
+        
+    }//GEN-LAST:event_formWindowClosing
+
     private void init(){
         this.txtUsername.setVisible(false);
         this.areaJugadores.setVisible(false);
@@ -253,15 +320,33 @@ public class Frame extends javax.swing.JFrame implements Suscriptor<EventoMVC>{
         this.btnSalir.setVisible(false);
         this.btnCrearPartida.setVisible(true);
         this.btnUnirse.setVisible(true);
+        
+        this.txtUsername.addActionListener((ActionEvent e) -> {
+            String usernameNuevo = txtUsername.getText();
+            if (usernameNuevo.isBlank())
+                JOptionPane.showMessageDialog(null, "No puede dejar el username en blanco");
+            else {
+                if (validarUsername(usernameNuevo)) {
+                    CuentaDTO cuentaActualizada = new CuentaDTO();
+                    cuentaActualizada.setUsername(usernameNuevo);
+                    cuentaActualizada.setId(cuenta.getId());
+                    
+                    EventoMVCJugador evento = new EventoMVCJugador(TipoJugadorMVC.CAMBIAR_USERNAME);
+                    evento.setPublicador(cuentaActualizada);
+                    System.out.println("evento enviado: "+evento.getPublicador());
+                    publicador.publicarEvento(evento.getTipo(), evento);
+                }
+            }
+        });
     }
     
     private boolean validarUsername(String user){
         List<JugadorDTO> jugadores = partida.getJugadores();
         if (jugadores.size() > 1) {
-            CuentaDTO cuenta;
-            for (JugadorDTO jugador : jugadores) {
-                cuenta = jugador.getCuenta();
-                if (cuenta.getUsername().equals(user)) {
+            CuentaDTO cuentaDTO;
+            for (JugadorDTO j : jugadores) {
+                cuentaDTO = j.getCuenta();
+                if (cuentaDTO.getUsername().equals(user)) {
                     return false;
                 }
             }
@@ -277,6 +362,8 @@ public class Frame extends javax.swing.JFrame implements Suscriptor<EventoMVC>{
         this.btnUnirse.setVisible(!enPartida);
         this.btnSalir.setVisible(enPartida);
         this.btnListo.setVisible(enPartida);
+        if(enPartida)
+            txtUsername.setText(jugador.getCuenta().getUsername());
     }
     
     private String removerJugador(CuentaDTO jugador){
@@ -288,16 +375,43 @@ public class Frame extends javax.swing.JFrame implements Suscriptor<EventoMVC>{
     }
     
     private String agregarJugador(CuentaDTO jugador){
+        
         StringBuilder builder = new StringBuilder(areaJugadores.getText());
         builder.append(jugador.getUsername()).append('\n');
         
         return builder.toString();
     }
     
+    private String actualizarTxtArea(String nombreAnterior, String nombreNuevo){
+        int index = areaJugadores.getText().indexOf(nombreAnterior);
+        
+        StringBuilder builder = new StringBuilder(areaJugadores.getText());
+        builder.replace(index, index+nombreAnterior.length(), nombreNuevo);
+        
+        return builder.toString();
+    }
+    
+    private void actualizarUsername(CuentaDTO jugador){
+        CuentaDTO aux;
+        String nombreAnterior = null;
+        for (JugadorDTO j : partida.getJugadores()) {
+            aux = j.getCuenta();
+            if(aux.getId() == jugador.getId()){
+                nombreAnterior = aux.getUsername();
+                j.getCuenta().setUsername(jugador.getUsername());
+                break;
+            }
+        }
+        
+        areaJugadores.setText(actualizarTxtArea(nombreAnterior, jugador.getUsername()));
+    }
+    
     private void agregarJugadores(List<JugadorDTO> jugadores){
         StringBuilder builder = new StringBuilder();
+        CuentaDTO aux;
         for (JugadorDTO j : jugadores) {
-            builder.append(j.getCuenta().getUsername()).append('\n');
+            aux = j.getCuenta();
+            builder.append(aux.getUsername()).append('\n');
         }
         
         areaJugadores.setText(builder.toString());

@@ -27,11 +27,13 @@ public class ManejadorLobby extends ObservadorLobby{
     private static int id;
     private ICliente cliente;
     private List<Cuenta> jugadoresListos;
+    private List<Cuenta> jugadoresPartida;
     
     public ManejadorLobby() {
         partidas = new CopyOnWriteArrayList<>();
         consumers = new ConcurrentHashMap<>();
         jugadoresListos = new CopyOnWriteArrayList<>();
+        jugadoresPartida = new CopyOnWriteArrayList<>();
         setConsumers();
     }
     
@@ -66,6 +68,7 @@ public class ManejadorLobby extends ObservadorLobby{
                 /*si aun hay jugadores en la partida,
                 crea un evento de que el jugador salio para notificar al
                 resto de jugadores*/
+                System.out.println("jugadores en partida: "+partida.getJugadores());
                 EventoLobby ev = director.crearEventoJugadorSalio(jugador);
                 cliente.enviarEvento(ev);
             }
@@ -79,6 +82,7 @@ public class ManejadorLobby extends ObservadorLobby{
         if(this.partida == null){
             System.out.println("partida creada");
             this.partida = eventoJ.getPartida();
+            jugadoresPartida.add(eventoJ.getJugador());
             System.out.println("jugadores: "+partida.getJugadores());
             System.out.println("codigo: "+partida.getCodigoPartida());
         }
@@ -144,12 +148,16 @@ public class ManejadorLobby extends ObservadorLobby{
     public void cambiarUsername(Evento evento) {
         EventoJugador evJ = (EventoJugador)evento;
         Cuenta jActualizado = evJ.getJugador();
-        
+        System.out.println("jAct = "+jActualizado);
         Cuenta j = partida.buscarJugador(jActualizado);
+        System.out.println("j: "+j);
         if(j != null){
             j.setUsername(jActualizado.getUsername());
-        }
-        System.out.println("jugadores en partida con jugador act: "+partida.getJugadores());
+            System.out.println("jAc2= "+j);
+            partida.actualizarJugador(j);
+            System.out.println("jugadores de partida: "+partida.getJugadores());
+        }else
+            System.out.println("null en lobby");
         
         EventoLobby evLobby = director.crearEventoActualizarUsername(j);
         cliente.enviarEvento(evLobby);

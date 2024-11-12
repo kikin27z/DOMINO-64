@@ -33,7 +33,7 @@ public class PublicadorEventos implements Publicador<EventoMVC>{
     }
     
     @Override
-    public void suscribir(Enum tipoEvento, Suscriptor suscriptor) {
+    public void suscribir(Enum<?> tipoEvento, Suscriptor suscriptor) {
         suscriptores.merge(tipoEvento, new HashSet<>(List.of(suscriptor)),
                 (set, newSet) ->{
                     set.add(suscriptor);
@@ -42,7 +42,7 @@ public class PublicadorEventos implements Publicador<EventoMVC>{
     }
 
     @Override
-    public void desuscribir(Enum tipoEvento, Suscriptor suscriptor) {
+    public void desuscribir(Enum<?> tipoEvento, Suscriptor suscriptor) {
         suscriptores.computeIfPresent(tipoEvento,
                 (tipo, subs) -> {
                     subs.remove(suscriptor);
@@ -51,7 +51,7 @@ public class PublicadorEventos implements Publicador<EventoMVC>{
     }
 
     @Override
-    public void publicarEvento(Enum tipoEvento, EventoMVC evento) {
+    public void publicarEvento(Enum<?> tipoEvento, EventoMVC evento) {
         if(suscriptores.containsKey(tipoEvento)){
             suscriptores.get(tipoEvento).forEach(sub -> sub.recibirEvento(evento));
         }

@@ -27,6 +27,14 @@ public class Partida implements Serializable{
         this.codigoPartida = codigoPartida;
     }
 
+    public void actualizarJugador(Cuenta jugador){
+        if(buscarJugador(jugador) != null){
+            jugadores.set(jugadores.indexOf(jugador), jugador);
+            System.out.println("jugador actualiazdo: "+jugador);
+        }else
+            System.out.println("jugador no encontrado");
+    }
+    
     public Cuenta buscarJugador(Cuenta jugador){
         for (Cuenta j : jugadores) {
             if(j.getId() == jugador.getId())

@@ -89,51 +89,40 @@ public class Starter {
     }
     
     private static void simulacion(ManejadorCuenta mc, PublicadorEventos pub){
+        //crea una cuenta dto a partir de la entidad Cuenta del manejador
         Cuenta cuenta = mc.getCuenta();
         CuentaDTO cuentaDTO = new CuentaDTO();
         cuentaDTO.setId(cuenta.getId());
         
+        //crear la instancia del publicador de eventos de presentacion
         Publicador publicadorP = PublicadorEventosPresentacion.getInstance();
         
+        /*se agrega como suscriptor al manejadorCuenta 
+        el manejador se suscribe a los eventos declarados en su lista de eventos
+        de manera que, cuando el publicadorEventosPresentacion publique un
+        evento de un tipo que este en la lista del manejadorCuenta, el
+        evento le llegara al manejador
+        */
         for (Enum<?> eventoMVC : mc.getEventosMVC()) {
             publicadorP.suscribir(eventoMVC, mc);
         }
         
+        /*
+        se inicia el frame, asignandole el publicador de presentacion,
+        de esta manera, se van a poder publicar eventos desde el frame.
+        Tambien se le asigna el dto de la cuenta del jugador
+        */
         Frame frame = new Frame(publicadorP, cuentaDTO);
         
+        /*
+        el frame se suscribe a los eventos delcarados en su lista de eventos,
+        
+        */
         for (Enum<?> evento : frame.getEventos()) {
             pub.suscribir(evento, frame);
         }
         
         initFrame(frame);
-//        Scanner s = new Scanner(System.in);
-//        
-//        int opcion;
-//        do {
-//            System.out.println("(1)Crear partida");
-//            System.out.println("(2)Unirse a partida");
-//            opcion = s.nextInt();
-//            switch (opcion) {
-//                case 1 -> crear(mc);
-//                case 2 -> unirse(mc, s);
-//                default -> System.out.println("elige una opcion valida (1 o 2)");
-//            }
-//        } while (opcion != 1 && opcion != 2);
-//        System.out.println("hola");
-//        
     }
     
-    private static void crear(ManejadorCuenta mc){
-        PartidaDTO partida = new PartidaDTO();
-        partida.setFichasPorJugador(5);
-        //mc.crearPartida(partida);
-    }
-    
-    private static void unirse(ManejadorCuenta mc, Scanner s){
-        System.out.println("ingresa el codigo de la partida:");
-        String codigo = s.next();
-        PartidaDTO partida = new PartidaDTO();
-        partida.setCodigoPartida(codigo);
-       // mc.unirmePartida(partida);
-    }
 }
