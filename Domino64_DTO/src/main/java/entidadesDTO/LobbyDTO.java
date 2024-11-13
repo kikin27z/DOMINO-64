@@ -1,12 +1,14 @@
 package entidadesDTO;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
  * @author karim
  */
-public class LobbyDTO {
+public class LobbyDTO implements Serializable{
     private List<CuentaDTO> cuentas;
     private String codigoPartida;
     private CuentaDTO cuentaActual;
@@ -14,11 +16,17 @@ public class LobbyDTO {
     public LobbyDTO(String codigoPartida) {
         this.codigoPartida = codigoPartida;
     }
+    public LobbyDTO(CuentaDTO cuentaActual) {
+    }
+    
 
     public List<CuentaDTO> getCuentas() {
         return cuentas;
     }
-
+    public void generarCodigo(){
+        setCodigo();
+    }
+    
     public void setCuentas(List<CuentaDTO> cuentas) {
         this.cuentas = cuentas;
     }
@@ -44,5 +52,14 @@ public class LobbyDTO {
     }
     
     
-    
+    private void setCodigo(){
+        Random rnd = new Random();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            if(i==3)
+                builder.append('-');
+            builder.append(rnd.nextInt(10));
+        }
+        codigoPartida = builder.toString();
+    }
 }

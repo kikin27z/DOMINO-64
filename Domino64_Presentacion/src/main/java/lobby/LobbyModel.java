@@ -230,4 +230,8 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
     public String obtenerIdCuentaActual(){
         return cuentaActual.getIdCadena();
     }
+    
+    public String obtenerCodigoPartida(){
+        return lobbyDTO.getCodigoPartida();
+    }
 }

@@ -7,6 +7,7 @@ import entidades.Partida;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.EventoError;
 import domino64.eventos.base.error.TipoError;
+import entidadesDTO.LobbyDTO;
 import eventos.EventoJugador;
 import eventos.EventoLobby;
 import java.util.List;
@@ -215,7 +216,7 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable{
 
     public static void main(String[] args){
 //        
-        Client c = Client.getClient(5000);
+        Client c = Client.getClient("10.202.68.69",5000);
         ManejadorLobby manejador = new ManejadorLobby();
         
         for (Enum<?> suscripcion : eventos) {
@@ -225,7 +226,7 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable{
         //cliente = c;
         manejador.setCliente(c);
         
-        c.iniciar();
+        c.iniciar(false);
         
         id = c.getClientId();
         
@@ -293,5 +294,17 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable{
             Thread.currentThread().interrupt();
         }
     }
+
+//    @Override
+//    public void irLobby(Evento evento) {
+//        EventoJugador eventoJ = (EventoJugador)evento;
+//        LobbyDTO lobbyNuevo = eventoJ.getLobby();
+//        Cuenta creadorPartida = eventoJ.getJugador();
+//        
+//        List<Cuenta> players = new CopyOnWriteArrayList<>();
+//        players.add(creadorPartida);
+//        System.out.println("partida creada. Codigo: "+lobbyNuevo.getCodigoPartida());
+//        System.out.println("jugador: "+ lobbyNuevo.getCuentaActual().getAvatar().getUrl());
+//    }
     
 }

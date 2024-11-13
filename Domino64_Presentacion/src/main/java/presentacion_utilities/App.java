@@ -1,5 +1,10 @@
 package presentacion_utilities;
 
+import entidadesDTO.AvatarDTO;
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.LobbyDTO;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -31,7 +36,29 @@ public class App extends Application{
     public void start(Stage stage) throws Exception {
         // Establece el fondo (escenario).
         Navegacion.getInstance().setFondo(stage);
+        
+//        LobbyDTO lobby = new LobbyDTO("999-222");
+//        CuentaDTO cuenta1 = new CuentaDTO();
+//        cuenta1.setIdCadena("qwer");
+//        cuenta1.setAvatar(AvatarDTO.AVE);
+//        CuentaDTO cuenta2 = new CuentaDTO();
+//        cuenta2.setIdCadena("qwer2");
+//        cuenta2.setAvatar(AvatarDTO.VENADO);
+//        CuentaDTO cuenta3 = new CuentaDTO();
+//        cuenta3.setIdCadena("qter2");
+//        cuenta3.setAvatar(AvatarDTO.PANDA);
+//        
+//        List<CuentaDTO> cuentas = new ArrayList<>();
+//        cuentas.add(cuenta1);
+//        cuentas.add(cuenta2);
+//        cuentas.add(cuenta3);
+//        
+//        lobby.setCuentas(cuentas);
+//        lobby.setCuentaActual(cuenta2);
+//        
+//        Navegacion.getInstance().cambiarLobby(lobby);
         Navegacion.getInstance().cambiarInicio();
+        
         
         // Establece el icono de la aplicación.
         Image icon = new Image(getClass().getResourceAsStream("/images/logo.png"));

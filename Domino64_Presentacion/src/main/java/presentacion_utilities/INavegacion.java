@@ -42,4 +42,6 @@ public interface INavegacion {
      * Este método debería gestionar la transición de la vista actual a la vista de opciones de partida.
      */
     public void cambiarOpcionesPartida();
+    
+    public void cambiarCreditos();
 }

@@ -7,7 +7,6 @@ package eventos;
 //import categorias.CategoriaEvento;
 import entidades.Cuenta;
 import entidades.Ficha;
-import com.luisa.excepcionesLogica.LogicException;
 import java.util.ArrayList;
 import java.util.List;
 import tiposLogicos.TipoLogicaTablero;
@@ -47,10 +46,10 @@ public class EventoTablero extends EventoLogico<Ficha>{
         return ficha;
     }
     
-    public List<Ficha> getExtremos() throws LogicException{
+    public List<Ficha> getExtremos() {
         if(flag)
             return fichas;
-        throw new LogicException("ERROR: Accion invalida para este tipo de evento de tablero");
+        return null;
     }
 
     @Override

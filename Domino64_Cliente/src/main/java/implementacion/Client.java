@@ -106,18 +106,23 @@ public class Client extends Observable<Evento> implements ICliente{
         return clientId;
     }
     
-    public void iniciar(){
+    public void iniciar(boolean esLocal){
         running = true;
-        conectarCliente();
+        conectarCliente(esLocal);
         
         new Thread(this::procesarColaEventos).start();
         
         ejecutorEventos.submit(this::listenForEvent);
     }
     
-    private void conectarCliente(){
+    private void conectarCliente(boolean esLocal){
         try {
+            if(esLocal){
+                
             socket = new Socket("localhost", port);
+            }else{
+                socket = new Socket(host, port);
+            }
             System.out.println("en el run");
             
             output = new ObjectOutputStream(socket.getOutputStream());

@@ -1,5 +1,8 @@
 package presentacion_utilities;
 
+import creditos.CreditosControl;
+import creditos.CreditosModel;
+import creditos.CreditosView;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
 import inicio.InicioControl;
@@ -125,5 +128,21 @@ public class Navegacion implements INavegacion {
 
     public Thread getHiloApp() {
         return hiloApp;
+    }
+
+    @Override
+    public void cambiarCreditos() {
+        Platform.runLater(() -> {
+            CreditosModel modeloLobby = new CreditosModel();
+            try {
+//                notificador.asignarObservableLobby(modeloLobby);
+//                mediador.setModeloLobby(modeloLobby);
+                CreditosView view = new CreditosView(modeloLobby); // Instancia la vista de la partida
+                view.iniciarEscena(fondo); // Inicia la escena de la partida
+                CreditosControl control = new CreditosControl(view, modeloLobby);
+            } catch (IOException ex) {
+                ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
+            }
+        });
     }
 }

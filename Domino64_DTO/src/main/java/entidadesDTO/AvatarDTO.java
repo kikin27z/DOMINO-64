@@ -6,28 +6,27 @@ package entidadesDTO;
  * acceder a la representación visual del avatar.
  * 
  * @author Luisa Fernanda Morales Espinoza - 00000233450
- * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
 public enum AvatarDTO {
-    AVE(0),       
-    GATO(1),       
-    JAGUAR(2),     
-    KIWI(3),      
-    MARIPOSA(4),   
-    PANDA(5),     
-    SERPIENTE(6),  
-    TORTUGA(7),
-    VENADO(8);     
+    AVE("/avatar/ave.png"),       
+    GATO("/avatar/gato.png"),       
+    JAGUAR("/avatar/jaguar.png"),     
+    KIWI("/avatar/kiwi.png"),      
+    MARIPOSA("/avatar/mariposa.png"),   
+    PANDA("/avatar/panda.png"),     
+    SERPIENTE("/avatar/serpiente.png"),  
+    TORTUGA("/avatar/tortuga.png"),
+    VENADO("/avatar/venado.png");     
 
-    private final int url;  
+    private final String url;  
 
     /**
      * Constructor de la enumeración AvatarDTO.
      * 
      * @param url el identificador único del avatar.
      */
-    AvatarDTO(int url) {
+    AvatarDTO(String url) {
         this.url = url; 
     }
 
@@ -36,7 +35,7 @@ public enum AvatarDTO {
      * 
      * @return el identificador del avatar.
      */
-    public int getUrl() {
+    public String getUrl() {
         return url;  
     }
 }

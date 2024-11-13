@@ -1,5 +1,11 @@
 package presentacion_utilities;
 
+import entidadesDTO.AvatarDTO;
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.LobbyDTO;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author karim
@@ -12,5 +18,7 @@ public class Principal {
         INavegacion navegacion = Navegacion.getInstance();
         navegacion.iniciarApp();
 
+        
+        
     }
 }

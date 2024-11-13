@@ -7,6 +7,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import listener.ControlEventos;
+import logicaLobby.ObservadorLobbyLocal;
 
 /**
  * Clase que actúa como controlador central del juego. Es responsable de la
@@ -35,11 +37,7 @@ public class Control {
      */
     private Control() {
         // Crear un único hilo que actuará como nuestro hilo principal
-        hiloPrincipal = Executors.newSingleThreadExecutor(r -> {
-            Thread thread = new Thread(r);
-            thread.setName("MainLogicThread");
-            return thread;
-        });
+        hiloPrincipal = crearHiloPrincipal();
         hiloPrincipal.execute(() -> {
             try {
                 // Inicializar los manejadores
@@ -58,14 +56,14 @@ public class Control {
     }
 
     private void subscribirManejadores(){
-        Client client =  Client.getClient(5000);
+        Client client =  Client.getClient("10.202.68.69",5000);
         
         for (Enum<?> evento : cuenta.getEventos()) {
             client.addObserver(evento, cuenta);
         }
         
         cuenta.init(client);
-        client.iniciar();
+        client.iniciar(false);
         cuenta.setClientId(client.getClientId());
 //        try {
 //            Thread.sleep(5000);
@@ -137,5 +135,13 @@ public class Control {
      */
     public static ExecutorService getHiloPrincipal() {
         return hiloPrincipal;
+    }
+    
+    private ExecutorService crearHiloPrincipal(){
+        return Executors.newSingleThreadExecutor(r -> {
+            Thread thread = new Thread(r);
+            thread.setName("MainLogicThread");
+            return thread;
+        });
     }
 }

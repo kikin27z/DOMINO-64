@@ -3,7 +3,6 @@ package eventos;
 //import categorias.CategoriaEvento;
 import entidades.Ficha;
 import entidades.Cuenta;
-import com.luisa.excepcionesLogica.LogicException;
 import java.util.ArrayList;
 import java.util.List;
 import tiposLogicos.TipoLogicaPozo;
@@ -43,10 +42,10 @@ public class EventoPozo extends EventoLogico<Ficha>{
     }
     
     
-    public List<Ficha> getFichas() throws LogicException{
+    public List<Ficha> getFichas() {
         if(flag)
             return fichas;
-        throw new LogicException("ERROR: Accion invalida para este tipo de evento de pozo");
+        return null;
     }
 
     @Override
