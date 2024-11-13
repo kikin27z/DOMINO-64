@@ -1,5 +1,6 @@
 package entidades;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Random;
 
@@ -7,7 +8,7 @@ import java.util.Random;
  *
  * @author luisa M
  */
-public class Cuenta {
+public class Cuenta implements Serializable{
     private String username;
     private String avatarUrl;
     private int id;
@@ -73,7 +74,12 @@ public class Cuenta {
             return false;
         }
         final Cuenta other = (Cuenta) obj;
-        return Objects.equals(this.username, other.username);
+        return Objects.equals(this.id, other.id);
+    }
+
+    @Override
+    public String toString() {
+        return "Cuenta{" +"user= " + username + ", id=" + id + '}';
     }
     
     public  String generateLetterString() {

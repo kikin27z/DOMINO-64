@@ -4,11 +4,13 @@
  */
 package entidades;
 
+import java.io.Serializable;
+
 /**
  *
  * @author luisa M
  */
-public class Ficha implements Comparable<Ficha>{
+public class Ficha implements Comparable<Ficha>, Serializable{
     private int izquierda, derecha;
     private final int valor;
 

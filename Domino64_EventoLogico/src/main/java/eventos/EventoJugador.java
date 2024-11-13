@@ -70,6 +70,7 @@ public class EventoJugador extends EventoLogico<Ficha>{
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString());
         sb.append("{contexto= ").append(context);
+        sb.append(", jugador= ").append(jugador);
         sb.append(", tipo= ").append(tipo.toString());
         sb.append('}');
         return sb.toString();

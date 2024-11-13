@@ -9,11 +9,14 @@ import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.TipoError;
 import eventBus.Subscriber;
 import eventos.EventoLogico;
+import eventos.EventoJugador;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tiposLogicos.TipoSuscripcion;
@@ -29,11 +32,13 @@ public class HiloJugador implements Runnable, Subscriber{
     private ObjectOutputStream output;
     private ObjectInputStream input;
     private List<Enum<?>> suscripciones;
+    private volatile boolean running;
+    private ExecutorService ejecutorEventos;
     
     public HiloJugador(Publicador publicador, Socket socket, int id) {
         this.publicador = publicador;
         this.id = id;
-        
+        this.ejecutorEventos = Executors.newCachedThreadPool();
         this.socket = socket;
         initStream();
     }
@@ -47,7 +52,9 @@ public class HiloJugador implements Runnable, Subscriber{
             try {
                 output = new ObjectOutputStream(socket.getOutputStream());
                 input = new ObjectInputStream(socket.getInputStream());
+                
             } catch (IOException ex) {
+                running = false;
                 Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, null, ex);
                 Servidor.desconectarJugador(id);
             }
@@ -60,14 +67,13 @@ public class HiloJugador implements Runnable, Subscriber{
      * 
      * @param evento Evento recibido y que debe enviar al jugador
      */
-    private void enviarEvento(Evento evento){
+    private synchronized void enviarEvento(Evento evento){
         try {
-            synchronized (output) {
-                output.writeObject(evento);
-                output.flush();
-            }
-            
+            output.reset();
+            output.writeObject(evento);
+            output.flush();
         } catch (IOException e) {
+            running = false;
             Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, null, e);
             Servidor.desconectarJugador(id);
         }
@@ -125,34 +131,49 @@ public class HiloJugador implements Runnable, Subscriber{
         }
     }
     
-    private void manejarEvento(EventoLogico evento){
+    private void manejarEvento(Evento evento){
         Enum<?> tipo = evento.getTipo();
-        System.out.println("tipo en hilo jugador: "+tipo);
         if(tipo.equals(TipoSuscripcion.SUSCRIBIR)){
             suscribirEvento((Enum<?>)evento.getInfo());
         }else if(tipo.equals(TipoSuscripcion.DESUSCRIBIR)){
             removerSuscripcion((Enum<?>)evento.getInfo());
         }else{
             publicador.publicarEvento(tipo, evento);
-            System.out.println("se publico desde el hilo del jugador");
         }
     }
     
     @Override
     public void run() {
         try {
+            running = true;
             //enviar el id asignado al cliente
-            output.writeInt(id);
-            output.flush();
+            synchronized (output) {
+                output.writeInt(id);
+                output.flush();
+            }
             
             recibirSuscripciones();
             
-            EventoLogico evento;
-            while((evento = (EventoLogico)input.readObject()) != null){
-                manejarEvento(evento);
+            
+            while(running){ 
+                Object obj = input.readObject();
+                Evento ev = (Evento)obj;
+                ejecutorEventos.submit(()-> manejarEvento(ev));
+                //manejarEvento(ev);
+//                obj = input.readObject();
+//                if(obj instanceof EventoJugador evJugador){
+//                    System.out.println("nombre: "+evJugador.getJugador());
+//                    evento = (EventoJugador)obj;
+//                    System.out.println("evento jugador: "+evento);
+//                }else{
+//                    evento = (EventoLogico) obj;
+//                }
+//                
+//                manejarEvento(evento);
             }
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, null, ex);
+            running = false;
             removerSuscripciones();
             Servidor.desconectarJugador(id);
         }
@@ -190,6 +211,7 @@ public class HiloJugador implements Runnable, Subscriber{
     public void recibirEvento(Evento evento) {
         enviarEvento(evento);
         if(evento.getTipo().equals(TipoError.ERROR_DE_SERVIDOR)){
+            running = false;
             removerSuscripciones();
             Servidor.desconectarJugador(id);
         }

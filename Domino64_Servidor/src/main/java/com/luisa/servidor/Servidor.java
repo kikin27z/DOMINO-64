@@ -8,7 +8,6 @@ import com.domino64.base.Publicador;
 import eventBus.BusCore;
 import eventBus.Publisher;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
@@ -56,7 +55,7 @@ public class Servidor {
         clientesJugadores = new ConcurrentHashMap<>();
         clientesComponentes = new ConcurrentHashMap<>();
         threadPoolComponentes = Executors.newFixedThreadPool(5);
-        threadPoolJugadores = Executors.newCachedThreadPool();
+        threadPoolJugadores = Executors.newFixedThreadPool(10);
     }
 
     /**
@@ -160,7 +159,7 @@ public class Servidor {
                 socket = servidor.accept();
                 jugadorId++;
                 HiloJugador jugador = new HiloJugador(publicador,socket, jugadorId);
-                clientesJugadores.put(jugadorId,jugador);
+                clientesJugadores.putIfAbsent(jugadorId,jugador);
                 threadPoolJugadores.execute(jugador);
             }
         } catch (IOException e) {

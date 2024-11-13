@@ -16,91 +16,83 @@ import tiposLogicos.TiposJugador;
  * @author luisa M
  */
 public class DirectorJugador extends DirectorEventos<BuilderEventoJugador>{
-    private Cuenta jugador;
-    private Partida partida;
-    
-    public DirectorJugador(BuilderEventoJugador builder, Cuenta jugador) {
+
+    public DirectorJugador(BuilderEventoJugador builder) {
         super(builder);
-        this.jugador = jugador;
     }
     
-    public void setPartida(Partida partida){
-        this.partida = partida;
-    }
-    
-    public EventoJugador crearEventoColocarFicha(Ficha ficha){
+    public EventoJugador crearEventoColocarFicha(Ficha ficha, Cuenta publicador){
         builder.setInfo(ficha);
-        builder.setIdPublicador(jugador.getId());
-        builder.setPartida(partida);
-        builder.setPublicador(jugador);
+        builder.setIdPublicador(publicador.getId());
+        builder.setPublicador(publicador);
         builder.setTipo(TiposJugador.COLOCAR_FICHA);
         return builder.construirEvento();
     }
     
-    public EventoJugador crearEventoUnirsePartida(Partida partida){
-        builder.setPartida(partida);
-        builder.setPublicador(jugador);
-        builder.setIdPublicador(jugador.getId());
+    public EventoJugador crearEventoUnirsePartida(Partida partidaNueva, Cuenta nuevoJugador){
+        builder.setPartida(partidaNueva);
+        builder.setPublicador(nuevoJugador);
+        builder.setIdPublicador(nuevoJugador.getId());
         builder.setTipo(TiposJugador.UNIRSE_PARTIDA);
         return builder.construirEvento();
     }
     
-    public EventoJugador crearEventoCrearPartida(Partida partida){
+    public EventoJugador crearEventoCrearPartida(Partida partida, Cuenta creador){
         builder.setPartida(partida);
-        builder.setPublicador(jugador);
-        builder.setIdPublicador(jugador.getId());
+        builder.setPublicador(creador);
+        builder.setIdPublicador(creador.getId());
         builder.setTipo(TiposJugador.CREAR_PARTIDA);
         return builder.construirEvento();
     }
     
-    public EventoJugador crearEventoJalarFicha(){
-        builder.setPublicador(jugador);
-        builder.setIdPublicador(jugador.getId());
+    public EventoJugador crearEventoJalarFicha(Cuenta publicador){
+        builder.setPublicador(publicador);
+        builder.setIdPublicador(publicador.getId());
         builder.setTipo(TiposJugador.JALAR_FICHA);
         return builder.construirEvento();
     }
     
-    public EventoJugador crearEventoAbandonarPartida(){
+    public EventoJugador crearEventoAbandonarPartida(Partida partida,Cuenta publicador){
         builder.setPartida(partida);
-        builder.setPublicador(jugador);
-        builder.setIdPublicador(jugador.getId());
+        builder.setPublicador(publicador);
+        builder.setIdPublicador(publicador.getId());
         builder.setTipo(TiposJugador.ABANDONAR_PARTIDA);
         return builder.construirEvento();
     }
     
-    public EventoJugador crearEventoCambiarAvatar(Cuenta cuentaActualizada){
+    public EventoJugador crearEventoCambiarAvatar(Partida partida, Cuenta cuentaActualizada){
         builder.setPartida(partida);
         builder.setPublicador(cuentaActualizada);
-        builder.setIdPublicador(jugador.getId());
+        builder.setIdPublicador(cuentaActualizada.getId());
         builder.setTipo(TiposJugador.CAMBIAR_AVATAR);
         return builder.construirEvento();
     }
     
-    public EventoJugador crearEventoCambiarUsername(Cuenta cuentaActualizada){
+    public EventoJugador crearEventoCambiarUsername(Partida partida, Cuenta cuentaActualizada){
         builder.setPartida(partida);
         builder.setPublicador(cuentaActualizada);
-        builder.setIdPublicador(jugador.getId());
+        builder.setIdPublicador(cuentaActualizada.getId());
         builder.setTipo(TiposJugador.CAMBIAR_USERNAME);
         return builder.construirEvento();
     }
     
-    public EventoJugador crearEventoPeticionRendirse(){
-        builder.setPublicador(jugador);
-        builder.setIdPublicador(jugador.getId());
+    public EventoJugador crearEventoPeticionRendirse(Cuenta publicador){
+        builder.setPublicador(publicador);
+        builder.setIdPublicador(publicador.getId());
         builder.setTipo(TiposJugador.PETICION_RENDIRSE);
         return builder.construirEvento();
     }
     
-    public EventoJugador crearEventoPasarTurno(){
-        builder.setPublicador(jugador);
-        builder.setIdPublicador(jugador.getId());
+    public EventoJugador crearEventoPasarTurno(Cuenta publicador){
+        builder.setPublicador(publicador);
+        builder.setIdPublicador(publicador.getId());
         builder.setTipo(TiposJugador.PASAR_TURNO);
         return builder.construirEvento();
     }
     
-    public EventoJugador crearEventoJugadorListo(){
-        builder.setPublicador(jugador);
-        builder.setIdPublicador(jugador.getId());
+    public EventoJugador crearEventoJugadorListo(Cuenta publicador){
+        builder.setPublicador(publicador);
+        builder.setIdPublicador(publicador.getId());
         builder.setTipo(TiposJugador.JUGADOR_LISTO);
         return builder.construirEvento();
     }

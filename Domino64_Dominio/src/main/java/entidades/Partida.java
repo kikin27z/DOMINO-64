@@ -4,14 +4,16 @@
  */
 package entidades;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
  *
  * @author luisa M
  */
-public class Partida {
+public class Partida implements Serializable{
     private List<Cuenta> jugadores;
     private int fichasPorJugador;
     private String codigoPartida;
@@ -26,7 +28,21 @@ public class Partida {
         this.codigoPartida = codigoPartida;
     }
 
+    public void actualizarJugador(Cuenta jugador){
+        if(buscarJugador(jugador) != null){
+            jugadores.set(jugadores.indexOf(jugador), jugador);
+            System.out.println("jugador actualiazdo: "+jugador);
+        }else
+            System.out.println("jugador no encontrado");
+    }
     
+    public Cuenta buscarJugador(Cuenta jugador){
+        for (Cuenta j : jugadores) {
+            if(j.getId() == jugador.getId())
+                return j;
+        }
+        return null;
+    }
     
     private void setCodigo(){
         Random rnd = new Random();
@@ -67,6 +83,28 @@ public class Partida {
 
     public String getCodigoPartida() {
         return codigoPartida;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 53 * hash + Objects.hashCode(this.codigoPartida);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Partida other = (Partida) obj;
+        return Objects.equals(this.codigoPartida, other.codigoPartida);
     }
     
     

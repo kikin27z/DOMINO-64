@@ -4,6 +4,7 @@
  */
 package entidades;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author luisa M
  */
-public class Jugador {
+public class Jugador implements Serializable{
     private List<Ficha> fichas;
     private Cuenta cuenta;
     private boolean enTurno;

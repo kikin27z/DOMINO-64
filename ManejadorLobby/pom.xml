@@ -17,11 +17,6 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>Arquitectura_Software</groupId>
-            <artifactId>Domino64_Dominio</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>com.client</groupId>
             <artifactId>Domino64_Cliente</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -30,6 +25,11 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>Domino64_Evento</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>Arquitectura_Software</groupId>
+            <artifactId>Domino64_Dominio</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <properties>

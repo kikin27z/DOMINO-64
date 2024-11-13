@@ -1,6 +1,7 @@
 package entidades;
 
 import excepciones.DominioException;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Stack;
 
@@ -9,7 +10,7 @@ import java.util.Stack;
  *
  * @author luisa M
  */
-public class Pozo {
+public class Pozo implements Serializable{
     private Stack<Ficha> fichas;
 
     public Pozo() {
