@@ -1,5 +1,7 @@
 package eventosPantallas;
 
+import entidadesDTO.PartidaDTO;
+
 /**
  *
  * @author karim

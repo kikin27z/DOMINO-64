@@ -1,5 +1,8 @@
 package manejadores;
 
+import abstraccion.ICliente;
+import implementacion.Client;
+import logicaLobby.ManejadorCuenta;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -21,6 +24,7 @@ public class Control {
     private static MediadorManejadores modelo;
     private static Control principal;
     private static ExecutorService hiloPrincipal;
+    private static ICliente cliente;
 
     /**
      * Constructor privado que inicializa los manejadores del juego y el hilo
@@ -37,10 +41,10 @@ public class Control {
         hiloPrincipal.execute(() -> {
             try {
                 // Inicializar los manejadores
+                cliente = Client.getClient(5000);
                 cuenta = new ManejadorCuenta();
                 modelo = new MediadorManejadores();
                 display = new ManejadorDisplay();
-                System.out.println("Manejadores iniciados en: " + Thread.currentThread().getName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -97,6 +101,10 @@ public class Control {
         return modelo;
     }
 
+    
+    public static ICliente obtenerCliente(){
+        return cliente;
+    }
     /**
      * Obtiene el servicio de ejecución que maneja el hilo principal del juego.
      * 

@@ -3,6 +3,7 @@ package lobby;
 import entidadesDTO.CuentaDTO;
 import eventosLobby.ObserverLobbyMVC;
 import java.io.IOException;
+import java.util.List;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -41,28 +42,29 @@ import javafx.stage.Stage;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class LobbyView  implements ObserverLobbyMVC{
+public class LobbyView implements ObserverLobbyMVC {
 
     private final LobbyModel modelo;
+    private Stage fondo;
     private AnchorPane panel;
     private StackPane btnAjustes;
     private TextField txtUsuario;
-    private HBox jugadoresContenedor;
-    private Stage fondo;
-    private Stage ventanaConfiguracion;
-    private Stage ventanaAvatares;
     private AnchorPane fondoConfiguracionPartida;
     private Label lblEncabezado;
     private Label lblMensaje;
     private ImageView ajustesImg;
+
+    private ImageView btnAvatar;
     private Button btnConfirmarCambios;
     private Button btnCancelarCambios;
-    private ImageView btnAvatar;
-    private AnchorPane fondoAvatares;
-
     private Button btnAbandonar;
     private Button btnIniciar;
+    private Button btnCerrarAvatares;
     private HBox jugadoresContainer;
+    private Stage ventanaConfiguracion;
+    private Stage ventanaAvatares;
+    private AnchorPane fondoAvatares;
+    private EventHandler seleccionAvatar;
 
     /**
      * Constructor de la clase LobbyView. Inicializa el modelo asociado a esta
@@ -90,6 +92,7 @@ public class LobbyView  implements ObserverLobbyMVC{
         fondo.show();
         cargarConfiguracion();
         cargarAvatares();
+        crearJugadores();
     }
 
     //------------GUI------------\\
@@ -119,10 +122,7 @@ public class LobbyView  implements ObserverLobbyMVC{
         AnchorPane.setTopAnchor(jugadoresContainer, 216.0);
 
         // Agregar 4 paneles de jugadores
-        ponerJugadorActual();
-        ponerJugadorOtro();
-        ponerJugadorOtro();
-        ponerJugadorOtro();
+        
         panel.getChildren().add(jugadoresContainer);
 
         // Label de fin de juego
@@ -186,6 +186,22 @@ public class LobbyView  implements ObserverLobbyMVC{
         AnchorPane.setLeftAnchor(lblCodigo, 30.0);
         AnchorPane.setTopAnchor(lblCodigo, 46.0);
         panel.getChildren().add(lblCodigo);
+        cargarBtnModal();
+        ponerJugadorActual();
+    }
+    
+    
+    private void crearJugadores(){
+        List<CuentaDTO> cuentas = modelo.getLobbyDTO().getCuentas();
+        
+        for(var cuenta : cuentas){
+            if(cuenta.getIdCadena().equalsIgnoreCase(modelo.obtenerIdCuentaActual())){
+                ponerJugadorActual();
+            }else{
+                ponerJugadorOtro();
+            }
+            
+        }
     }
 
     private void ponerJugadorActual() {
@@ -204,10 +220,7 @@ public class LobbyView  implements ObserverLobbyMVC{
         panel.setPrefSize(222, 278);
 
         // Avatar del jugador
-        btnAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
-        btnAvatar.setFitHeight(150);
-        btnAvatar.setFitWidth(200);
-        btnAvatar.setPreserveRatio(true);
+        btnAvatar.setImage(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
         AnchorPane.setLeftAnchor(btnAvatar, 41.0);
         AnchorPane.setTopAnchor(btnAvatar, 15.0);
 
@@ -295,101 +308,117 @@ public class LobbyView  implements ObserverLobbyMVC{
 
         return stackPane;
     }
+    //--------------------------------------------------------Modal windows--------------------------------------------------------
+    private void cargarBtnModal() {
+        btnAvatar = new ImageView();
+        btnAvatar.setFitHeight(150);
+        btnAvatar.setFitWidth(200);
+        btnAvatar.setPreserveRatio(true);
+        
+        btnCancelarCambios = new Button("Cancelar");
+        btnCancelarCambios.setLayoutX(89);
+        btnCancelarCambios.setLayoutY(327);
+        btnCancelarCambios.setPrefWidth(200);
+        btnCancelarCambios.setStyle("-fx-background-color: #5C4033; -fx-background-radius: 20;");
+        btnCancelarCambios.setTextFill(javafx.scene.paint.Color.WHITE);
+        btnCancelarCambios.setFont(new Font("Russo One", 23));
+        btnCancelarCambios.setCursor(Cursor.HAND);
 
-    // Getters para los botones para poder manejar eventos
-    public Button getBtnAbandonar() {
-        return btnAbandonar;
+        btnConfirmarCambios = new Button("Confirmar");
+        btnConfirmarCambios.setLayoutX(352);
+        btnConfirmarCambios.setLayoutY(327);
+        btnConfirmarCambios.setPrefWidth(200);
+        btnConfirmarCambios.setStyle("-fx-background-color: #B2533E; -fx-background-radius: 20;");
+        btnConfirmarCambios.setTextFill(javafx.scene.paint.Color.WHITE);
+        btnConfirmarCambios.setFont(new Font("Russo One", 23));
+        btnConfirmarCambios.setCursor(Cursor.HAND);
+        
+                // Crear botón de cerrar
+        btnCerrarAvatares = new Button("X");
+        btnCerrarAvatares.setLayoutX(25);
+        btnCerrarAvatares.setLayoutY(24);
+        btnCerrarAvatares.setStyle("-fx-background-color: #2F1C1C; -fx-background-radius: 20;");
+        btnCerrarAvatares.setTextFill(Color.WHITE);
     }
 
-    public Button getBtnIniciar() {
-        return btnIniciar;
-    }
-
-    //------------GUI actualizar con modelo-------------
     /**
-     * Quita el panel del jugador enviado como parámetro.
-     *
-     * @param panelJugador Panel del jugador a quitar de la GUI.
+     * Carga la ventana modal de selección de avatares.
      */
-    private void quitarJugadorOnline(AnchorPane panelJugador) {
-        jugadoresContenedor.getChildren().remove(panelJugador);
+    public void cargarAvatares() {
+        fondoAvatares = new AnchorPane();
+        fondoAvatares.setStyle("-fx-background-color: D9D9D9;");
+
+        // Crear el GridPane
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(20);
+        gridPane.setVgap(20);
+        gridPane.setLayoutX(105);
+        gridPane.setLayoutY(54);
+
+        // Array de nombres de avatares
+        String[] avatars = {
+            "ave", "gato", "panda",
+            "jaguar", "kiwi", "mariposa",
+            "serpiente", "tortuga", "venado"
+        };
+
+        // Crear y añadir ImageViews al GridPane
+        for (int i = 0; i < avatars.length; i++) {
+            ImageView imageView = crearIconoAvatar(avatars[i]);
+
+            // Añadir evento de click
+            final String avatarName = avatars[i];
+//            imageView.setOnMouseClicked(event -> {
+//                v.close();
+//            });
+
+            gridPane.add(imageView, i % 3, i / 3);
+        }
+
+
+
+        // Añadir elementos al AnchorPane
+        fondoAvatares.getChildren().addAll(gridPane, btnCerrarAvatares);
+
+        // Crear una nueva ventana (Stage) modal
+        ventanaAvatares = new Stage();
+
+        // Establecer la modalidad para la ventana
+        ventanaAvatares.initModality(Modality.APPLICATION_MODAL);
+
+        // Definir la ventana padre para la modalidad
+        ventanaAvatares.initOwner(fondo);
+
+        // Título y contenido de la ventana modal
+        ventanaAvatares.setTitle("Selección de avatares");
+        Scene scene = new Scene(fondoAvatares, 656, 554);
+        ventanaAvatares.setScene(scene);
     }
 
-    /**
-     * Actualiza el avatar de un jugador en el panel correspondiente.
-     *
-     * @param panelJugador El panel del jugador donde se mostrará el avatar.
-     * @param url La URL de la imagen del nuevo avatar.
-     */
-    private void actualizarAvatarJugador(AnchorPane panelJugador, String url) {
-        ImageView avatar = (ImageView) panelJugador.lookup("#avatar");
-        Image nuevaImagen = new Image(getClass().getResourceAsStream(url));
-        avatar.setImage(nuevaImagen);
+    private ImageView crearIconoAvatar(String avatarName) {
+        ImageView imageView = new ImageView();
+        imageView.setFitHeight(135);
+        imageView.setFitWidth(135);
+        imageView.setPreserveRatio(true);
+        imageView.setPickOnBounds(true);
+
+        // Cargar la imagen
+        Image image = new Image(getClass().getResourceAsStream("/avatar/" + avatarName + ".png"));
+        imageView.setImage(image);
+
+        // Añadir cursor de mano
+        imageView.setCursor(Cursor.HAND);
+
+        // Si es el panda, añadir efecto de ajuste de color
+        if (avatarName.equals("panda")) {
+            imageView.setEffect(new ColorAdjust());
+        }
+
+        return imageView;
     }
 
-    /**
-     * Actualiza el nombre de un jugador en el panel correspondiente.
-     *
-     * @param panelJugador El panel del jugador donde se mostrará el nombre.
-     * @param nombre El nuevo nombre del jugador.
-     */
-    private void actualizarNombreOtroJugador(AnchorPane panelJugador, String nombre) {
-        Label lblUsuario = (Label) panelJugador.lookup("#nombre");
-        lblUsuario.setText(nombre);
-    }
-
-    /**
-     * Muestra que un jugador está listo añadiendo un icono al panel del
-     * jugador.
-     *
-     * @param panelJugador El panel del jugador que se marcará como listo.
-     */
-    private void ponerListoJugador(AnchorPane panelJugador) {
-        ImageView imgListo = new ImageView(new Image(getClass().getResourceAsStream("/images/listo.png")));
-        imgListo.setFitHeight(40);
-        imgListo.setFitWidth(40);
-        imgListo.setLayoutX(148);
-        imgListo.setLayoutY(8);
-        imgListo.setId("listo");
-        panelJugador.getChildren().add(imgListo);
-    }
-
-    /**
-     * Elimina el icono de "listo" de un jugador en el panel correspondiente.
-     *
-     * @param panelJugador El panel del jugador al que se le eliminará el icono
-     * de listo.
-     */
-    private void quitarListoJugador(AnchorPane panelJugador) {
-        Node nodoAQuitar = (ImageView) panelJugador.lookup("#listo");
-        panelJugador.getChildren().remove(nodoAQuitar);
-    }
-
-    /**
-     * Activa un avatar en la ventana de selección de avatares, haciéndolo
-     * seleccionable.
-     *
-     * @param avatar El ImageView del avatar a activar.
-     */
-    private void activarAvatar(ImageView avatar) {
-        avatar.setCursor(Cursor.HAND);
-//        avatar.setOnMouseClicked(value);
-    }
-
-    /**
-     * Inhabilita un avatar en la ventana de selección de avatares, haciéndolo
-     * no seleccionable.
-     *
-     * @param avatar El ImageView del avatar a inhabilitar.
-     */
-    private void inhabilitarAvatar(ImageView avatar) {
-        ColorAdjust colorAdjust = new ColorAdjust();
-        colorAdjust.setSaturation(-0.76);
-        avatar.setEffect(colorAdjust);
-    }
-
-    //----------Modal windows----------
-    /**
+    
+        /**
      * Carga la ventana modal de configuración de la partida.
      */
     private void cargarConfiguracion() {
@@ -416,25 +445,6 @@ public class LobbyView  implements ObserverLobbyMVC{
         titleLabel.setFont(new Font("Verdana Bold", 48));
 
         topBanner.getChildren().add(titleLabel);
-
-        // Buttons
-        btnCancelarCambios = new Button("Cancelar");
-        btnCancelarCambios.setLayoutX(89);
-        btnCancelarCambios.setLayoutY(327);
-        btnCancelarCambios.setPrefWidth(200);
-        btnCancelarCambios.setStyle("-fx-background-color: #5C4033; -fx-background-radius: 20;");
-        btnCancelarCambios.setTextFill(javafx.scene.paint.Color.WHITE);
-        btnCancelarCambios.setFont(new Font("Russo One", 23));
-        btnCancelarCambios.setCursor(Cursor.HAND);
-
-        btnConfirmarCambios = new Button("Confirmar");
-        btnConfirmarCambios.setLayoutX(352);
-        btnConfirmarCambios.setLayoutY(327);
-        btnConfirmarCambios.setPrefWidth(200);
-        btnConfirmarCambios.setStyle("-fx-background-color: #B2533E; -fx-background-radius: 20;");
-        btnConfirmarCambios.setTextFill(javafx.scene.paint.Color.WHITE);
-        btnConfirmarCambios.setFont(new Font("Russo One", 23));
-        btnConfirmarCambios.setCursor(Cursor.HAND);
 
         // Labels
         Label playersLabel = new Label("Cantidad de jugadores");
@@ -513,14 +523,13 @@ public class LobbyView  implements ObserverLobbyMVC{
         Scene scene = new Scene(fondoConfiguracionPartida, 640, 400);
         ventanaConfiguracion.setScene(scene);
     }
-
     /**
      * Muestra la ventana de configuración de la partida. La ventana es modal,
      * lo que significa que bloquea la interacción con otras ventanas hasta que
      * se cierre.
      */
     public void mostrarVentanaConfiguracion() {
-
+        cargarConfiguracion();
         ventanaConfiguracion.setResizable(false);
         ventanaConfiguracion.showAndWait();  // showAndWait hace que sea modal
     }
@@ -531,92 +540,11 @@ public class LobbyView  implements ObserverLobbyMVC{
     public void cerrarVentanaConfiguracion() {
         ventanaConfiguracion.close();
     }
-
     /**
-     * Carga la ventana modal de selección de avatares.
+     * Cierra la ventana de configuración de la partida.
      */
-    public void cargarAvatares() {
-        ventanaAvatares = new Stage();
-
-        // Crear el AnchorPane principal
-        fondoAvatares = new AnchorPane();
-        fondoAvatares.setStyle("-fx-background-color: D9D9D9;");
-//        fondoAvatares.setPrefSize(656, 554);
-
-        // Crear el GridPane
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(20);
-        gridPane.setVgap(20);
-        gridPane.setLayoutX(105);
-        gridPane.setLayoutY(54);
-
-        // Array de nombres de avatares
-        String[] avatars = {
-            "ave", "gato", "panda",
-            "jaguar", "kiwi", "mariposa",
-            "serpiente", "tortuga", "venado"
-        };
-
-        // Crear y añadir ImageViews al GridPane
-        for (int i = 0; i < avatars.length; i++) {
-            ImageView imageView = createImageView(avatars[i]);
-
-            // Añadir evento de click
-            final String avatarName = avatars[i];
-//            imageView.setOnMouseClicked(event -> {
-//                v.close();
-//            });
-
-            gridPane.add(imageView, i % 3, i / 3);
-        }
-
-        // Crear botón de cerrar
-        Button closeButton = new Button("X");
-        closeButton.setLayoutX(25);
-        closeButton.setLayoutY(24);
-        closeButton.setStyle("-fx-background-color: #2F1C1C; -fx-background-radius: 20;");
-        closeButton.setTextFill(Color.WHITE);
-        closeButton.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/RussoOne-Regular.ttf"), 30));
-        closeButton.setOnAction(e -> ventanaAvatares.close());
-
-        // Añadir elementos al AnchorPane
-        fondoAvatares.getChildren().addAll(gridPane, closeButton);
-        
-        // Crear una nueva ventana (Stage) modal
-        ventanaAvatares = new Stage();
-
-        // Establecer la modalidad para la ventana
-        ventanaAvatares.initModality(Modality.APPLICATION_MODAL);
-
-        // Definir la ventana padre para la modalidad
-        ventanaAvatares.initOwner(fondo);
-
-        // Título y contenido de la ventana modal
-        ventanaAvatares.setTitle("Selección de avatares");
-        Scene scene = new Scene(fondoAvatares, 656, 554);
-        ventanaAvatares.setScene(scene);
-    }
-
-    private ImageView createImageView(String avatarName) {
-        ImageView imageView = new ImageView();
-        imageView.setFitHeight(135);
-        imageView.setFitWidth(135);
-        imageView.setPreserveRatio(true);
-        imageView.setPickOnBounds(true);
-
-        // Cargar la imagen
-        Image image = new Image(getClass().getResourceAsStream("/avatar/" + avatarName + ".png"));
-        imageView.setImage(image);
-
-        // Añadir cursor de mano
-        imageView.setCursor(Cursor.HAND);
-
-        // Si es el panda, añadir efecto de ajuste de color
-        if (avatarName.equals("panda")) {
-            imageView.setEffect(new ColorAdjust());
-        }
-
-        return imageView;
+    public void cerrarVentanaAvatares() {
+        ventanaAvatares.close();
     }
 
     /**
@@ -625,91 +553,142 @@ public class LobbyView  implements ObserverLobbyMVC{
      * cierre.
      */
     public void mostrarVentanaAvatares() {
+        cargarAvatares();
         ventanaAvatares.setResizable(false);
         ventanaAvatares.showAndWait();  // showAndWait hace que sea modal
     }
 
-    //------------EVENTOS------------
-    /**
-     * Asigna el evento de clic para el botón de modo Offline.
-     *
-     * @param e el manejador de eventos que se ejecutará al hacer clic en el
-     * botón.
-     */
-    public void mostrarConfiguracion(EventHandler<MouseEvent> e) {
-        btnAjustes.setOnMouseClicked(e);
-    }
-
-    /**
-     * Asigna un evento de clic para mostrar la ventana de selección de
-     * avatares.
-     *
-     * @param e El manejador de eventos que se ejecutará al hacer clic en el
-     * avatar.
-     */
-    public void mostrarAvatares(EventHandler<MouseEvent> e) {
-        btnAvatar.setOnMouseClicked(e);//---------------------------Falta terminar----------
-    }
-
-    /**
-     * Asigna un evento de clic y de salida del texto al campo de nombre de
-     * usuario.
-     *
-     * @param e El manejador de eventos que se ejecutará al interactuar con el
-     * campo de texto.
-     */
-    public void confirmarTexto(EventHandler<MouseEvent> e) {
-        txtUsuario.setOnMouseExited(e);
-        txtUsuario.setOnMouseClicked(e);
-    }
-
-    /**
-     * Asigna un evento de clic para abandonar la partida.
-     *
-     * @param e El manejador de eventos que se ejecutará al hacer clic en el
-     * botón de abandonar.
-     */
+    //-------------------------------------EVENTOS Control-------------------------------------------------
     public void abandonarPartida(EventHandler<MouseEvent> e) {
         btnAbandonar.setOnMouseClicked(e);//---------------------------Falta terminar----------
         //Que se actualice en los demas jugadores
         //Si es el admin que se acabe la partida y saque a todos
     }
 
-    /**
-     * Asigna un evento de clic para iniciar la partida.
-     *
-     * @param e El manejador de eventos que se ejecutará al hacer clic en el
-     * botón de iniciar.
-     */
+
     public void iniciarPartida(EventHandler<MouseEvent> e) {
         btnIniciar.setOnMouseClicked(e);//---------------------------Falta terminar----------
-        //Indicar cuantos llistos hay
-        //Si ya acompletaron la sala y todos tienen nombre deberian estar listos todos
+    }
+    
+    public void mostrarAvatares(EventHandler<MouseEvent> e) {
+        btnAvatar.setOnMouseClicked(e);
     }
 
-    /**
-     * Asigna un evento de clic para confirmar los cambios en la configuración
-     * de la partida.
-     *
-     * @param e El manejador de eventos que se ejecutará al hacer clic en el
-     * botón de confirmar cambios.
-     */
+    public void cerrarAvatares(EventHandler<MouseEvent> e){
+        btnCerrarAvatares.setOnMouseClicked(e);
+    }
+    
+    public void mostrarConfiguracion(EventHandler<MouseEvent> e) {
+        btnAjustes.setOnMouseClicked(e);
+    }
+    
     public void confirmarCambiosPartida(EventHandler<MouseEvent> e) {
         btnConfirmarCambios.setOnMouseClicked(e);
     }
 
-    /**
-     * Asigna un evento de clic para cancelar los cambios en la configuración de
-     * la partida.
-     *
-     * @param e El manejador de eventos que se ejecutará al hacer clic en el
-     * botón de cancelar cambios.
-     */
     public void cancelarCambiosPartida(EventHandler<MouseEvent> e) {
         btnCancelarCambios.setOnMouseClicked(e);
     }
 
-    //--------------Metodos Observer-----------------------
+    //----------------------Eventos de Modelo------------------------------------
+    @Override
+    public void actualizarAvatarJugador(CuentaDTO cuenta) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarNuevoJugador(CuentaDTO cuenta) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarQuitarJugador(CuentaDTO cuenta) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarJugadorListo(CuentaDTO cuenta) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarJugadorNoListo(CuentaDTO cuenta) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    //--------------------Getters-------------------------
+    public Button getBtnAbandonar() {
+        return btnAbandonar;
+    }
+
+    public Button getBtnIniciar() {
+        return btnIniciar;
+    }
+
+    /**
+     * Actualiza el avatar de un jugador en el panel correspondiente.
+     *
+     * @param panelJugador El panel del jugador donde se mostrará el avatar.
+     * @param url La URL de la imagen del nuevo avatar.
+     */
+    private void actualizarAvatarJugador(AnchorPane panelJugador, String url) {
+        ImageView avatar = (ImageView) panelJugador.lookup("#avatar");
+        Image nuevaImagen = new Image(getClass().getResourceAsStream(url));
+        avatar.setImage(nuevaImagen);
+    }
+
+    /**
+     * Actualiza el nombre de un jugador en el panel correspondiente.
+     *
+     * @param panelJugador El panel del jugador donde se mostrará el nombre.
+     * @param nombre El nuevo nombre del jugador.
+     */
+    private void actualizarNombreOtroJugador(AnchorPane panelJugador, String nombre) {
+        Label lblUsuario = (Label) panelJugador.lookup("#nombre");
+        lblUsuario.setText(nombre);
+    }
+
+    /**
+     * Muestra que un jugador está listo añadiendo un icono al panel del
+     * jugador.
+     *
+     * @param panelJugador El panel del jugador que se marcará como listo.
+     */
+    private void ponerListoJugador(AnchorPane panelJugador) {
+        ImageView imgListo = new ImageView(new Image(getClass().getResourceAsStream("/images/listo.png")));
+        imgListo.setFitHeight(40);
+        imgListo.setFitWidth(40);
+        imgListo.setLayoutX(148);
+        imgListo.setLayoutY(8);
+        imgListo.setId("listo");
+        panelJugador.getChildren().add(imgListo);
+    }
+
+    /**
+     * Elimina el icono de "listo" de un jugador en el panel correspondiente.
+     *
+     * @param panelJugador El panel del jugador al que se le eliminará el icono
+     * de listo.
+     */
+    private void quitarListoJugador(AnchorPane panelJugador) {
+        Node nodoAQuitar = (ImageView) panelJugador.lookup("#listo");
+        panelJugador.getChildren().remove(nodoAQuitar);
+    }
+
+    /**
+     * Inhabilita un avatar en la ventana de selección de avatares, haciéndolo
+     * no seleccionable.
+     *
+     * @param avatar El ImageView del avatar a inhabilitar.
+     */
+    private void inhabilitarAvatar(ImageView avatar) {
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setSaturation(-0.76);
+        avatar.setEffect(colorAdjust);
+    }
+
+
+
     /**
      * Actualiza el mensaje de aviso en la interfaz de usuario.
      */
@@ -730,27 +709,6 @@ public class LobbyView  implements ObserverLobbyMVC{
     public void actualizarEncabezado() {
         lblEncabezado.setText(modelo.getEncabezadoLobby());//---------------------------Falta terminar----------
         //Aparezca cuantos esten listos
-    }
-
-    /**
-     * Agrega un nuevo jugador al lobby.
-     *
-     * @param cuenta La cuenta del jugador a agregar.
-     */
-//    @Override
-    public void agregarOtroJugador(CuentaDTO cuenta) {
-//        colocarJugadorOnline(cuenta);
-    }
-
-    /**
-     * Quita un jugador del lobby.
-     *
-     * @param cuenta La cuenta del jugador a quitar.
-     */
-//    @Override
-    public void quitarOtroJugador(CuentaDTO cuenta) {
-        AnchorPane panelJugador = modelo.obtenerPanelJugador(cuenta.getId());
-        quitarJugadorOnline(panelJugador);
     }
 
     /**
@@ -775,45 +733,4 @@ public class LobbyView  implements ObserverLobbyMVC{
         quitarListoJugador(panelJugador);
     }
 
-    /**
-     * Actualiza el avatar de un jugador en el lobby.
-     *
-     * @param cuenta La cuenta del jugador cuyo avatar será actualizado.
-     */
-//    @Override
-    public void actualizarAvatarJugador(CuentaDTO cuenta) {
-        AnchorPane panelJugador = modelo.obtenerPanelJugador(cuenta.getId());
-//        actualizarAvatarJugador(panelJugador, cuenta.getAvatar());
-    }
-
-    /**
-     * Actualiza el nombre de un jugador en el lobby.
-     *
-     * @param cuenta La cuenta del jugador cuyo nombre será actualizado.
-     */
-//    @Override
-    public void actualizarNombreOtroJugador(CuentaDTO cuenta) {
-        AnchorPane panelJugador = modelo.obtenerPanelJugador(cuenta.getId());
-//        actualizarNombreOtroJugador(panelJugador, cuenta.getNombre());
-    }
-
-    @Override
-    public void actualizarNuevoJugador(CuentaDTO cuenta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void actualizarQuitarJugador(CuentaDTO cuenta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void actualizarJugadorListo(CuentaDTO cuenta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void actualizarJugadorNoListo(CuentaDTO cuenta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

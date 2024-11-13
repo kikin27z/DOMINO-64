@@ -13,8 +13,8 @@ import javafx.scene.input.MouseEvent;
  * @author José Karim Franco Valencia - 00000245138
  */
 public class LobbyControl {
-    private LobbyView view;  // Referencia a la vista (LobbyView)
-    private LobbyModel modelo;  // Referencia al modelo (LobbyModel)
+    private final LobbyView view;  // Referencia a la vista (LobbyView)
+    private final LobbyModel modelo;  // Referencia al modelo (LobbyModel)
 
     /**
      * Constructor del controlador del lobby.
@@ -38,8 +38,9 @@ public class LobbyControl {
         view.mostrarAvatares(this::abrirAvatares);  // Evento para abrir la selección de avatares
         view.abandonarPartida(this::abandonarPartida);  // Evento para abandonar la partida
         view.iniciarPartida(this::iniciarPartida);  // Evento para iniciar la partida
-//        view.confirmarCambiosPartida(this::guardarConfiguracionPartida);  // Evento para guardar cambios en la configuración
-//        view.cancelarCambiosPartida(this::cancelarConfiguracionPartida);  // Evento para cancelar cambios en la configuración
+        view.confirmarCambiosPartida(this::guardarConfiguracionPartida);  // Evento para guardar cambios en la configuración
+        view.cancelarCambiosPartida(this::cancelarConfiguracionPartida);  // Evento para cancelar cambios en la configuración
+        view.cerrarAvatares(this::cerrarAvatares);  // Evento para cancelar cambios en la configuración
     }
     
     //-------------------Eventos-------------------
@@ -50,7 +51,6 @@ public class LobbyControl {
      * @param e el evento de ratón que activa esta acción.
      */
     private void guardarConfiguracionPartida(MouseEvent e) {
-        System.out.println("GuardarCambios");   //-------------------------------------------------Le falta aun
     }
     
     /**
@@ -101,37 +101,10 @@ public class LobbyControl {
      */
     private void abrirAvatares(MouseEvent e) {
         view.mostrarVentanaAvatares();
-        System.out.println("Avatares"); //-------------------------------------------------Le falta aun
+    }
+    private void cerrarAvatares(MouseEvent e) {
+        view.cerrarVentanaAvatares();
     }
     
-    /**
-     * Evento que se ejecuta al seleccionar el nombre de usuario.
-     * Registra un evento adicional para confirmar el cambio del nombre cuando el usuario hace clic fuera del campo de texto.
-     *
-     * @param e el evento de ratón que activa esta acción.
-     */
-    private void seleccionNombreUsuario(MouseEvent e) {
-        if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-            TextField txtUsuario = (TextField) e.getSource();
-            txtUsuario.setOnMouseExited(this::cambioNombreUsuario);
-        }
-    }
-    
-    /**
-     * Evento que se ejecuta cuando el usuario sale del campo de texto del nombre de usuario.
-     * Valida y actualiza el nombre de usuario en el modelo.
-     *
-     * @param e el evento de ratón que activa esta acción.
-     */
-    private void cambioNombreUsuario(MouseEvent e) {
-        if (e.getEventType() == MouseEvent.MOUSE_EXITED) {
-            TextField txtUsuario = (TextField) e.getSource();  // Obtiene el campo de texto
-            txtUsuario.getParent().requestFocus();  // Quita el foco del campo de texto
-            txtUsuario.setOnMouseExited(null);  // Desactiva el evento de salida del ratón
-//            logicaNombreUsuario(txtUsuario.getText());  // Llama a la lógica de validación del nombre
-        }
-    }
-
-    //-------------------Lógica de control-------------------
 
 }

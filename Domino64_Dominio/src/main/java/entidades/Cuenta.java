@@ -1,6 +1,7 @@
 package entidades;
 
 import java.util.Objects;
+import java.util.Random;
 
 /**
  *
@@ -9,12 +10,19 @@ import java.util.Objects;
 public class Cuenta {
     private String username;
     private String avatarUrl;
-    private final int id;
+    private int id;
+    private String idCadena;
     private Jugador jugador;
 
     public Cuenta(int id) {
         this.id = id;
     }
+
+    public Cuenta() {
+        idCadena = generateLetterString();
+    }
+    
+    
 
     public int getId(){
         return id;
@@ -67,5 +75,27 @@ public class Cuenta {
         final Cuenta other = (Cuenta) obj;
         return Objects.equals(this.username, other.username);
     }
+    
+    public  String generateLetterString() {
+        String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        Random random = new Random();
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < 5; i++) {
+            int index = random.nextInt(letters.length());
+            result.append(letters.charAt(index));
+        }
+
+        return result.toString();
+    }
+
+    public String getIdCadena() {
+        return idCadena;
+    }
+
+    public void setIdCadena(String idCadena) {
+        this.idCadena = idCadena;
+    }
+    
     
 }

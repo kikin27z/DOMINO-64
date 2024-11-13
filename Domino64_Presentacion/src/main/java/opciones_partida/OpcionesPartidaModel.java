@@ -1,5 +1,8 @@
 package opciones_partida;
 
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.PartidaDTO;
+import entidadesDTO.UnirseDTO;
 import eventosOpcionesPartida.ObserverOpcionesPartida;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +120,7 @@ public class OpcionesPartidaModel implements ObservableOpcionesPartida, Observab
             observer.actualizarMensajeAviso(mensaje);
         }
     }
+    
 
     //---------------------Eventos Modelo a lógica--------------------------------
     /**
@@ -161,8 +165,9 @@ public class OpcionesPartidaModel implements ObservableOpcionesPartida, Observab
             actualizarMensajeAviso(aviso);
             return;
         }
+        UnirseDTO unirse = new UnirseDTO(codigoPartida);
         for (var observer : observersLogica) {
-            observer.buscarPartida(codigoPartida);
+            observer.buscarPartida(unirse);
         }
     }
 }

@@ -42,7 +42,7 @@ public class FachadaNavegador {
             case ESCOGER_MODO -> {
             }
             case LOBBY -> {
-                navegador.cambiarLobby();
+                navegador.cambiarLobby(null);
             }
             case PARTIDA -> {
                 navegador.cambiarPartida();

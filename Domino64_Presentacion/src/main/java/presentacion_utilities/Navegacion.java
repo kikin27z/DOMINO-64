@@ -1,5 +1,7 @@
 package presentacion_utilities;
 
+import entidadesDTO.LobbyDTO;
+import entidadesDTO.PartidaDTO;
 import inicio.InicioControl;
 import inicio.InicioModel;
 import inicio.InicioView;
@@ -71,9 +73,12 @@ public class Navegacion implements INavegacion {
     }
 
     @Override
-    public void cambiarLobby() {
+    public void cambiarLobby(LobbyDTO lobby) {
         LobbyModel modeloLobby = new LobbyModel();
+        modeloLobby.setLobbyDTO(lobby);
         try {
+            notificador.asignarObservableLobby(modeloLobby);
+            mediador.setModeloLobby(modeloLobby);
             LobbyView view = new LobbyView(modeloLobby); // Instancia la vista de la partida
             view.iniciarEscena(fondo); // Inicia la escena de la partida
             LobbyControl control = new LobbyControl(view, modeloLobby);
@@ -90,6 +95,7 @@ public class Navegacion implements INavegacion {
     public void cambiarPartida() {
         PartidaModel modeloPartida = new PartidaModel();
         notificador.asignarObservablePartida(modeloPartida);
+        mediador.setModeloPartida(modeloPartida);
         try {
             PartidaView partida = new PartidaView(modeloPartida); // Instancia la vista de la partida
             partida.iniciarEscena(fondo); // Inicia la escena de la partida

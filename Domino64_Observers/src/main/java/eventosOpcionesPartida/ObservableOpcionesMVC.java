@@ -1,5 +1,7 @@
 package eventosOpcionesPartida;
 
+import entidadesDTO.PartidaDTO;
+
 /**
  * Interfaz que define los métodos que deben implementar los objetos observables relacionados con las opciones del MVC (Modelo-Vista-Controlador).
  * Esta interfaz permite gestionar a los observadores que reaccionan a los cambios relacionados con las opciones de la partida.
@@ -34,4 +36,5 @@ public interface ObservableOpcionesMVC {
      * @param mensaje el mensaje de aviso que debe ser enviado a los observadores.
      */
     void actualizarMensajeAviso(String mensaje);
+    
 }

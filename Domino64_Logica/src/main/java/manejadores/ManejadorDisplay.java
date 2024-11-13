@@ -1,5 +1,7 @@
 package manejadores;
 
+import entidadesDTO.LobbyDTO;
+import entidadesDTO.PartidaDTO;
 import eventosPantallas.ObserverPantalla;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,7 +41,6 @@ public final class ManejadorDisplay implements ObserverPantalla{
     //------------------------Eventos de cambiar pantallas--------------------
     @Override
     public void avisarMostrarInicio() {
-        
         navegacion.cambiarInicio();
     }
 
@@ -63,8 +64,8 @@ public final class ManejadorDisplay implements ObserverPantalla{
     }
 
     @Override
-    public void avisarMostrarLobby() {
-        navegacion.cambiarLobby();
+    public void avisarMostrarLobby(LobbyDTO lobby) {
+        navegacion.cambiarLobby(lobby);
     }
     
 }
