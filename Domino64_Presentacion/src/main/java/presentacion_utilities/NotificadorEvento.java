@@ -1,5 +1,6 @@
 package presentacion_utilities;
 
+import entidadesDTO.PartidaDTO;
 import eventosLobby.ObservableLobby;
 import eventosLobby.ObserverLobby;
 import eventosOpcionesPartida.ObserverOpcionesPartida;
@@ -86,7 +87,7 @@ public class NotificadorEvento implements INotificadorEvento, ObservablePantalla
 
     @Override
     public void avisarMostrarLobby() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    
     }
     //-------------------Metodos de INotificarEventos---------------------
     @Override

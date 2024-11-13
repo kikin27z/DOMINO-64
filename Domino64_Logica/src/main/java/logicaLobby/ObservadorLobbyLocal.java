@@ -9,6 +9,7 @@ import domino64.eventos.base.error.TipoError;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import observer.Observer;
 import tiposLogicos.TipoLogicaLobby;
@@ -23,7 +24,8 @@ import tiposLogicos.TipoLogicaLobby;
  * que se va a ejecutar al recibir el evento especifico.
  * Este observador solo recibe eventos que genera el jugador.
  * 
- * @author luisa M
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public abstract class ObservadorLobbyLocal implements Observer<Evento>{
     protected Map<Enum<?>, Consumer<Evento>> consumers;
@@ -37,6 +39,11 @@ public abstract class ObservadorLobbyLocal implements Observer<Evento>{
                     TipoLogicaLobby.ACTUALIZAR_AVATARES,
                     TipoLogicaLobby.ACTUALIZAR_USERNAME
             ));
+
+    public ObservadorLobbyLocal() {
+        this.consumers = new ConcurrentHashMap<>();
+    }
+    
     
     
     @Override

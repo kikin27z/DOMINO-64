@@ -28,9 +28,7 @@ import java.util.function.Consumer;
 import logicaNotificacionEventos.PublicadorEventos;
 import tiposEventos.TipoJugadorMVC;
 import tiposEventos.TipoLobbyMVC;
-import tiposLogicos.TiposJugador;
 import tiposLogicos.TipoLogicaLobby;
-import tiposLogicos.TipoSuscripcion;
 import utilities.BuilderEventoSuscripcion;
 import utilities.DirectorSuscripcion;
 
@@ -42,12 +40,14 @@ public class ManejadorCuenta extends ObservadorLobbyLocal implements Suscriptor<
     private Cuenta jugador;
     private ICliente cliente;
     private Partida partida;
+    private List<Cuenta> jugadores;
     private PublicadorEventos publicador;
     private DirectorJugador directorEventos;
     private DirectorSuscripcion directorSuscripciones;
     private Map<Enum<?>, Consumer<EventoMVC>> consumersMVC;
     private final List<Enum<?>> eventosMVC = new ArrayList<>(
             List.of(
+                    TipoError.ERROR_LOGICO,
                     TipoJugadorMVC.ABANDONAR_PARTIDA,
                     TipoJugadorMVC.CAMBIAR_AVATAR,
                     TipoJugadorMVC.CAMBIAR_USERNAME,
@@ -59,6 +59,7 @@ public class ManejadorCuenta extends ObservadorLobbyLocal implements Suscriptor<
     public ManejadorCuenta(){
         consumers = new ConcurrentHashMap<>();
         consumersMVC = new HashMap<>();
+        jugadores = new ArrayList<>();
     }
     
     public List<Enum<?>> getEventosMVC(){
@@ -71,9 +72,9 @@ public class ManejadorCuenta extends ObservadorLobbyLocal implements Suscriptor<
     
     private void setConsumersMVC(){
         consumersMVC.putIfAbsent(TipoError.ERROR_LOGICO, this::manejarError);
-        consumersMVC.putIfAbsent(TipoJugadorMVC.ABANDONAR_PARTIDA, this::actualizarJugadores);
+        consumersMVC.putIfAbsent(TipoJugadorMVC.ABANDONAR_PARTIDA, this::abandonarPartida);
         consumersMVC.putIfAbsent(TipoJugadorMVC.CAMBIAR_AVATAR, this::actualizarJugadores);
-        consumersMVC.putIfAbsent(TipoJugadorMVC.CAMBIAR_USERNAME, this::actualizarJugadores);
+        consumersMVC.putIfAbsent(TipoJugadorMVC.CAMBIAR_USERNAME, this::cambiarUsername);
         consumersMVC.putIfAbsent(TipoJugadorMVC.CREAR_PARTIDA, this::crearPartida);
         consumersMVC.putIfAbsent(TipoJugadorMVC.JUGADOR_LISTO, this::actualizarJugadores);
         consumersMVC.putIfAbsent(TipoJugadorMVC.UNIRSE_PARTIDA, this::unirsePartida);
@@ -82,6 +83,7 @@ public class ManejadorCuenta extends ObservadorLobbyLocal implements Suscriptor<
     public void init(ICliente cliente, PublicadorEventos publicador){
         this.cliente = cliente;
         this.publicador = publicador;
+        directorEventos = new DirectorJugador(new BuilderEventoJugador());
         cliente.establecerSuscripciones(eventos);
         setConsumers();
         setConsumersMVC();
@@ -89,40 +91,53 @@ public class ManejadorCuenta extends ObservadorLobbyLocal implements Suscriptor<
 
     public void setClientId(int id){
         this.jugador = new Cuenta(id);
-        directorEventos = new DirectorJugador(new BuilderEventoJugador(), jugador);
         directorSuscripciones = new DirectorSuscripcion(new BuilderEventoSuscripcion(), id);
     }
     
     private boolean validarCambioUsername(CuentaDTO cuentaDTO){
-        for (Cuenta j : partida.getJugadores()) {
-            if(j.getUsername().equals(cuentaDTO.getUsername())){
+        for (Cuenta j : jugadores) {
+            if(j.getUsername().equalsIgnoreCase(cuentaDTO.getUsername())){
                 return false;
             }
         }
         return true;
     }
     
-    public void unirsePartida(EventoMVC eventoMVC){
+    private void abandonarPartida(EventoMVC eventoMVC){        
+         EventoJugador evento = directorEventos.crearEventoAbandonarPartida(partida, jugador);
+         cliente.enviarEvento(evento);
+         partida = null;
+    }
+    
+    private void unirsePartida(EventoMVC eventoMVC){
         EventoMVCJugador eventoMVCJ = (EventoMVCJugador)eventoMVC;
         PartidaDTO partidaDTO = eventoMVCJ.getPartida();
         CuentaDTO publicadorDTO = eventoMVCJ.getPublicador();
-        
+
         jugador.setUsername(publicadorDTO.getUsername());
-        
-        EventoJugador evento = directorEventos.crearEventoUnirsePartida(new Partida(partidaDTO.getCodigoPartida()));
+
+        EventoJugador evento = directorEventos.crearEventoUnirsePartida(new Partida(partidaDTO.getCodigoPartida()),jugador);
         cliente.enviarEvento(evento);
 
         suscribirEvento();
     }
 
-    public void cambiarUsername(EventoMVC eventoMVC){
+    private void cambiarUsername(EventoMVC eventoMVC){
         EventoMVCJugador eventoJMVC = (EventoMVCJugador)eventoMVC;
         CuentaDTO jugadorActualizado = eventoJMVC.getPublicador();
         
         if(validarCambioUsername(jugadorActualizado)){
-            jugador.setUsername(jugadorActualizado.getUsername());
+            this.jugador.setUsername(jugadorActualizado.getUsername());
+            System.out.println("jugador act = "+jugador.getUsername());
             
-            EventoJugador evento = directorEventos.crearEventoCambiarUsername(jugador);
+            jugadores.set(jugadores.indexOf(jugador), jugador);
+            Cuenta jugadorAct = new Cuenta(jugador.getId());
+            jugadorAct.setUsername(jugador.getUsername());
+            
+            EventoJugador evento = directorEventos.crearEventoCambiarUsername(partida, jugadorAct);
+            
+            System.out.println("evento jug: "+evento.toString());
+            
             cliente.enviarEvento(evento);
             
             EventoMVCLobby eventoMVCL = new EventoMVCLobby(TipoLobbyMVC.ACTUALIZAR_USERNAME);
@@ -147,16 +162,17 @@ public class ManejadorCuenta extends ObservadorLobbyLocal implements Suscriptor<
         removerEvento(evento.getInfo());
     }
 
-    public void crearPartida(EventoMVC evento){
+    private void crearPartida(EventoMVC evento){
         EventoMVCJugador eventoMVC = (EventoMVCJugador)evento;
         
         PartidaDTO partidaDTO = eventoMVC.getPartida();
         CuentaDTO cuentaDTO = eventoMVC.getPublicador();
         
         jugador.setUsername(cuentaDTO.getUsername());
-        partida = new Partida(new ArrayList<>(List.of(jugador)), partidaDTO.getFichasPorJugador());
+        jugadores.add(jugador);
+        partida = new Partida(jugadores, partidaDTO.getFichasPorJugador());
         
-        EventoJugador eventoJ = directorEventos.crearEventoCrearPartida(partida);
+        EventoJugador eventoJ = directorEventos.crearEventoCrearPartida(partida, jugador);
         
         cliente.enviarEvento(eventoJ);
     }
@@ -166,6 +182,7 @@ public class ManejadorCuenta extends ObservadorLobbyLocal implements Suscriptor<
         EventoLobby ev = (EventoLobby)evento;
         partida = ev.obtenerPartida();
         removerSuscripcion();
+        jugadores = partida.getJugadores();
         
         EventoMVCLobby eventoMVC = new EventoMVCLobby(TipoLobbyMVC.PARTIDA_OBTENIDA);
         PartidaDTO partidaOb = new PartidaDTO();
@@ -176,9 +193,10 @@ public class ManejadorCuenta extends ObservadorLobbyLocal implements Suscriptor<
         CuentaDTO cuentaDTO;
         JugadorDTO jugadorDTO;
         
-        for (Cuenta jugadorP : partida.getJugadores()) {
+        for (Cuenta jugadorP :jugadores) {
             cuentaDTO = new CuentaDTO();
             cuentaDTO.setUsername(jugadorP.getUsername());
+            cuentaDTO.setId(jugadorP.getId());
             jugadorDTO = new JugadorDTO(cuentaDTO);
             jugadoresDTO.add(jugadorDTO);
         }
@@ -192,15 +210,33 @@ public class ManejadorCuenta extends ObservadorLobbyLocal implements Suscriptor<
     
     @Override
     public void actualizarJugadoresListos(Evento evento){
+        EventoLobby ev = (EventoLobby)evento;
+        Cuenta jugadorListo = ev.getInfo();
         
+        EventoMVCLobby eventoMVC = new EventoMVCLobby(TipoLobbyMVC.ACTUALIZAR_JUGADORES_LISTOS);
+        
+        CuentaDTO jugadorDTO = new CuentaDTO();
+        jugadorDTO.setUsername(jugadorListo.getUsername());
+        
+        eventoMVC.setPublicador(jugadorDTO);
+        publicador.publicarEvento(eventoMVC.getTipo(), eventoMVC);
     }
     
     @Override
     public void actualizarJugadores(Evento evento){
         EventoLobby ev = (EventoLobby)evento;
-        Cuenta jugadorNuevo = ev.getInfo();
+        Cuenta jugadorEvento = ev.getInfo();
+        
+        if(ev.getTipo().equals(TipoLogicaLobby.JUGADOR_SALIO))
+            removerJugador(jugadorEvento);
+        else
+            agregarJugador(jugadorEvento);
+    }
+    
+    private void agregarJugador(Cuenta jugadorNuevo){
+        jugadores.add(jugadorNuevo);
         partida.agregarJugador(jugadorNuevo);
-        System.out.println("un jugador nuevo: "+jugadorNuevo.getId());
+        System.out.println("un jugador nuevo: "+jugadorNuevo.getUsername());
         
         CuentaDTO jugadorNuevoDTO = new CuentaDTO();
         jugadorNuevoDTO.setUsername(jugadorNuevo.getUsername());
@@ -210,20 +246,48 @@ public class ManejadorCuenta extends ObservadorLobbyLocal implements Suscriptor<
         publicador.publicarEvento(eventoMVC.getTipo(), eventoMVC);
     }
     
-
+    private void removerJugador(Cuenta exjugador){
+        jugadores.remove(exjugador);
+        partida.removerJugador(exjugador);
+        System.out.println("salio un jugador: "+exjugador.getUsername());
+        CuentaDTO exjugadorDTO = new CuentaDTO();
+        exjugadorDTO.setUsername(exjugador.getUsername());
+        exjugadorDTO.setId(exjugador.getId());
+        
+        EventoMVCLobby eventoMVC = new EventoMVCLobby(TipoLobbyMVC.JUGADOR_SALIO);
+        eventoMVC.setPublicador(exjugadorDTO);
+        publicador.publicarEvento(eventoMVC.getTipo(), eventoMVC);
+    }
+    
     @Override
     public void actualizarAvatares(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoLobby ev = (EventoLobby)evento;
+        Cuenta jugadorEv = ev.getInfo();
+        CuentaDTO jugadorDTO = new CuentaDTO();
+        jugadorDTO.setId(jugadorEv.getId());
+        
+        EventoMVCLobby evMVC = new EventoMVCLobby(TipoLobbyMVC.ACTUALIZAR_AVATARES);
+        evMVC.agregarContexto(jugadorDTO);
+        publicador.publicarEvento(evMVC.getTipo(), evMVC);
     }
 
     @Override
     public void actualizarUsernames(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoLobby ev = (EventoLobby)evento;
+        Cuenta jugadorEv = ev.getInfo();
+        System.out.println("en actualizar usernames cuenta: "+jugadorEv);
+        CuentaDTO jugadorDTO = new CuentaDTO();
+        jugadorDTO.setId(jugadorEv.getId());
+        jugadorDTO.setUsername(jugadorEv.getUsername());
+        
+        EventoMVCLobby evMVC = new EventoMVCLobby(TipoLobbyMVC.ACTUALIZAR_USERNAME);
+        evMVC.agregarContexto(jugadorDTO);
+        publicador.publicarEvento(evMVC.getTipo(), evMVC);
     }
 
     @Override
     public void manejarError(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        System.out.println("ps un evento de error xd");
     }
 
     @Override

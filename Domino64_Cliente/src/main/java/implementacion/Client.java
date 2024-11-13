@@ -6,14 +6,20 @@ package implementacion;
 
 import abstraccion.ICliente;
 import domino64.eventos.base.Evento;
+import domino64.eventos.base.error.EventoError;
+import domino64.eventos.base.error.TipoError;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import observer.Observable;
@@ -36,7 +42,8 @@ public class Client extends Observable<Evento> implements ICliente{
     private volatile boolean running;
     private volatile boolean connected;
     private List<Enum<?>> suscripcionesEventos;
-
+    private BlockingQueue<Evento> colaEventos;
+    
     /**
      * para conexion en equipos diferentes (diferentes ip)
      *
@@ -58,6 +65,7 @@ public class Client extends Observable<Evento> implements ICliente{
         });
         
         suscripcionesEventos = new ArrayList<>();
+        colaEventos = new LinkedBlockingQueue();
     }
 
     /**
@@ -79,7 +87,7 @@ public class Client extends Observable<Evento> implements ICliente{
         });
         
         suscripcionesEventos = new ArrayList<>();
-        
+        colaEventos = new LinkedBlockingQueue();
     }
     
     public static synchronized Client getClient(int port){
@@ -102,6 +110,8 @@ public class Client extends Observable<Evento> implements ICliente{
         running = true;
         conectarCliente();
         
+        new Thread(this::procesarColaEventos).start();
+        
         ejecutorEventos.submit(this::listenForEvent);
     }
     
@@ -122,8 +132,6 @@ public class Client extends Observable<Evento> implements ICliente{
             System.out.println("id cliente: "+clientId);
             
             enviarSuscripciones();
-            
-//            listenForEvent();
             
         }catch (IOException ex){
             System.out.println("Error al conectar cliente "+clientId);
@@ -147,7 +155,6 @@ public class Client extends Observable<Evento> implements ICliente{
                     synchronized (output) {
                         output.writeObject(suscripcionesEventos);
                         output.flush();
-                        System.out.println("se enviaron las subs");
                     }
                 } catch (IOException e) {
                     System.out.println("error al enviar suscripciones: " + e.getMessage());
@@ -157,19 +164,47 @@ public class Client extends Observable<Evento> implements ICliente{
         }
     }
     
-    @Override
-    public void enviarEvento(Evento event) {
-        if(connected){
+    private void procesarColaEventos(){
+        while(running){
             try {
-                synchronized (output) {
-                    output.writeObject(event);//envia msj al servidor
-                    output.flush();
+                Evento e = colaEventos.take();
+                if(connected){
+                    try {
+                        synchronized (output) {
+                            output.reset();
+                            System.out.println("en el enviar evento; " + e);
+                            output.writeObject(e);//envia msj al servidor
+                            output.flush();
+                        }
+                    } catch (IOException ex) {
+                        System.out.println("error al enviar evento: " + ex.getMessage());
+                        manejarDesconexion();
+                    }
                 }
-            } catch (IOException ex) {
-                System.out.println("error al enviar evento: " + ex.getMessage());
-                manejarDesconexion();
+            } catch (InterruptedException e) {
+                System.out.println("error al tomar el evento de la cola de eventos: " + e.getMessage());
+                Thread.currentThread().interrupt();
+                break;
             }
         }
+    }
+    
+    @Override
+    public void enviarEvento(Evento event) {
+        colaEventos.offer(event);
+//        if(connected){
+//            try {
+//                synchronized (output) { 
+//                    output.reset();
+//                    System.out.println("en el enviar evento; "+event);
+//                    output.writeObject(event);//envia msj al servidor
+//                    output.flush();
+//                }
+//            } catch (IOException ex) {
+//                System.out.println("error al enviar evento: " + ex.getMessage());
+//                manejarDesconexion();
+//            }
+//        }
     }
 
     @Override
@@ -188,7 +223,6 @@ public class Client extends Observable<Evento> implements ICliente{
             if(connected && input != null){
                 Evento evento;
                 try {
-                    System.out.println("en el listen for events");
                     evento = (Evento)input.readObject();
                     manejarEvento(evento);
                 } catch (IOException e) {
@@ -216,11 +250,27 @@ public class Client extends Observable<Evento> implements ICliente{
     
     private void manejarDesconexion(){
         connected = false;
+        running = false;
+        System.out.println("en falso");
+        Evento error = new EventoError(TipoError.ERROR_DE_SERVIDOR, "se desconecto el cliente");
+        notifyObservers(TipoError.ERROR_DE_SERVIDOR, error);
+        System.out.println("se notifico el error");
+        ejecutorEventos.shutdown();
+        
+        try {
+            if (!ejecutorEventos.awaitTermination(5, TimeUnit.SECONDS)) {
+                ejecutorEventos.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            ejecutorEventos.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+        
         try {
             if (socket != null)socket.close();
             if(input != null)input.close();
             if(output != null)output.close();
-            System.out.println("cliente desconectado");
+            System.out.println("cliente desconectadooo");
         } catch (IOException e) {}
         
         //reconexionProgramada();

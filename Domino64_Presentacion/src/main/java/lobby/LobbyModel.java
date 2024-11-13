@@ -1,9 +1,12 @@
 package lobby;
 
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
 import eventosLobby.ObservableLobby;
 import eventosLobby.ObservableLobbyMVC;
+import eventosLobby.ObserverLobby;
+import eventosLobby.ObserverLobbyMVC;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,16 +23,19 @@ import javafx.scene.layout.AnchorPane;
  * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author José Karim Franco Valencia - 00000245138
  */
-public class LobbyModel implements  ObservableLobbyMVC {
+public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
 
-    private CuentaDTO cuentaActual;  // Cuenta del jugador actual
     private List<CuentaDTO> cuentasJugadoresOnline;  // Lista de cuentas de jugadores en línea
     private Map<Integer, AnchorPane> panelesJugadores;  // Mapa de paneles de jugadores, indexados por ID
     private String mensaje;  // Mensaje de error o información
     private String encabezadoLobby;  // Encabezado del lobby
-    private boolean esOnline;  // Estado de conexión (online/offline)
     private String[] avatares;  // Lista de avatares disponibles
     private PartidaDTO partidaDTO;
+    private List<ObserverLobby> observersLogica;
+    private List<ObserverLobbyMVC> observerMVC;
+    private LobbyDTO lobbyDTO;
+    private CuentaDTO cuentaActual;
+    
 
     /**
      * Constructor del modelo del lobby. Inicializa los datos y carga la
@@ -37,6 +43,8 @@ public class LobbyModel implements  ObservableLobbyMVC {
      */
     public LobbyModel() {
         cargarDatos();  // Carga los datos iniciales
+        observersLogica = new ArrayList<>();
+        observerMVC = new ArrayList<>();
     }
 
     /**
@@ -45,8 +53,7 @@ public class LobbyModel implements  ObservableLobbyMVC {
      */
     public void cargarDatos() {
         encabezadoLobby = "Bienvenidos";
-        mensaje = null;
-        esOnline = true;
+        mensaje = "";
         avatares = new String[]{
             "/avatar/ave.png",
             "/avatar/gato.png",
@@ -60,39 +67,60 @@ public class LobbyModel implements  ObservableLobbyMVC {
         };  // Lista de avatares
         panelesJugadores = new HashMap<>();
         cuentasJugadoresOnline = new ArrayList<>();
-        cuentaActual = new CuentaDTO(0, "/avatar/venado.png", mensaje);
     }
 
-    //--------------Métodos notificadores-------------------
-    /**
-     * Actualiza el nombre de otro jugador en la vista.
-     *
-     * @param cuenta la cuenta del jugador cuyo nombre se actualizará.
-     */
-    public void actualizarNombreOtroJugador(CuentaDTO cuenta) {
-//////////////////////        notificarActualizarNombreOtroJugador(cuenta);  // Notifica a los observadores sobre el cambio
+    //---------------------Eventos Modelo a vista--------------------------------
+    @Override
+    public void agregarObserver(ObservableLobbyMVC observador) {
     }
 
-    public void iniciarPartida() {
+    @Override
+    public void quitarObserver(ObservableLobbyMVC observador) {
     }
 
-    //--------------Validadores-------------------
-    /**
-     * Valida si el nombre del jugador contiene caracteres válidos.
-     *
-     * @param nombre el nombre a validar.
-     */
-    public void sonCaracteresValidosNombre(String nombre) {
-        String regex = "^([a-zA-Z0-9]*( [a-zA-Z0-9]*)?){1,}$";
-        if (nombre.isBlank()) {
-            setMensaje("El nombre del jugador esta vacio");
-        } else if (!nombre.matches(regex)) {
-            setMensaje("Solo se aceptan números y letras");
-        } else if (nombre.length() > 14) {
-            setMensaje("El nombre no puede superar los 14 caracteres");
-        } else {
-            this.mensaje = null;
-        }
+    @Override
+    public void actualizarNuevoJugador(CuentaDTO cuenta) {
+    }
+
+    @Override
+    public void actualizarQuitarJugador(CuentaDTO cuenta) {
+    }
+
+    @Override
+    public void actualizarAvatarJugador(CuentaDTO cuenta) {
+    }
+
+    @Override
+    public void actualizarJugadorListo(CuentaDTO cuenta) {
+    }
+
+    @Override
+    public void actualizarJugadorNoListo(CuentaDTO cuenta) {
+    }
+
+    //---------------------Eventos Modelo a lógica--------------------------------
+    @Override
+    public void agregarObserver(ObserverLobby observador) {
+    }
+
+    @Override
+    public void quitarObserver(ObserverLobby observador) {
+    }
+
+    @Override
+    public void avisarJugadorListo() {
+    }
+
+    @Override
+    public void avisarJugadorNoListo() {
+    }
+
+    @Override
+    public void avisarIniciarPartida() {
+    }
+
+    @Override
+    public void avisarAbandonar() {
     }
 
     //--------------GETTERS && SETTERS-------------------
@@ -124,23 +152,6 @@ public class LobbyModel implements  ObservableLobbyMVC {
         return encabezadoLobby;  // Retorna el encabezado del lobby
     }
 
-    /**
-     * Obtiene la cuenta actual del jugador.
-     *
-     * @return la cuenta actual.
-     */
-    public CuentaDTO getCuentaActual() {
-        return cuentaActual;
-    }
-
-    /**
-     * Establece la cuenta actual del jugador.
-     *
-     * @param cuentaActual la cuenta a establecer como actual.
-     */
-    public void setCuentaActual(CuentaDTO cuentaActual) {
-        this.cuentaActual = cuentaActual;
-    }
 
     /**
      * Establece un nuevo encabezado para el lobby.
@@ -151,14 +162,6 @@ public class LobbyModel implements  ObservableLobbyMVC {
         this.encabezadoLobby = encabezadoLobby;
     }
 
-    /**
-     * Obtiene el ID de la cuenta actual.
-     *
-     * @return el ID de la cuenta actual.
-     */
-    public Integer obtenerIdActual() {
-        return cuentaActual.getId();
-    }
 
     /**
      * Obtiene el panel del jugador correspondiente a un ID.
@@ -199,24 +202,6 @@ public class LobbyModel implements  ObservableLobbyMVC {
     }
 
     /**
-     * Indica si el lobby está en línea.
-     *
-     * @return true si está en línea, false en caso contrario.
-     */
-    public boolean isEsOnline() {
-        return esOnline;
-    }
-
-    /**
-     * Establece el estado de conexión del lobby.
-     *
-     * @param esOnline el nuevo estado de conexión a establecer.
-     */
-    public void setEsOnline(boolean esOnline) {
-        this.esOnline = esOnline;
-    }
-
-    /**
      * Obtiene la lista de avatares disponibles.
      *
      * @return un array con las rutas de los avatares.
@@ -224,40 +209,25 @@ public class LobbyModel implements  ObservableLobbyMVC {
     public String[] getAvatares() {
         return avatares;
     }
-    //---------------------Eventos Modelo a vista--------------------------------
-    @Override
-    public void agregarObserver(ObservableLobbyMVC observador) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+    public PartidaDTO getPartidaDTO() {
+        return partidaDTO;
     }
 
-    @Override
-    public void quitarObserver(ObservableLobbyMVC observador) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void setPartidaDTO(PartidaDTO partidaDTO) {
+        this.partidaDTO = partidaDTO;
     }
 
-    @Override
-    public void actualizarNuevoJugador(CuentaDTO cuenta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public LobbyDTO getLobbyDTO() {
+        return lobbyDTO;
     }
 
-    @Override
-    public void actualizarQuitarJugador(CuentaDTO cuenta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void setLobbyDTO(LobbyDTO lobbyDTO) {
+        this.lobbyDTO = lobbyDTO;
+        this.cuentaActual = lobbyDTO.getCuentaActual();
     }
-
-    @Override
-    public void actualizarAvatarJugador(CuentaDTO cuenta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    
+    public String obtenerIdCuentaActual(){
+        return cuentaActual.getIdCadena();
     }
-
-    @Override
-    public void actualizarJugadorListo(CuentaDTO cuenta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void actualizarJugadorNoListo(CuentaDTO cuenta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
 }

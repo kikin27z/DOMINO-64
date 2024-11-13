@@ -1,7 +1,12 @@
 package manejadores;
 
+import abstraccion.ICliente;
+import implementacion.Client;
+import logicaLobby.ManejadorCuenta;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Clase que actúa como controlador central del juego. Es responsable de la
@@ -21,6 +26,7 @@ public class Control {
     private static MediadorManejadores modelo;
     private static Control principal;
     private static ExecutorService hiloPrincipal;
+    private static ICliente cliente;
 
     /**
      * Constructor privado que inicializa los manejadores del juego y el hilo
@@ -37,16 +43,39 @@ public class Control {
         hiloPrincipal.execute(() -> {
             try {
                 // Inicializar los manejadores
+                
+                
                 cuenta = new ManejadorCuenta();
                 modelo = new MediadorManejadores();
                 display = new ManejadorDisplay();
-                System.out.println("Manejadores iniciados en: " + Thread.currentThread().getName());
+                cuenta.setManejadorDisplay(display);
+                
+                subscribirManejadores();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
     }
 
+    private void subscribirManejadores(){
+        Client client =  Client.getClient(5000);
+        
+        for (Enum<?> evento : cuenta.getEventos()) {
+            client.addObserver(evento, cuenta);
+        }
+        
+        cuenta.init(client);
+        client.iniciar();
+        cuenta.setClientId(client.getClientId());
+//        try {
+//            Thread.sleep(5000);
+//        } catch (InterruptedException ex) {
+//            Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        display.iniciarJuego();
+        
+    }
+    
     /**
      * Obtiene la instancia única de la clase {@link Control}. Si la instancia
      * no existe, se crea una nueva.
@@ -97,6 +126,10 @@ public class Control {
         return modelo;
     }
 
+    
+    public static ICliente obtenerCliente(){
+        return cliente;
+    }
     /**
      * Obtiene el servicio de ejecución que maneja el hilo principal del juego.
      * 

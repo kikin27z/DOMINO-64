@@ -6,7 +6,7 @@ package starter;
 
 import com.domino64.base.Publicador;
 import com.domino64.base.Suscriptor;
-import domino64.eventos.base.Evento;
+import eventos.EventoMVC;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.Set;
  * Los suscriptores que tendria serian los manejadores en la logica local
  * @author luisa M
  */
-public class PublicadorEventosPresentacion implements Publicador {
+public class PublicadorEventosPresentacion implements Publicador<EventoMVC> {
     private static PublicadorEventosPresentacion publicador;
     private final Map<Enum<?>, Set<Suscriptor>> suscriptores;
 
@@ -84,7 +84,7 @@ public class PublicadorEventosPresentacion implements Publicador {
      * @param evento El evento a publicar
      */
     @Override
-    public void publicarEvento(Enum tipoEvento, Evento evento) {
+    public void publicarEvento(Enum tipoEvento, EventoMVC evento) {
         if(suscriptores.containsKey(tipoEvento)){
             suscriptores.get(tipoEvento).forEach(sub -> sub.recibirEvento(evento));
         }

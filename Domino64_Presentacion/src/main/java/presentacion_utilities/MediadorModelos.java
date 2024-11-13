@@ -1,5 +1,6 @@
 package presentacion_utilities;
 
+import entidadesDTO.PartidaDTO;
 import eventosLobby.ObservableLobbyMVC;
 import javafx.application.Platform;
 import eventosOpcionesPartida.ObservableOpcionesMVC;
@@ -30,21 +31,20 @@ public class MediadorModelos {
     public void setModeloOpciones(ObservableOpcionesMVC modeloOpciones) {
         this.modeloOpciones = modeloOpciones;
     }
-    
-    
+    public void setModeloPartida(ObservablePartidaMVC modeloPartida) {
+        this.modeloPartida = modeloPartida;
+    }
+    public void setModeloLobby(ObservableLobbyMVC modeloLobby) {
+        this.modeloLobby = modeloLobby;
+    }
     
     
     
     public void respuesta(String respuesta){
-        System.out.println("Imprimiendo en mediador antes de enviarlos");
-            System.out.println(respuesta);
-            System.out.println(Thread.currentThread());
-            System.out.println("");
         Platform.runLater(()-> {
             System.out.println("Imprimiendo en mediador ");
             System.out.println(respuesta);
             System.out.println(Thread.currentThread());
-            modeloOpciones.actualizarMensajeAviso(respuesta);
         });
     }
 }

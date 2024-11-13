@@ -4,13 +4,14 @@
  */
 package logicaDisplay;
 
+import domino64.eventos.base.Evento;
 import presentacion_utilities.FachadaNavegador;
 
 /**
  *
  * @author luisa M
  */
-public class ManejadorDisplay {
+public class ManejadorDisplay extends ObservadorDisplay{
     private FachadaNavegador nav;
     
     public ManejadorDisplay(){
@@ -23,6 +24,36 @@ public class ManejadorDisplay {
     
     public void actualizarPantalla(int pantalla){
         
+    }
+
+    @Override
+    public void recibirPartida(Evento evento) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarJugadoresListos(Evento evento) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarJugadores(Evento evento) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarAvatares(Evento evento) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarUsername(Evento evento) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void mostrarError(Evento evento) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

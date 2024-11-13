@@ -4,6 +4,7 @@
  */
 package entidades;
 
+import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -11,7 +12,7 @@ import java.util.Deque;
  *
  * @author luisa M
  */
-public class Tablero {
+public class Tablero implements Serializable{
     private Deque<Ficha> trenFichas;
     public final int IZQUIERDA = 0;
     public final int DERECHA = 1;

@@ -1,5 +1,7 @@
 package presentacion_utilities;
 
+import entidadesDTO.LobbyDTO;
+
 /**
  * Interfaz que define los métodos para la navegación entre diferentes vistas
  * de la aplicación. Esta interfaz establece un contrato para las clases que
@@ -27,7 +29,7 @@ public interface INavegacion {
      * Método para cambiar la vista a la pantalla de lobby.
      * Este método debería gestionar la transición de la vista actual a la vista del lobby.
      */
-    public void cambiarLobby();
+    public void cambiarLobby(LobbyDTO lobby);
 
     /**
      * Método para cambiar la vista a la pantalla de partida.

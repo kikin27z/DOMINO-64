@@ -1,8 +1,8 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logicaLobby;
+package logicaDisplay;
 
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.TipoError;
@@ -12,20 +12,13 @@ import java.util.Map;
 import java.util.function.Consumer;
 import observer.Observer;
 import tiposLogicos.TipoLogicaLobby;
+import tiposLogicos.TipoLogicaPartida;
 
 /**
- * Clase que representa una implementacion de un observador. 
- * Este observador concreto define los metodos que van a manejar
- * los distintos eventos que le interesa recibir a este observador.
- * La lista de enum define los eventos que va a observar.
- * Tiene un mapeo de consumers por cada tipo de evento, esto quiere decir
- * que por cada tipo de evento que va a recibir, le asigna un metodo
- * que se va a ejecutar al recibir el evento especifico.
- * Este observador solo recibe eventos que genera el jugador.
- * 
+ *
  * @author luisa M
  */
-public abstract class ObservadorLobbyLocal implements Observer<Evento>{
+public abstract class ObservadorDisplay implements Observer<Evento> {
     protected Map<Enum<?>, Consumer<Evento>> consumers;
     protected final List<Enum<?>> eventos = new ArrayList<>(
             List.of(
@@ -35,18 +28,22 @@ public abstract class ObservadorLobbyLocal implements Observer<Evento>{
                     TipoLogicaLobby.JUGADOR_NUEVO,
                     TipoLogicaLobby.JUGADOR_SALIO,
                     TipoLogicaLobby.ACTUALIZAR_AVATARES,
-                    TipoLogicaLobby.ACTUALIZAR_USERNAME
+                    TipoLogicaLobby.ACTUALIZAR_USERNAME,
+                    TipoLogicaPartida.INICIO_PARTIDA,
+                    TipoLogicaPartida.JUGADOR_GANO,
+                    TipoLogicaPartida.JUGADOR_SALIO,
+                    TipoLogicaPartida.PETICION_RENDIRSE,
+                    TipoLogicaPartida.TERMINO_PARTIDA
             ));
     
-    
     @Override
-    public void update(Evento evento){
+    public void update(Evento evento) {
         Consumer<Evento> cons = consumers.get(evento.getTipo());
         if(cons != null){
             cons.accept(evento);
         }
     }
-
+    
     public List<Enum<?>> getEventos(){
         return eventos;
     }
@@ -62,13 +59,13 @@ public abstract class ObservadorLobbyLocal implements Observer<Evento>{
     }
     
     protected void setConsumers(){
-        consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
-        consumers.putIfAbsent(TipoError.ERROR_LOGICO, this::manejarError);
+        consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::mostrarError);
+        consumers.putIfAbsent(TipoError.ERROR_LOGICO, this::mostrarError);
         consumers.putIfAbsent(TipoLogicaLobby.JUGADOR_NUEVO, this::actualizarJugadores);
         consumers.putIfAbsent(TipoLogicaLobby.ACTUALIZAR_JUGADORES_LISTO, this::actualizarJugadoresListos);
         consumers.putIfAbsent(TipoLogicaLobby.JUGADOR_SALIO, this::actualizarJugadores);
         consumers.putIfAbsent(TipoLogicaLobby.ACTUALIZAR_AVATARES, this::actualizarAvatares);
-        consumers.putIfAbsent(TipoLogicaLobby.ACTUALIZAR_USERNAME, this::actualizarUsernames);
+        consumers.putIfAbsent(TipoLogicaLobby.ACTUALIZAR_USERNAME, this::actualizarUsername);
     }
     
     public abstract void recibirPartida(Evento evento);
@@ -79,8 +76,8 @@ public abstract class ObservadorLobbyLocal implements Observer<Evento>{
     
     public abstract void actualizarAvatares(Evento evento);
     
-    public abstract void actualizarUsernames(Evento evento);
+    public abstract void actualizarUsername(Evento evento);
     
-    public abstract void manejarError(Evento evento);
+    public abstract void mostrarError(Evento evento);
     
 }

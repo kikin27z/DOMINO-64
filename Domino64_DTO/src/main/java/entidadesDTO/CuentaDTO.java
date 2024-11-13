@@ -7,18 +7,17 @@ package entidadesDTO;
 public class CuentaDTO {
     private int id;
     private String username;
-    private String avatarUrl;
-
-    public CuentaDTO(int id, String username, String avatarUrl) {
-        this.id = id;
-        this.username = username;
-        this.avatarUrl = avatarUrl;
-    }
+    private AvatarDTO avatar;
+    private String idCadena;
 
     public CuentaDTO() {
     }
-    
-    
+
+    public CuentaDTO(int id, String username, AvatarDTO avatar) {
+        this.id = id;
+        this.username = username;
+        this.avatar = avatar;
+    }
 
     public int getId() {
         return id;
@@ -36,21 +35,22 @@ public class CuentaDTO {
         this.username = username;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public AvatarDTO getAvatar() {
+        return avatar;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setAvatar(AvatarDTO avatar) {
+        this.avatar = avatar;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("CuentaDTO{");
-        sb.append("username=").append(username);
-        sb.append(", avatarUrl=").append(avatarUrl);
-        sb.append('}');
-        return sb.toString();
+    public String getIdCadena() {
+        return idCadena;
     }
+
+    public void setIdCadena(String idCadena) {
+        this.idCadena = idCadena;
+    }
+    
+    
+    
 }

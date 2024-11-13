@@ -3,10 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/module-info.java to edit this template
  */
 
-module ManejadorPartida {
-    requires Evento;
-    requires Client;
-    requires Observer;
-    requires Domino64_Dominio;
-    requires EventoLogico;
+module Domino64_Dominio {
+    exports entidades;
 }

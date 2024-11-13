@@ -1,20 +1,29 @@
 package entidades;
 
+import java.io.Serializable;
 import java.util.Objects;
+import java.util.Random;
 
 /**
  *
  * @author luisa M
  */
-public class Cuenta {
+public class Cuenta implements Serializable{
     private String username;
     private String avatarUrl;
-    private final int id;
+    private int id;
+    private String idCadena;
     private Jugador jugador;
 
     public Cuenta(int id) {
         this.id = id;
     }
+
+    public Cuenta() {
+        idCadena = generateLetterString();
+    }
+    
+    
 
     public int getId(){
         return id;
@@ -65,7 +74,38 @@ public class Cuenta {
             return false;
         }
         final Cuenta other = (Cuenta) obj;
-        return Objects.equals(this.username, other.username);
+        return Objects.equals(this.id, other.id);
     }
+
+    @Override
+    public String toString() {
+        return "Cuenta{" +"user= " + username + ", id=" + id + '}';
+    }
+    
+    public  String generateLetterString() {
+        String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        Random random = new Random();
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < 5; i++) {
+            int index = random.nextInt(letters.length());
+            result.append(letters.charAt(index));
+        }
+
+        return result.toString();
+    }
+
+    public String getIdCadena() {
+        return idCadena;
+    }
+
+    public void setIdCadena(String idCadena) {
+        this.idCadena = idCadena;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     
 }

@@ -14,6 +14,7 @@ import javafx.scene.canvas.Canvas;
 import presentacion_utilities.NotificadorEvento;
 import java.util.logging.Logger;
 import eventosPartida.ObservablePartida;
+import eventosPartida.ObservablePartidaMVC;
 
 /**
  *
@@ -21,7 +22,7 @@ import eventosPartida.ObservablePartida;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class PartidaModel implements ObservablePartida {
+public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
 
     private static final Logger logger = Logger.getLogger(PartidaModel.class.getName());
     private JugadorDTO jugador;
