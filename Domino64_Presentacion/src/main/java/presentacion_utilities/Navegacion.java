@@ -7,6 +7,7 @@ import inicio.InicioModel;
 import inicio.InicioView;
 import java.io.IOException;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import lobby.LobbyControl;
 import lobby.LobbyModel;
@@ -27,6 +28,7 @@ import partida.PartidaView;
  * @author José Karim Franco Valencia - 00000245138
  */
 public class Navegacion implements INavegacion {
+
     private Stage fondo;
     private static Navegacion navegacion;
     private Thread hiloApp;
@@ -59,7 +61,7 @@ public class Navegacion implements INavegacion {
         hiloApp = new Thread(() -> Application.launch(App.class));
         hiloApp.start();
     }
-    
+
     @Override
     public void cambiarInicio() {
         InicioModel modeloInicio = new InicioModel();
@@ -74,17 +76,19 @@ public class Navegacion implements INavegacion {
 
     @Override
     public void cambiarLobby(LobbyDTO lobby) {
-        LobbyModel modeloLobby = new LobbyModel();
-        modeloLobby.setLobbyDTO(lobby);
-        try {
-            notificador.asignarObservableLobby(modeloLobby);
-            mediador.setModeloLobby(modeloLobby);
-            LobbyView view = new LobbyView(modeloLobby); // Instancia la vista de la partida
-            view.iniciarEscena(fondo); // Inicia la escena de la partida
-            LobbyControl control = new LobbyControl(view, modeloLobby);
-        } catch (IOException ex) {
-            ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
-        }
+        Platform.runLater(() -> {
+            LobbyModel modeloLobby = new LobbyModel();
+            modeloLobby.setLobbyDTO(lobby);
+            try {
+                notificador.asignarObservableLobby(modeloLobby);
+                mediador.setModeloLobby(modeloLobby);
+                LobbyView view = new LobbyView(modeloLobby); // Instancia la vista de la partida
+                view.iniciarEscena(fondo); // Inicia la escena de la partida
+                LobbyControl control = new LobbyControl(view, modeloLobby);
+            } catch (IOException ex) {
+                ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
+            }
+        });
     }
 
     public void setFondo(Stage fondo) {

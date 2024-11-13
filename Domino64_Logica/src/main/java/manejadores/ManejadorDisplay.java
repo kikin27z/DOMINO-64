@@ -21,14 +21,10 @@ public final class ManejadorDisplay implements ObserverPantalla{
     public ManejadorDisplay() {
         notificador = NotificadorEvento.getInstance();
         modeloLogica = Control.obtenerManejadorModelo();
-        
-        
         notificador.agregarObserver(this);
-        iniciarJuego();
     }
 
     public void iniciarJuego(){
-        System.out.println(Thread.currentThread());
         navegacion = Navegacion.getInstance();
         navegacion.iniciarApp();
         try {

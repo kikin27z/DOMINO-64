@@ -9,6 +9,7 @@ import domino64.eventos.base.error.TipoError;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import observer.Observer;
 import tiposLogicos.TipoLogicaLobby;
@@ -23,7 +24,8 @@ import tiposLogicos.TipoLogicaLobby;
  * que se va a ejecutar al recibir el evento especifico.
  * Este observador solo recibe eventos que genera el jugador.
  * 
- * @author luisa M
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public abstract class ObservadorLobbyLocal implements Observer<Evento>{
     protected Map<Enum<?>, Consumer<Evento>> consumers;
@@ -31,12 +33,17 @@ public abstract class ObservadorLobbyLocal implements Observer<Evento>{
             List.of(
                     TipoError.ERROR_LOGICO,
                     TipoError.ERROR_DE_SERVIDOR,
-                    TipoLogicaLobby.JUGADOR_LISTO,
+                    TipoLogicaLobby.ACTUALIZAR_JUGADORES_LISTO,
                     TipoLogicaLobby.JUGADOR_NUEVO,
                     TipoLogicaLobby.JUGADOR_SALIO,
                     TipoLogicaLobby.ACTUALIZAR_AVATARES,
                     TipoLogicaLobby.ACTUALIZAR_USERNAME
             ));
+
+    public ObservadorLobbyLocal() {
+        this.consumers = new ConcurrentHashMap<>();
+    }
+    
     
     
     @Override
@@ -65,7 +72,7 @@ public abstract class ObservadorLobbyLocal implements Observer<Evento>{
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
         consumers.putIfAbsent(TipoError.ERROR_LOGICO, this::manejarError);
         consumers.putIfAbsent(TipoLogicaLobby.JUGADOR_NUEVO, this::actualizarJugadores);
-        consumers.putIfAbsent(TipoLogicaLobby.JUGADOR_LISTO, this::actualizarJugadoresListos);
+        consumers.putIfAbsent(TipoLogicaLobby.ACTUALIZAR_JUGADORES_LISTO, this::actualizarJugadoresListos);
         consumers.putIfAbsent(TipoLogicaLobby.JUGADOR_SALIO, this::actualizarJugadores);
         consumers.putIfAbsent(TipoLogicaLobby.ACTUALIZAR_AVATARES, this::actualizarAvatares);
         consumers.putIfAbsent(TipoLogicaLobby.ACTUALIZAR_USERNAME, this::actualizarUsernames);

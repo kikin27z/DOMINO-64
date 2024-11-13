@@ -38,5 +38,11 @@ public class LobbyDTO {
     public CuentaDTO getCuentaActual() {
         return cuentaActual;
     }
+
+    public void setCuentaActual(CuentaDTO cuentaActual) {
+        this.cuentaActual = cuentaActual;
+    }
+    
+    
     
 }

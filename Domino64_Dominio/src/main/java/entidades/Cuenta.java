@@ -102,6 +102,10 @@ public class Cuenta implements Serializable{
     public void setIdCadena(String idCadena) {
         this.idCadena = idCadena;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     
     
 }

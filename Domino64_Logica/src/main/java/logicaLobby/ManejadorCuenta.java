@@ -4,16 +4,21 @@ import abstraccion.ICliente;
 import domino64.eventos.base.Evento;
 import entidades.Cuenta;
 import entidades.Partida;
+import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.UnirseDTO;
 import eventos.EventoJugador;
 import eventos.EventoLobby;
+import implementacion.Client;
+import java.util.ArrayList;
+import java.util.List;
 import manejadores.Control;
 import manejadores.ManejadorDisplay;
 import presentacion_utilities.MediadorModelos;
 import presentacion_utilities.NotificadorEvento;
 import tiposLogicos.TipoLogicaLobby;
 import utilities.BuilderEventoJugador;
+import utilities.BuilderEventoSuscripcion;
 import utilities.DirectorJugador;
 import utilities.DirectorSuscripcion;
 
@@ -32,23 +37,27 @@ public class ManejadorCuenta  extends ObservadorLobbyLocal{
     private Cuenta cuenta;
 
     public ManejadorCuenta() {
+        super();
         cuenta = new Cuenta();
         cliente = Control.obtenerCliente();
         notificador = NotificadorEvento.getInstance();
         mediador = MediadorModelos.getInstance();
         directorEventos = new DirectorJugador(new BuilderEventoJugador());
         manejadorDisplay = Control.obtenerManejadorDisplay();
+        
     }
-    
-    public void contruisr(String codigo){
-        EventoJugador enviarMensaje = directorEventos.crearEventoUnirsePartida(new Partida(codigo));
-        cliente.enviarEvento(enviarMensaje);
-        mediador.respuesta(codigo);
-    }
+
     
     public void crearPartida(){
-        
-        
+        Partida partida = new Partida(new ArrayList<Cuenta>(List.of(cuenta)), 4);
+        EventoJugador crear = directorEventos.crearEventoCrearPartida(partida, cuenta);
+        cliente.enviarEvento(crear);
+        LobbyDTO lobby = new LobbyDTO(partida.getCodigoPartida());
+        CuentaDTO cuenta1 = new CuentaDTO();
+        cuenta1.setIdCadena(cuenta.getIdCadena());
+        lobby.setCuentaActual(cuenta1);
+        lobby.setCuentas(List.of(cuenta1));
+        manejadorDisplay.avisarMostrarLobby(lobby);
     }
     
     public void buscarPartida(UnirseDTO unirseDTO){
@@ -68,6 +77,19 @@ public class ManejadorCuenta  extends ObservadorLobbyLocal{
         }
     }
 
+    
+    public void init(Client cliente){
+        this.cliente = cliente;
+        directorEventos = new DirectorJugador(new BuilderEventoJugador());
+        cliente.establecerSuscripciones(eventos);
+        setConsumers();
+    }
+    
+    public void setClientId(int id){
+        this.cuenta.setId(id);
+        directorSuscripciones = new DirectorSuscripcion(new BuilderEventoSuscripcion(), id);
+    }
+    
     @Override
     public void actualizarJugadoresListos(Evento evento) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -92,4 +114,10 @@ public class ManejadorCuenta  extends ObservadorLobbyLocal{
     public void manejarError(Evento evento) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+    public void setManejadorDisplay(ManejadorDisplay manejadorDisplay) {
+        this.manejadorDisplay = manejadorDisplay;
+    }
+    
+    
 }

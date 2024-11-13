@@ -265,7 +265,6 @@ public class ManejadorCuenta extends ObservadorLobbyLocal implements Suscriptor<
         Cuenta jugadorEv = ev.getInfo();
         CuentaDTO jugadorDTO = new CuentaDTO();
         jugadorDTO.setId(jugadorEv.getId());
-        jugadorDTO.setAvatarUrl(jugadorEv.getAvatarUrl());
         
         EventoMVCLobby evMVC = new EventoMVCLobby(TipoLobbyMVC.ACTUALIZAR_AVATARES);
         evMVC.agregarContexto(jugadorDTO);

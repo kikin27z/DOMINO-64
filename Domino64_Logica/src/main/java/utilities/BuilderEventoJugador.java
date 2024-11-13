@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package utilities;
 
 import builder.EventBuilder;
@@ -12,25 +8,32 @@ import eventos.EventoJugador;
 import tiposLogicos.TiposJugador;
 
 /**
- * Clase constructora de eventos de jugador.
- * Este builder lo va a usar el director del manejador de cuenta 
- * para facilitar y encapsular la logica de construccion de eventos del jugador
- * @author luisa M
+ * Clase constructora de eventos de jugador. Este builder lo va a usar el
+ * director del manejador de cuenta para facilitar y encapsular la logica de
+ * construccion de eventos del jugador
+ *
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class BuilderEventoJugador implements EventBuilder<Ficha> {
+
     private EventoJugador evento;
-    
-    public void setPartida(Partida partida){
+
+    public BuilderEventoJugador() {
+        evento = new EventoJugador();
+    }
+
+    public void setPartida(Partida partida) {
         evento.setPartida(partida);
     }
-    
-    public void setPublicador(Cuenta jugador){
+
+    public void setPublicador(Cuenta jugador) {
         evento.setJugador(jugador);
     }
-    
+
     @Override
     public void setTipo(Enum<?> tipo) {
-        evento.setTipo((TiposJugador)tipo);
+        evento.setTipo((TiposJugador) tipo);
     }
 
     @Override
@@ -54,5 +57,5 @@ public class BuilderEventoJugador implements EventBuilder<Ficha> {
     public void reiniciar() {
         evento = new EventoJugador();
     }
-    
+
 }
