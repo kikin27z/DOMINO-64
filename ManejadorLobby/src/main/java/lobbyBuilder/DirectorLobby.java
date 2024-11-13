@@ -33,7 +33,8 @@ public class DirectorLobby extends DirectorEventos<BuilderEventoLobby> {
         return builder.construirEvento();
     }
     
-    public EventoLobby crearEventoJugadorSalio(Cuenta jugador){
+    public EventoLobby crearEventoJugadorSalio(Partida partida, Cuenta jugador){
+        builder.agregarPartida(partida);
         builder.setIdPublicador(jugador.getId());
         builder.setInfo(jugador);
         builder.setTipo(TipoLogicaLobby.JUGADOR_SALIO);

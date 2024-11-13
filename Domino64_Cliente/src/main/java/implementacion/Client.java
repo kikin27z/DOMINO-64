@@ -6,6 +6,8 @@ package implementacion;
 
 import abstraccion.ICliente;
 import domino64.eventos.base.Evento;
+import domino64.eventos.base.error.EventoError;
+import domino64.eventos.base.error.TipoError;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
@@ -129,8 +132,6 @@ public class Client extends Observable<Evento> implements ICliente{
             System.out.println("id cliente: "+clientId);
             
             enviarSuscripciones();
-            
-//            listenForEvent();
             
         }catch (IOException ex){
             System.out.println("Error al conectar cliente "+clientId);
@@ -249,6 +250,11 @@ public class Client extends Observable<Evento> implements ICliente{
     
     private void manejarDesconexion(){
         connected = false;
+        running = false;
+        System.out.println("en falso");
+        Evento error = new EventoError(TipoError.ERROR_DE_SERVIDOR, "se desconecto el cliente");
+        notifyObservers(TipoError.ERROR_DE_SERVIDOR, error);
+        System.out.println("se notifico el error");
         ejecutorEventos.shutdown();
         
         try {
@@ -264,7 +270,7 @@ public class Client extends Observable<Evento> implements ICliente{
             if (socket != null)socket.close();
             if(input != null)input.close();
             if(output != null)output.close();
-            System.out.println("cliente desconectado");
+            System.out.println("cliente desconectadooo");
         } catch (IOException e) {}
         
         //reconexionProgramada();

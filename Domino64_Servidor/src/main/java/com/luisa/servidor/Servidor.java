@@ -159,7 +159,7 @@ public class Servidor {
                 socket = servidor.accept();
                 jugadorId++;
                 HiloJugador jugador = new HiloJugador(publicador,socket, jugadorId);
-                clientesJugadores.put(jugadorId,jugador);
+                clientesJugadores.putIfAbsent(jugadorId,jugador);
                 threadPoolJugadores.execute(jugador);
             }
         } catch (IOException e) {

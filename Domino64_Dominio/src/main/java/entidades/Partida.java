@@ -6,6 +6,7 @@ package entidades;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -82,6 +83,28 @@ public class Partida implements Serializable{
 
     public String getCodigoPartida() {
         return codigoPartida;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 53 * hash + Objects.hashCode(this.codigoPartida);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Partida other = (Partida) obj;
+        return Objects.equals(this.codigoPartida, other.codigoPartida);
     }
     
     

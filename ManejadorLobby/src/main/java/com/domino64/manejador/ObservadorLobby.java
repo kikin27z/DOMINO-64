@@ -9,6 +9,9 @@ import domino64.eventos.base.error.TipoError;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Consumer;
 import observer.Observer;
 import tiposLogicos.TiposJugador;
@@ -18,6 +21,7 @@ import tiposLogicos.TiposJugador;
  * @author luisa M
  */
 public abstract class ObservadorLobby implements Observer<Evento> {
+    protected static BlockingQueue<Evento> colaEventos;
     protected Map<Enum<?>, Consumer<Evento>> consumers;
     protected static final List<Enum<?>> eventos = new ArrayList<>(
             List.of(
@@ -30,14 +34,15 @@ public abstract class ObservadorLobby implements Observer<Evento> {
                     TiposJugador.JUGADOR_LISTO
             ));
     
-   
+    protected ObservadorLobby(){
+        consumers = new ConcurrentHashMap<>();
+        colaEventos = new LinkedBlockingDeque();
+    }
+    
     @Override
     public void update(Evento observable) {
-        Consumer<Evento> cons = consumers.get(observable.getTipo());
-        if(cons != null){
-            cons.accept(observable);
-        }
-    }
+        colaEventos.offer(observable); 
+   }
     
     protected void setConsumers(){
         consumers.putIfAbsent(TiposJugador.ABANDONAR_PARTIDA, this::removerJugador);
