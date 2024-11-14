@@ -1,6 +1,5 @@
 module ManejadorLobby {
     requires EventoLogico;
-    requires Excepciones;
     requires Evento;
     requires Client;
     requires Observer;

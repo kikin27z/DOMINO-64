@@ -176,7 +176,7 @@ public class LobbyView implements ObserverLobbyMVC {
         AnchorPane.setTopAnchor(lblCodigoTitulo, 21.0);
         panel.getChildren().add(lblCodigoTitulo);
 
-        Label lblCodigo = new Label("xxx-xxx");
+        Label lblCodigo = new Label(modelo.obtenerCodigoPartida());
         lblCodigo.setFont(Font.font("Russo One", 20));
         lblCodigo.setTextFill(Color.valueOf("#2f1c1c"));
         lblCodigo.setAlignment(Pos.CENTER);
@@ -187,7 +187,6 @@ public class LobbyView implements ObserverLobbyMVC {
         AnchorPane.setTopAnchor(lblCodigo, 46.0);
         panel.getChildren().add(lblCodigo);
         cargarBtnModal();
-        ponerJugadorActual();
     }
     
     
@@ -196,31 +195,31 @@ public class LobbyView implements ObserverLobbyMVC {
         
         for(var cuenta : cuentas){
             if(cuenta.getIdCadena().equalsIgnoreCase(modelo.obtenerIdCuentaActual())){
-                ponerJugadorActual();
+                ponerJugadorActual(cuenta);
             }else{
-                ponerJugadorOtro();
+                ponerJugadorOtro(cuenta);
             }
             
         }
     }
 
-    private void ponerJugadorActual() {
-        jugadoresContainer.getChildren().add(crearPanelJugadorActual());
+    private void ponerJugadorActual(CuentaDTO cuenta) {
+        jugadoresContainer.getChildren().add(crearPanelJugadorActual(cuenta));
     }
 
-    private void ponerJugadorOtro() {
-        jugadoresContainer.getChildren().add(crearPanelOtroJugador());
+    private void ponerJugadorOtro(CuentaDTO cuenta) {
+        jugadoresContainer.getChildren().add(crearPanelOtroJugador(cuenta));
 
     }
 
-    private AnchorPane crearPanelJugadorActual() {
+    private AnchorPane crearPanelJugadorActual(CuentaDTO cuenta) {
         AnchorPane panel = new AnchorPane();
         panel.setMaxSize(222, 278);
         panel.setMinSize(222, 278);
         panel.setPrefSize(222, 278);
 
         // Avatar del jugador
-        btnAvatar.setImage(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
+        btnAvatar.setImage(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
         AnchorPane.setLeftAnchor(btnAvatar, 41.0);
         AnchorPane.setTopAnchor(btnAvatar, 15.0);
 
@@ -248,14 +247,14 @@ public class LobbyView implements ObserverLobbyMVC {
         return panel;
     }
 
-    private AnchorPane crearPanelOtroJugador() {
+    private AnchorPane crearPanelOtroJugador(CuentaDTO cuenta) {
         AnchorPane panel = new AnchorPane();
         panel.setMaxSize(222, 278);
         panel.setMinSize(222, 278);
         panel.setPrefSize(222, 278);
 
         // Avatar del jugador
-        ImageView avatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
+        ImageView avatar = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
         avatar.setFitHeight(150);
         avatar.setFitWidth(200);
         avatar.setPreserveRatio(true);

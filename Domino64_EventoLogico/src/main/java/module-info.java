@@ -1,5 +1,4 @@
 module EventoLogico{
-    requires Excepciones;
     requires Evento;
     requires Domino64_DTO;
     

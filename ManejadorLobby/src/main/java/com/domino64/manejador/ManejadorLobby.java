@@ -10,6 +10,7 @@ import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.EventoError;
 import domino64.eventos.base.error.TipoError;
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.LobbyDTO;
 import eventos.EventoJugador;
 import eventos.EventoLobby;
 import java.util.List;
@@ -33,7 +34,8 @@ import tiposLogicos.TipoLogicaLobby;
  *
  * @author luisa M
  */
-public class ManejadorLobby extends ObservadorLobby implements Runnable{
+public class ManejadorLobby extends ObservadorLobby implements Runnable {
+
     private static DirectorLobby director;
     private Partida partida;
     private static int id;
@@ -46,9 +48,8 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable{
     private List<Cuenta> jugadoresListos;
     private AtomicBoolean running;
     private static ExecutorService ejecutorEventos;
-    
-    
-    public ManejadorLobby(){
+
+    public ManejadorLobby() {
         jugadoresPartidas = new ConcurrentHashMap<>();
         jugadoresListos = new CopyOnWriteArrayList<>();
         adaptador = new AdaptadorEntidad();
@@ -56,7 +57,7 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable{
         ejecutorEventos = Executors.newFixedThreadPool(4);
         running = new AtomicBoolean(true);
     }
-    
+
     public ManejadorLobby(AtomicBoolean running) {
         this.running = running;
         adaptador = new AdaptadorEntidad();
@@ -64,14 +65,14 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable{
         jugadoresListos = new CopyOnWriteArrayList<>();
         setConsumers();
     }
-    
-    protected void setIdManejador(int idManejador){
+
+    protected void setIdManejador(int idManejador) {
         id = idManejador;
     }
-    
+
     @Override
-    public void run(){
-        while(running.get()){
+    public void run() {
+        while (running.get()) {
             try {
                 Evento nextEvent = colaEventos.take();
                 Consumer<Evento> cons = consumers.get(nextEvent.getTipo());
@@ -85,46 +86,47 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable{
             }
         }
     }
-    
-    protected int getIdManejador(){
+
+    protected int getIdManejador() {
         return id;
     }
-    
-    protected void setDirector(DirectorLobby directorLobby){
-        director =directorLobby;
+
+    protected void setDirector(DirectorLobby directorLobby) {
+        director = directorLobby;
     }
-    
-    protected void setCliente(ICliente client){
+
+    protected void setCliente(ICliente client) {
         this.cliente = client;
         cliente.establecerSuscripciones(eventos);
     }
-    
+
     /**
-     * metodo para quitar un jugador de la partida.
-     * Si aun hay jugadores en la partida, se envia un evento
-     * para notificar que el jugador salio. Si el jugador era el ultimo que quedaba,
-     * se elimina la partida para que ya no la manipule el manejador
+     * metodo para quitar un jugador de la partida. Si aun hay jugadores en la
+     * partida, se envia un evento para notificar que el jugador salio. Si el
+     * jugador era el ultimo que quedaba, se elimina la partida para que ya no
+     * la manipule el manejador
+     *
      * @param jugador Jugador a remover
      */
     @Override
-    public void removerJugador(Evento eventoNuevo){
-        EventoJugador eventoJ = (EventoJugador)eventoNuevo;
-        Cuenta jugador  = eventoJ.getJugador();
+    public void removerJugador(Evento eventoNuevo) {
+        EventoJugador eventoJ = (EventoJugador) eventoNuevo;
+        Cuenta jugador = eventoJ.getJugador();
         /*si el manejador ya esta manejando una partida
         o sea si un jugador ya creo una partida
-        */
+         */
         Partida partidaEvento = eventoJ.getPartida();
-        
-        if(jugadoresPartidas.containsKey(partidaEvento)){
-            jugadoresPartidas.compute(partidaEvento, (p,j)->{
+
+        if (jugadoresPartidas.containsKey(partidaEvento)) {
+            jugadoresPartidas.compute(partidaEvento, (p, j) -> {
                 j.remove(jugador);
                 return j;
             });
-            
-            if(jugadoresPartidas.get(partidaEvento).isEmpty()){
+
+            if (jugadoresPartidas.get(partidaEvento).isEmpty()) {
                 jugadoresPartidas.remove(partidaEvento);
-            }else{
-                System.out.println("jugadores en partida: "+jugadoresPartidas.get(partidaEvento));
+            } else {
+                System.out.println("jugadores en partida: " + jugadoresPartidas.get(partidaEvento));
                 EventoLobby ev = director.crearEventoJugadorSalio(partidaEvento, jugador);
                 cliente.enviarEvento(ev);
             }
@@ -149,7 +151,6 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable{
 //        }
     }
 
-    
     @Override
     public void crearPartida(Evento evento) {
         EventoJugador eventoJ = (EventoJugador)evento;
@@ -157,17 +158,17 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable{
         CuentaDTO cuentaDTO = eventoJ.getJugador();
         Cuenta creadorPartida = adaptadorDTO.adaptarEntidadCuenta(cuentaDTO);
         nuevaPartida.agregarJugador(creadorPartida);
-        
+
         List<Cuenta> players = new CopyOnWriteArrayList<>();
         players.add(creadorPartida);
         jugadoresPartidas.put(nuevaPartida, players);
-        System.out.println("partida creada. Codigo: "+nuevaPartida.getCodigoPartida());
-        System.out.println("jugador: "+jugadoresPartidas.get(nuevaPartida));
+        System.out.println("partida creada. Codigo: " + nuevaPartida.getCodigoPartida());
+        System.out.println("jugador: " + jugadoresPartidas.get(nuevaPartida));
     }
 
-    private void unirse(EventoJugador evento, Cuenta jugador){
+    private void unirse(EventoJugador evento, Cuenta jugador) {
         Partida partidaBuscada = evento.getPartida();
-        System.out.println("partida buscada: "+ partidaBuscada);
+        System.out.println("partida buscada: " + partidaBuscada);
 
         if (jugadoresPartidas.containsKey(partidaBuscada)) {
             System.out.println("se encontro la partida");
@@ -177,109 +178,91 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable{
             });
             List<Cuenta> jugadoresActuales = jugadoresPartidas.get(partidaBuscada);
             partidaBuscada.setJugadores(jugadoresActuales);
-            
+
             notificarJugadores(partidaBuscada, jugador);
-            
+
         } else {
             notificarError(TipoError.ERROR_LOGICO, jugador.getId(), "No hay una partida con ese codigo");
         }
     }
-    
-    private void notificarJugadores(Partida partida, Cuenta jugador){
+
+    private void notificarJugadores(Partida partida, Cuenta jugador) {
         EventoLobby ev = director.crearEventoPartidaEncontrada(partida);
         cliente.enviarEvento(ev);
         System.out.println("se unio a partida");
-        
+
         EventoLobby ev2 = director.crearEventoJugadorNuevo(jugador);
         cliente.enviarEvento(ev2);
         System.out.println("se notifico a otros jugadores");
     }
-    
+
     @Override
     public void unirsePartida(Evento evento) {
-        EventoJugador eventoJ= (EventoJugador)evento; 
-        Cuenta jugador =eventoJ.getJugador();
-        if(jugadoresPartidas.isEmpty())
+        EventoJugador eventoJ = (EventoJugador) evento;
+        Cuenta jugador = eventoJ.getJugador();
+        if (jugadoresPartidas.isEmpty()) {
             notificarError(TipoError.ERROR_LOGICO, jugador.getId(), "No hay una partida iniciada");
-        else{
+        } else {
             unirse(eventoJ, jugador);
         }
     }
 
     /**
      * metodo para notificar errores
+     *
      * @param tipo El tipo de error a notificar
      * @param idJugador Id del suscriptor al que se va a notificar
      */
-    private void notificarError(TipoError tipo, int idJugador, String msjError){
+    private void notificarError(TipoError tipo, int idJugador, String msjError) {
         System.out.println("no se pudo unir a la partida");
-        EventoError error = new EventoError(tipo,msjError);
+        EventoError error = new EventoError(tipo, msjError);
         error.setIdPublicador(idJugador);
-        
-       cliente.enviarEvento(error);
-    }
 
-    public static void main(String[] args){
-//        
-        Client c = Client.getClient(5000);
-        ManejadorLobby manejador = new ManejadorLobby();
-        
-        for (Enum<?> suscripcion : eventos) {
-            c.addObserver(suscripcion, manejador);
-        }
-        
-        //cliente = c;
-        manejador.setCliente(c);
-        
-        c.iniciar();
-        
-        id = c.getClientId();
-        
-        director = new DirectorLobby(new BuilderEventoLobby(), id);
-        
-        ejecutorEventos.submit(manejador);
+        cliente.enviarEvento(error);
     }
 
     @Override
     public void cambiarUsername(Evento evento) {
-        EventoJugador evJ = (EventoJugador)evento;
+        EventoJugador evJ = (EventoJugador) evento;
         Cuenta jActualizado = evJ.getJugador();
         Cuenta j = partida.buscarJugador(jActualizado);
-        if(j != null){
-            j.setUsername(jActualizado.getUsername());
+        if (j != null) {
+//            j.setNombre(jActualizado.getNombre());
             partida.actualizarJugador(j);
-        }else
+        } else {
             System.out.println("null en lobby");
-        
+        }
+
         EventoLobby evLobby = director.crearEventoActualizarUsername(j);
         cliente.enviarEvento(evLobby);
     }
 
     @Override
     public void cambiarAvatar(Evento evento) {
-        EventoJugador evJ = (EventoJugador)evento;
+        EventoJugador evJ = (EventoJugador) evento;
         Cuenta jActualizado = evJ.getJugador();
-        
+
         Cuenta j = partida.buscarJugador(jActualizado);
-        if(j != null){
-            j.setAvatarUrl(jActualizado.getAvatarUrl());
-        }
-        System.out.println("avatar nuevo: "+j.getAvatarUrl());
-        System.out.println("jugadores en partida con jugador act: "+partida.getJugadores());
-        
+//        if (j != null) {
+//            j.setAvatarUrl(jActualizado.getAvatarUrl());
+//        }
+//        System.out.println("avatar nuevo: " + j.getAvatarUrl());
+        System.out.println("jugadores en partida con jugador act: " + partida.getJugadores());
+
         EventoLobby evLobby = director.crearEventoActualizarAvatares(j);
         cliente.enviarEvento(evLobby);
     }
 
     @Override
     public void jugadorListo(Evento evento) {
-        EventoJugador evJ = (EventoJugador)evento;
+        EventoJugador evJ = (EventoJugador) evento;
         Cuenta jugadorL = evJ.getJugador();
-        if(jugadoresListos.contains(jugadorL))
+        if (jugadoresListos.contains(jugadorL)) {
             jugadoresListos.remove(jugadorL);
-        else 
+        } else {
             jugadoresListos.add(jugadorL);
-        
+        }
+
         EventoLobby evL = director.crearEventoActualizarJugadoresListos(jugadorL);
         cliente.enviarEvento(evL);
     }
@@ -288,16 +271,36 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable{
     public void manejarError(Evento evento) {
         running.set(false);
         ejecutorEventos.shutdown();
-        
+
         try {
             if (!ejecutorEventos.awaitTermination(5, TimeUnit.SECONDS)) {
                 ejecutorEventos.shutdownNow();
             }
         } catch (InterruptedException e) {
             ejecutorEventos.shutdownNow();
-            System.out.println("shutdownNow? "+ejecutorEventos.isShutdown());
+            System.out.println("shutdownNow? " + ejecutorEventos.isShutdown());
             Thread.currentThread().interrupt();
         }
     }
+
+//    @Override
+//    public void irLobby(Evento evento) {
+//        EventoJugador eventoJ = (EventoJugador)evento;
+//        LobbyDTO lobbyNuevo = eventoJ.getLobby();
+//        Cuenta creadorPartida = eventoJ.getJugador();
+//        
+//        List<Cuenta> players = new CopyOnWriteArrayList<>();
+//        players.add(creadorPartida);
+//        System.out.println("partida creada. Codigo: "+lobbyNuevo.getCodigoPartida());
+//        System.out.println("jugador: "+ lobbyNuevo.getCuentaActual().getAvatar().getUrl());
+//    }
     
+    public void vincularCliente(Client _cliente){
+        this.cliente = _cliente;
+        cliente.establecerSuscripciones(eventos);
+        _cliente.iniciar();
+        id = _cliente.getClientId();
+        director = new DirectorLobby(new BuilderEventoLobby(), id);
+        ejecutorEventos.submit(this);
+    }
 }

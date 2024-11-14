@@ -3,9 +3,9 @@ package utilities;
 import builder.EventBuilder;
 import entidades.Cuenta;
 import entidades.Ficha;
-import entidades.Partida;
-import entidadesDTO.CuentaDTO;
 import entidadesDTO.PartidaDTO;
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.LobbyDTO;
 import eventos.EventoJugador;
 import tiposLogicos.TiposJugador;
 
@@ -27,6 +27,10 @@ public class BuilderEventoJugador implements EventBuilder {
 
     public void setPartida(PartidaDTO partida) {
         evento.setPartida(partida);
+    }
+    
+    public void setLobbyDTO(LobbyDTO lobby){
+        evento.setLobby(lobby);
     }
 
     public void setPublicador(CuentaDTO jugador) {

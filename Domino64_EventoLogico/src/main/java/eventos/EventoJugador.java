@@ -1,7 +1,7 @@
 package eventos;
 
 import entidadesDTO.CuentaDTO;
-import entidadesDTO.PartidaDTO;
+import entidadesDTO.LobbyDTO;
 import tiposLogicos.TiposJugador;
 
 
@@ -20,8 +20,9 @@ import tiposLogicos.TiposJugador;
 public class EventoJugador extends EventoLogico{
     private Object context;
     private TiposJugador tipo;
-    private CuentaDTO jugador;
-    private PartidaDTO partida;
+    private LobbyDTO lobby;
+    private CuentaDTO cuenta;
+    private Ficha ficha;
     
     public EventoJugador(){}
     
@@ -48,6 +49,23 @@ public class EventoJugador extends EventoLogico{
     public PartidaDTO getPartida(){
         return partida;
     }
+
+    public LobbyDTO getLobby() {
+        return lobby;
+    }
+
+    public void setLobby(LobbyDTO lobby) {
+        this.lobby = lobby;
+    }
+
+    public CuentaDTO getCuenta() {
+        return cuenta;
+    }
+
+    public void setCuenta(CuentaDTO cuenta) {
+        this.cuenta = cuenta;
+    }
+    
     
     @Override
     public void agregarInfo(Object contexto) {

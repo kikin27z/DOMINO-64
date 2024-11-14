@@ -52,6 +52,7 @@ public abstract class ObservadorLobby implements Observer<Evento> {
         consumers.putIfAbsent(TiposJugador.CAMBIAR_AVATAR, this::cambiarAvatar);
         consumers.putIfAbsent(TiposJugador.JUGADOR_LISTO, this::jugadorListo);
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
+//        consumers.putIfAbsent(TiposJugador.IR_LOBBY, this::irLobby);
     }
     
     public void agregarEvento(Enum<?> evento, Consumer<Evento> consumer){

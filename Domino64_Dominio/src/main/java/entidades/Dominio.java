@@ -1,12 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package entidades;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  *
@@ -15,39 +7,18 @@ import java.util.List;
 public class Dominio {
 
     public static void main(String[] args) {
-        List<Integer> numeros = new ArrayList<>();
-        numeros.add(7);
-        numeros.add(5);
-        numeros.add(12);
-        numeros.add(8);
-        numeros.add(2);
-        numeros.add(19);
+        Cuenta karim = new Cuenta();
+        Cuenta luisa = new Cuenta();
+        Cuenta paul = new Cuenta();
+        Cuenta gibran = new Cuenta();
         
-        insertionSort(numeros);
-        //printNumeros(numeros);
-    }
-    
-    public static List<Integer> insertionSort(List<Integer> numeros){
-        for (int i = 0; i < numeros.size(); i++) {
-            int key = numeros.get(i);
-            int j = i - 1;
-
-            while (j >= 0 && numeros.get(j)> key) {
-                numeros.set(j + 1, numeros.get(j));
-                j = j - 1;
-            }
-
-            numeros.set(j + 1, key);
-            printNumeros(numeros);
-            System.out.println("");
-
-        }
-        return numeros;
-    }
-    
-     private static void printNumeros(List<Integer> numeros){
-        for (Integer num : numeros) {
-            System.out.print("numero: "+num+", ");
-        }
+        Lobby lobby = new Lobby();
+        
+        lobby.agregarCuenta(karim);
+        lobby.agregarCuenta(luisa);
+        lobby.agregarCuenta(paul);
+        lobby.cambiarAvatar(paul, Avatar.SERPIENTE);
+        lobby.agregarCuenta(gibran);
+        lobby.obtenerAvataresDisponibles();
     }
 }

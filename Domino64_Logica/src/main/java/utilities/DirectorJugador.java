@@ -7,6 +7,7 @@ import entidades.Partida;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.PartidaDTO;
+import entidadesDTO.LobbyDTO;
 import eventos.EventoJugador;
 import tiposLogicos.TiposJugador;
 
@@ -24,7 +25,7 @@ public class DirectorJugador extends DirectorEventos<BuilderEventoJugador>{
     public DirectorJugador(BuilderEventoJugador builder) {
         super(builder);
     }
-    
+
     public EventoJugador crearEventoColocarFicha(FichaDTO ficha, CuentaDTO publicador){
         builder.setContexto(ficha);
         builder.setIdPublicador(publicador.getId());
@@ -48,7 +49,14 @@ public class DirectorJugador extends DirectorEventos<BuilderEventoJugador>{
         return builder.construirEvento();
     }
     
-    public EventoJugador crearEventoJalarFicha(CuentaDTO publicador){
+    public EventoJugador irEventoLobby(CuentaDTO cuenta, int id){
+        builder.setPublicador(cuenta);
+        builder.setIdPublicador(id);
+        builder.setTipo(TiposJugador.CREAR_PARTIDA);
+        return builder.construirEvento();
+    }
+    
+    public EventoJugador crearEventoJalarFicha(Cuenta publicador){
         builder.setPublicador(publicador);
         builder.setIdPublicador(publicador.getId());
         builder.setTipo(TiposJugador.JALAR_FICHA);
