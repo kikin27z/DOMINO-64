@@ -103,10 +103,10 @@ public class ManejadorCuenta extends ObservadorLobbyLocal implements Suscriptor<
         return true;
     }
     
-    private void abandonarPartida(EventoMVC eventoMVC){        
-         EventoJugador evento = directorEventos.crearEventoAbandonarPartida(partida, jugador);
-         cliente.enviarEvento(evento);
-         partida = null;
+    private void abandonarPartida(EventoMVC eventoMVC) {
+        EventoJugador evento = directorEventos.crearEventoAbandonarPartida(partida, jugador);
+        cliente.enviarEvento(evento);
+        partida = null;
     }
     
     private void unirsePartida(EventoMVC eventoMVC){

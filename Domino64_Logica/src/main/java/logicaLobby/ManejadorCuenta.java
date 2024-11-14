@@ -1,22 +1,27 @@
 package logicaLobby;
 
 import abstraccion.ICliente;
+import adapter.AdaptadorEntidad;
 import domino64.eventos.base.Evento;
 import entidades.Cuenta;
 import entidades.Partida;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
+import entidadesDTO.PartidaDTO;
 import entidadesDTO.UnirseDTO;
 import eventos.EventoJugador;
 import eventos.EventoLobby;
+import eventos.EventoSuscripcion;
 import implementacion.Client;
 import java.util.ArrayList;
 import java.util.List;
 import manejadores.Control;
 import manejadores.ManejadorDisplay;
+import observer.Observer;
 import presentacion_utilities.MediadorModelos;
 import presentacion_utilities.NotificadorEvento;
 import tiposLogicos.TipoLogicaLobby;
+import tiposLogicos.TiposJugador;
 import utilities.BuilderEventoJugador;
 import utilities.BuilderEventoSuscripcion;
 import utilities.DirectorJugador;
@@ -33,6 +38,7 @@ public class ManejadorCuenta  extends ObservadorLobbyLocal{
     private ICliente cliente;
     private DirectorJugador directorEventos;
     private DirectorSuscripcion directorSuscripciones;
+    private AdaptadorEntidad adapter;
     private ManejadorDisplay manejadorDisplay;
     private Cuenta cuenta;
 
@@ -41,6 +47,7 @@ public class ManejadorCuenta  extends ObservadorLobbyLocal{
         cuenta = new Cuenta();
         cliente = Control.obtenerCliente();
         notificador = NotificadorEvento.getInstance();
+        adapter = new AdaptadorEntidad();
         mediador = MediadorModelos.getInstance();
         directorEventos = new DirectorJugador(new BuilderEventoJugador());
         manejadorDisplay = Control.obtenerManejadorDisplay();
@@ -49,15 +56,20 @@ public class ManejadorCuenta  extends ObservadorLobbyLocal{
 
     
     public void crearPartida(){
-        Partida partida = new Partida(new ArrayList<Cuenta>(List.of(cuenta)), 4);
-        EventoJugador crear = directorEventos.crearEventoCrearPartida(partida, cuenta);
+        //Partida partida = new Partida(new ArrayList<Cuenta>(List.of(cuenta)), 4);
+        //PartidaDTO partidaDto = adapter.adaptarEntidadPartida(partida);
+        CuentaDTO cuentaDTO = adapter.adaptarEntidadCuenta(cuenta);
+        EventoJugador crear = directorEventos.crearEventoCrearPartida(cuentaDTO);
         cliente.enviarEvento(crear);
-        LobbyDTO lobby = new LobbyDTO(partida.getCodigoPartida());
-        CuentaDTO cuenta1 = new CuentaDTO();
-        cuenta1.setIdCadena(cuenta.getIdCadena());
-        lobby.setCuentaActual(cuenta1);
-        lobby.setCuentas(List.of(cuenta1));
-        manejadorDisplay.avisarMostrarLobby(lobby);
+        
+        EventoSuscripcion suscripcion = directorSuscripciones.crearEventoSuscribirse(TipoLogicaLobby.PARTIDA_ENCONTRADA);
+        cliente.agregarSuscripcion(suscripcion, this);
+//        LobbyDTO lobby = new LobbyDTO(partida.getCodigoPartida());
+//        CuentaDTO cuenta1 = new CuentaDTO();
+//        cuenta1.setIdCadena(cuenta.getIdCadena());
+//        lobby.setCuentaActual(cuenta1);
+//        lobby.setCuentas(List.of(cuenta1));
+//        manejadorDisplay.avisarMostrarLobby(lobby);
     }
     
     public void buscarPartida(UnirseDTO unirseDTO){
@@ -66,14 +78,13 @@ public class ManejadorCuenta  extends ObservadorLobbyLocal{
 
     @Override
     public void recibirPartida(Evento evento) {
-        LobbyDTO lobby = new LobbyDTO("");
         Enum<?> tipo = evento.getTipo();
         if(tipo.equals(TipoLogicaLobby.PARTIDA_ENCONTRADA)){
             EventoLobby eventoLobby = (EventoLobby) evento;
-            
+            LobbyDTO lobby = (LobbyDTO)eventoLobby.getInfo();
             
             lobby.asignarIdJugadorActual(cuenta.getIdCadena());
-            manejadorDisplay.avisarMostrarLobby(null);
+            manejadorDisplay.avisarMostrarLobby(lobby);
         }
     }
 

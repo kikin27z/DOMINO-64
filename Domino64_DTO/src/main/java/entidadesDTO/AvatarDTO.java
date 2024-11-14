@@ -1,5 +1,7 @@
 package entidadesDTO;
 
+import java.io.Serializable;
+
 /**
  * Enumeración que representa los avatares disponibles en el juego.
  * Cada avatar tiene un identificador único (url) que puede utilizarse para
@@ -9,7 +11,7 @@ package entidadesDTO;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public enum AvatarDTO {
+public enum AvatarDTO implements Serializable {
     AVE(0),       
     GATO(1),       
     JAGUAR(2),     

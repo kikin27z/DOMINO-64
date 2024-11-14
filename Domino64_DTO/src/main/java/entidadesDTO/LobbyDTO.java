@@ -1,12 +1,13 @@
 package entidadesDTO;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author karim
  */
-public class LobbyDTO {
+public class LobbyDTO implements Serializable {
     private List<CuentaDTO> cuentas;
     private String codigoPartida;
     private CuentaDTO cuentaActual;

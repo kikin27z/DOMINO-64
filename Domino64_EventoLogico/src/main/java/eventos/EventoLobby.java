@@ -1,8 +1,8 @@
 package eventos;
 
 
-import entidades.Cuenta;
-import entidades.Partida;
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.PartidaDTO;
 import tiposLogicos.TipoLogicaLobby;
 
 /**
@@ -16,11 +16,11 @@ import tiposLogicos.TipoLogicaLobby;
  * @author luisa M
  * @author karim F
  */
-public class EventoLobby extends EventoLogico<Cuenta> {
-    private Partida partida;
+public class EventoLobby extends EventoLogico {
+    private PartidaDTO partida;
     private TipoLogicaLobby tipo;
-    private Cuenta contexto;
-    private Cuenta publicador;
+    private Object contexto;
+    private CuentaDTO publicador;
     
     public EventoLobby(){}
     
@@ -29,29 +29,29 @@ public class EventoLobby extends EventoLogico<Cuenta> {
         this.tipo = tipo;
     }
     
-    public void agregarPartida(Partida partida){
+    public void agregarPartida(PartidaDTO partida){
         this.partida = partida;
     }
     
-    public Partida obtenerPartida(){
+    public PartidaDTO obtenerPartida(){
         return partida;
     }
     
-    public void setPublicador(Cuenta cuenta){
+    public void setPublicador(CuentaDTO cuenta){
         publicador = cuenta;
     }
     
-    public Cuenta getPublicador(){
+    public CuentaDTO getPublicador(){
         return publicador;
     }
     
     @Override
-    public void agregarInfo(Cuenta info) {
+    public void agregarInfo(Object info) {
         contexto = info;
     }
 
     @Override
-    public Cuenta getInfo() {
+    public Object getInfo() {
         return contexto;
     }
 

@@ -1,10 +1,12 @@
 package entidadesDTO;
 
+import java.io.Serializable;
+
 /**
  *
  * @author luisa M
  */
-public class CuentaDTO {
+public class CuentaDTO implements Serializable{
     private int id;
     private String username;
     private AvatarDTO avatar;

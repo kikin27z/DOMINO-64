@@ -4,6 +4,7 @@
  */
 package entidadesDTO;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,14 +12,13 @@ import java.util.List;
  *
  * @author luisa M
  */
-public class JugadorDTO {
+public class JugadorDTO implements Serializable {
     private CuentaDTO cuenta;
     private List<FichaDTO> fichas;
     private FichaDTO fichaSeleccionada;
 
     public JugadorDTO(CuentaDTO cuenta){
         this.cuenta = cuenta;
-        fichas= new ArrayList<>();
     }
     public JugadorDTO(){
         fichas = new ArrayList<>();

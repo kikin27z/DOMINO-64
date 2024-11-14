@@ -1,12 +1,15 @@
 package com.domino64.manejador;
 
 import abstraccion.ICliente;
+import adapter.AdaptadorDTO;
+import adapter.AdaptadorEntidad;
 import implementacion.Client;
 import entidades.Cuenta;
 import entidades.Partida;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.EventoError;
 import domino64.eventos.base.error.TipoError;
+import entidadesDTO.CuentaDTO;
 import eventos.EventoJugador;
 import eventos.EventoLobby;
 import java.util.List;
@@ -35,10 +38,12 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable{
     private Partida partida;
     private static int id;
     private ICliente cliente;
+    private AdaptadorEntidad adaptador;
+    private AdaptadorDTO adaptadorDTO;
     private Map<Cuenta, Boolean> jugadoresL;
+    //private Map<Lobby, List<Cuenta>> jugadoresListos;
     private Map<Partida, List<Cuenta>> jugadoresPartidas;
     private List<Cuenta> jugadoresListos;
-    private List<Cuenta> jugadoresPartida;
     private AtomicBoolean running;
     private static ExecutorService ejecutorEventos;
     
@@ -46,7 +51,7 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable{
     public ManejadorLobby(){
         jugadoresPartidas = new ConcurrentHashMap<>();
         jugadoresListos = new CopyOnWriteArrayList<>();
-        jugadoresPartida = new CopyOnWriteArrayList<>();
+        adaptador = new AdaptadorEntidad();
         setConsumers();
         ejecutorEventos = Executors.newFixedThreadPool(4);
         running = new AtomicBoolean(true);
@@ -54,9 +59,9 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable{
     
     public ManejadorLobby(AtomicBoolean running) {
         this.running = running;
+        adaptador = new AdaptadorEntidad();
         jugadoresPartidas = new ConcurrentHashMap<>();
         jugadoresListos = new CopyOnWriteArrayList<>();
-        jugadoresPartida = new CopyOnWriteArrayList<>();
         setConsumers();
     }
     
@@ -148,8 +153,9 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable{
     @Override
     public void crearPartida(Evento evento) {
         EventoJugador eventoJ = (EventoJugador)evento;
-        Partida nuevaPartida = eventoJ.getPartida();
-        Cuenta creadorPartida = eventoJ.getJugador();
+        Lobby nuevaPartida = new Lobby();
+        CuentaDTO cuentaDTO = eventoJ.getJugador();
+        Cuenta creadorPartida = adaptadorDTO.adaptarEntidadCuenta(cuentaDTO);
         nuevaPartida.agregarJugador(creadorPartida);
         
         List<Cuenta> players = new CopyOnWriteArrayList<>();

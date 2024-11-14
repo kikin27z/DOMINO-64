@@ -4,11 +4,13 @@
  */
 package entidadesDTO;
 
+import java.io.Serializable;
+
 /**
  *
  * @author karim
  */
-public enum JugadaValidaDTO {
+public enum JugadaValidaDTO  implements Serializable{
     NINGUNA,
     SOLO_IZQUIERDA,
     SOLO_DERECHA,

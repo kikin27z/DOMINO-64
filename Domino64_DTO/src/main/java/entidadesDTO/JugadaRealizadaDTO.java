@@ -1,10 +1,12 @@
 package entidadesDTO;
 
+import java.io.Serializable;
+
 /**
  *
  * @author karim
  */
-public class JugadaRealizadaDTO {
+public class JugadaRealizadaDTO implements Serializable {
     private PosicionDTO posicion;
     private boolean extremoIzq;
     private int coordenaX;

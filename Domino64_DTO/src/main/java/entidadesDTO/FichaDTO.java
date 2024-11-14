@@ -1,10 +1,12 @@
 package entidadesDTO;
 
+import java.io.Serializable;
+
 /**
  *
  * @author luisa M
  */
-public class FichaDTO {
+public class FichaDTO implements Serializable{
     private int izquierda;
     private int derecha;
     

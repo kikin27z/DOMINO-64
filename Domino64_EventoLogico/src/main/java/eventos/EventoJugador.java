@@ -1,8 +1,7 @@
 package eventos;
 
-import entidades.Cuenta;
-import entidades.Ficha;
-import entidades.Partida;
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.PartidaDTO;
 import tiposLogicos.TiposJugador;
 
 
@@ -18,11 +17,11 @@ import tiposLogicos.TiposJugador;
  * @author luisa M
  * @author karim F
  */
-public class EventoJugador extends EventoLogico<Ficha>{
-    private Ficha context;
+public class EventoJugador extends EventoLogico{
+    private Object context;
     private TiposJugador tipo;
-    private Cuenta jugador;
-    private Partida partida;
+    private CuentaDTO jugador;
+    private PartidaDTO partida;
     
     public EventoJugador(){}
     
@@ -34,25 +33,25 @@ public class EventoJugador extends EventoLogico<Ficha>{
         this.tipo = tipo;
     }
     
-    public Cuenta getJugador(){
+    public CuentaDTO getJugador(){
         return jugador;
     }
     
-    public void setJugador(Cuenta jugador){
+    public void setJugador(CuentaDTO jugador){
         this.jugador = jugador;
     }
     
-    public void setPartida(Partida partida){
+    public void setPartida(PartidaDTO partida){
         this.partida = partida;
     }
     
-    public Partida getPartida(){
+    public PartidaDTO getPartida(){
         return partida;
     }
     
     @Override
-    public void agregarInfo(Ficha info) {
-        this.context = info;
+    public void agregarInfo(Object contexto) {
+        this.context = contexto;
     }
 
     @Override
@@ -61,7 +60,7 @@ public class EventoJugador extends EventoLogico<Ficha>{
     }
 
     @Override
-    public Ficha getInfo() {
+    public Object getInfo() {
         return context;
     }
 

@@ -4,6 +4,8 @@ import builder.EventBuilder;
 import entidades.Cuenta;
 import entidades.Ficha;
 import entidades.Partida;
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.PartidaDTO;
 import eventos.EventoJugador;
 import tiposLogicos.TiposJugador;
 
@@ -15,7 +17,7 @@ import tiposLogicos.TiposJugador;
  * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author José Karim Franco Valencia - 00000245138
  */
-public class BuilderEventoJugador implements EventBuilder<Ficha> {
+public class BuilderEventoJugador implements EventBuilder {
 
     private EventoJugador evento;
 
@@ -23,16 +25,16 @@ public class BuilderEventoJugador implements EventBuilder<Ficha> {
         evento = new EventoJugador();
     }
 
-    public void setPartida(Partida partida) {
+    public void setPartida(PartidaDTO partida) {
         evento.setPartida(partida);
     }
 
-    public void setPublicador(Cuenta jugador) {
+    public void setPublicador(CuentaDTO jugador) {
         evento.setJugador(jugador);
     }
 
     @Override
-    public void setTipo(Enum<?> tipo) {
+    public void setTipo(Enum tipo) {
         evento.setTipo((TiposJugador) tipo);
     }
 
@@ -42,7 +44,7 @@ public class BuilderEventoJugador implements EventBuilder<Ficha> {
     }
 
     @Override
-    public void setInfo(Ficha info) {
+    public void setContexto(Object info) {
         evento.agregarInfo(info);
     }
 

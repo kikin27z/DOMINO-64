@@ -8,9 +8,9 @@ import com.domino64.base.Publicador;
 import eventBus.BusCore;
 import eventBus.Publisher;
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -183,7 +183,7 @@ public class Servidor {
         try {
             servidor = new ServerSocket(port);
             System.out.println("Servidor iniciado");
-
+            System.out.println("ip servidor: "+Inet4Address.getLocalHost().getHostAddress());
             recibirComponentes();
             System.out.println("componentes conectados");
             recibirJugadores();

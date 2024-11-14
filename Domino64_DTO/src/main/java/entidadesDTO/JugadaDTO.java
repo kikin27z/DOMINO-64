@@ -1,10 +1,12 @@
 package entidadesDTO;
 
+import java.io.Serializable;
+
 /**
  *
  * @author karim
  */
-public class JugadaDTO {
+public class JugadaDTO implements Serializable {
     private int izquierda;
     private int derecha;
     private FichaDTO ficha;

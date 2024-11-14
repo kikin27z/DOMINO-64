@@ -3,6 +3,8 @@ package lobbyBuilder;
 import builder.EventBuilder;
 import entidades.Cuenta;
 import entidades.Partida;
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.PartidaDTO;
 import eventos.EventoLobby;
 import tiposLogicos.TipoLogicaLobby;
 
@@ -10,7 +12,7 @@ import tiposLogicos.TipoLogicaLobby;
  *
  * @author luisa M
  */
-public class BuilderEventoLobby implements EventBuilder<Cuenta>{
+public class BuilderEventoLobby implements EventBuilder<CuentaDTO>{
     private EventoLobby evento;
     
     public BuilderEventoLobby(){
@@ -28,15 +30,15 @@ public class BuilderEventoLobby implements EventBuilder<Cuenta>{
     }
 
     @Override
-    public void setInfo(Cuenta info) {
+    public void setContexto(CuentaDTO info) {
         this.evento.agregarInfo(info);
     }
 
-    public void agregarPartida(Partida partida){
+    public void agregarPartida(PartidaDTO partida){
         this.evento.agregarPartida(partida);
     }
     
-    public void setPublicador(Cuenta publicador){
+    public void setPublicador(CuentaDTO publicador){
         this.evento.setPublicador(publicador);
     }
     

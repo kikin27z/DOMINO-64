@@ -7,6 +7,8 @@ package lobbyBuilder;
 import builder.DirectorEventos;
 import entidades.Cuenta;
 import entidades.Partida;
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.PartidaDTO;
 import eventos.EventoLobby;
 import tiposLogicos.TipoLogicaLobby;
 
@@ -26,43 +28,43 @@ public class DirectorLobby extends DirectorEventos<BuilderEventoLobby> {
         this.idPublicador = idPublicador;
     }
     
-    public EventoLobby crearEventoJugadorNuevo(Cuenta jugador){
+    public EventoLobby crearEventoJugadorNuevo(CuentaDTO jugador){
         builder.setIdPublicador(jugador.getId());
-        builder.setInfo(jugador);
+        builder.setContexto(jugador);
         builder.setTipo(TipoLogicaLobby.JUGADOR_NUEVO);
         return builder.construirEvento();
     }
     
-    public EventoLobby crearEventoJugadorSalio(Partida partida, Cuenta jugador){
+    public EventoLobby crearEventoJugadorSalio(PartidaDTO partida, CuentaDTO jugador){
         builder.agregarPartida(partida);
         builder.setIdPublicador(jugador.getId());
-        builder.setInfo(jugador);
+        builder.setContexto(jugador);
         builder.setTipo(TipoLogicaLobby.JUGADOR_SALIO);
         return builder.construirEvento();
     }
     
-    public EventoLobby crearEventoActualizarJugadoresListos(Cuenta jugador){
+    public EventoLobby crearEventoActualizarJugadoresListos(CuentaDTO jugador){
         builder.setIdPublicador(jugador.getId());
-        builder.setInfo(jugador);
+        builder.setContexto(jugador);
         builder.setTipo(TipoLogicaLobby.ACTUALIZAR_JUGADORES_LISTO);
         return builder.construirEvento();
     }
     
-    public EventoLobby crearEventoActualizarAvatares(Cuenta cuentaActualizada){
+    public EventoLobby crearEventoActualizarAvatares(CuentaDTO cuentaActualizada){
         builder.setIdPublicador(cuentaActualizada.getId());
-        builder.setInfo(cuentaActualizada);
+        builder.setContexto(cuentaActualizada);
         builder.setTipo(TipoLogicaLobby.ACTUALIZAR_AVATARES);
         return builder.construirEvento();
     }
     
-    public EventoLobby crearEventoActualizarUsername(Cuenta cuentaActualizada){
+    public EventoLobby crearEventoActualizarUsername(CuentaDTO cuentaActualizada){
         builder.setIdPublicador(cuentaActualizada.getId());
-        builder.setInfo(cuentaActualizada);
+        builder.setContexto(cuentaActualizada);
         builder.setTipo(TipoLogicaLobby.ACTUALIZAR_USERNAME);
         return builder.construirEvento();
     }
     
-    public EventoLobby crearEventoPartidaEncontrada(Partida partidaEncontrada){
+    public EventoLobby crearEventoPartidaEncontrada(PartidaDTO partidaEncontrada){
         builder.setIdPublicador(idPublicador);
         builder.agregarPartida(partidaEncontrada);
         builder.setTipo(TipoLogicaLobby.PARTIDA_ENCONTRADA);

@@ -1,10 +1,12 @@
 package entidadesDTO;
 
+import java.io.Serializable;
+
 /**
  *
  * @author karim
  */
-public class UnirseDTO {
+public class UnirseDTO implements Serializable {
     private String codigoPartida;
     private int idJugador;
 

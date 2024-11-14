@@ -10,11 +10,10 @@ import tiposLogicos.TipoSuscripcion;
  */
 public class BuilderEventoSuscripcion implements EventBuilder<Enum<?>>{
     private EventoSuscripcion evento;
-    private TipoSuscripcion tipo;
     
     @Override
     public void setTipo(Enum<?> tipo) {
-        this.tipo = (TipoSuscripcion)tipo;
+        evento.setTipo((TipoSuscripcion)tipo);
     }
 
     @Override
@@ -23,7 +22,7 @@ public class BuilderEventoSuscripcion implements EventBuilder<Enum<?>>{
     }
 
     @Override
-    public void setInfo(Enum<?> info) {
+    public void setContexto(Enum<?> info) {
         evento.agregarInfo(info);
     }
 

@@ -1,7 +1,6 @@
 package eventos;
 
-//import categorias.CategoriaEvento;
-import entidades.Cuenta;
+import entidadesDTO.CuentaDTO;
 import java.util.ArrayList;
 import java.util.List;
 import tiposLogicos.TipoLogicaTurno;
@@ -10,9 +9,9 @@ import tiposLogicos.TipoLogicaTurno;
  *
  * @author luisa M
  */
-public class EventoTurno extends EventoLogico<Cuenta>{
-    private List<Cuenta> jugadores;
-    private Cuenta jugador;
+public class EventoTurno extends EventoLogico<CuentaDTO>{
+    private List<CuentaDTO> jugadores;
+    private CuentaDTO jugador;
     private boolean flag;
     private TipoLogicaTurno tipo;
     
@@ -34,7 +33,7 @@ public class EventoTurno extends EventoLogico<Cuenta>{
      * @param info Cuenta del contexto de este evento
      */
     @Override
-    public void agregarInfo(Cuenta info) {
+    public void agregarInfo(CuentaDTO info) {
         if(flag)
             jugadores.add(info);
         else{
@@ -48,7 +47,7 @@ public class EventoTurno extends EventoLogico<Cuenta>{
      * @return La cuenta como parte del contexto
      */
     @Override
-    public Cuenta getInfo() {
+    public CuentaDTO getInfo() {
         return jugador;
     }
     /**
@@ -60,10 +59,8 @@ public class EventoTurno extends EventoLogico<Cuenta>{
      * designaron los turnos.
      * @return La lista de jugadores como contexto del evento
      */
-    public List<Cuenta> getJugadores(){
-        if(flag)
-            return jugadores;
-        return null;
+    public List<CuentaDTO> getJugadores(){
+        return jugadores;
     }
 
     @Override
