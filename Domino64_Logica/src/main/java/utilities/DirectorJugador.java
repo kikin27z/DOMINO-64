@@ -4,6 +4,7 @@ import builder.DirectorEventos;
 import entidades.Cuenta;
 import entidades.Ficha;
 import entidades.Partida;
+import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
 import eventos.EventoJugador;
 import tiposLogicos.TiposJugador;
@@ -18,7 +19,6 @@ import tiposLogicos.TiposJugador;
  * @author José Karim Franco Valencia - 00000245138
  */
 public class DirectorJugador extends DirectorEventos<BuilderEventoJugador>{
-
     public DirectorJugador(BuilderEventoJugador builder) {
         super(builder);
     }
@@ -47,13 +47,12 @@ public class DirectorJugador extends DirectorEventos<BuilderEventoJugador>{
         return builder.construirEvento();
     }
     
-//    public EventoJugador irEventoLobby(LobbyDTO lobby, Cuenta creador){
-//        builder.setLobbyDTO(lobby);
-//        builder.setPublicador(creador);
-//        builder.setIdPublicador(creador.getId());
-//        builder.setTipo(TiposJugador.IR_LOBBY);
-//        return builder.construirEvento();
-//    }
+    public EventoJugador irEventoLobby(CuentaDTO cuenta, int id){
+        builder.setCuentaDTO(cuenta);
+        builder.setIdPublicador(id);
+        builder.setTipo(TiposJugador.CREAR_PARTIDA);
+        return builder.construirEvento();
+    }
     
     public EventoJugador crearEventoJalarFicha(Cuenta publicador){
         builder.setPublicador(publicador);

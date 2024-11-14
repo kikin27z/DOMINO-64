@@ -4,6 +4,7 @@ import builder.EventBuilder;
 import entidades.Cuenta;
 import entidades.Ficha;
 import entidades.Partida;
+import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
 import eventos.EventoJugador;
 import tiposLogicos.TiposJugador;
@@ -34,6 +35,10 @@ public class BuilderEventoJugador implements EventBuilder<Ficha> {
 
     public void setPublicador(Cuenta jugador) {
         evento.setJugador(jugador);
+    }
+    
+    public void setCuentaDTO(CuentaDTO cuenta){
+        
     }
 
     @Override

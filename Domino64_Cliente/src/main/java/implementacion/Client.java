@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package implementacion;
 
 import abstraccion.ICliente;
@@ -18,7 +14,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -106,23 +101,20 @@ public class Client extends Observable<Evento> implements ICliente{
         return clientId;
     }
     
-    public void iniciar(boolean esLocal){
+    public void iniciar(){
         running = true;
-        conectarCliente(esLocal);
+        conectarCliente();
         
         new Thread(this::procesarColaEventos).start();
         
         ejecutorEventos.submit(this::listenForEvent);
     }
     
-    private void conectarCliente(boolean esLocal){
+    private void conectarCliente(){
         try {
-            if(esLocal){
+//            
                 
-            socket = new Socket("localhost", port);
-            }else{
-                socket = new Socket(host, port);
-            }
+            socket = new Socket(host, port);
             System.out.println("en el run");
             
             output = new ObjectOutputStream(socket.getOutputStream());

@@ -9,8 +9,8 @@ import java.util.Random;
  * @author luisa M
  */
 public class Cuenta implements Serializable{
-    private String username;
-    private String avatarUrl;
+    private String nombre;
+    private Avatar avatar;
     private int id;
     private String idCadena;
     private Jugador jugador;
@@ -20,30 +20,27 @@ public class Cuenta implements Serializable{
     }
 
     public Cuenta() {
-        idCadena = generateLetterString();
+        idCadena = crearId();
     }
-    
-    
 
     public int getId(){
         return id;
     }
     
-    public String getUsername() {
-        return username;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
+        nombre = avatar.getNombre();
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public Avatar getAvatar() {
+        return avatar;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
-    }
+    
 
     public Jugador getJugador() {
         return jugador;
@@ -58,7 +55,7 @@ public class Cuenta implements Serializable{
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 73 * hash + Objects.hashCode(this.username);
+        hash = 73 * hash + Objects.hashCode(this.nombre);
         return hash;
     }
 
@@ -79,10 +76,10 @@ public class Cuenta implements Serializable{
 
     @Override
     public String toString() {
-        return "Cuenta{" +"user= " + username + ", id=" + id + '}';
+        return "Cuenta{" + "nombre=" + nombre + ", avatar=" + avatar + ", idCadena=" + idCadena + '}';
     }
-    
-    public  String generateLetterString() {
+
+    public  String crearId() {
         String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         Random random = new Random();
         StringBuilder result = new StringBuilder();

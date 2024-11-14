@@ -37,7 +37,7 @@ public class Starter {
         }
         
         manejadorC.init(c, publicador);
-        c.iniciar(true);
+        c.iniciar();
         manejadorC.setClientId(c.getClientId());
         
 //        ManejadorJugador manejadorJ = new ManejadorJugador();
