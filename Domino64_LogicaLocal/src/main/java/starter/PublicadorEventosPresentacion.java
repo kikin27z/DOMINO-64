@@ -6,7 +6,7 @@ package starter;
 
 import com.domino64.base.Publicador;
 import com.domino64.base.Suscriptor;
-import eventos.EventoMVC;
+import eventoss.EventoMVC;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;

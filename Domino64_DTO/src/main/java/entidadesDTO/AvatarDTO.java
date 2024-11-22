@@ -11,27 +11,35 @@ import java.io.Serializable;
  * @author José Karim Franco Valencia - 00000245138
  */
 public enum AvatarDTO {
-    AVE("/avatar/ave.png"),       
-    GATO("/avatar/gato.png"),       
-    JAGUAR("/avatar/jaguar.png"),     
-    KIWI("/avatar/kiwi.png"),      
-    MARIPOSA("/avatar/mariposa.png"),   
-    PANDA("/avatar/panda.png"),     
-    SERPIENTE("/avatar/serpiente.png"),  
-    TORTUGA("/avatar/tortuga.png"),
-    VENADO("/avatar/venado.png");     
+    AVE("/avatar/ave.png","Piolin", "ave"),       
+    GATO("/avatar/gato.png","Silvestre","gato"),       
+    JAGUAR("/avatar/jaguar.png","Lucchi","jaguar"),     
+    KIWI("/avatar/kiwi.png", "Jenni Rivera","kiwi"),      
+    MARIPOSA("/avatar/mariposa.png", "Victor Encinas","mariposa"),   
+    PANDA("/avatar/panda.png", "Po","panda"),     
+    SERPIENTE("/avatar/serpiente.png", "Orochimaru","serpiente"),  
+    TORTUGA("/avatar/tortuga.png", "Donatello","tortuga"),
+    VENADO("/avatar/venado.png", "Chopper","venado");     
 
     private final String url;  
+    private final String nombre;
+    private final String animal;
 
     /**
      * Constructor de la enumeración AvatarDTO.
      * 
      * @param url el identificador único del avatar.
      */
-    AvatarDTO(String url) {
-        this.url = url; 
+    AvatarDTO(String url, String nombre, String animal) {
+        this.url = url;
+        this.nombre = nombre;
+        this.animal = animal;
     }
 
+    public String getNombre(){
+        return nombre;
+    }
+    
     /**
      * Obtiene el identificador único del avatar.
      * 
@@ -39,5 +47,9 @@ public enum AvatarDTO {
      */
     public String getUrl() {
         return url;  
+    }
+    
+    public String getAnimal() {
+        return animal;  
     }
 }

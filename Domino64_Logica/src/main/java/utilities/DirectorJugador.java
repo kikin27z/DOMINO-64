@@ -34,8 +34,8 @@ public class DirectorJugador extends DirectorEventos<BuilderEventoJugador>{
         return builder.construirEvento();
     }
     
-    public EventoJugador crearEventoUnirsePartida(PartidaDTO partidaNueva, CuentaDTO nuevoJugador){
-        builder.setPartida(partidaNueva);
+    public EventoJugador crearEventoUnirsePartida(LobbyDTO partidaNueva, CuentaDTO nuevoJugador){
+        builder.setLobbyDTO(partidaNueva);
         builder.setPublicador(nuevoJugador);
         builder.setIdPublicador(nuevoJugador.getId());
         builder.setTipo(TiposJugador.UNIRSE_PARTIDA);
@@ -56,31 +56,31 @@ public class DirectorJugador extends DirectorEventos<BuilderEventoJugador>{
         return builder.construirEvento();
     }
     
-    public EventoJugador crearEventoJalarFicha(Cuenta publicador){
+    public EventoJugador crearEventoJalarFicha(CuentaDTO publicador){
         builder.setPublicador(publicador);
         builder.setIdPublicador(publicador.getId());
         builder.setTipo(TiposJugador.JALAR_FICHA);
         return builder.construirEvento();
     }
     
-    public EventoJugador crearEventoAbandonarPartida(PartidaDTO partida,CuentaDTO publicador){
-        builder.setPartida(partida);
+    public EventoJugador crearEventoAbandonarPartida(LobbyDTO lobby,CuentaDTO publicador){
+        builder.setLobbyDTO(lobby);
         builder.setPublicador(publicador);
         builder.setIdPublicador(publicador.getId());
         builder.setTipo(TiposJugador.ABANDONAR_PARTIDA);
         return builder.construirEvento();
     }
     
-    public EventoJugador crearEventoCambiarAvatar(PartidaDTO partida, CuentaDTO cuentaActualizada){
-        builder.setPartida(partida);
+    public EventoJugador crearEventoCambiarAvatar(LobbyDTO lobby, CuentaDTO cuentaActualizada){
+        builder.setLobbyDTO(lobby);
         builder.setPublicador(cuentaActualizada);
         builder.setIdPublicador(cuentaActualizada.getId());
         builder.setTipo(TiposJugador.CAMBIAR_AVATAR);
         return builder.construirEvento();
     }
     
-    public EventoJugador crearEventoCambiarUsername(PartidaDTO partida, CuentaDTO cuentaActualizada){
-        builder.setPartida(partida);
+    public EventoJugador crearEventoCambiarUsername(LobbyDTO lobby, CuentaDTO cuentaActualizada){
+        builder.setLobbyDTO(lobby);
         builder.setPublicador(cuentaActualizada);
         builder.setIdPublicador(cuentaActualizada.getId());
         builder.setTipo(TiposJugador.CAMBIAR_USERNAME);
@@ -101,10 +101,14 @@ public class DirectorJugador extends DirectorEventos<BuilderEventoJugador>{
         return builder.construirEvento();
     }
     
-    public EventoJugador crearEventoJugadorListo(CuentaDTO publicador){
+    public EventoJugador crearEventoActualizarJugadorListo(LobbyDTO lobby, CuentaDTO publicador, boolean listo){
+        builder.setLobbyDTO(lobby);
         builder.setPublicador(publicador);
         builder.setIdPublicador(publicador.getId());
-        builder.setTipo(TiposJugador.JUGADOR_LISTO);
+        if(listo)
+            builder.setTipo(TiposJugador.JUGADOR_LISTO);
+        else
+            builder.setTipo(TiposJugador.JUGADOR_NO_LISTO);
         return builder.construirEvento();
     }
 }

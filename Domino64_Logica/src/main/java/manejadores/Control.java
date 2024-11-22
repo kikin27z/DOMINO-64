@@ -1,13 +1,24 @@
 package manejadores;
 
 import abstraccion.ICliente;
+import eventoss.EventoMVC;
+import eventoss.EventoMVCDisplay;
+import eventoss.EventoMVCJugador;
+import eventoss.TipoJugadorMVC;
 import implementacion.Client;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import logicaLobby.ManejadorCuenta;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import presentacion_utilities.ControladorComunicacion;
+import presentacion_utilities.NotificadorEvento;
 
 /**
  * Clase que actúa como controlador central del juego. Es responsable de la
@@ -21,9 +32,8 @@ import java.util.logging.Logger;
  * @author José Karim Franco Valencia - 00000245138
  */
 public class Control {
-
+    private static final Map<TipoJugadorMVC, Consumer<EventoMVCJugador>> consumers = new ConcurrentHashMap<>();
     private static final Logger LOGGER = Logger.getLogger(Control.class.getName());
-
     private static ManejadorCuenta cuenta;
     private static ManejadorDisplay display;
     private static MediadorManejadores modelo;
@@ -31,6 +41,8 @@ public class Control {
     private static ExecutorService hiloPrincipal;
     private static ICliente cliente;
 
+   
+    
     /**
      * Constructor privado que inicializa los manejadores del juego y el hilo
      * principal que ejecutará las operaciones lógicas. Este método se ejecuta
@@ -44,31 +56,58 @@ public class Control {
             try {
                 // Inicializar los manejadores
 
-                cuenta = new ManejadorCuenta();
-                modelo = new MediadorManejadores();
-                display = new ManejadorDisplay();
-                cuenta.setManejadorDisplay(display);
-
+//                cuenta = new ManejadorCuenta();
+                modelo = MediadorManejadores.getInstance();
+////                display = new ManejadorDisplay();
+//                cuenta.setManejadorDisplay(display);
                 subscribirManejadores();
+                MediadorManejadores.getManejadorDisplay().iniciarJuego();
+                iniciarHiloLogica();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
     }
 
+    public static void iniciarHiloLogica(){
+            while (true) {
+                try {
+                    EventoMVCJugador mensaje = ControladorComunicacion.colaEventosALogica.take();
+                    System.out.println("after take: "+ mensaje.getTipo());
+                    if(!consumers.isEmpty()){
+                        Consumer<EventoMVCJugador> consumer = consumers.get(mensaje.getTipo());
+                        if(consumer != null){
+                            consumer.accept(mensaje);
+                        }
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        //}, "LogicThread").start();
+    }
+    
+    public static void agregarConsumer(TipoJugadorMVC tipo, Consumer<EventoMVCJugador> consumer){
+        consumers.putIfAbsent(tipo, consumer);
+    }
+    
+    public static void removerConsumer(TipoJugadorMVC tipo, Consumer<EventoMVCJugador> consumer){
+        consumers.remove(tipo, consumer);
+    }
+    
     private void subscribirManejadores() {
         String ip = pedirIP();
         Client client = Client.getClient(ip, 5000);
 
-        for (Enum<?> evento : cuenta.getEventos()) {
-            client.addObserver(evento, cuenta);
+        for (Enum<?> evento : MediadorManejadores.getManejadorCuenta().getEventos()) {
+            client.addObserver(evento, MediadorManejadores.getManejadorCuenta());
         }
 
-        cuenta.init(client);
+        MediadorManejadores.getManejadorCuenta().init(client);
         client.iniciar();
-        cuenta.setClientId(client.getClientId());
+        MediadorManejadores.getManejadorCuenta().setClientId(client.getClientId());
 
-        display.iniciarJuego();
+        //display.iniciarJuego();
 
     }
 

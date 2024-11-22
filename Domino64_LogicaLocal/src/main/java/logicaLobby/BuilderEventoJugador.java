@@ -5,12 +5,8 @@
 package logicaLobby;
 
 import builder.EventBuilder;
-import entidades.Cuenta;
-import entidades.Ficha;
-import entidades.Partida;
 import entidadesDTO.CuentaDTO;
-import entidadesDTO.FichaDTO;
-import entidadesDTO.PartidaDTO;
+import entidadesDTO.LobbyDTO;
 import eventos.EventoJugador;
 import tiposLogicos.TiposJugador;
 
@@ -28,8 +24,8 @@ public class BuilderEventoJugador implements EventBuilder {
         evento = new EventoJugador();
     }
     
-    public void setPartida(PartidaDTO partida){
-        evento.setPartida(partida);
+    public void setPartida(LobbyDTO partida){
+        evento.setLobby(partida);
     }
     
     public void setPublicador(CuentaDTO jugador){

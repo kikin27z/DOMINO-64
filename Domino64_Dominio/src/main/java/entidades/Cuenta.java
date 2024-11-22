@@ -9,7 +9,7 @@ import java.util.Random;
  * @author luisa M
  */
 public class Cuenta implements Serializable{
-    private String nombre;
+    private String username;
     private Avatar avatar;
     private int id;
     private String idCadena;
@@ -28,19 +28,17 @@ public class Cuenta implements Serializable{
     }
     
     public String getNombre() {
-        return nombre;
+        return username;
     }
 
     public void setAvatar(Avatar avatar) {
         this.avatar = avatar;
-        nombre = avatar.getNombre();
+        username = avatar.getNombre();
     }
 
     public Avatar getAvatar() {
         return avatar;
     }
-
-    
 
     public Jugador getJugador() {
         return jugador;
@@ -51,11 +49,10 @@ public class Cuenta implements Serializable{
     }
 
     
-    
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 73 * hash + Objects.hashCode(this.nombre);
+        hash = 73 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -76,7 +73,7 @@ public class Cuenta implements Serializable{
 
     @Override
     public String toString() {
-        return "Cuenta{" + "nombre=" + nombre + ", avatar=" + avatar + ", idCadena=" + idCadena + '}';
+        return "Cuenta{" + "nombre=" + username + ", avatar=" + avatar + ", idCadena=" + idCadena + '}';
     }
 
     public  String crearId() {

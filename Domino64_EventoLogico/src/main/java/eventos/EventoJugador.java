@@ -1,7 +1,9 @@
 package eventos;
 
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.JugadaDTO;
 import entidadesDTO.LobbyDTO;
+import entidadesDTO.PartidaDTO;
 import tiposLogicos.TiposJugador;
 
 
@@ -22,7 +24,7 @@ public class EventoJugador extends EventoLogico{
     private TiposJugador tipo;
     private LobbyDTO lobby;
     private CuentaDTO cuenta;
-    private Ficha ficha;
+    private PartidaDTO partida;
     
     public EventoJugador(){}
     
@@ -35,21 +37,13 @@ public class EventoJugador extends EventoLogico{
     }
     
     public CuentaDTO getJugador(){
-        return jugador;
+        return cuenta;
     }
     
     public void setJugador(CuentaDTO jugador){
-        this.jugador = jugador;
+        this.cuenta = jugador;
     }
     
-    public void setPartida(PartidaDTO partida){
-        this.partida = partida;
-    }
-    
-    public PartidaDTO getPartida(){
-        return partida;
-    }
-
     public LobbyDTO getLobby() {
         return lobby;
     }
@@ -57,15 +51,6 @@ public class EventoJugador extends EventoLogico{
     public void setLobby(LobbyDTO lobby) {
         this.lobby = lobby;
     }
-
-    public CuentaDTO getCuenta() {
-        return cuenta;
-    }
-
-    public void setCuenta(CuentaDTO cuenta) {
-        this.cuenta = cuenta;
-    }
-    
     
     @Override
     public void agregarInfo(Object contexto) {
@@ -87,7 +72,7 @@ public class EventoJugador extends EventoLogico{
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString());
         sb.append("{contexto= ").append(context);
-        sb.append(", jugador= ").append(jugador);
+        sb.append(", jugador= ").append(cuenta);
         sb.append(", tipo= ").append(tipo.toString());
         sb.append('}');
         return sb.toString();

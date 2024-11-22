@@ -4,6 +4,7 @@ import builder.EventBuilder;
 import entidades.Cuenta;
 import entidades.Partida;
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
 import eventos.EventoLobby;
 import tiposLogicos.TipoLogicaLobby;
@@ -34,8 +35,8 @@ public class BuilderEventoLobby implements EventBuilder<CuentaDTO>{
         this.evento.agregarInfo(info);
     }
 
-    public void agregarPartida(PartidaDTO partida){
-        this.evento.agregarPartida(partida);
+    public void agregarLobby(LobbyDTO lobby){
+        this.evento.agregarLobby(lobby);
     }
     
     public void setPublicador(CuentaDTO publicador){

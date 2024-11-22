@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package eventos;
+package eventoss;
 
 import domino64.eventos.base.Evento;
 import entidadesDTO.CuentaDTO;
@@ -33,7 +33,7 @@ public abstract class EventoMVC<T> implements Evento{
         return publicador.getId();
     }
     
-    @Override
+   @Override
     public abstract Enum<?> getTipo();
     
     public abstract void agregarContexto(T contexto);

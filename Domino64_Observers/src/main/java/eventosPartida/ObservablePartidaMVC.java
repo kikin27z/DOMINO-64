@@ -4,10 +4,18 @@
  */
 package eventosPartida;
 
+
 /**
  *
  * @author karim
  */
-public interface ObservablePartidaMVC {
+public abstract class ObservablePartidaMVC {
+    private ObserverPartidaMVC observer;
+
+    public void agregarObserver(ObserverPartidaMVC observer){
+        this.observer = observer;
+    }
     
+    public void notificarJugadorSalio(){
+    }
 }

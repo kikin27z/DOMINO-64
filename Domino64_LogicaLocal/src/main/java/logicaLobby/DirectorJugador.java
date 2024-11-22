@@ -1,9 +1,6 @@
 package logicaLobby;
 
 import builder.DirectorEventos;
-import entidades.Cuenta;
-import entidades.Ficha;
-import entidades.Partida;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.PartidaDTO;

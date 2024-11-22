@@ -13,16 +13,18 @@ public class JugadaRealizadaDTO implements Serializable {
     private int coordenaY;
     private FichaDTO ficha;
 
+    public JugadaRealizadaDTO() {
+    }
+    
+    public JugadaRealizadaDTO(PosicionDTO posicion){
+        this.posicion = posicion;
+    }
+    
     public JugadaRealizadaDTO(PosicionDTO posicion, boolean izquierda) {
         this.posicion = posicion;
         this.extremoIzq = izquierda;
     }
-
-    public JugadaRealizadaDTO() {
-    }
     
-    
-
     public PosicionDTO getPosicion() {
         return posicion;
     }

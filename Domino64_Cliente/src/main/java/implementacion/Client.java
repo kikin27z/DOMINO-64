@@ -76,10 +76,7 @@ public class Client extends Observable<Evento> implements ICliente{
             return t;
         });
         
-        this.ejecutorEventos = Executors.newSingleThreadExecutor(r -> {
-            Thread t = new Thread(r);
-            return t;
-        });
+        this.ejecutorEventos = Executors.newCachedThreadPool();
         
         suscripcionesEventos = new ArrayList<>();
         colaEventos = new LinkedBlockingQueue();
@@ -107,7 +104,7 @@ public class Client extends Observable<Evento> implements ICliente{
         
         new Thread(this::procesarColaEventos).start();
         
-        ejecutorEventos.submit(this::listenForEvent);
+        new Thread(this::listenForEvent).start();
     }
     
     private void conectarCliente(){
@@ -150,6 +147,7 @@ public class Client extends Observable<Evento> implements ICliente{
             if(connected){
                 try {
                     synchronized (output) {
+                        output.reset();
                         output.writeObject(suscripcionesEventos);
                         output.flush();
                     }
@@ -161,6 +159,11 @@ public class Client extends Observable<Evento> implements ICliente{
         }
     }
     
+    /**
+     * envia los eventos al servidor
+     * Va tomando los eventos que se vayan agregando a la cola
+     * y los envia segun vayan llegando
+     */
     private void procesarColaEventos(){
         while(running){
             try {
@@ -189,19 +192,6 @@ public class Client extends Observable<Evento> implements ICliente{
     @Override
     public void enviarEvento(Evento event) {
         colaEventos.offer(event);
-//        if(connected){
-//            try {
-//                synchronized (output) { 
-//                    output.reset();
-//                    System.out.println("en el enviar evento; "+event);
-//                    output.writeObject(event);//envia msj al servidor
-//                    output.flush();
-//                }
-//            } catch (IOException ex) {
-//                System.out.println("error al enviar evento: " + ex.getMessage());
-//                manejarDesconexion();
-//            }
-//        }
     }
 
     @Override
@@ -221,7 +211,10 @@ public class Client extends Observable<Evento> implements ICliente{
                 Evento evento;
                 try {
                     evento = (Evento)input.readObject();
-                    manejarEvento(evento);
+                    System.out.println("evento en lstn 4 ev: "+evento);
+                    ejecutorEventos.submit(() -> {
+                        manejarEvento(evento);
+                    });
                 } catch (IOException e) {
                     manejarDesconexion();
                 }catch (ClassNotFoundException ex){
@@ -255,7 +248,7 @@ public class Client extends Observable<Evento> implements ICliente{
         ejecutorEventos.shutdown();
         
         try {
-            if (!ejecutorEventos.awaitTermination(5, TimeUnit.SECONDS)) {
+            if (!ejecutorEventos.awaitTermination(3, TimeUnit.SECONDS)) {
                 ejecutorEventos.shutdownNow();
             }
         } catch (InterruptedException e) {
@@ -278,6 +271,13 @@ public class Client extends Observable<Evento> implements ICliente{
     public void agregarSuscripcion(Evento evento, Observer ob) {
         suscripcionesEventos.add((Enum<?>)evento.getInfo());
         addObserver((Enum<?>)evento.getInfo(), ob);
+        enviarEvento(evento);
+    }
+
+    @Override
+    public void removerSuscripcion(Evento evento, Observer ob) {
+        suscripcionesEventos.remove((Enum<?>)evento.getInfo());
+        removeObserver((Enum<?>)evento.getInfo(), ob);
         enviarEvento(evento);
     }
 

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -75,9 +76,11 @@ public class Servidor {
             HiloJugador jugador = clientesJugadores.get(idCliente);
             Socket socket = jugador.getSocket();
             try {
-                socket.getInputStream().close();
-                socket.getOutputStream().close();
-                socket.close();
+                if(!socket.isClosed()){
+                    socket.getInputStream().close();
+                    socket.getOutputStream().close();
+                    socket.close();
+                }
             } catch (IOException e) {
                 Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, null, e);
             }
@@ -99,9 +102,11 @@ public class Servidor {
             HiloComponente componente = clientesComponentes.get(idCliente);
             Socket socket = componente.getSocket();
             try {
-                socket.getInputStream().close();
-                socket.getOutputStream().close();
-                socket.close();
+                if(!socket.isClosed()){
+                    socket.getInputStream().close();
+                    socket.getOutputStream().close();
+                    socket.close();
+                }
             } catch (IOException e) {
                 Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, null, e);
             }
@@ -207,8 +212,12 @@ public class Servidor {
     }
 
     private void imprimirIP(){
-        System.out.println("Servidor iniciado en puerto: " + port);
-        System.out.println("IPs disponibles:");
-        System.out.println("  IP servidor: " + Inet4Address.getLocalHost().getHostAddress());
+        try {
+            System.out.println("Servidor iniciado en puerto: " + port);
+            System.out.println("IPs disponibles:");
+            System.out.println("  IP servidor: " + Inet4Address.getLocalHost().getHostAddress());
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
+        }
     }
 }

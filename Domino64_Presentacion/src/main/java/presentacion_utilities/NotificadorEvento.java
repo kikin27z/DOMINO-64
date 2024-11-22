@@ -1,6 +1,5 @@
 package presentacion_utilities;
 
-import entidadesDTO.PartidaDTO;
 import eventosLobby.ObservableLobby;
 import eventosLobby.ObserverLobby;
 import eventosOpcionesPartida.ObserverOpcionesPartida;
@@ -18,7 +17,6 @@ import eventosPartida.ObservablePartida;
  * @author José Karim Franco Valencia - 00000245138
  */
 public class NotificadorEvento implements INotificadorEvento, ObservablePantallas {
-
     private static NotificadorEvento notificarEvento; // Instancia única de Navegacion
     private final List<ObserverPantalla> observersDisplay;
     private ObservableOpcionesPartida opciones;

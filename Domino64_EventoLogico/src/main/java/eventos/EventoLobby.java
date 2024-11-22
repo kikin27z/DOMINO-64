@@ -2,6 +2,7 @@ package eventos;
 
 
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
 import tiposLogicos.TipoLogicaLobby;
 
@@ -9,7 +10,7 @@ import tiposLogicos.TipoLogicaLobby;
  * Clase que representa los eventos que puede generar el Lobby.
  * La entidad que maneja es la entidad Cuenta, debido a que
  * en el lobby solo se conocen las cuentas de los jugadores.
- * A este evento se le puede agregar la partida en la cual
+ * A este evento se le puede agregar la lobby en la cual
  * esta el contexto (la partida donde esta el jugador)
  * Este evento puede ser de cualquier tipo definido en el
  * enum TipoLogicaLobby
@@ -17,7 +18,7 @@ import tiposLogicos.TipoLogicaLobby;
  * @author karim F
  */
 public class EventoLobby extends EventoLogico {
-    private PartidaDTO partida;
+    private LobbyDTO lobby;
     private TipoLogicaLobby tipo;
     private Object contexto;
     private CuentaDTO publicador;
@@ -29,12 +30,12 @@ public class EventoLobby extends EventoLogico {
         this.tipo = tipo;
     }
     
-    public void agregarPartida(PartidaDTO partida){
-        this.partida = partida;
+    public void agregarLobby(LobbyDTO lobby){
+        this.lobby = lobby;
     }
     
-    public PartidaDTO obtenerPartida(){
-        return partida;
+    public LobbyDTO obtenerLobby(){
+        return lobby;
     }
     
     public void setPublicador(CuentaDTO cuenta){

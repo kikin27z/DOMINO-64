@@ -4,14 +4,17 @@
  */
 package adapter;
 
+import entidades.Avatar;
 import entidades.Cuenta;
 import entidades.Ficha;
 import entidades.Jugador;
+import entidades.Lobby;
 import entidades.Partida;
 import entidadesDTO.AvatarDTO;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadorDTO;
+import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +24,13 @@ import java.util.List;
  * @author luisa M
  */
 public class AdaptadorEntidad {
+    
+    public LobbyDTO adaptarEntidadLobby(Lobby lobby){
+        LobbyDTO dto = new LobbyDTO(lobby.getCodigoPartida());
+        List<CuentaDTO> cuentas = adaptarCuentas(lobby.obtenerCuentas());
+        dto.setCuentas(cuentas);
+        return dto;
+    }
     
     public PartidaDTO adaptarEntidadPartida(Partida partida){
         PartidaDTO dto = new PartidaDTO();
@@ -55,29 +65,28 @@ public class AdaptadorEntidad {
         CuentaDTO dto = new CuentaDTO();
         
         dto.setId(cuenta.getId());
-        if(cuenta.getAvatarUrl() != null){
-            dto.setAvatar(adaptarAvatar(cuenta.getAvatarUrl()));
+        if(cuenta.getAvatar() != null){
+            dto.setAvatar(adaptarAvatar(cuenta.getAvatar()));
         }
         dto.setIdCadena(cuenta.getIdCadena());
-        dto.setUsername(cuenta.getUsername());
         
         return dto;
     } 
     
-    public AvatarDTO adaptarAvatar(String nombreAvatar){
-        AvatarDTO avatar = null;
-        switch(nombreAvatar){
-            case "AVE"-> avatar = AvatarDTO.AVE;
-            case "GATO"-> avatar = AvatarDTO.GATO;
-            case "JAGUAR"-> avatar = AvatarDTO.JAGUAR;
-            case "KIWI"-> avatar = AvatarDTO.KIWI;
-            case "MARIPOSA"-> avatar = AvatarDTO.MARIPOSA;
-            case "PANDA"-> avatar = AvatarDTO.PANDA;
-            case "SERPIENTE"-> avatar = AvatarDTO.SERPIENTE;
-            case "TORTUGA"-> avatar = AvatarDTO.TORTUGA;
-            case "VENADO"-> avatar = AvatarDTO.VENADO;
+    public AvatarDTO adaptarAvatar(Avatar avatar){
+        AvatarDTO avatarDTO = null;
+        switch(avatar){
+            case Avatar.AVE-> avatarDTO = AvatarDTO.AVE;
+            case Avatar.GATO-> avatarDTO = AvatarDTO.GATO;
+            case Avatar.JAGUAR-> avatarDTO = AvatarDTO.JAGUAR;
+            case Avatar.KIWI-> avatarDTO = AvatarDTO.KIWI;
+            case Avatar.MARIPOSA-> avatarDTO = AvatarDTO.MARIPOSA;
+            case Avatar.PANDA-> avatarDTO = AvatarDTO.PANDA;
+            case Avatar.SERPIENTE-> avatarDTO = AvatarDTO.SERPIENTE;
+            case Avatar.TORTUGA-> avatarDTO = AvatarDTO.TORTUGA;
+            case Avatar.VENADO-> avatarDTO = AvatarDTO.VENADO;
         }
-        return avatar;
+        return avatarDTO;
     }
     
 }

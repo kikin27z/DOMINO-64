@@ -18,6 +18,7 @@ public enum TiposJugador {
     CAMBIAR_USERNAME,
     PETICION_RENDIRSE,
     JUGADOR_LISTO,
+    JUGADOR_NO_LISTO,
     PASAR_TURNO
     ;
 }

@@ -1,9 +1,17 @@
 package lobby;
 
+import entidadesDTO.AvatarDTO;
 import entidadesDTO.CuentaDTO;
+import eventoss.EventoMVCLobby;
 import eventosLobby.ObserverLobbyMVC;
+import eventoss.TipoLobbyMVC;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -28,6 +36,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import observer.Observable;
+import observer.Observer;
 
 /**
  * La clase LobbyView gestiona la interfaz gráfica (GUI) de la pantalla de lobby
@@ -42,7 +52,7 @@ import javafx.stage.Stage;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class LobbyView implements ObserverLobbyMVC {
+public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLobbyMVC {
 
     private final LobbyModel modelo;
     private Stage fondo;
@@ -50,10 +60,11 @@ public class LobbyView implements ObserverLobbyMVC {
     private StackPane btnAjustes;
     private TextField txtUsuario;
     private AnchorPane fondoConfiguracionPartida;
-    private Label lblEncabezado;
+    private Label lblJugadoresListos;
     private Label lblMensaje;
     private ImageView ajustesImg;
-
+    private static List<ImageView> avatares;
+    private static List<AnchorPane> panelesJugadores;
     private ImageView btnAvatar;
     private Button btnConfirmarCambios;
     private Button btnCancelarCambios;
@@ -75,6 +86,7 @@ public class LobbyView implements ObserverLobbyMVC {
      */
     public LobbyView(LobbyModel modelo) {
         this.modelo = modelo;
+        modelo.agregarObserver(this);
     }
 
     /**
@@ -86,13 +98,15 @@ public class LobbyView implements ObserverLobbyMVC {
      */
     public void iniciarEscena(Stage fondo) throws IOException {
         inicializarVista();
+        panelesJugadores = new ArrayList<>();
         Scene scene = new Scene(panel);
         this.fondo = fondo;
         fondo.setScene(scene);
         fondo.show();
         cargarConfiguracion();
         cargarAvatares();
-        crearJugadores();
+        //crearJugadores();
+        System.out.println("se acabo el iniciar escena");
     }
 
     //------------GUI------------\\
@@ -104,7 +118,11 @@ public class LobbyView implements ObserverLobbyMVC {
         panel.setStyle("-fx-background-color: #B2533E;");
 
         // Label para jugadores listos
-        Label lblJugadoresListos = new Label("1/3 listos para iniciar");
+        int jugadoresListos = modelo.getJugadoresListos().size();
+        int cantidadJugadores = modelo.getCuentas().size();
+        String str =jugadoresListos +"/" + cantidadJugadores + " listos para iniciar";
+        
+        lblJugadoresListos = new Label(str);
         lblJugadoresListos.setFont(Font.font("Verdana Bold", 48));
         lblJugadoresListos.setTextFill(Color.valueOf("#2f1c1c"));
         lblJugadoresListos.setPrefWidth(855);
@@ -148,13 +166,16 @@ public class LobbyView implements ObserverLobbyMVC {
         panel.getChildren().add(btnAbandonar);
 
         // Botón Iniciar
-        btnIniciar = new Button("Iniciar partida");
+        btnIniciar = new Button("Estoy listo");
         btnIniciar.setFont(Font.font("Russo One", 37));
         btnIniciar.setStyle("-fx-background-color: #D9D9D9; -fx-background-radius: 20;");
         btnIniciar.setTextFill(Color.valueOf("#2f1c1c"));
         btnIniciar.setPrefWidth(420);
         btnIniciar.setMaxHeight(70);
         btnIniciar.setCursor(Cursor.HAND);
+        if(modelo.getCuentas().size()==1){
+            btnIniciar.setDisable(true);
+        }
         AnchorPane.setLeftAnchor(btnIniciar, 507.0);
         AnchorPane.setTopAnchor(btnIniciar, 562.0);
         panel.getChildren().add(btnIniciar);
@@ -190,49 +211,75 @@ public class LobbyView implements ObserverLobbyMVC {
     }
     
     
-    private void crearJugadores(){
-        List<CuentaDTO> cuentas = modelo.getLobbyDTO().getCuentas();
-        
+    protected void crearJugadores(){
+        List<CuentaDTO> cuentas = modelo.getCuentas();
+        Map<String, AnchorPane> paneles = new HashMap<>();
         for(var cuenta : cuentas){
             if(cuenta.getIdCadena().equalsIgnoreCase(modelo.obtenerIdCuentaActual())){
-                ponerJugadorActual(cuenta);
+                paneles.put(cuenta.getIdCadena(),ponerJugadorActual(cuenta));
             }else{
-                ponerJugadorOtro(cuenta);
+                paneles.put(cuenta.getIdCadena(),ponerJugadorOtro(cuenta));
             }
-            
         }
+        EventoMVCLobby evento = new EventoMVCLobby(TipoLobbyMVC.INICIALIZAR_PANELES_JUGADORES);
+        evento.agregarContexto(paneles);
+        notifyObservers(evento.getTipo(), evento);
     }
 
-    private void ponerJugadorActual(CuentaDTO cuenta) {
-        jugadoresContainer.getChildren().add(crearPanelJugadorActual(cuenta));
+    private AnchorPane ponerJugadorActual(CuentaDTO cuenta) {
+//        boolean listo = modelo.getJugadoresListos().contains(cuenta);
+        AnchorPane panelJugadorAct = crearPanelJugadorActual(cuenta, false);
+        panelesJugadores.add(panelJugadorAct);
+        jugadoresContainer.getChildren().add(panelJugadorAct);
+        return panelJugadorAct;
     }
 
-    private void ponerJugadorOtro(CuentaDTO cuenta) {
-        jugadoresContainer.getChildren().add(crearPanelOtroJugador(cuenta));
-
+    private AnchorPane ponerJugadorOtro(CuentaDTO cuenta) {
+        boolean listo = modelo.getJugadoresListos().contains(cuenta);
+        AnchorPane panelJugadorAct = crearPanelOtroJugador(cuenta, listo);
+        panelesJugadores.add(panelJugadorAct);
+        jugadoresContainer.getChildren().add(panelJugadorAct);
+        return panelJugadorAct;
     }
 
-    private AnchorPane crearPanelJugadorActual(CuentaDTO cuenta) {
-        AnchorPane panel = new AnchorPane();
-        panel.setMaxSize(222, 278);
-        panel.setMinSize(222, 278);
-        panel.setPrefSize(222, 278);
-
-        // Avatar del jugador
-        btnAvatar.setImage(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
-        AnchorPane.setLeftAnchor(btnAvatar, 41.0);
-        AnchorPane.setTopAnchor(btnAvatar, 15.0);
-
-        // Icono de listo
+    private ImageView pintarIconoListo(){
+        
         ImageView iconoListo = new ImageView(new Image(getClass().getResourceAsStream("/images/listo.png")));
+        iconoListo.setId("iconoListo");
         iconoListo.setFitHeight(150);
         iconoListo.setFitWidth(40);
         iconoListo.setPreserveRatio(true);
         AnchorPane.setLeftAnchor(iconoListo, 148.0);
         AnchorPane.setTopAnchor(iconoListo, 8.0);
+        
+        //panelJugador.getChildren().add(iconoListo);
+        return iconoListo;
+    }
+    
+    private AnchorPane crearPanelJugadorActual(CuentaDTO cuenta, boolean listo) {
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setId(cuenta.getIdCadena());
+        anchorPane.setMaxSize(222, 278);
+        anchorPane.setMinSize(222, 278);
+        anchorPane.setPrefSize(222, 278);
 
+        // Avatar del jugador
+        btnAvatar.setImage(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
+        btnAvatar.setId("avatar");
+        AnchorPane.setLeftAnchor(btnAvatar, 41.0);
+        AnchorPane.setTopAnchor(btnAvatar, 15.0);
+
+//        btnAvatar = cambiarFiltroAvatar(cuenta, btnAvatar);
+        
+        // Icono de listo
+        ImageView iconoListo = null;
+        if(listo){
+            iconoListo = pintarIconoListo();
+        }
+        
         // Nombre del jugador
-        Label lblNombre = new Label("Karim D Luffy");
+        Label lblNombre = new Label(cuenta.getUsername());
+        lblNombre.setId("nombre");
         lblNombre.setFont(Font.font("Russo One", 20));
         lblNombre.setTextFill(Color.valueOf("#2f1c1c"));
         lblNombre.setAlignment(Pos.CENTER);
@@ -242,35 +289,43 @@ public class LobbyView implements ObserverLobbyMVC {
         lblNombre.setPrefWidth(192);
         AnchorPane.setLeftAnchor(lblNombre, 15.0);
         AnchorPane.setTopAnchor(lblNombre, 180.0);
-
-        panel.getChildren().addAll(btnAvatar, iconoListo, lblNombre);
-        return panel;
+        
+        if(listo)
+            anchorPane.getChildren().addAll(btnAvatar, iconoListo, lblNombre);
+        else
+            anchorPane.getChildren().addAll(btnAvatar, lblNombre);
+        
+        return anchorPane;
     }
 
-    private AnchorPane crearPanelOtroJugador(CuentaDTO cuenta) {
-        AnchorPane panel = new AnchorPane();
-        panel.setMaxSize(222, 278);
-        panel.setMinSize(222, 278);
-        panel.setPrefSize(222, 278);
+    private AnchorPane crearPanelOtroJugador(CuentaDTO cuenta, boolean listo) {
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setId(cuenta.getIdCadena());
+        anchorPane.setMaxSize(222, 278);
+        anchorPane.setMinSize(222, 278);
+        anchorPane.setPrefSize(222, 278);
 
         // Avatar del jugador
         ImageView avatar = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
+        avatar.setId("avatar");
         avatar.setFitHeight(150);
         avatar.setFitWidth(200);
         avatar.setPreserveRatio(true);
         AnchorPane.setLeftAnchor(avatar, 41.0);
         AnchorPane.setTopAnchor(avatar, 15.0);
 
+        //cambiarFiltroAvatar(cuenta, avatar);
+        
         // Icono de listo
-        ImageView iconoListo = new ImageView(new Image(getClass().getResourceAsStream("/images/listo.png")));
-        iconoListo.setFitHeight(150);
-        iconoListo.setFitWidth(40);
-        iconoListo.setPreserveRatio(true);
-        AnchorPane.setLeftAnchor(iconoListo, 148.0);
-        AnchorPane.setTopAnchor(iconoListo, 8.0);
+        ImageView iconoListo = null;
+        if(listo){
+            iconoListo = pintarIconoListo();
+        }
 
         // Nombre del jugador
-        Label lblNombre = new Label("Karim D Luffy");
+        //CuentaDTO jugador = cuenta;
+        Label lblNombre = new Label(cuenta.getUsername());
+        lblNombre.setId("nombre");
         lblNombre.setFont(Font.font("Russo One", 20));
         lblNombre.setTextFill(Color.valueOf("#2f1c1c"));
         lblNombre.setAlignment(Pos.CENTER);
@@ -281,8 +336,12 @@ public class LobbyView implements ObserverLobbyMVC {
         AnchorPane.setLeftAnchor(lblNombre, 15.0);
         AnchorPane.setTopAnchor(lblNombre, 180.0);
 
-        panel.getChildren().addAll(avatar, iconoListo, lblNombre);
-        return panel;
+        if(listo)
+            anchorPane.getChildren().addAll(avatar, iconoListo, lblNombre);
+        else
+            anchorPane.getChildren().addAll(avatar, lblNombre);
+        
+        return anchorPane;
     }
 
     private StackPane crearBotonAjustes() {
@@ -306,6 +365,13 @@ public class LobbyView implements ObserverLobbyMVC {
         stackPane.setCursor(Cursor.HAND);
 
         return stackPane;
+    }
+    
+    private void removerPanelJugador(CuentaDTO cuenta){
+        AnchorPane panelExJugador = modelo.obtenerPanelJugador(cuenta.getIdCadena());
+        panelesJugadores.remove(panelExJugador);
+        jugadoresContainer.getChildren().remove(panelExJugador);
+//        jugadoresContainer.getChildren().removeIf(p -> p.getId().equals(cuenta.getIdCadena()));
     }
     //--------------------------------------------------------Modal windows--------------------------------------------------------
     private void cargarBtnModal() {
@@ -340,15 +406,44 @@ public class LobbyView implements ObserverLobbyMVC {
         btnCerrarAvatares.setTextFill(Color.WHITE);
     }
 
+//    public ImageView cambiarFiltroAvatar(ImageView imgView){
+//        return setEffect(imgView);
+////        Node node = fondoAvatares.getChildren().getFirst();
+////        String animalAvatar = cuenta.getAvatar().getAnimal();
+////        if (node != null && node instanceof GridPane gridP) {
+////            FilteredList<Node> listAv = gridP.getChildren().filtered(avatar -> avatar.getId().equals(animalAvatar));
+////            ImageView avatar = (ImageView) listAv.getFirst();
+////            setEffect(avatar);
+////        }
+//        
+//    }
+    
+    protected void removeEffect(ImageView view){
+        if(view.getEffect() != null){
+            view.setEffect(null);
+        }
+    }
+    
+    protected ImageView setEffect(ImageView imgView){
+        if(imgView.getEffect() == null){
+            ColorAdjust filtro = new ColorAdjust();
+            filtro.setSaturation(-1);
+            imgView.setEffect(filtro);
+        }
+        return imgView;
+    }
+    
     /**
      * Carga la ventana modal de selección de avatares.
      */
     public void cargarAvatares() {
+        avatares = new ArrayList<>();
         fondoAvatares = new AnchorPane();
         fondoAvatares.setStyle("-fx-background-color: D9D9D9;");
 
         // Crear el GridPane
         GridPane gridPane = new GridPane();
+        gridPane.setId("gridAvatares");
         gridPane.setHgap(20);
         gridPane.setVgap(20);
         gridPane.setLayoutX(105);
@@ -364,7 +459,7 @@ public class LobbyView implements ObserverLobbyMVC {
         // Crear y añadir ImageViews al GridPane
         for (int i = 0; i < avatars.length; i++) {
             ImageView imageView = crearIconoAvatar(avatars[i]);
-
+            avatares.add(imageView);
             // Añadir evento de click
             final String avatarName = avatars[i];
 //            imageView.setOnMouseClicked(event -> {
@@ -372,9 +467,8 @@ public class LobbyView implements ObserverLobbyMVC {
 //            });
 
             gridPane.add(imageView, i % 3, i / 3);
+            
         }
-
-
 
         // Añadir elementos al AnchorPane
         fondoAvatares.getChildren().addAll(gridPane, btnCerrarAvatares);
@@ -396,6 +490,7 @@ public class LobbyView implements ObserverLobbyMVC {
 
     private ImageView crearIconoAvatar(String avatarName) {
         ImageView imageView = new ImageView();
+        imageView.setId(avatarName);
         imageView.setFitHeight(135);
         imageView.setFitWidth(135);
         imageView.setPreserveRatio(true);
@@ -404,14 +499,23 @@ public class LobbyView implements ObserverLobbyMVC {
         // Cargar la imagen
         Image image = new Image(getClass().getResourceAsStream("/avatar/" + avatarName + ".png"));
         imageView.setImage(image);
-
-        // Añadir cursor de mano
-        imageView.setCursor(Cursor.HAND);
-
+        
         // Si es el panda, añadir efecto de ajuste de color
         if (avatarName.equals("panda")) {
             imageView.setEffect(new ColorAdjust());
         }
+        
+        AvatarDTO avatarJugActual;
+        for (CuentaDTO cuenta : modelo.getCuentas()) {
+            avatarJugActual = cuenta.getAvatar();
+            if(avatarName.equals(avatarJugActual.getAnimal())){
+                imageView = setEffect(imageView);
+                break;
+            }
+        }
+        
+        // Añadir cursor de mano
+        imageView.setCursor(Cursor.HAND);
 
         return imageView;
     }
@@ -563,8 +667,7 @@ public class LobbyView implements ObserverLobbyMVC {
         //Que se actualice en los demas jugadores
         //Si es el admin que se acabe la partida y saque a todos
     }
-
-
+    
     public void iniciarPartida(EventHandler<MouseEvent> e) {
         btnIniciar.setOnMouseClicked(e);//---------------------------Falta terminar----------
     }
@@ -589,30 +692,105 @@ public class LobbyView implements ObserverLobbyMVC {
         btnCancelarCambios.setOnMouseClicked(e);
     }
 
+    protected void seleccionarAvatar(EventHandler<MouseEvent> e, ImageView imgV){
+        imgV.setOnMouseClicked(e);
+//        if(avatares.contains(imgV)){
+//            avatares.get(avatares.indexOf(imgV)).setOnMouseClicked(e);
+//        }
+    }
+    
     //----------------------Eventos de Modelo------------------------------------
+    private AnchorPane actualizarPanel(AnchorPane pane, AvatarDTO avatarNuevo){
+        ImageView iconoListo = (ImageView)pane.getChildren().filtered(node -> node.getId().equals("iconoListo")).get(0);
+        
+        ObservableList<Node> nodes = pane.getChildren();
+        Image imgAvatar = new Image(avatarNuevo.getUrl());
+        ImageView avatar = ((ImageView) nodes.get(0));
+        avatar.setImage(imgAvatar);
+        Label nombre = (Label) nodes.getLast();
+        nombre.setText(avatarNuevo.getNombre());
+
+        pane.getChildren().removeAll();
+
+        if (iconoListo != null)
+            pane.getChildren().addAll(avatar, iconoListo, nombre);
+        else
+            pane.getChildren().addAll(avatar, nombre);
+        
+        return pane;
+    }
+    
+    private void cambiarAvatar(AvatarDTO avatarDTO, boolean agregarEfecto){
+        for (ImageView avatar : avatares) {
+            if(avatar.getId().equals(avatarDTO.getAnimal())){
+                if(agregarEfecto)
+                    setEffect(avatar);
+                else
+                    removeEffect(avatar);
+                break;
+            }
+        }
+//        FilteredList<Node> nodes = fondoAvatares.getChildren().filtered(node -> node.getId().equals("grid"));
+//        if(nodes != null){
+//            GridPane grid = (GridPane)nodes.get(0);
+//            ImageView avatar = (ImageView)grid.getChildren().filtered(node -> node.getId().equals(nombreAnimal)).get(0);
+//            int colIndex = GridPane.getColumnIndex(avatar);
+//            int rowIndex = GridPane.getRowIndex(avatar);
+//            grid.getChildren().removeIf(node -> node.getId().equals(nombreAnimal));
+//            grid.add(avatar, colIndex, rowIndex);
+//            
+//            fondoAvatares.getChildren().removeAll();
+//            fondoAvatares.getChildren().addAll(grid, btnCerrarAvatares);
+//        }
+    }
+    
     @Override
     public void actualizarAvatarJugador(CuentaDTO cuenta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        AnchorPane pane = modelo.obtenerPanelJugador(cuenta.getIdCadena());
+        cambiarAvatar(cuenta.getAvatar(), true);
+        AnchorPane panelAct = actualizarPanel(pane, cuenta.getAvatar());
+        
+        int index = jugadoresContainer.getChildren().indexOf(pane);
+        jugadoresContainer.getChildren().remove(index);
+        jugadoresContainer.getChildren().add(index, panelAct);
     }
 
     @Override
     public void actualizarNuevoJugador(CuentaDTO cuenta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        AnchorPane nuevoPanel = ponerJugadorOtro(cuenta);
+        cambiarAvatar(cuenta.getAvatar(), true);
+        actualizarEncabezado(modelo.ACTUALIZACION_CANTIDAD_JUGADORES, true);
+        btnIniciar.setDisable(false);
+        EventoMVCLobby evento = new EventoMVCLobby(TipoLobbyMVC.AGREGAR_PANEL_JUGADOR);
+        evento.agregarContexto(nuevoPanel);
+        notifyObservers(evento.getTipo(), evento);
     }
 
     @Override
     public void actualizarQuitarJugador(CuentaDTO cuenta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        removerPanelJugador(cuenta);
+        if(modelo.getCuentas().size() == 1)
+            btnIniciar.setDisable(true);
+        cambiarAvatar(cuenta.getAvatar(), false);
+        actualizarEncabezado(modelo.ACTUALIZACION_CANTIDAD_JUGADORES, false);
     }
 
     @Override
     public void actualizarJugadorListo(CuentaDTO cuenta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ImageView icono = pintarIconoListo();
+        actualizarEncabezado(modelo.ACTUALIZACION_JUGADORES_LISTOS, true);
+        AnchorPane pane = modelo.obtenerPanelJugador(cuenta.getIdCadena());
+        pane.getChildren().add(icono);
+        btnIniciar.setText("No listo");
+        
     }
 
     @Override
     public void actualizarJugadorNoListo(CuentaDTO cuenta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        actualizarEncabezado(modelo.ACTUALIZACION_JUGADORES_LISTOS, false);
+        AnchorPane pane = modelo.obtenerPanelJugador(cuenta.getIdCadena());
+        pane.getChildren().removeIf(node -> node.getId().equals("iconoListo"));
+        btnIniciar.setText("Estoy listo");
     }
 
     //--------------------Getters-------------------------
@@ -622,6 +800,10 @@ public class LobbyView implements ObserverLobbyMVC {
 
     public Button getBtnIniciar() {
         return btnIniciar;
+    }
+    
+    public static List<ImageView> getAvatares(){
+        return avatares;
     }
 
     /**
@@ -705,8 +887,20 @@ public class LobbyView implements ObserverLobbyMVC {
      * listos.
      */
 //    @Override
-    public void actualizarEncabezado() {
-        lblEncabezado.setText(modelo.getEncabezadoLobby());//---------------------------Falta terminar----------
+    public void actualizarEncabezado(int tipoActualizacion, boolean agregar) {
+        char numJugadoresAnt = lblJugadoresListos.getText().charAt(tipoActualizacion);
+        int num = Integer.parseInt(String.valueOf(numJugadoresAnt));
+        char numNuevo;
+        if(agregar){
+            numNuevo = String.valueOf(num+1).charAt(0);
+        }else
+            numNuevo = String.valueOf(num-1).charAt(0);
+        
+        String oldTxt = lblJugadoresListos.getText();
+        String newTxt = oldTxt.replace(numJugadoresAnt, numNuevo);
+        
+        lblJugadoresListos.setText(newTxt);
+        //lblEncabezado.setText(modelo.getEncabezadoLobby());//---------------------------Falta terminar----------
         //Aparezca cuantos esten listos
     }
 
@@ -717,7 +911,7 @@ public class LobbyView implements ObserverLobbyMVC {
      */
 //    @Override
     public void ponerListoJugador(CuentaDTO cuenta) {
-        AnchorPane panelJugador = modelo.obtenerPanelJugador(cuenta.getId());
+        AnchorPane panelJugador = modelo.obtenerPanelJugador(cuenta.getIdCadena());
         ponerListoJugador(panelJugador);
     }
 
@@ -728,8 +922,13 @@ public class LobbyView implements ObserverLobbyMVC {
      */
 //    @Override
     public void quitarListoJugador(CuentaDTO cuenta) {
-        AnchorPane panelJugador = modelo.obtenerPanelJugador(cuenta.getId());
+        AnchorPane panelJugador = modelo.obtenerPanelJugador(cuenta.getIdCadena());
         quitarListoJugador(panelJugador);
     }
-
+//-----------------------------------------------------
+    
+    public void agregarObserver(Observer<EventoMVCLobby> observer){
+        addObserver(TipoLobbyMVC.AGREGAR_PANEL_JUGADOR, observer);
+        addObserver(TipoLobbyMVC.INICIALIZAR_PANELES_JUGADORES, observer);
+    }
 }

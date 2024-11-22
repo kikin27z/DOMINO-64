@@ -31,7 +31,8 @@ public abstract class ObservadorLobby implements Observer<Evento> {
                     TiposJugador.CAMBIAR_USERNAME,
                     TiposJugador.CREAR_PARTIDA,
                     TiposJugador.UNIRSE_PARTIDA,
-                    TiposJugador.JUGADOR_LISTO
+                    TiposJugador.JUGADOR_LISTO,
+                    TiposJugador.JUGADOR_NO_LISTO
             ));
     
     protected ObservadorLobby(){
@@ -50,7 +51,8 @@ public abstract class ObservadorLobby implements Observer<Evento> {
         consumers.putIfAbsent(TiposJugador.CREAR_PARTIDA, this::crearPartida);
         consumers.putIfAbsent(TiposJugador.CAMBIAR_USERNAME, this::cambiarUsername);
         consumers.putIfAbsent(TiposJugador.CAMBIAR_AVATAR, this::cambiarAvatar);
-        consumers.putIfAbsent(TiposJugador.JUGADOR_LISTO, this::jugadorListo);
+        consumers.putIfAbsent(TiposJugador.JUGADOR_LISTO, this::actualizarJugadorListo);
+        consumers.putIfAbsent(TiposJugador.JUGADOR_NO_LISTO, this::actualizarJugadorListo);
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
 //        consumers.putIfAbsent(TiposJugador.IR_LOBBY, this::irLobby);
     }
@@ -65,6 +67,6 @@ public abstract class ObservadorLobby implements Observer<Evento> {
     public abstract void crearPartida(Evento evento);
     public abstract void cambiarUsername(Evento evento);
     public abstract void cambiarAvatar(Evento evento);
-    public abstract void jugadorListo(Evento evento);
+    public abstract void actualizarJugadorListo(Evento evento);
     public abstract void manejarError(Evento evento);
 }

@@ -1,8 +1,10 @@
 package opciones_partida;
 
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
 import entidadesDTO.UnirseDTO;
+import eventoss.EventoMVCJugador;
 import eventosOpcionesPartida.ObserverOpcionesPartida;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,8 @@ import eventosPantallas.ObservablePantallas;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import eventosOpcionesPartida.ObservableOpcionesMVC;
+import eventoss.TipoJugadorMVC;
+import presentacion_utilities.ControladorComunicacion;
 
 /**
  * Modelo para la gestión de opciones de partida, que implementa el patrón
@@ -148,6 +152,8 @@ public class OpcionesPartidaModel implements ObservableOpcionesPartida, Observab
      */
     @Override
     public void avisarCrearPartida() {
+//        EventoMVCJugador evento = new EventoMVCJugador(TipoJugadorMVC.CREAR_PARTIDA);
+//        ControladorComunicacion.enviarEventoALogica(evento);
         for (var observer : observersLogica) {
             observer.crearPartida();
         }
@@ -166,6 +172,9 @@ public class OpcionesPartidaModel implements ObservableOpcionesPartida, Observab
             return;
         }
         UnirseDTO unirse = new UnirseDTO(codigoPartida);
+//        EventoMVCJugador evento = new EventoMVCJugador(TipoJugadorMVC.UNIRSE_PARTIDA);
+//        evento.setLobby(new LobbyDTO(codigoPartida));
+//        ControladorComunicacion.enviarEventoALogica(evento);
         for (var observer : observersLogica) {
             observer.buscarPartida(unirse);
         }

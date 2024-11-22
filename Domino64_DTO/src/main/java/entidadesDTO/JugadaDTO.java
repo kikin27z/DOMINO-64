@@ -11,14 +11,13 @@ public class JugadaDTO implements Serializable {
     private int derecha;
     private FichaDTO ficha;
 
-    private JugadaDTO() {
+    public JugadaDTO() {
     }
     
     public JugadaDTO(int izquierda, int derecha) {
         this.izquierda = izquierda;
         this.derecha = derecha;
     }
-    
     
     public JugadaValidaDTO determinarJugada(FichaDTO ficha){
         JugadaValidaDTO jugada;

@@ -9,18 +9,17 @@ import entidades.Partida;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.EventoError;
 import domino64.eventos.base.error.TipoError;
+import entidades.Lobby;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
 import eventos.EventoJugador;
 import eventos.EventoLobby;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -28,7 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lobbyBuilder.BuilderEventoLobby;
 import lobbyBuilder.DirectorLobby;
-import tiposLogicos.TipoLogicaLobby;
+import tiposLogicos.TiposJugador;
 
 /**
  *
@@ -37,22 +36,22 @@ import tiposLogicos.TipoLogicaLobby;
 public class ManejadorLobby extends ObservadorLobby implements Runnable {
 
     private static DirectorLobby director;
-    private Partida partida;
     private static int id;
     private ICliente cliente;
     private AdaptadorEntidad adaptador;
     private AdaptadorDTO adaptadorDTO;
-    private Map<Cuenta, Boolean> jugadoresL;
-    //private Map<Lobby, List<Cuenta>> jugadoresListos;
-    private Map<Partida, List<Cuenta>> jugadoresPartidas;
-    private List<Cuenta> jugadoresListos;
+    private Map<Lobby, List<Cuenta>> jugadoresPartidas;
+    //private Map<Partida, List<Cuenta>> jugadoresPartidas;
+    private Map<Lobby, List<Cuenta>> jugadoresListos;
     private AtomicBoolean running;
     private static ExecutorService ejecutorEventos;
 
     public ManejadorLobby() {
         jugadoresPartidas = new ConcurrentHashMap<>();
-        jugadoresListos = new CopyOnWriteArrayList<>();
+        jugadoresListos = new ConcurrentHashMap<>();
+        //jugadoresListos = new CopyOnWriteArrayList<>();
         adaptador = new AdaptadorEntidad();
+        adaptadorDTO = new AdaptadorDTO();
         setConsumers();
         ejecutorEventos = Executors.newFixedThreadPool(4);
         running = new AtomicBoolean(true);
@@ -61,8 +60,10 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
     public ManejadorLobby(AtomicBoolean running) {
         this.running = running;
         adaptador = new AdaptadorEntidad();
+        adaptadorDTO = new AdaptadorDTO();
         jugadoresPartidas = new ConcurrentHashMap<>();
-        jugadoresListos = new CopyOnWriteArrayList<>();
+        jugadoresListos = new ConcurrentHashMap<>();
+        //jugadoresListos = new CopyOnWriteArrayList<>();
         setConsumers();
     }
 
@@ -74,7 +75,9 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
     public void run() {
         while (running.get()) {
             try {
+                System.out.println("before take");
                 Evento nextEvent = colaEventos.take();
+                System.out.println("event took: "+nextEvent);
                 Consumer<Evento> cons = consumers.get(nextEvent.getTipo());
                 if (cons != null) {
                     cons.accept(nextEvent);
@@ -111,44 +114,34 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
     @Override
     public void removerJugador(Evento eventoNuevo) {
         EventoJugador eventoJ = (EventoJugador) eventoNuevo;
-        Cuenta jugador = eventoJ.getJugador();
-        /*si el manejador ya esta manejando una partida
-        o sea si un jugador ya creo una partida
-         */
-        Partida partidaEvento = eventoJ.getPartida();
-
+        CuentaDTO jugadorDTO = eventoJ.getJugador();
+        Cuenta jugador = adaptadorDTO.adaptarEntidadCuenta(jugadorDTO);
+        
+        LobbyDTO partidaDTO = eventoJ.getLobby();
+        Lobby partidaEvento = new Lobby(partidaDTO.getCodigoPartida());
+        //partidaEvento.agregarCuenta(jugador);
+        
         if (jugadoresPartidas.containsKey(partidaEvento)) {
             jugadoresPartidas.compute(partidaEvento, (p, j) -> {
                 j.remove(jugador);
                 return j;
             });
-
+            
+            jugadoresListos.compute(partidaEvento, (p, j) -> {
+                if(!j.isEmpty())
+                    j.remove(jugador);
+                return j;
+            });
+            
             if (jugadoresPartidas.get(partidaEvento).isEmpty()) {
                 jugadoresPartidas.remove(partidaEvento);
+                jugadoresListos.remove(partidaEvento);
             } else {
                 System.out.println("jugadores en partida: " + jugadoresPartidas.get(partidaEvento));
-                EventoLobby ev = director.crearEventoJugadorSalio(partidaEvento, jugador);
+                EventoLobby ev = director.crearEventoJugadorSalio(partidaDTO, jugadorDTO);
                 cliente.enviarEvento(ev);
             }
         }
-//        if(this.partida != null){
-//            //se quita el jugador de la partida
-//            //partida.removerJugador(jugador);
-//            jugadoresPartida.remove(jugador);
-//            //si ya era el ultimo jugador que quedaba
-//            if(jugadoresPartida.isEmpty()){
-//                //el lobby deja de manejar la partida
-//                //dejando espacio para que otro jugador cree otra partida
-//                partida = null;
-//            }else{
-//                /*si aun hay jugadores en la partida,
-//                crea un evento de que el jugador salio para notificar al
-//                resto de jugadores*/
-//                System.out.println("jugadores en partida: "+partida.getJugadores());
-//                EventoLobby ev = director.crearEventoJugadorSalio(partida, jugador);
-//                cliente.enviarEvento(ev);
-//            }
-//        }
     }
 
     @Override
@@ -157,51 +150,100 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
         Lobby nuevaPartida = new Lobby();
         CuentaDTO cuentaDTO = eventoJ.getJugador();
         Cuenta creadorPartida = adaptadorDTO.adaptarEntidadCuenta(cuentaDTO);
-        nuevaPartida.agregarJugador(creadorPartida);
-
+        creadorPartida = nuevaPartida.asignarAvatar(creadorPartida);
+        nuevaPartida.agregarCuenta(creadorPartida);
+        
+        /**
+         * agregando la partida a los mapeos.
+         * Se agrega al mapeo de partidas-jugadores
+         * y al mapeo de partidas-jugadores listos.
+         * La lista de jugadores listos inicialmente debe estar vacia
+         */
         List<Cuenta> players = new CopyOnWriteArrayList<>();
         players.add(creadorPartida);
         jugadoresPartidas.put(nuevaPartida, players);
+        jugadoresListos.put(nuevaPartida, new CopyOnWriteArrayList<>());
+        
+        LobbyDTO lobbyCreado = adaptador.adaptarEntidadLobby(nuevaPartida);
+        CuentaDTO creadorDTO = adaptador.adaptarEntidadCuenta(creadorPartida);
+        lobbyCreado.setCuentaActual(creadorDTO);
+        
+        EventoLobby ev = director.crearEventoPartidaEncontrada(
+                lobbyCreado, 
+                creadorDTO);
+        
+        System.out.println("evento lobby: "+ev);
+        cliente.enviarEvento(ev);
+        
         System.out.println("partida creada. Codigo: " + nuevaPartida.getCodigoPartida());
-        System.out.println("jugador: " + jugadoresPartidas.get(nuevaPartida));
     }
 
     private void unirse(EventoJugador evento, Cuenta jugador) {
-        Partida partidaBuscada = evento.getPartida();
-        System.out.println("partida buscada: " + partidaBuscada);
-
-        if (jugadoresPartidas.containsKey(partidaBuscada)) {
+        LobbyDTO lobbyDTO = evento.getLobby();
+        System.out.println("partida buscada: " + lobbyDTO);
+        Lobby lobbyBuscado = new Lobby(lobbyDTO.getCodigoPartida());
+        
+        if (jugadoresPartidas.containsKey(lobbyBuscado)) {
             System.out.println("se encontro la partida");
-            jugadoresPartidas.compute(partidaBuscada, (p, j) -> {
-                j.add(jugador);
-                return j;
-            });
-            List<Cuenta> jugadoresActuales = jugadoresPartidas.get(partidaBuscada);
-            partidaBuscada.setJugadores(jugadoresActuales);
-
-            notificarJugadores(partidaBuscada, jugador);
+            System.out.println("jugadores actuales: "+jugadoresPartidas.get(lobbyBuscado));
+            lobbyBuscado.agregarCuentas(jugadoresPartidas.get(lobbyBuscado));
+            
+            Cuenta jugadorNuevo = lobbyBuscado.asignarAvatar(jugador);
+            System.out.println("jugador a agregar: "+jugadorNuevo);
+            agregarJugadorMapeo(lobbyBuscado, jugadorNuevo);
+            
+            lobbyDTO = inicializarLobbyDTO(lobbyDTO, lobbyBuscado);
+            System.out.println("lobbydTO : "+lobbyDTO );
+            notificarJugadores(lobbyDTO, adaptador.adaptarEntidadCuenta(jugadorNuevo));
 
         } else {
             notificarError(TipoError.ERROR_LOGICO, jugador.getId(), "No hay una partida con ese codigo");
         }
     }
 
-    private void notificarJugadores(Partida partida, Cuenta jugador) {
-        EventoLobby ev = director.crearEventoPartidaEncontrada(partida);
-        cliente.enviarEvento(ev);
-        System.out.println("se unio a partida");
+    private LobbyDTO inicializarLobbyDTO(LobbyDTO lobbyDTO, Lobby lobby){
+        List<Cuenta> jugadoresActuales = jugadoresPartidas.get(lobby);
+        lobbyDTO.setCuentas(adaptador.adaptarCuentas(jugadoresActuales));
 
-        EventoLobby ev2 = director.crearEventoJugadorNuevo(jugador);
+        List<Cuenta> jL = jugadoresListos.get(lobby);
+        System.out.println("");
+        System.out.println("");
+        System.out.println("jugadores listos en el mapa; "+jL);
+        System.out.println("");
+        System.out.println("");
+        if (!jL.isEmpty())
+            lobbyDTO.agregarJugadoresListos(adaptador.adaptarCuentas(jL));
+        return lobbyDTO;
+    }
+    
+    private void agregarJugadorMapeo(Lobby lobby, Cuenta jugador){
+        jugadoresPartidas.compute(lobby, (p, j) -> {
+            j.add(jugador);
+            return j;
+        });
+
+    }
+    
+    private void notificarJugadores(LobbyDTO partida, CuentaDTO jugador) {
+        EventoLobby ev2 = director.crearEventoJugadorNuevo(partida, jugador);
         cliente.enviarEvento(ev2);
         System.out.println("se notifico a otros jugadores");
+        
+        partida.setCuentaActual(jugador);
+        EventoLobby ev = director.crearEventoPartidaEncontrada(partida, jugador);
+        cliente.enviarEvento(ev);
+        System.out.println("se unio a partida");
     }
 
     @Override
     public void unirsePartida(Evento evento) {
         EventoJugador eventoJ = (EventoJugador) evento;
-        Cuenta jugador = eventoJ.getJugador();
+        CuentaDTO jugadorDTO = eventoJ.getJugador();
+        
+        Cuenta jugador = adaptadorDTO.adaptarEntidadCuenta(jugadorDTO);
+        
         if (jugadoresPartidas.isEmpty()) {
-            notificarError(TipoError.ERROR_LOGICO, jugador.getId(), "No hay una partida iniciada");
+            notificarError(TipoError.ERROR_LOGICO, jugadorDTO.getId(), "No hay una partida iniciada");
         } else {
             unirse(eventoJ, jugador);
         }
@@ -223,47 +265,71 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
 
     @Override
     public void cambiarUsername(Evento evento) {
-        EventoJugador evJ = (EventoJugador) evento;
-        Cuenta jActualizado = evJ.getJugador();
-        Cuenta j = partida.buscarJugador(jActualizado);
-        if (j != null) {
-//            j.setNombre(jActualizado.getNombre());
-            partida.actualizarJugador(j);
-        } else {
-            System.out.println("null en lobby");
-        }
-
-        EventoLobby evLobby = director.crearEventoActualizarUsername(j);
-        cliente.enviarEvento(evLobby);
+//        EventoJugador evJ = (EventoJugador) evento;
+//        CuentaDTO jActualizadoDTO = evJ.getJugador();
+//        Cuenta jugadorActualizado = adaptadorDTO.adaptarEntidadCuenta(jActualizadoDTO);
+//        Cuenta j = partida.buscarJugador(jActualizado);
+//        if (j != null) {
+////            j.setNombre(jActualizado.getNombre());
+//            partida.actualizarJugador(j);
+//        } else {
+//            System.out.println("null en lobby");
+//        }
+//
+//        EventoLobby evLobby = director.crearEventoActualizarUsername(j);
+//        cliente.enviarEvento(evLobby);
     }
 
     @Override
     public void cambiarAvatar(Evento evento) {
         EventoJugador evJ = (EventoJugador) evento;
-        Cuenta jActualizado = evJ.getJugador();
+        CuentaDTO jActualizado = evJ.getJugador();
+        LobbyDTO lobbyDTO = evJ.getLobby();
+        Lobby lobby = new Lobby(lobbyDTO.getCodigoPartida());
+        
+        if(jugadoresPartidas.containsKey(lobby)){
+            jugadoresPartidas.compute(lobby, (l,j)->{
+                for (Cuenta cuenta : j) {
+                    if(cuenta.getId() == jActualizado.getId()){
+                        cuenta.setAvatar(adaptadorDTO.adaptarAvatar(jActualizado.getAvatar()));
+                        break;
+                    }
+                }
+                return j;
+            });
+            
+            EventoLobby evLobby = director.crearEventoActualizarAvatares(lobbyDTO,jActualizado);
+            cliente.enviarEvento(evLobby);
 
-        Cuenta j = partida.buscarJugador(jActualizado);
-//        if (j != null) {
-//            j.setAvatarUrl(jActualizado.getAvatarUrl());
-//        }
-//        System.out.println("avatar nuevo: " + j.getAvatarUrl());
-        System.out.println("jugadores en partida con jugador act: " + partida.getJugadores());
-
-        EventoLobby evLobby = director.crearEventoActualizarAvatares(j);
-        cliente.enviarEvento(evLobby);
+        }
     }
 
     @Override
-    public void jugadorListo(Evento evento) {
+    public void actualizarJugadorListo(Evento evento) {
         EventoJugador evJ = (EventoJugador) evento;
-        Cuenta jugadorL = evJ.getJugador();
-        if (jugadoresListos.contains(jugadorL)) {
-            jugadoresListos.remove(jugadorL);
+        LobbyDTO lobbyDTO = evJ.getLobby();
+        Lobby lobby = adaptadorDTO.adaptarEntidadLobby(lobbyDTO);
+        
+        CuentaDTO jugadorDTO = evJ.getJugador();
+        Cuenta jugadorListo = adaptadorDTO.adaptarEntidadCuenta(jugadorDTO);
+        
+        boolean listo = evJ.getTipo().equals(TiposJugador.JUGADOR_LISTO);
+        
+        if (jugadoresListos.containsKey(lobby)) {
+            jugadoresListos.compute(lobby, (l,j)->{
+                if(listo){
+                    j.add(jugadorListo);
+                }else{
+                    j.remove(jugadorListo);
+                }
+                return j;
+            });
+            
         } else {
-            jugadoresListos.add(jugadorL);
+            jugadoresListos.put(lobby, new CopyOnWriteArrayList<>(List.of(jugadorListo)));
         }
 
-        EventoLobby evL = director.crearEventoActualizarJugadoresListos(jugadorL);
+        EventoLobby evL = director.crearEventoActualizarJugadoresListos(lobbyDTO,jugadorDTO, listo);
         cliente.enviarEvento(evL);
     }
 
@@ -283,18 +349,6 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
         }
     }
 
-//    @Override
-//    public void irLobby(Evento evento) {
-//        EventoJugador eventoJ = (EventoJugador)evento;
-//        LobbyDTO lobbyNuevo = eventoJ.getLobby();
-//        Cuenta creadorPartida = eventoJ.getJugador();
-//        
-//        List<Cuenta> players = new CopyOnWriteArrayList<>();
-//        players.add(creadorPartida);
-//        System.out.println("partida creada. Codigo: "+lobbyNuevo.getCodigoPartida());
-//        System.out.println("jugador: "+ lobbyNuevo.getCuentaActual().getAvatar().getUrl());
-//    }
-    
     public void vincularCliente(Client _cliente){
         this.cliente = _cliente;
         cliente.establecerSuscripciones(eventos);

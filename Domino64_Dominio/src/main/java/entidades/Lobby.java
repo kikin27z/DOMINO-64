@@ -2,6 +2,7 @@ package entidades;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -13,17 +14,29 @@ public class Lobby {
     private List<Cuenta> cuentas;
     private String codigoPartida;
 
+    public Lobby(String codigoPartida){
+        this.codigoPartida = codigoPartida;
+    }
+    
     public Lobby() {
         crearCodigo();
         cuentas = new ArrayList<>();
     }
 
+    public void agregarCuentas(List<Cuenta> cuentas){
+        this.cuentas = cuentas;
+    }
+    
     public void agregarCuenta(Cuenta cuenta) {
-        asignarAvatar(cuenta);
+        //cuenta = asignarAvatar(cuenta);
         cuentas.add(cuenta);
     }
 
-    private void asignarAvatar(Cuenta cuenta) {
+    public String getCodigoPartida(){
+        return codigoPartida;
+    }
+    
+    public Cuenta asignarAvatar(Cuenta cuenta) {
         List<Avatar> usados = obtenerAvataresUsados();
         for (var avatar : Avatar.listaAvatares()) {
             if (!avatarUsado(usados, avatar)) {
@@ -31,6 +44,7 @@ public class Lobby {
                 break;
             }
         }
+        return cuenta;
     }
 
     private boolean avatarUsado(List<Avatar> avatares, Avatar avatar) {
@@ -77,6 +91,10 @@ public class Lobby {
         return null;
     }
 
+    public List<Cuenta> obtenerCuentas(){
+        return cuentas;
+    }
+    
     public List<Avatar> obtenerAvataresDisponibles() {
         // Obtener los avatares que ya están en uso
         List<Avatar> avataresTotales = Avatar.listaAvatares();
@@ -94,4 +112,34 @@ public class Lobby {
 
         return disponibles;
     }
+
+    @Override
+    public String toString() {
+        return "Lobby{" + "cuentas=" + cuentas + ", codigoPartida=" + codigoPartida + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + Objects.hashCode(this.codigoPartida);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Lobby other = (Lobby) obj;
+        return Objects.equals(this.codigoPartida, other.codigoPartida);
+    }
+    
+    
+    
 }
