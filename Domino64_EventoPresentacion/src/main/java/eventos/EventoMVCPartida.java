@@ -39,4 +39,9 @@ public class EventoMVCPartida extends EventoMVC<FichaDTO> {
         this.setPublicador(jugador.getCuenta());
     }
 
+    @Override
+    public int getIdContexto() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }

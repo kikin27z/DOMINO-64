@@ -102,6 +102,11 @@ public class EventoMVCDisplay extends EventoMVC {
     public void setJugadaValida(JugadaValidaDTO jugadaValida) {
         this.jugadaValida = jugadaValida;
     }
+
+    @Override
+    public int getIdContexto() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
     
 }
