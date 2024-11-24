@@ -12,7 +12,9 @@ import domino64.eventos.base.Evento;
 import entidades.Ficha;
 import entidades.Partida;
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaDTO;
+import eventos.EventoJugador;
 import eventos.EventoPozo;
 import eventos.EventoSuscripcion;
 import eventos.EventoTurno;
@@ -77,7 +79,7 @@ public class ManejadorTurnos extends ObservadorTurno{
         return copiaJugadores;
     }
     
-    private void cambiarTurno(Partida partida){        
+    private Jugador cambiarTurno(Partida partida){        
         jugadoresEnTurno.compute(partida, (p,j) -> {
             List<Jugador> jugadores = jugadoresPartidas.get(p);
             int index = jugadores.indexOf(j);
@@ -88,6 +90,8 @@ public class ManejadorTurnos extends ObservadorTurno{
             j = jugadores.get(index+1);
             return j;
         });
+        
+        return jugadoresEnTurno.get(partida);
     }
     
     private void verificarFichaObtenida(Evento evento){
@@ -114,7 +118,7 @@ public class ManejadorTurnos extends ObservadorTurno{
         jugadoresEnTurno.put(idsContextos.get(idContexto), primerJugador);
         CuentaDTO cuentaDTO = adaptador.adaptarEntidadCuenta(primerJugador.getCuenta());
         
-        EventoTurno buscarMula = new EventoTurno(TipoLogicaTurno.BUSCAR_PRIMERA_MULA);
+        EventoTurno buscarMula = new EventoTurno(TipoLogicaTurno.JUGADORES_SIN_MULAS);
         buscarMula.agregarInfo(cuentaDTO);
         buscarMula.setIdContexto(idContexto);
         buscarMula.setIdPublicador(id);
@@ -137,34 +141,48 @@ public class ManejadorTurnos extends ObservadorTurno{
         
         List<Jugador> jugadores = partida.getJugadores();
         
-        jugadoresPartidas.put(partida, jugadores);
-        
         Jugador primerJugador = buscarPrimerTurno(jugadores);
         EventoTurno turnosDesignados = new EventoTurno();
         
         if(primerJugador != null){
             jugadores = designarOtrosTurnos(jugadores, primerJugador);
             turnosDesignados.setTipo(TipoLogicaTurno.TURNOS_DESIGNADOS);
+            partida.setJugadores(jugadores);
         }else{
-            turnosDesignados.setTipo(TipoLogicaTurno.BUSCAR_PRIMERA_MULA);
+            turnosDesignados.setTipo(TipoLogicaTurno.JUGADORES_SIN_MULAS);
         }
+        jugadoresPartidas.put(partida, jugadores);
         
-        for (Jugador jugador : jugadores) {
-            turnosDesignados.agregarInfo(adaptador.adaptarEntidadCuenta(jugador.getCuenta()));
+        partidaDTO = adaptador.adaptarEntidadPartida(partida);
+        
+        for (JugadorDTO jugadorDTO : partidaDTO.getJugadores()) {
+            turnosDesignados.agregarInfo(jugadorDTO.getCuenta());
         }
-        
+        turnosDesignados.setPartida(partidaDTO);
         turnosDesignados.setIdContexto(eventoPozo.getIdContexto());
         turnosDesignados.setIdPublicador(id);
+        
+        cliente.enviarEvento(turnosDesignados);
     }
 
     @Override
     public void cambiarTurno(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoJugador eventoJ = (EventoJugador)evento;
+        Partida partida = adaptadorDTO.adaptarPartidaDTO(eventoJ.getPartida());
+        Jugador jugEnTurno = cambiarTurno(partida);
+        CuentaDTO jugadorEnTurnoDTO = adaptador.adaptarEntidadCuenta(jugEnTurno.getCuenta());
+        
+        EventoTurno cambioTurno = new EventoTurno(TipoLogicaTurno.CAMBIO_TURNO);
+        cambioTurno.setIdContexto(eventoJ.getIdContexto());
+        cambioTurno.agregarInfo(jugadorEnTurnoDTO);
+        cambioTurno.setIdPublicador(id);
+        
+        cliente.enviarEvento(cambioTurno);
     }
 
     @Override
     public void reacomodarTurnos(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
     }
     
 }

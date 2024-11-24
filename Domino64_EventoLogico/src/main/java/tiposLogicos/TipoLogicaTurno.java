@@ -12,8 +12,6 @@ package tiposLogicos;
 public enum TipoLogicaTurno {
     CAMBIO_TURNO,
     TURNOS_DESIGNADOS,
-    BUSCAR_PRIMERA_MULA,
-    DESIGNAR_OTROS_TURNOS,
-    DESIGNAR_PRIMER_TURNO,
+    JUGADORES_SIN_MULAS,
     PASAR_TURNO;
 }

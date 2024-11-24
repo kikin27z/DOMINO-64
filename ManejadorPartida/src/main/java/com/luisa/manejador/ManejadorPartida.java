@@ -6,11 +6,13 @@ import adapter.AdaptadorEntidad;
 import domino64.eventos.base.Evento;
 import entidades.Jugador;
 import entidades.Partida;
+import entidadesDTO.CuentaDTO;
 import entidadesDTO.PartidaDTO;
 import eventos.EventoJugador;
 import eventos.EventoLobby;
 import eventos.EventoPartida;
 import eventos.EventoPozo;
+import eventos.EventoTurno;
 import implementacion.Client;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -157,16 +159,17 @@ public class ManejadorPartida extends ObservadorPartida implements Runnable{
     }
 
     @Override
-    protected void asignarFichas(Evento evento) {
-        EventoPozo eventoP = (EventoPozo)evento;
-        PartidaDTO partidaDTO = (PartidaDTO)eventoP.getInfo();
-        Partida partida = adaptadorDTO.adaptarPartidaDTO(partidaDTO);
-        List<Jugador> jugadoresConFichas = partida.getJugadores();
-        partidas.compute(partida, (p,j) -> j = jugadoresConFichas);
-    }
-
-    @Override
     protected void asignarTurnos(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoTurno eventoTurno = (EventoTurno)evento;
+        
+        Partida partida = adaptadorDTO.adaptarPartidaDTO(eventoTurno.getPartida());
+        List<Jugador> jugadoresOrdenados = partida.getJugadores();
+        
+        partidas.compute(partida, (p,j) -> j = jugadoresOrdenados);
+    }
+    
+    @Override
+    protected void iniciarBusquedaPrimeraMula(Evento evento){
+        
     }
 }

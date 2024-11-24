@@ -1,6 +1,7 @@
 package eventos;
 
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.PartidaDTO;
 import java.util.ArrayList;
 import java.util.List;
 import tiposLogicos.TipoLogicaTurno;
@@ -12,6 +13,7 @@ import tiposLogicos.TipoLogicaTurno;
 public class EventoTurno extends EventoLogico<CuentaDTO>{
     private List<CuentaDTO> jugadores;
     private CuentaDTO jugador;
+    private PartidaDTO partida;
     private boolean flag;
     private TipoLogicaTurno tipo;
     
@@ -63,6 +65,14 @@ public class EventoTurno extends EventoLogico<CuentaDTO>{
         return jugadores;
     }
 
+    public void setPartida(PartidaDTO partida){
+        this.partida = partida;
+    }
+    
+    public PartidaDTO getPartida(){
+        return partida;
+    }
+    
     @Override
     public TipoLogicaTurno getTipo() {
         return tipo;
@@ -71,7 +81,7 @@ public class EventoTurno extends EventoLogico<CuentaDTO>{
     public void setTipo(TipoLogicaTurno tipo){
         this.tipo = tipo;
         if (tipo.equals(TipoLogicaTurno.TURNOS_DESIGNADOS) ||
-                tipo.equals(TipoLogicaTurno.BUSCAR_PRIMERA_MULA)) {
+                tipo.equals(TipoLogicaTurno.JUGADORES_SIN_MULAS)) {
             jugadores = new ArrayList<>();
             flag = true;
         }

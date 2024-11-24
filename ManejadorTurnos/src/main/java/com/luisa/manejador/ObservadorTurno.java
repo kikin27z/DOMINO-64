@@ -47,6 +47,7 @@ public abstract class ObservadorTurno implements Observer<Evento> {
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
         consumers.putIfAbsent(TipoLogicaPozo.FICHAS_REPARTIDAS, this::designarTurnos);
         consumers.putIfAbsent(TiposJugador.PASAR_TURNO, this::cambiarTurno);
+        consumers.putIfAbsent(TiposJugador.COLOCAR_FICHA, this::cambiarTurno);
         consumers.putIfAbsent(TipoLogicaPartida.JUGADOR_SALIO, this::reacomodarTurnos);
     }
 

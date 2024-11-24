@@ -223,11 +223,6 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
         lobbyDTO.setCuentas(adaptador.adaptarCuentas(jugadoresActuales));
 
         List<Cuenta> jL = jugadoresListos.get(lobby);
-        System.out.println("");
-        System.out.println("");
-        System.out.println("jugadores listos en el mapa; "+jL);
-        System.out.println("");
-        System.out.println("");
         if (!jL.isEmpty())
             lobbyDTO.agregarJugadoresListos(adaptador.adaptarCuentas(jL));
         return lobbyDTO;
@@ -244,12 +239,10 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
     private void notificarJugadores(LobbyDTO partida, CuentaDTO jugador) {
         EventoLobby ev2 = director.crearEventoJugadorNuevo(partida, jugador);
         cliente.enviarEvento(ev2);
-        System.out.println("se notifico a otros jugadores");
         
         partida.setCuentaActual(jugador);
         EventoLobby ev = director.crearEventoPartidaEncontrada(partida, jugador);
         cliente.enviarEvento(ev);
-        System.out.println("se unio a partida");
     }
 
     @Override
@@ -367,10 +360,18 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
         PartidaDTO partidaDTO = adaptador.adaptarEntidadPartida(partida);
         lobby.setPartida(partidaDTO);
         
-        EventoLobby inicioPartida = director.crearEventoPrepararPartida(lobby);
-        cliente.enviarEvento(inicioPartida);
+        int idContextoPartida = generarIdContextoPartida(partidaDTO);
+        EventoLobby prepararPartida = director.crearEventoPrepararPartida(lobby, idContextoPartida);
+        cliente.enviarEvento(prepararPartida);
     }
 
+    private int generarIdContextoPartida(PartidaDTO partida){
+        String codigoPartida = partida.getCodigoPartida();
+        String digitos = codigoPartida.replaceFirst("-", "");
+        int idContextoPartida = Integer.parseInt(digitos);
+        return idContextoPartida;
+    }
+    
     @Override
     public void manejarError(Evento evento) {
         running.set(false);

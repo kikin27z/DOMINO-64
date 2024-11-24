@@ -31,6 +31,11 @@ public class BuilderEventoLobby implements EventBuilder<CuentaDTO>{
     }
 
     @Override
+    public void setIdContexto(int idContexto) {
+        this.evento.setIdContexto(idContexto);
+    }
+
+    @Override
     public void setContexto(CuentaDTO info) {
         this.evento.agregarInfo(info);
     }
