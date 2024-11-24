@@ -13,11 +13,10 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import observer.Observable;
 import observer.Observer;
 
@@ -38,8 +37,7 @@ public class Client extends Observable<Evento> implements ICliente{
     private volatile boolean running;
     private volatile boolean connected;
     private List<Enum<?>> suscripcionesEventos;
-    private BlockingQueue<Evento> colaEventosAEnviar;
-    private BlockingQueue<Evento> colaEventosRecibidos;
+    private BlockingQueue<Evento> colaEventos;
     
     /**
      * para conexion en equipos diferentes (diferentes ip)
@@ -56,11 +54,13 @@ public class Client extends Observable<Evento> implements ICliente{
             return t;
         });
         
-        this.ejecutorEventos = Executors.newFixedThreadPool(3);
+        this.ejecutorEventos = Executors.newSingleThreadExecutor(r -> {
+            Thread t = new Thread(r);
+            return t;
+        });
         
         suscripcionesEventos = new ArrayList<>();
-        colaEventosAEnviar = new LinkedBlockingQueue();
-        colaEventosRecibidos = new LinkedBlockingQueue();
+        colaEventos = new LinkedBlockingQueue();
     }
 
     /**
@@ -76,11 +76,10 @@ public class Client extends Observable<Evento> implements ICliente{
             return t;
         });
         
-        this.ejecutorEventos = Executors.newFixedThreadPool(3);
+        this.ejecutorEventos = Executors.newCachedThreadPool();
         
         suscripcionesEventos = new ArrayList<>();
-        colaEventosAEnviar = new LinkedBlockingQueue();
-        colaEventosRecibidos = new LinkedBlockingQueue();
+        colaEventos = new LinkedBlockingQueue();
     }
     
     public static synchronized Client getClient(int port){
@@ -103,13 +102,9 @@ public class Client extends Observable<Evento> implements ICliente{
         running = true;
         conectarCliente();
         
-        ejecutorEventos.submit(this::procesarColaEventos);
-        ejecutorEventos.submit(this::manejarEvento);
-        ejecutorEventos.submit(this::listenForEvent);
+        new Thread(this::procesarColaEventos).start();
         
-        //new Thread(this::procesarColaEventos).start();
-        
-        //new Thread(this::listenForEvent).start();
+        new Thread(this::listenForEvent).start();
     }
     
     private void conectarCliente(){
@@ -169,12 +164,11 @@ public class Client extends Observable<Evento> implements ICliente{
      * Va tomando los eventos que se vayan agregando a la cola
      * y los envia segun vayan llegando
      */
-    private Thread procesarColaEventos(){
-        return new Thread(() -> {
-            while (running) {
+    private void procesarColaEventos(){
+        while(running){
                 try {
-                    Evento e = colaEventosAEnviar.take();
-                    if (connected) {
+                Evento e = colaEventos.take();
+                if(connected){
                         try {
                             synchronized (output) {
                                 output.reset();
@@ -189,18 +183,15 @@ public class Client extends Observable<Evento> implements ICliente{
                     }
                 } catch (InterruptedException e) {
                     System.out.println("error al tomar el evento de la cola de eventos: " + e.getMessage());
-                    manejarDesconexion();
-//                    Thread.currentThread().interrupt();
-//                    break;
-                }
+                Thread.currentThread().interrupt();
+                break;
             }
-        });
-        
+    }
     }
     
     @Override
     public void enviarEvento(Evento event) {
-        colaEventosAEnviar.offer(event);
+        colaEventos.offer(event);
     }
 
     @Override
@@ -217,52 +208,36 @@ public class Client extends Observable<Evento> implements ICliente{
     private void listenForEvent() {
         while(running){
             if(connected && input != null){
-                try {
-                    Evento evento = (Evento)input.readObject();
-                    colaEventosRecibidos.offer(evento);
+                Evento evento;
+                    try {
+                    evento = (Evento)input.readObject();
                     System.out.println("evento en lstn 4 ev: "+evento);
-//                    ejecutorEventos.submit(() -> {
-//                        manejarEvento(evento);
-//                    });
-                } catch (IOException e) {
-                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, e.getLocalizedMessage());
+                    ejecutorEventos.submit(() -> {
+                        manejarEvento(evento);
+                    });
+                    } catch (IOException e) {
+                        manejarDesconexion();
                 }catch (ClassNotFoundException ex){
                     System.err.println("Error al recibir un evento: "+ex.getMessage());
-                }finally{
-                    manejarDesconexion();
-                }
+                    }
             }else {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    manejarDesconexion();
-//                    Thread.currentThread().interrupt();
-//                    break;
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                    }
                 }
             }
-        }
     }
     
-    private Thread manejarEvento(){
-        return new Thread(() -> {
-            while(running){
-                try {
-                    Evento evento = colaEventosRecibidos.take();
+    private void manejarEvento(Evento evento){
                     System.out.println("mensaje recibido " + evento);
 
                     notifyObservers(evento.getTipo(), evento);
                     System.out.println("se notifico a observers");
-                } catch (InterruptedException ex) {
-                    System.out.println("error al tomar el evento de la cola de eventos: " + ex.getMessage());
-                    manejarDesconexion();
-                    //Thread.currentThread().interrupt();
-                    //break;
                 }
-            }
-        });
         
-    }
-    
     private void manejarDesconexion(){
         connected = false;
         running = false;

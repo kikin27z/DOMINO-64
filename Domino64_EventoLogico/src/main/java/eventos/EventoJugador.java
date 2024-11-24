@@ -26,7 +26,9 @@ public class EventoJugador extends EventoLogico{
     private LobbyDTO lobby;
     private JugadorDTO jugador;
     
-    public EventoJugador(){}
+    public EventoJugador(){
+        this.jugador = new JugadorDTO();
+    }
     
     public EventoJugador(TiposJugador tipo){
         this.tipo = tipo;

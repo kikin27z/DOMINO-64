@@ -36,15 +36,13 @@ public class HiloJugador implements Runnable, Subscriber{
     private volatile boolean running;
     private ExecutorService ejecutorEventos;
     private BlockingQueue<Evento> colaEventosBus;
-    private BlockingQueue<Evento> colaEventosCliente;
     
     public HiloJugador(Publicador publicador, Socket socket, int id) {
         this.publicador = publicador;
         this.id = id;
-        this.ejecutorEventos = Executors.newFixedThreadPool(2);
+        this.ejecutorEventos = Executors.newCachedThreadPool();
         this.socket = socket;
         this.colaEventosBus = new LinkedBlockingQueue<>();
-        this.colaEventosCliente = new LinkedBlockingQueue<>();
         initStream();
     }
 
@@ -66,42 +64,21 @@ public class HiloJugador implements Runnable, Subscriber{
         }
     }
     
-    private void recibirEventosCliente(){
-        while (running) {
-            try {
-                Object obj = input.readObject();
-                Evento ev = (Evento) obj;
-                colaEventosCliente.offer(ev);
-                //manejarEvento(ev);
-            } catch (IOException ex) {
-                Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, ex.getMessage());
-            } finally {
-                running = false;
-                removerSuscripciones();
-                Servidor.desconectarJugador(id);
-            }
-        }
-    }
-    
     /**
      * Metodo usado para enviarle al cliente (al jugador) los eventos 
      * recibidos del bus.
      * 
      */
-    private Thread enviarEventoACliente(){
-        return new Thread(() -> {
+    private void enviarEvento(){
+        new Thread(() -> {
             while(running){
                 try {
                     Evento ev = colaEventosBus.take();
-                    if(ev.getIdContexto() == 0 || ev.getIdContexto() == this.idContexto){
-                        synchronized (output) {
-                            output.reset();
-                            System.out.println("evento a enviar: " + ev);
-                            output.writeObject(ev);
-                            output.flush();
-                        }
+                    synchronized (output) {
+                        output.reset();
+                        System.out.println("evento a enviar: " + ev);
+                        output.writeObject(ev);
+                        output.flush();
                     }
                 } catch (IOException e) {
                     running = false;
@@ -111,7 +88,8 @@ public class HiloJugador implements Runnable, Subscriber{
                     Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
                 }
             }
-        });
+        }).start();
+        
     }
     
     /**
@@ -165,33 +143,18 @@ public class HiloJugador implements Runnable, Subscriber{
             removerSuscripcion(suscripcion);
         }
     }
-    /**
-     * metodo para publicar en el bus los eventos que envie el cliente.
-     * Los eventos se toman de la cola que almacena los eventos 
-     * recibidos del cliente
-     * @return el hilo que se encarga de publicar los eventos
-     */
-    private Thread enviarEventoABus(){
-        return new Thread(() -> {
-            while(running){
-                try {
-                    Evento evento = colaEventosCliente.take();
+    
+    private void manejarEvento(Evento evento){
                     Enum<?> tipo = evento.getTipo();
-                    if (tipo.equals(TipoSuscripcion.SUSCRIBIR)) {
-                        suscribirEvento((Enum<?>) evento.getInfo());
-                    } else if (tipo.equals(TipoSuscripcion.DESUSCRIBIR)) {
-                        removerSuscripcion((Enum<?>) evento.getInfo());
-                    } else {
+        if(tipo.equals(TipoSuscripcion.SUSCRIBIR)){
+            suscribirEvento((Enum<?>)evento.getInfo());
+        }else if(tipo.equals(TipoSuscripcion.DESUSCRIBIR)){
+            removerSuscripcion((Enum<?>)evento.getInfo());
+        }else{
                         publicador.publicarEvento(tipo, evento);
                     }
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
             
-        });
-    }
-    
     @Override
     public void run() {
         try {
@@ -204,13 +167,32 @@ public class HiloJugador implements Runnable, Subscriber{
             
             recibirSuscripciones();
             
-            ejecutorEventos.submit(this::enviarEventoACliente);
-            ejecutorEventos.submit(this::enviarEventoABus);
-            recibirEventosCliente();
+            enviarEvento();
             
+            while(running){ 
+                Object obj = input.readObject();
+                Evento ev = (Evento)obj;
+                ejecutorEventos.submit(()-> {
+                    manejarEvento(ev);
+                    System.out.println("ev: "+ev);
+                });
+                //manejarEvento(ev);
+//                obj = input.readObject();
+//                if(obj instanceof EventoJugador evJugador){
+//                    System.out.println("nombre: "+evJugador.getJugador());
+//                    evento = (EventoJugador)obj;
+//                    System.out.println("evento jugador: "+evento);
+//                }else{
+//                    evento = (EventoLogico) obj;
+//                }
+//                
+//                manejarEvento(evento);
+            }
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
-            
+            running = false;
+            removerSuscripciones();
+            Servidor.desconectarJugador(id);
         }
     }
     
