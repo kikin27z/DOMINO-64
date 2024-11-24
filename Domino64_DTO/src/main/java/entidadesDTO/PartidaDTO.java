@@ -21,6 +21,11 @@ public class PartidaDTO implements Serializable {
         this.jugadores = new ArrayList<>();
     }
     
+    public PartidaDTO(String codigoPartida){
+        this.codigoPartida = codigoPartida;
+        jugadores = new ArrayList<>();
+    }
+    
     public String getCodigoPartida() {
         return codigoPartida;
     }

@@ -13,7 +13,7 @@ public class Cuenta implements Serializable{
     private Avatar avatar;
     private int id;
     private String idCadena;
-    private Jugador jugador;
+    //private Jugador jugador;
 
     public Cuenta(int id) {
         this.id = id;
@@ -40,13 +40,13 @@ public class Cuenta implements Serializable{
         return avatar;
     }
 
-    public Jugador getJugador() {
-        return jugador;
-    }
-
-    public void setJugador(Jugador jugador) {
-        this.jugador = jugador;
-    }
+//    public Jugador getJugador() {
+//        return jugador;
+//    }
+//
+//    public void setJugador(Jugador jugador) {
+//        this.jugador = jugador;
+//    }
 
     
     @Override

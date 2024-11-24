@@ -1,7 +1,9 @@
 package entidades;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
@@ -10,7 +12,7 @@ import java.util.Random;
  * @author karim
  */
 public class Lobby {
-
+    private Map<Cuenta, Boolean> jugadoresListos;
     private List<Cuenta> cuentas;
     private String codigoPartida;
 
@@ -21,8 +23,37 @@ public class Lobby {
     public Lobby() {
         crearCodigo();
         cuentas = new ArrayList<>();
+        jugadoresListos = new HashMap<>();
     }
 
+    public void agregarJugadorListo(Cuenta cuenta){
+        jugadoresListos.put(cuenta, true);
+    }
+    
+    public void removerJugadorListo(Cuenta cuenta){
+        jugadoresListos.put(cuenta, false);
+    }
+    
+    public List<Cuenta> getJugadoresListos(){
+        List<Cuenta> jugadoresL = new ArrayList<>();
+        for (Cuenta cuenta : cuentas) {
+            if(jugadoresListos.get(cuenta))
+                jugadoresL.add(cuenta);
+        }
+        return jugadoresL;
+    }
+    
+    public boolean todosListos(){
+        int contador = 0;
+        for (Cuenta cuenta : cuentas) {
+            if(jugadoresListos.get(cuenta))
+                contador++;
+            else
+                break;
+        }
+        return contador == cuentas.size();
+    }
+    
     public void agregarCuentas(List<Cuenta> cuentas){
         this.cuentas = cuentas;
     }
@@ -30,6 +61,13 @@ public class Lobby {
     public void agregarCuenta(Cuenta cuenta) {
         //cuenta = asignarAvatar(cuenta);
         cuentas.add(cuenta);
+        jugadoresListos.putIfAbsent(cuenta, false);
+    }
+
+    public void removerCuenta(Cuenta cuenta) {
+        //cuenta = asignarAvatar(cuenta);
+        cuentas.remove(cuenta);
+        jugadoresListos.remove(cuenta);
     }
 
     public String getCodigoPartida(){

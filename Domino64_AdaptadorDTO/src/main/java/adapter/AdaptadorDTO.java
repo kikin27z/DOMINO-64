@@ -25,64 +25,79 @@ import java.util.List;
  */
 public class AdaptadorDTO {
 
-    public Lobby adaptarEntidadLobby(LobbyDTO lobbyDTO){
+    public Lobby adaptarLobbyDTO(LobbyDTO lobbyDTO){
         Lobby lobby = new Lobby(lobbyDTO.getCodigoPartida());
         
-        List<Cuenta> cuentas = adaptarCuentas(lobbyDTO.getCuentas());
+        List<Cuenta> cuentas = adaptarCuentasDTO(lobbyDTO.getCuentas());
         lobby.agregarCuentas(cuentas);
         return lobby;
     }
     
-    public Partida adaptarEntidadPartida(PartidaDTO partida){
+    public Partida adaptarPartidaDTO(PartidaDTO partida){
         Partida entidad = new Partida(partida.getCodigoPartida());
         if (partida.getFichasPorJugador() > 0) {
             entidad.setFichasPorJugador(partida.getFichasPorJugador());
         }
         if (partida.getJugadores() != null) {
-            List<Cuenta> cuentas = new ArrayList<>();
-            for (Cuenta cuenta : adaptarJugadores(partida.getJugadores())) {
-                cuentas.add(cuenta);
-            }
-            entidad.setJugadores(cuentas);
+            entidad.setJugadores(adaptarJugadoresDTO(partida.getJugadores()));
         }
 
         return entidad;
     }
     
-    public List<Cuenta> adaptarCuentas(List<CuentaDTO> cuentas) {
-        List<Cuenta> entidades = new ArrayList<>();
-        for (CuentaDTO cuenta : cuentas) {
-            entidades.add(adaptarEntidadCuenta(cuenta));
+    public List<Jugador> adaptarJugadoresDTO(List<JugadorDTO> jugadores) {
+        List<Jugador> entidades = new ArrayList<>();
+        for (JugadorDTO jugador : jugadores) {
+            entidades.add(adaptarJugadorDTO(jugador));
         }
         return entidades;
     }
     
-    public List<Cuenta> adaptarJugadores(List<JugadorDTO> cuentas) {
+    public Jugador adaptarJugadorDTO(JugadorDTO jugador) {
+        Jugador entidad = new Jugador(adaptarCuentaDTO(jugador.getCuenta()));
+
+        if (jugador.getFichas() != null) {
+            entidad.setFichas(adaptarFichaDTO(jugador.getFichas()));
+        }
+
+        return entidad;
+    }
+
+    
+    public List<Cuenta> adaptarCuentasDTO(List<CuentaDTO> cuentas) {
         List<Cuenta> entidades = new ArrayList<>();
-        for (JugadorDTO cuenta : cuentas) {
-            entidades.add(adaptarEntidadCuenta(cuenta.getCuenta()));
+        for (CuentaDTO cuenta : cuentas) {
+            entidades.add(adaptarCuentaDTO(cuenta));
         }
         return entidades;
     }
-
-    public FichaDTO adaptarEntidadFicha(Ficha ficha) {
-        return new FichaDTO(ficha.getDerecha(), ficha.getIzquierda());
+    
+    public List<Ficha> adaptarFichaDTO(List<FichaDTO> fichasDTO) {
+        List<Ficha> fichas = new ArrayList<>();
+        for (FichaDTO ficha : fichasDTO) {
+            fichas.add(adaptarFichaDTO(ficha));
+        }
+        return fichas;
+    }
+    
+    public Ficha adaptarFichaDTO(FichaDTO ficha) {
+        return new Ficha(ficha.getDerecha(), ficha.getIzquierda());
     }
 
-    public Cuenta adaptarEntidadCuenta(CuentaDTO cuentaDTO) {
+    public Cuenta adaptarCuentaDTO(CuentaDTO cuentaDTO) {
         System.out.println("en adaptar entidad cuenta");
         Cuenta entidad = new Cuenta();
 
         entidad.setId(cuentaDTO.getId());
         if (cuentaDTO.getAvatar() != null) {
-            entidad.setAvatar(adaptarAvatar(cuentaDTO.getAvatar()));
+            entidad.setAvatar(adaptarAvatarDTO(cuentaDTO.getAvatar()));
         }
         entidad.setIdCadena(cuentaDTO.getIdCadena());
         System.out.println("entidad: "+entidad);
         return entidad;
     }
 
-    public Avatar adaptarAvatar(AvatarDTO avatarDTO) {
+    public Avatar adaptarAvatarDTO(AvatarDTO avatarDTO) {
         Avatar avatar = null;
         switch (avatarDTO) {
             case AVE ->

@@ -47,6 +47,10 @@ public class JugadorDTO implements Serializable {
     public CuentaDTO getCuenta(){
         return cuenta;
     }
+    
+    public void setCuenta(CuentaDTO cuenta){
+        this.cuenta = cuenta;
+    }
 
     @Override
     public String toString() {

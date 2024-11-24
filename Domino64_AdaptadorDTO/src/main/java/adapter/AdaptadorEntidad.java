@@ -39,14 +39,18 @@ public class AdaptadorEntidad {
             dto.setFichasPorJugador(partida.getFichasPorJugador());
         }
         if(partida.getJugadores() != null){
-            List<JugadorDTO> jugadoresDTO = new ArrayList<>();
-            for (CuentaDTO cuenta : adaptarCuentas(partida.getJugadores())) {
-                jugadoresDTO.add(new JugadorDTO(cuenta));
-            }
-            dto.setJugadores(jugadoresDTO);
+            dto.setJugadores(adaptarJugadores(partida.getJugadores()));
         }
         
         return dto;
+    }
+    
+    public List<JugadorDTO> adaptarJugadores(List<Jugador> jugadores){
+        List<JugadorDTO> dtos = new ArrayList<>();
+        for (Jugador jugador : jugadores) {
+            dtos.add(adaptarEntidadJugador(jugador));
+        }
+        return dtos;
     }
     
     public List<CuentaDTO> adaptarCuentas(List<Cuenta> cuentas){
@@ -60,6 +64,25 @@ public class AdaptadorEntidad {
     public FichaDTO adaptarEntidadFicha(Ficha ficha){
         return new FichaDTO(ficha.getDerecha(), ficha.getIzquierda());
     }
+    
+    public List<FichaDTO> adaptarEntidadesFicha(List<Ficha> fichas){
+        List<FichaDTO> fichasDTO = new ArrayList<>();
+        for (Ficha ficha : fichas) {
+            fichasDTO.add(adaptarEntidadFicha(ficha));
+        }
+        return fichasDTO;
+    }
+    
+    public JugadorDTO adaptarEntidadJugador(Jugador jugador){
+        JugadorDTO dto = new JugadorDTO(adaptarEntidadCuenta(jugador.getCuenta()));
+        
+        if(jugador.getFichas() != null){
+            dto.setFichas(adaptarEntidadesFicha(jugador.getFichas()));
+        }
+        
+        return dto;
+    } 
+    
     
     public CuentaDTO adaptarEntidadCuenta(Cuenta cuenta){
         CuentaDTO dto = new CuentaDTO();

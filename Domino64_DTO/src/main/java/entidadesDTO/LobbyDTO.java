@@ -14,11 +14,11 @@ import java.util.Random;
 public class LobbyDTO implements Serializable{
     private List<CuentaDTO> cuentas;
     private Map<CuentaDTO, Boolean> jugadoresListos;
-    private String codigoPartida;
+    private PartidaDTO partida;
     private CuentaDTO cuentaActual;
     
     public LobbyDTO(String codigoPartida) {
-        this.codigoPartida = codigoPartida;
+        partida = new PartidaDTO(codigoPartida);
         jugadoresListos = new HashMap<>();
         cuentas = new ArrayList<>();
     }
@@ -26,6 +26,22 @@ public class LobbyDTO implements Serializable{
     public LobbyDTO(CuentaDTO cuentaActual) {
         jugadoresListos = new HashMap<>();
         cuentas = new ArrayList<>();
+    }
+    
+    public void setCantidadFichas(int cantidadFichas){
+        this.partida.setFichasPorJugador(cantidadFichas);
+    }
+    
+    public int getCantidadFichas(){
+        return partida.getFichasPorJugador();
+    }
+    
+    public PartidaDTO getPartida(){
+        return partida;
+    }
+    
+    public void setPartida(PartidaDTO partida){
+        this.partida = partida;
     }
     
     public void agregarJugadoresListos(List<CuentaDTO> listos){
@@ -65,11 +81,11 @@ public class LobbyDTO implements Serializable{
     }
 
     public String getCodigoPartida() {
-        return codigoPartida;
+        return partida.getCodigoPartida();
     }
 
     public void setCodigoPartida(String codigoPartida) {
-        this.codigoPartida = codigoPartida;
+        this.partida.setCodigoPartida(codigoPartida);
     }
 
     public void asignarIdJugadorActual(String id){
@@ -93,7 +109,7 @@ public class LobbyDTO implements Serializable{
                 builder.append('-');
             builder.append(rnd.nextInt(10));
         }
-        codigoPartida = builder.toString();
+        partida.setCodigoPartida(builder.toString());
     }
 
     @Override
@@ -101,7 +117,7 @@ public class LobbyDTO implements Serializable{
         StringBuilder sb = new StringBuilder();
         sb.append("LobbyDTO{");
         sb.append("cuentas=").append(cuentas);
-        sb.append(", codigoPartida=").append(codigoPartida);
+        sb.append(", codigoPartida=").append(partida.getCodigoPartida());
         sb.append(", cuentaActual=").append(cuentaActual);
         sb.append(", jugadoresListos=").append(jugadoresListos);
         sb.append('}');
