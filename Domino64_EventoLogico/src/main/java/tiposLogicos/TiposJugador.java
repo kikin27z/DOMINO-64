@@ -19,6 +19,7 @@ public enum TiposJugador {
     PETICION_RENDIRSE,
     JUGADOR_LISTO,
     JUGADOR_NO_LISTO,
-    PASAR_TURNO
+    PASAR_TURNO,
+    CAMBIAR_CONFIG_PARTIDA
     ;
 }

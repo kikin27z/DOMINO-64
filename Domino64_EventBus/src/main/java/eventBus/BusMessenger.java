@@ -4,10 +4,8 @@
  */
 package eventBus;
 
-import com.domino64.base.Suscriptor;
-import domino64.eventos.base.error.EventoError;
+import domino64.eventos.base.error.*;
 import domino64.eventos.base.*;
-import domino64.eventos.base.error.TipoError;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

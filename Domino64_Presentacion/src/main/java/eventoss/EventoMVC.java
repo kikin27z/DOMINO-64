@@ -20,12 +20,24 @@ import entidadesDTO.CuentaDTO;
  */
 public abstract class EventoMVC<T> implements Evento{
     private CuentaDTO publicador;
+    private int idContexto ;
+    
     public void setPublicador(CuentaDTO cuenta){
         publicador = cuenta;
+        idContexto = 0;
+    }
+    
+    public void setIdContexto(int id){
+        this.idContexto = id;
     }
     
     public CuentaDTO getPublicador(){
         return publicador;
+    }
+    
+    @Override
+    public int getIdContexto(){
+        return idContexto;
     }
     
     @Override

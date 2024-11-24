@@ -20,7 +20,7 @@ public class EventoTurno extends EventoLogico<CuentaDTO>{
     public EventoTurno(TipoLogicaTurno tipo){
         super();
         this.tipo = tipo;
-        if(tipo.equals(TipoLogicaTurno.DESIGNAR_OTROS_TURNOS)){
+        if(tipo.equals(TipoLogicaTurno.TURNOS_DESIGNADOS)){
             jugadores = new ArrayList<>();
             flag = true;
         }
@@ -70,5 +70,10 @@ public class EventoTurno extends EventoLogico<CuentaDTO>{
     
     public void setTipo(TipoLogicaTurno tipo){
         this.tipo = tipo;
+        if (tipo.equals(TipoLogicaTurno.TURNOS_DESIGNADOS) ||
+                tipo.equals(TipoLogicaTurno.BUSCAR_PRIMERA_MULA)) {
+            jugadores = new ArrayList<>();
+            flag = true;
+        }
     }
 }

@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * @author luisa M
  * @deprecated Esta clase ya no esta en uso
  */
+@Deprecated
 public class BusStore {
     private Map<Enum<?>, Queue<Subscriber>> subsOnStandBy;
     

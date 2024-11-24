@@ -19,6 +19,7 @@ public class EventoError implements Evento<String> {
     private TipoError tipo;
     private String mensaje;
     private int idPublicador;
+    private int idContexto;
     
     public EventoError(TipoError tipo, String mensaje){
         this.tipo = tipo;
@@ -29,13 +30,22 @@ public class EventoError implements Evento<String> {
         this.tipo = tipo;
     }
     
+    public void setMensajeError(String msj){
+        this.mensaje = msj;
+    }
+    
+    public void setIdContexto(int id){
+        this.idContexto = id;
+    }
+    
     @Override
     public TipoError getTipo(){
         return tipo;
     }
     
-    public void setMensajeError(String msj){
-        this.mensaje = msj;
+    @Override
+    public int getIdContexto(){
+        return idContexto;
     }
 
     @Override

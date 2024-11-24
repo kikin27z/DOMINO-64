@@ -8,10 +8,10 @@ import tiposLogicos.TipoLogicaPozo;
  *
  * @author luisa M
  */
-public class EventoPozo extends EventoLogico<FichaDTO>{
+public class EventoPozo extends EventoLogico{
+    private Object contexto;
     private List<FichaDTO> fichas;
     private FichaDTO ficha;
-    private boolean flag;
     private TipoLogicaPozo tipo;
     
     public EventoPozo(){}
@@ -19,24 +19,16 @@ public class EventoPozo extends EventoLogico<FichaDTO>{
     public EventoPozo( TipoLogicaPozo tipo){
         super();
         this.tipo = tipo;
-        if(tipo.equals(TipoLogicaPozo.REPARTIR_FICHAS)){
-            fichas = new ArrayList<>();
-            flag = true;
-        }
     }
     
     @Override
-    public void agregarInfo(FichaDTO info) {
-        if(flag){
-            fichas.add(info);
-        }else{
-            ficha = info;
-        }
+    public void agregarInfo(Object info) {
+        this.contexto = info;
     }
 
     @Override
-    public FichaDTO getInfo() {
-        return ficha;
+    public Object getInfo() {
+        return contexto;
     }
     
     

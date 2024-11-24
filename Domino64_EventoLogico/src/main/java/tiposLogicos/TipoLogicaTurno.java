@@ -11,6 +11,8 @@ package tiposLogicos;
  */
 public enum TipoLogicaTurno {
     CAMBIO_TURNO,
+    TURNOS_DESIGNADOS,
+    BUSCAR_PRIMERA_MULA,
     DESIGNAR_OTROS_TURNOS,
     DESIGNAR_PRIMER_TURNO,
     PASAR_TURNO;
