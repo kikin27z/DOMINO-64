@@ -79,5 +79,12 @@ public class DirectorLobby extends DirectorEventos<BuilderEventoLobby> {
         return builder.construirEvento();
     }
     
+    public EventoLobby crearEventoPrepararPartida(LobbyDTO partida){
+        builder.setIdPublicador(idPublicador);
+        builder.agregarLobby(partida);
+        builder.setTipo(TipoLogicaLobby.PREPARAR_PARTIDA);
+        return builder.construirEvento();
+    }
+    
     
 }

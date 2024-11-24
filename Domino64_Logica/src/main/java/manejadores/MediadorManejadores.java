@@ -41,7 +41,7 @@ public class MediadorManejadores {
     private MediadorManejadores() {
         cuenta = new ManejadorCuenta();
         display = new ManejadorDisplay();
-        cuenta.setManejadorDisplay(display);
+        //cuenta.setManejadorDisplay(display);
         
         mediadorModelos = MediadorModelos.getInstance();
         //notificador = NotificadorEvento.getInstance();
@@ -173,6 +173,13 @@ public class MediadorManejadores {
         public void avisarCambioAvatar(CuentaDTO cuentaActualizada) {
             EventoMVCJugador evento = new EventoMVCJugador(TipoJugadorMVC.CAMBIAR_AVATAR);
             evento.setPublicador(cuentaActualizada);
+            ControladorComunicacion.enviarEventoALogica(evento);
+        }
+
+        @Override
+        public void avisarCambioConfig(LobbyDTO lobbyAct) {
+            EventoMVCJugador evento = new EventoMVCJugador(TipoJugadorMVC.CAMBIAR_CONFIG_PARTIDA);
+            evento.setLobby(lobbyAct);
             ControladorComunicacion.enviarEventoALogica(evento);
         }
 

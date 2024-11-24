@@ -101,6 +101,7 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
     @Override
     public void inicializarLobby(LobbyDTO lobby){
         this.lobbyDTO = lobby;
+        System.out.println("cantidad de fichas en modelo: "+lobbyDTO.getCantidadFichas());
         this.jugadoresListos = lobby.getJugadoresListos();
         if(jugadoresListos.isEmpty())
             System.out.println("no hay jugadores listos");
@@ -353,5 +354,16 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
     
     protected boolean jugadorActualListo(){
         return jugadorActualListo;
+    }
+    
+    protected int getCantidadFichas(){
+        return lobbyDTO.getCantidadFichas();
+    }
+    
+    protected void setCantidadFichas(int cantidadFichas){
+        lobbyDTO.setCantidadFichas(cantidadFichas);
+        for (ObserverLobby observerLobby : observersLogica) {
+            observerLobby.avisarCambioConfig(lobbyDTO);
+        }
     }
 }

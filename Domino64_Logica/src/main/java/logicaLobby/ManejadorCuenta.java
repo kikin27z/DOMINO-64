@@ -41,13 +41,11 @@ import utilities.DirectorSuscripcion;
  */
 public class ManejadorCuenta extends ObservadorLobbyLocal {
 
-    private NotificadorEvento notificador;
     private ICliente cliente;
     private DirectorJugador directorEventos;
     private DirectorSuscripcion directorSuscripciones;
     private AdaptadorEntidad adapterEntidad;
     private AdaptadorDTO adapterDTO;
-    private ManejadorDisplay manejadorDisplay;
     private Cuenta cuenta;
     private LobbyDTO lobbyDTO;
     private Map<CuentaDTO, Boolean> jugadoresListos;
@@ -57,11 +55,9 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
         super();
         cuenta = new Cuenta();
         cliente = Control.obtenerCliente();
-        notificador = NotificadorEvento.getInstance();
         adapterEntidad = new AdaptadorEntidad();
         adapterDTO = new AdaptadorDTO();
         directorEventos = new DirectorJugador(new BuilderEventoJugador());
-        manejadorDisplay = Control.obtenerManejadorDisplay();
         jugadoresLobby = new ArrayList<>();
         jugadoresListos = new HashMap<>();
         setConsumersMVC();
@@ -74,12 +70,21 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
         Control.agregarConsumer(TipoJugadorMVC.JUGADOR_LISTO, this::actualizarJugadorListo);
         Control.agregarConsumer(TipoJugadorMVC.JUGADOR_NO_LISTO, this::actualizarJugadorListo);
         Control.agregarConsumer(TipoJugadorMVC.CAMBIAR_AVATAR, this::actualizarAvatar);
+        Control.agregarConsumer(TipoJugadorMVC.CAMBIAR_CONFIG_PARTIDA, this::actualizarConfigPartida);
+    }
+    
+    private void actualizarConfigPartida(EventoMVCJugador evento){
+        LobbyDTO lobbyAct = evento.getLobby();
+        lobbyDTO.setCantidadFichas(lobbyAct.getCantidadFichas());
+        EventoJugador cambioConfig = directorEventos.crearEventoActualizarConfigPartida(lobbyDTO);
+        cliente.enviarEvento(cambioConfig);
+        
     }
     
     private void actualizarAvatar(EventoMVCJugador evento){
         CuentaDTO cuentaDTO = evento.getPublicador();
         if(validarCambioAvatar(cuentaDTO.getAvatar())){
-            cuenta.setAvatar(adapterDTO.adaptarAvatar(cuentaDTO.getAvatar()));
+            cuenta.setAvatar(adapterDTO.adaptarAvatarDTO(cuentaDTO.getAvatar()));
             EventoJugador cambioAv = directorEventos.crearEventoCambiarAvatar(lobbyDTO, cuentaDTO);
             
             MediadorManejadores.enviarADisplay(cambioAv);
@@ -140,7 +145,7 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
             System.out.println("evento: "+eventoLobby);
             
             lobbyDTO = eventoLobby.obtenerLobby();
-            cuenta = adapterDTO.adaptarEntidadCuenta(lobbyDTO.getCuentaActual());
+            cuenta = adapterDTO.adaptarCuentaDTO(lobbyDTO.getCuentaActual());
             
             jugadoresLobby = lobbyDTO.getCuentas();
             
@@ -263,9 +268,9 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public void setManejadorDisplay(ManejadorDisplay manejadorDisplay) {
-        this.manejadorDisplay = manejadorDisplay;
-    }
+//    public void setManejadorDisplay(ManejadorDisplay manejadorDisplay) {
+//        this.manejadorDisplay = manejadorDisplay;
+//    }
 
     private EventoLobby esEventoDeEsteLobby(Evento evento){
         EventoLobby ev = (EventoLobby) evento;

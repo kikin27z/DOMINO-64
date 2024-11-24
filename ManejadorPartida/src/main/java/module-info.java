@@ -9,4 +9,7 @@ module ManejadorPartida {
     requires Observer;
     requires Domino64_Dominio;
     requires EventoLogico;
+    requires Domino64_DTO;
+    requires Domino64.AdaptadorDTO;
+    requires java.logging;
 }

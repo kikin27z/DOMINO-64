@@ -60,6 +60,7 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
     private StackPane btnAjustes;
     private TextField txtUsuario;
     private AnchorPane fondoConfiguracionPartida;
+    private ChoiceBox<String> tilesChoiceBox;
     private Label lblJugadoresListos;
     private Label lblMensaje;
     private ImageView ajustesImg;
@@ -397,8 +398,8 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         btnConfirmarCambios.setTextFill(javafx.scene.paint.Color.WHITE);
         btnConfirmarCambios.setFont(new Font("Russo One", 23));
         btnConfirmarCambios.setCursor(Cursor.HAND);
-        
-                // Crear botón de cerrar
+
+        // Crear botón de cerrar
         btnCerrarAvatares = new Button("X");
         btnCerrarAvatares.setLayoutX(25);
         btnCerrarAvatares.setLayoutY(24);
@@ -459,6 +460,7 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         // Crear y añadir ImageViews al GridPane
         for (int i = 0; i < avatars.length; i++) {
             ImageView imageView = crearIconoAvatar(avatars[i]);
+            imageView.setOnMouseClicked(seleccionarAvatar(avatars[i]));
             avatares.add(imageView);
             // Añadir evento de click
             final String avatarName = avatars[i];
@@ -569,14 +571,14 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         tilesLabel.setFont(new Font("Russo One", 25));
 
         // Choice box
-        ChoiceBox<String> tilesChoiceBox = new ChoiceBox<>();
+        tilesChoiceBox = new ChoiceBox<>();
         tilesChoiceBox.setLayoutX(244);
         tilesChoiceBox.setLayoutY(261);
         tilesChoiceBox.setPrefWidth(150);
         tilesChoiceBox.setStyle("-fx-background-color: #FFF;");
         tilesChoiceBox.setCursor(Cursor.HAND);
         tilesChoiceBox.getItems().addAll("2", "3", "4", "5", "6", "7");
-        tilesChoiceBox.setValue("7");
+        tilesChoiceBox.setValue(String.valueOf(modelo.getCantidadFichas()));
 
         // Radio buttons
         ToggleGroup playerToggleGroup = new ToggleGroup();
@@ -688,15 +690,21 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         btnConfirmarCambios.setOnMouseClicked(e);
     }
 
+    protected int getChoiceBoxSelected(){
+        return Integer.parseInt(tilesChoiceBox.getValue());
+    }
+    
     public void cancelarCambiosPartida(EventHandler<MouseEvent> e) {
         btnCancelarCambios.setOnMouseClicked(e);
     }
 
-    protected void seleccionarAvatar(EventHandler<MouseEvent> e, ImageView imgV){
-        imgV.setOnMouseClicked(e);
-//        if(avatares.contains(imgV)){
-//            avatares.get(avatares.indexOf(imgV)).setOnMouseClicked(e);
-//        }
+    private EventHandler<MouseEvent> seleccionarAvatar(String nombreAvatar){
+        EventHandler<MouseEvent> handler = (MouseEvent t) -> {
+            EventoMVCLobby evento = new EventoMVCLobby(TipoLobbyMVC.CAMBIAR_AVATAR);
+            evento.agregarContexto(nombreAvatar);
+            notifyObservers(evento.getTipo(), evento);
+        };
+        return handler;
     }
     
     //----------------------Eventos de Modelo------------------------------------
@@ -748,6 +756,7 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
     public void actualizarAvatarJugador(CuentaDTO cuenta) {
         AnchorPane pane = modelo.obtenerPanelJugador(cuenta.getIdCadena());
         cambiarAvatar(cuenta.getAvatar(), true);
+//        ObservableList<Node> nodes = pane.getChildren().filtered(node -> node.getId().equals("avatar"));
         AnchorPane panelAct = actualizarPanel(pane, cuenta.getAvatar());
         
         int index = jugadoresContainer.getChildren().indexOf(pane);

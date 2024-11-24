@@ -14,59 +14,55 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Consumer;
 import observer.Observer;
-import tiposLogicos.TipoLogicaLobby;
+import tiposLogicos.TipoLogicaPartida;
 import tiposLogicos.TipoLogicaPozo;
-import tiposLogicos.TipoLogicaTurno;
 import tiposLogicos.TiposJugador;
 
 /**
  *
  * @author luisa M
  */
-public abstract class ObservadorPartida implements Observer<Evento> {
+public abstract class ObservadorTurno implements Observer<Evento> {
     protected static BlockingQueue<Evento> colaEventos;
     protected Map<Enum<?>, Consumer<Evento>> consumers;
     protected static final List<Enum<?>> eventos = new ArrayList<>(
             List.of(
                     TipoError.ERROR_DE_SERVIDOR,
-                    TiposJugador.ABANDONAR_PARTIDA,
-                    TiposJugador.PETICION_RENDIRSE,
-                    TipoLogicaLobby.PREPARAR_PARTIDA
+                    TipoLogicaPozo.FICHAS_REPARTIDAS,
+                    TiposJugador.PASAR_TURNO,
+                    TipoLogicaPartida.JUGADOR_SALIO
             ));
 
-    protected ObservadorPartida() {
+    protected ObservadorTurno() {
         consumers = new ConcurrentHashMap<>();
         colaEventos = new LinkedBlockingDeque();
-        setConsumers();
     }
 
     @Override
     public void update(Evento observable) {
-        Consumer<Evento> cons = consumers.get(observable.getTipo());
-        if (cons != null) {
-            cons.accept(observable);
-        }
+        colaEventos.offer(observable);
     }
 
-    private void setConsumers() {
+    protected void setConsumers() {
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
-        consumers.putIfAbsent(TiposJugador.ABANDONAR_PARTIDA, this::removerJugador);
-        consumers.putIfAbsent(TiposJugador.PETICION_RENDIRSE, this::recibirPeticion);
-        consumers.putIfAbsent(TipoLogicaLobby.PREPARAR_PARTIDA, this::recibirPartida);
-        consumers.putIfAbsent(TipoLogicaPozo.FICHAS_REPARTIDAS, this::asignarFichas);
-        consumers.putIfAbsent(TipoLogicaTurno.TURNOS_DESIGNADOS, this::asignarTurnos);
+        consumers.putIfAbsent(TipoLogicaPozo.FICHAS_REPARTIDAS, this::designarTurnos);
+        consumers.putIfAbsent(TiposJugador.PASAR_TURNO, this::cambiarTurno);
+        consumers.putIfAbsent(TipoLogicaPartida.JUGADOR_SALIO, this::reacomodarTurnos);
     }
 
     public void agregarEvento(Enum<?> evento, Consumer<Evento> consumer) {
         eventos.add(evento);
         consumers.putIfAbsent(evento, consumer);
     }
-
-    protected abstract void removerJugador(Evento evento);
-    protected abstract void recibirPeticion(Evento evento);
-    protected abstract void recibirPartida(Evento evento);
-    protected abstract void asignarFichas(Evento evento);
-    protected abstract void asignarTurnos(Evento evento);
-    protected abstract void manejarError(Evento evento);
+    
+    public void removerEvento(Enum<?> evento) {
+        eventos.remove(evento);
+        consumers.remove(evento);
+    }
+    
+    public abstract void manejarError(Evento evento);
+    public abstract void designarTurnos(Evento evento);
+    public abstract void cambiarTurno(Evento evento);
+    public abstract void reacomodarTurnos(Evento evento);
     
 }

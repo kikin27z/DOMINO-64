@@ -29,8 +29,8 @@ public class BuilderEventoJugador implements EventBuilder {
         evento.setLobby(lobby);
     }
 
-    public void setPublicador(CuentaDTO jugador) {
-        evento.setJugador(jugador);
+    public void setPublicador(CuentaDTO cuenta) {
+        evento.setCuenta(cuenta);
     }
 
     @Override

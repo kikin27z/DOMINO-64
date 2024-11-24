@@ -12,9 +12,24 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>Excepciones</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.mycompany</groupId>
+            <artifactId>Observer</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.evento.logico</groupId>
+            <artifactId>Domino64_EventoLogico</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.client</groupId>
+            <artifactId>Domino64_Cliente</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.domino64</groupId>
+            <artifactId>Domino64_AdaptadorDTO</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <properties>

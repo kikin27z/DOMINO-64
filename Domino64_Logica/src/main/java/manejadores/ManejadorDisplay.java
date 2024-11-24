@@ -99,7 +99,7 @@ public final class ManejadorDisplay implements ObserverPantalla{
         EventoJugador ev = (EventoJugador)evento;
         EventoMVCDisplay eventoDisplay = new EventoMVCDisplay();
         eventoDisplay.setTipo(TipoDisplayMVC.ACTUALIZAR_AVATARES);
-        eventoDisplay.setCuenta(ev.getJugador());
+        eventoDisplay.setCuenta(ev.getCuenta());
         fachada.actualizarLobby(eventoDisplay);
     }
     
@@ -129,7 +129,7 @@ public final class ManejadorDisplay implements ObserverPantalla{
             eventoDisplay.setTipo(TipoDisplayMVC.REMOVER_JUGADOR_LISTO);
         }
         
-        eventoDisplay.setCuenta(ev.getJugador());
+        eventoDisplay.setCuenta(ev.getCuenta());
         fachada.actualizarLobby(eventoDisplay);
      }
     

@@ -1,7 +1,6 @@
 package lobby;
 
 //import domino64.eventos.base.Evento;
-import entidadesDTO.AvatarDTO;
 import entidadesDTO.CuentaDTO;
 import eventoss.EventoMVCLobby;
 import eventoss.TipoLobbyMVC;
@@ -53,7 +52,6 @@ public class LobbyControl implements Observer<EventoMVCLobby>{
         view.confirmarCambiosPartida(this::guardarConfiguracionPartida);  // Evento para guardar cambios en la configuración
         view.cancelarCambiosPartida(this::cancelarConfiguracionPartida);  // Evento para cancelar cambios en la configuración
         view.cerrarAvatares(this::cerrarAvatares);  // Evento para cancelar cambios en la configuración
-        setEventoAvatares();
     }
     
     //-------------------Eventos-------------------
@@ -64,6 +62,10 @@ public class LobbyControl implements Observer<EventoMVCLobby>{
      * @param e el evento de ratón que activa esta acción.
      */
     private void guardarConfiguracionPartida(MouseEvent e) {
+        System.out.println("button del mouse event: "+e.getButton().toString());
+        modelo.setCantidadFichas(view.getChoiceBoxSelected());
+        view.cerrarVentanaConfiguracion();
+        //modelo.setCantidadFichas(0);
     }
     
     /**
@@ -117,31 +119,63 @@ public class LobbyControl implements Observer<EventoMVCLobby>{
         view.mostrarVentanaAvatares();
     }
     
-    private void setEventoAvatares() {
-        for (ImageView avatar : LobbyView.getAvatares()) {
-            EventHandler e = new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent t) {
-                    System.out.println("en handle");
-                    AvatarDTO avatarNuevo = modelo.getAvatarPorAnimal(avatar.getId());
-                    CuentaDTO cuentaAct = new CuentaDTO();
-                    cuentaAct.setId(modelo.getCuentaActual().getId());
-                    cuentaAct.setAvatar(avatarNuevo);
-                    modelo.avisarCambioAvatar(cuentaAct);
-//                    if(avatar.getEffect() == null){
-//                        view.setEffect(avatar);
-//                        AvatarDTO avatarNuevo = modelo.getAvatarPorAnimal(avatar.getId());
-//                        CuentaDTO cuentaAct = new CuentaDTO();
-//                        cuentaAct.setId(modelo.getCuentaActual().getId());
-//                        cuentaAct.setAvatar(avatarNuevo);
-//                        modelo.avisarCambioAvatar(cuentaAct);
-//                        //modelo.actualizarAvatarJugador(cuentaAct);
-//                    }
-                    
-                }
-            };
-            view.seleccionarAvatar(e, avatar);
-        }
+//    private void seleccionarGato(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("gato"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+//    
+//    private void seleccionarPanda(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("panda"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+//    
+//    private void seleccionarJaguar(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("jaguar"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+//    
+//    private void seleccionarKiwi(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("kiwi"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+//    
+//    private void seleccionarMariposa(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("mariposa"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+//    
+//    private void seleccionarSerpiente(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("serpiente"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+//    
+//    private void seleccionarTortuga(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("tortuga"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+//    
+//    private void seleccionarVenado(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("venado"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+//    
+//    private void seleccionarAve(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("ave"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+    
+    private void setEventoAvatares(MouseEvent e) {
+        System.out.println("??");
+        System.out.println(e.getButton());
     }
     
     private void cerrarAvatares(MouseEvent e) {
@@ -166,6 +200,12 @@ public class LobbyControl implements Observer<EventoMVCLobby>{
                 System.out.println("id panel: "+panel.getId());
                 
                 modelo.agregarPanelJugador(panel.getId(), panel);
+            }
+            case CAMBIAR_AVATAR -> {
+                CuentaDTO cuentaAct = modelo.getCuentaActual();
+                String nombreAv = (String)observable.getInfo();
+                cuentaAct.setAvatar(modelo.getAvatarPorAnimal(nombreAv));
+                modelo.avisarCambioAvatar(cuentaAct);
             }
         }
     }

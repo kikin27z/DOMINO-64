@@ -111,4 +111,11 @@ public class DirectorJugador extends DirectorEventos<BuilderEventoJugador>{
             builder.setTipo(TiposJugador.JUGADOR_NO_LISTO);
         return builder.construirEvento();
     }
+    
+    public EventoJugador crearEventoActualizarConfigPartida(LobbyDTO lobby){
+        builder.setLobbyDTO(lobby);
+        builder.setIdPublicador(lobby.getCuentaActual().getId());
+        builder.setTipo(TiposJugador.CAMBIAR_CONFIG_PARTIDA);
+        return builder.construirEvento();
+    }
 }
