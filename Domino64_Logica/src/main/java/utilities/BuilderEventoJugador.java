@@ -42,6 +42,10 @@ public class BuilderEventoJugador implements EventBuilder {
     public void setIdPublicador(int idPublicador) {
         evento.setIdPublicador(idPublicador);
     }
+    @Override
+    public void setIdContexto(int idContexto) {
+        evento.setIdContexto(idContexto);
+    }
 
     @Override
     public void setContexto(Object info) {
