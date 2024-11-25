@@ -9,22 +9,28 @@ import java.io.Serializable;
 public class JugadaRealizadaDTO implements Serializable {
     private PosicionDTO posicion;
     private boolean extremoIzq;
-    private int coordenaX;
-    private int coordenaY;
+    private double coordenadaX;
+    private double coordenadaY;
     private FichaDTO ficha;
 
-    public JugadaRealizadaDTO() {
-    }
-    
-    public JugadaRealizadaDTO(PosicionDTO posicion){
-        this.posicion = posicion;
-    }
-    
     public JugadaRealizadaDTO(PosicionDTO posicion, boolean izquierda) {
         this.posicion = posicion;
         this.extremoIzq = izquierda;
     }
+
+    public JugadaRealizadaDTO(PosicionDTO posicion, boolean extremoIzq, double coordenadaX, double coordenadaY, FichaDTO ficha) {
+        this.posicion = posicion;
+        this.extremoIzq = extremoIzq;
+        this.coordenadaX = coordenadaX;
+        this.coordenadaY = coordenadaY;
+        this.ficha = ficha;
+    }
+
+    public JugadaRealizadaDTO() {
+    }
     
+    
+
     public PosicionDTO getPosicion() {
         return posicion;
     }
@@ -41,21 +47,22 @@ public class JugadaRealizadaDTO implements Serializable {
         this.extremoIzq = extremoIzq;
     }
 
-    public int getCoordenaX() {
-        return coordenaX;
+    public double getCoordenadaX() {
+        return coordenadaX;
     }
 
-    public void setCoordenaX(int coordenaX) {
-        this.coordenaX = coordenaX;
+    public void setCoordenadaX(double coordenadaX) {
+        this.coordenadaX = coordenadaX;
     }
 
-    public int getCoordenaY() {
-        return coordenaY;
+    public double getCoordenadaY() {
+        return coordenadaY;
     }
 
-    public void setCoordenaY(int coordenaY) {
-        this.coordenaY = coordenaY;
+    public void setCoordenadaY(double coordenadaY) {
+        this.coordenadaY = coordenadaY;
     }
+
 
     public FichaDTO getFicha() {
         return ficha;

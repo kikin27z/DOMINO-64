@@ -16,7 +16,7 @@ public class Principal {
         System.out.println("Iniciado juego en presentación");
 
         INavegacion navegacion = Navegacion.getInstance();
-        navegacion.iniciarApp();
+        navegacion.iniciarAppPruebas();
 
         
         

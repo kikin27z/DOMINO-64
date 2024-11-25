@@ -72,17 +72,6 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
         mensaje = "";
         avatares = new ArrayList<>(List.of(AvatarDTO.AVE,AvatarDTO.GATO,AvatarDTO.JAGUAR,AvatarDTO.KIWI,AvatarDTO.MARIPOSA,
                 AvatarDTO.PANDA,AvatarDTO.SERPIENTE,AvatarDTO.TORTUGA,AvatarDTO.VENADO));
-//        avatares = new String[]{
-//            "/avatar/ave.png",
-//            "/avatar/gato.png",
-//            "/avatar/panda.png",
-//            "/avatar/jaguar.png",
-//            "/avatar/kiwi.png",
-//            "/avatar/mariposa.png",
-//            "/avatar/serpiente.png",
-//            "/avatar/tortuga.png",
-//            "/avatar/venado.png"
-//        };  // Lista de avatares
         panelesJugadores = new HashMap<>();
         cuentasJugadoresOnline = new ArrayList<>();
     }

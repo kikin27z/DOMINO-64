@@ -7,6 +7,7 @@ module utilities {
     requires Evento;
     requires Observer;
     requires java.logging;
+    requires ManejadorTablero;
 
     uses domino64.eventos.base.Evento;
     // Exporta y abre el paquete 'utilities' para que otros módulos puedan acceder y cargar FXML

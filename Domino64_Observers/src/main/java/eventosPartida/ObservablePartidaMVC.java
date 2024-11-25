@@ -4,18 +4,19 @@
  */
 package eventosPartida;
 
+import entidadesDTO.FichaDTO;
+import entidadesDTO.JugadaDTO;
+import java.util.List;
+
 
 /**
  *
  * @author karim
  */
-public abstract class ObservablePartidaMVC {
-    private ObserverPartidaMVC observer;
-
-    public void agregarObserver(ObserverPartidaMVC observer){
-        this.observer = observer;
-    }
-    
-    public void notificarJugadorSalio(){
-    }
+public interface  ObservablePartidaMVC {
+    public void agregarObserver(ObserverPartidaMVC observador);
+    public void quitarObserver(ObserverPartidaMVC observador);
+    public void actualizarDarFichas(List<FichaDTO> fichas);
+    public void actualizarDarFicha(FichaDTO ficha);
+    public void actualizarTurno(JugadaDTO jugada);
 }

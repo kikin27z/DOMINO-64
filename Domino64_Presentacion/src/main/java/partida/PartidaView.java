@@ -1,13 +1,12 @@
 package partida;
 
-import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
+import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
-import entidadesDTO.JugadaValidaDTO;
-import entidadesDTO.JugadorDTO;
-import entidadesDTO.PartidaDTO;
+import entidadesDTO.PosibleJugadaDTO;
 import entidadesDTO.PosicionDTO;
 import eventosPartida.ObserverPartida;
+import eventosPartida.ObserverPartidaMVC;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -29,7 +28,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import presentacion_dibujo.BuilderFichaMazo;
-import presentacion_dibujo.DibujoTablero2;
+import presentacion_dibujo.DibujoTablero;
 
 /**
  * Clase que representa la vista de la partida en la aplicación. Esta clase se
@@ -37,26 +36,25 @@ import presentacion_dibujo.DibujoTablero2;
  * visualización relacionada con la partida.
  *
  * @author Luisa Fernanda Morales Espinoza - 00000233450
- * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class PartidaView implements ObserverPartida {
+public class PartidaView implements ObserverPartidaMVC {
 
     private static final Logger logger = Logger.getLogger(PartidaView.class.getName());
     private final PartidaModel modelo;
     private AnchorPane containerGameBoard;
     private HBox bottomPlayer;
-    public Deque<Canvas> trenFichasDibujos;
+//    public Deque<Canvas> trenFichasDibujos;
     private StackPane pozoIndicador;
     private StackPane surrenderButton;
     private StackPane pauseButton;
-    private DibujoTablero2 gameBoard;
+    private DibujoTablero gameBoard;
     private EventHandler<MouseEvent> evaluarFicha;
     private EventHandler<MouseEvent> colocarFicha;
 
     public PartidaView(PartidaModel modelo) {
         this.modelo = modelo;
-        trenFichasDibujos = new ArrayDeque<>();
+////        trenFichasDibujos = new ArrayDeque<>();
         this.modelo.agregarObserver(this);
     }
 
@@ -77,8 +75,10 @@ public class PartidaView implements ObserverPartida {
         bottomPlayer.getChildren().add(ficha);
     }
 
-    public void quitarFichaMazo(Canvas ficha) {
-        bottomPlayer.getChildren().remove(ficha);
+    public void quitarFichaMazo() {
+        Canvas dibujo = modelo.getDibujoSeleccionado();
+        bottomPlayer.getChildren().remove(dibujo);
+        modelo.quitarMapeoFichas();
     }
 
     private AnchorPane createGameInterface() {
@@ -92,70 +92,26 @@ public class PartidaView implements ObserverPartida {
 
         // Create all components
         containerGameBoard = createGameBoard();
-        AnchorPane topPlayer = null;
-        AnchorPane rightPlayer = null;
-        AnchorPane leftPlayer = null;
-        
-        int cantidadJugadores = modelo.getCantidadJugadores();
-        PartidaDTO partida = modelo.getPartida();
-        List<CuentaDTO> jugadores = modelo.getJugadores();
-        CuentaDTO cuentaActual = modelo.getJugador().getCuenta();
-        jugadores.removeIf(cuenta -> cuenta.getId() == cuentaActual.getId());
-        
-        switch (cantidadJugadores) {
-            case 2 -> topPlayer = pintarJugador(jugadores.get(0),partida.getFichasPorJugador(), modelo.ARRIBA);
-            case 3 -> {
-                topPlayer = pintarJugador(jugadores.get(0),partida.getFichasPorJugador(), modelo.ARRIBA);
-                rightPlayer = pintarJugador(jugadores.get(1),partida.getFichasPorJugador(), modelo.DERECHA);
-            }
-            case 4 -> {
-                topPlayer = pintarJugador(jugadores.get(0),partida.getFichasPorJugador(), modelo.ARRIBA);
-                rightPlayer = pintarJugador(jugadores.get(1),partida.getFichasPorJugador(), modelo.DERECHA);
-                leftPlayer = pintarJugador(jugadores.get(2),partida.getFichasPorJugador(), modelo.IZQUIERDA);
-            }
-        }
-
+        AnchorPane topPlayer = createTopPlayer();
+        AnchorPane rightPlayer = createRightPlayer();
+        AnchorPane leftPlayer = createLeftPlayer();
         createBottomPlayer();
         AnchorPane topOptions = createTopOptions();
         createDeckIndicator();
         ImageView playerAvatar = createPlayerAvatar();
 
         // Add all components to root
-        switch(cantidadJugadores){
-            case 2 -> {
-                root.getChildren().addAll(
-                        containerGameBoard,
-                        topPlayer,
-                        bottomPlayer,
-                        topOptions,
-                        pozoIndicador,
-                        playerAvatar
-                );
-            }
-            case 3 -> {
-                root.getChildren().addAll(
-                        containerGameBoard,
-                        topPlayer,
-                        rightPlayer,
-                        bottomPlayer,
-                        topOptions,
-                        pozoIndicador,
-                        playerAvatar
-                );
-            }
-            case 4 -> {
-                root.getChildren().addAll(
-                        containerGameBoard,
-                        topPlayer,
-                        rightPlayer,
-                        leftPlayer,
-                        bottomPlayer,
-                        topOptions,
-                        pozoIndicador,
-                        playerAvatar
-                );
-            }
-        }
+        root.getChildren().addAll(
+                containerGameBoard,
+                topPlayer,
+                rightPlayer,
+                leftPlayer,
+                bottomPlayer,
+                topOptions,
+                pozoIndicador,
+                playerAvatar
+        );
+
         return root;
     }
 
@@ -168,7 +124,7 @@ public class PartidaView implements ObserverPartida {
         containerGameBoard.setStyle("-fx-background-color: fff;");
 
         // Inner white game board
-        gameBoard = new DibujoTablero2(evaluarFicha);
+        gameBoard = new DibujoTablero();
         gameBoard.setLayoutX(60);
         gameBoard.setLayoutY(40);
 
@@ -176,44 +132,11 @@ public class PartidaView implements ObserverPartida {
         return containerGameBoard;
     }
 
-    private AnchorPane pintarJugador(CuentaDTO jugador, int cantidadFichas, int posicion){
-        AnchorPane panelJugador = new AnchorPane();
-        panelJugador.setId(jugador.getIdCadena());
-        panelJugador.setLayoutX(modelo.getPlayerLayoutX(posicion));
-        panelJugador.setLayoutY(modelo.getPlayerLayoutY(posicion));
-        double w = modelo.getPlayerPrefSize(posicion)[0];
-        double h = modelo.getPlayerPrefSize(posicion)[1];
-        panelJugador.setPrefSize(w,h);
-        panelJugador.setStyle(modelo.getPlayerStyle());
-        
-        ImageView playerDeck = new ImageView(new Image(getClass().getResourceAsStream(modelo.getURL_MAZO_JUGADOR())));
-        playerDeck.setFitHeight(modelo.getPLAYER_DECK_HEIGHT());
-        playerDeck.setFitWidth(modelo.getPLAYER_DECK_WIDTH());
-        playerDeck.setLayoutX(modelo.getPlayerDeckLayoutX(posicion));
-        playerDeck.setLayoutY(modelo.getPlayerDeckLayoutY(posicion));
-        playerDeck.setRotate(modelo.getPlayerDeckRotate(posicion));
-
-        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream(jugador.getAvatar().getUrl())));
-        playerAvatar.setFitHeight(modelo.getPlayerAvatarHeight(posicion));
-        playerAvatar.setFitWidth(modelo.getPlayerAvatarHeight(posicion));
-        playerAvatar.setLayoutX(modelo.getPlayerAvatarLayoutX(posicion));
-        playerAvatar.setLayoutY(modelo.getPlayerAvatarLayoutY(posicion));
-        
-        Label cardCount = new Label(String.valueOf(cantidadFichas));
-        cardCount.setAlignment(modelo.getCARD_COUNT_ALIGNMENT());
-        cardCount.setLayoutX(modelo.getPlayerCardCountLayoutX(posicion));
-        cardCount.setLayoutY(modelo.getPlayerCardCountLayoutY(posicion));
-        double ccw = modelo.getCARD_COUNT_PREF_SIZE()[0];
-        double cch = modelo.getCARD_COUNT_PREF_SIZE()[1];
-        cardCount.setPrefSize(ccw, cch);
-        cardCount.setTextFill(modelo.getCARD_COUNT_COLOR());
-        cardCount.setFont(modelo.getCARD_COUNT_FONT());
-        
-        panelJugador.getChildren().addAll(playerDeck, playerAvatar, cardCount);
-        return panelJugador;
-    }
     
-    private AnchorPane createTopPlayer(JugadorDTO jugador, int cantidadFichas) {
+    public void asignarProcesarJugada(){
+        gameBoard.setOpcionJugada(colocarFicha);
+    }
+    private AnchorPane createTopPlayer() {
         AnchorPane topPlayer = new AnchorPane();
         topPlayer.setId("jugador3");
         topPlayer.setLayoutX(366);
@@ -229,15 +152,14 @@ public class PartidaView implements ObserverPartida {
         playerDeck.setLayoutX(109);
         playerDeck.setLayoutY(7);
         playerDeck.setRotate(180);
-        
-        CuentaDTO cuenta = jugador.getCuenta();
-        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
+
+        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
         playerAvatar.setFitHeight(100);
         playerAvatar.setFitWidth(100);
         playerAvatar.setLayoutX(-64);
         playerAvatar.setLayoutY(1);
 
-        Label cardCount = new Label(String.valueOf(cantidadFichas));
+        Label cardCount = new Label("6");
         cardCount.setAlignment(javafx.geometry.Pos.CENTER);
         cardCount.setLayoutX(167);
         cardCount.setLayoutY(22);
@@ -318,23 +240,19 @@ public class PartidaView implements ObserverPartida {
 
     private void createBottomPlayer() {
         bottomPlayer = new HBox();
-        bottomPlayer.setAlignment(modelo.getBOTTOM_PLAYER_ALIGNMENT());
-        bottomPlayer.setLayoutX(modelo.getPlayerLayoutX(modelo.ABAJO));
-        bottomPlayer.setLayoutY(modelo.getPlayerLayoutY(modelo.ABAJO));
-        double w = modelo.getPlayerPrefSize(modelo.ABAJO)[0];
-        double h = modelo.getPlayerPrefSize(modelo.ABAJO)[1];
-        bottomPlayer.setPrefSize(w, h);
-        bottomPlayer.setSpacing(modelo.getBOTTOM_PLAYER_SPACING());
-        bottomPlayer.setStyle(modelo.getPlayerStyle());
-        bottomPlayer.setPadding(modelo.getBOTTOM_PLAYER_PADDING());
-        
-        CuentaDTO cuenta = modelo.getJugador().getCuenta();
-        
-        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
-        playerAvatar.setFitHeight(modelo.getPlayerAvatarHeight(modelo.ABAJO));
-        playerAvatar.setFitWidth(modelo.getPlayerAvatarWidth(modelo.ABAJO));
-        playerAvatar.setLayoutX(modelo.getPlayerAvatarLayoutX(modelo.ABAJO));
-        playerAvatar.setLayoutY(modelo.getPlayerAvatarLayoutY(modelo.ABAJO));
+        bottomPlayer.setAlignment(javafx.geometry.Pos.CENTER);
+        bottomPlayer.setLayoutX(164);
+        bottomPlayer.setLayoutY(598);
+        bottomPlayer.setPrefSize(630, 92);
+        bottomPlayer.setSpacing(20);
+        bottomPlayer.setStyle("-fx-background-color: #B2533E; -fx-border-color: #000000; -fx-border-radius: 20; -fx-background-radius: 20;");
+        bottomPlayer.setPadding(new Insets(0, 0, -12, 20));
+
+        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
+        playerAvatar.setFitHeight(140);
+        playerAvatar.setFitWidth(140);
+        playerAvatar.setLayoutX(856);
+        playerAvatar.setLayoutY(553);
 
     }
 
@@ -402,8 +320,9 @@ public class PartidaView implements ObserverPartida {
     public void evaluarFicha(EventHandler<MouseEvent> e) {
         this.evaluarFicha = e;
     }
+
     public void procesarJugada(EventHandler<MouseEvent> e) {
-        colocarFicha = e;
+        this.colocarFicha = e;
     }
 
     public void clicPozo(EventHandler<MouseEvent> e) {
@@ -419,19 +338,39 @@ public class PartidaView implements ObserverPartida {
     }
 
     //--------------------------------Metodos Observador--------------------------------
-    @Override
-    public void avisarJugadaRealizada(JugadaRealizadaDTO jugadaDTO) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public void dibujarFichaPrueba(FichaDTO ficha) {
+        JugadaRealizadaDTO jugada;
+        if (cuenta == 0) {
+            jugada = new JugadaRealizadaDTO(PosicionDTO.ARRIBA, true, 30, 0, ficha);
+        } else if (cuenta == 1) {
+            jugada = new JugadaRealizadaDTO(PosicionDTO.ARRIBA, true, 30, 60, ficha);
 
-    @Override
-    public void avisarFichaSeleccionada(FichaDTO contexto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+        } else if (cuenta == 2) {
+            jugada = new JugadaRealizadaDTO(PosicionDTO.ARRIBA, true, 30, 120, ficha);
 
+        } else{
+            jugada = new JugadaRealizadaDTO(PosicionDTO.ARRIBA, true, 30, 180, ficha);
+        } 
+        gameBoard.dibujarFicha(jugada);
+        cuenta++;
+    }
+    
+    public void dibujarFicha(JugadaRealizadaDTO jugada){
+        gameBoard.dibujarFicha(jugada);
+        
+    }
+    
+    public void dibujarJugada(FichaDTO ficha, PosibleJugadaDTO jugada){
+        gameBoard.mostrarPosiblesJugadas(ficha, jugada);
+    }
+    
+    public void limpiarJugadas(){
+        gameBoard.limpiarJugadas();
+    }
+    
+    
     @Override
-    public void avisarDarFichas(List<FichaDTO> fichas) {
-        System.out.println("Dibuja");
+    public void actualizarDarFichas(List<FichaDTO> fichas) {
         BuilderFichaMazo dibujaFicha = new BuilderFichaMazo();
         for (FichaDTO ficha : fichas) {
             dibujaFicha.construirVertical(ficha);
@@ -443,7 +382,7 @@ public class PartidaView implements ObserverPartida {
     }
 
     @Override
-    public void avisarDarFicha(FichaDTO ficha) {
+    public void actualizarDarFicha(FichaDTO ficha) {
         BuilderFichaMazo dibujaFicha = new BuilderFichaMazo();
         dibujaFicha.construirVertical(ficha);
         Canvas dibujo = dibujaFicha.resultado();
@@ -451,8 +390,13 @@ public class PartidaView implements ObserverPartida {
         modelo.agregarMapeoFichas(dibujo, ficha);
         agregarDominoMazo(dibujo);
     }
-    
-    public void dibujarFicha(FichaDTO ficha){
-        gameBoard.dibujarFicha(ficha, 300, 270, PosicionDTO.DERECHA);
+
+    private int cuenta = 0;
+
+
+
+    @Override
+    public void actualizarTurno() {
+//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

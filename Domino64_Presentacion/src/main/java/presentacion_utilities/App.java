@@ -31,27 +31,6 @@ public class App extends Application{
     public void start(Stage stage) throws Exception {
         // Establece el fondo (escenario).
         Navegacion.getInstance().setFondo(stage);
-        
-//        LobbyDTO lobby = new LobbyDTO("999-222");
-//        CuentaDTO cuenta1 = new CuentaDTO();
-//        cuenta1.setIdCadena("qwer");
-//        cuenta1.setAvatar(AvatarDTO.AVE);
-//        CuentaDTO cuenta2 = new CuentaDTO();
-//        cuenta2.setIdCadena("qwer2");
-//        cuenta2.setAvatar(AvatarDTO.VENADO);
-//        CuentaDTO cuenta3 = new CuentaDTO();
-//        cuenta3.setIdCadena("qter2");
-//        cuenta3.setAvatar(AvatarDTO.PANDA);
-//        
-//        List<CuentaDTO> cuentas = new ArrayList<>();
-//        cuentas.add(cuenta1);
-//        cuentas.add(cuenta2);
-//        cuentas.add(cuenta3);
-//        
-//        lobby.setCuentas(cuentas);
-//        lobby.setCuentaActual(cuenta2);
-//        
-//        Navegacion.getInstance().cambiarLobby(lobby);
         Navegacion.getInstance().cambiarInicio();
         
         

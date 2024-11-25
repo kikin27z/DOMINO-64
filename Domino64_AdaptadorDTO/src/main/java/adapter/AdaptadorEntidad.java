@@ -62,7 +62,7 @@ public class AdaptadorEntidad {
     }
     
     public FichaDTO adaptarEntidadFicha(Ficha ficha){
-        return new FichaDTO(ficha.getDerecha(), ficha.getIzquierda());
+        return new FichaDTO(ficha.getIzquierda(), ficha.getDerecha());
     }
     
     public List<FichaDTO> adaptarEntidadesFicha(List<Ficha> fichas){

@@ -56,8 +56,13 @@ public class Navegacion implements INavegacion {
     public void iniciarApp() {
         System.out.println("iniciar app");
         ControladorComunicacion.iniciarHiloPresentacion();
-//        hiloApp = new Thread(() -> Application.launch(App.class));
-//        hiloApp.start();
+        
+    }
+    
+    @Override
+    public void iniciarAppPruebas() {
+        hiloApp = new Thread(() -> App.launch(App.class));
+        hiloApp.start();
     }
 
     @Override
@@ -157,4 +162,6 @@ public class Navegacion implements INavegacion {
             }
         });
     }
+
+    
 }

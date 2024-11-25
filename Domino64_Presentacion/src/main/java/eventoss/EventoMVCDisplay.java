@@ -7,7 +7,7 @@ package eventoss;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
-import entidadesDTO.JugadaValidaDTO;
+import entidadesDTO.PosibleJugadaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
@@ -25,7 +25,7 @@ public class EventoMVCDisplay extends EventoMVC {
     private JugadorDTO jugador;
     private PartidaDTO partida;
     private JugadaRealizadaDTO jugadaRealizada;
-    private JugadaValidaDTO jugadaValida;
+    private PosibleJugadaDTO jugadaValida;
     
     public EventoMVCDisplay(){}
     
@@ -100,11 +100,11 @@ public class EventoMVCDisplay extends EventoMVC {
         this.jugadaRealizada = jugadaRealizada;
     }
 
-    public JugadaValidaDTO getJugadaValida() {
+    public PosibleJugadaDTO getJugadaValida() {
         return jugadaValida;
     }
 
-    public void setJugadaValida(JugadaValidaDTO jugadaValida) {
+    public void setJugadaValida(PosibleJugadaDTO jugadaValida) {
         this.jugadaValida = jugadaValida;
     }
     

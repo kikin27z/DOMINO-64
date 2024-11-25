@@ -18,6 +18,7 @@ public interface INavegacion {
      * Este método debería configurar la escena inicial y mostrar la vista principal.
      */
     public void iniciarApp();
+    public void iniciarAppPruebas();
 
     /**
      * Método para cambiar la vista a la pantalla de inicio.

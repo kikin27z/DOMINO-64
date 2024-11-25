@@ -7,18 +7,19 @@ package entidades;
 public class Dominio {
 
     public static void main(String[] args) {
-        Cuenta karim = new Cuenta();
-        Cuenta luisa = new Cuenta();
-        Cuenta paul = new Cuenta();
-        Cuenta gibran = new Cuenta();
+        Ficha ficha1 = new Ficha(2, 3);
+        Ficha ficha2 = new Ficha(6, 3);
+        Ficha ficha3 = new Ficha(1, 6);
+        Ficha ficha4 = new Ficha(1, 0);
+        Ficha ficha5 = new Ficha(0, 5);
         
-        Lobby lobby = new Lobby();
+        Tablero tablero = new Tablero();
+        tablero.agregarFicha(ficha3, false);
+        tablero.agregarFicha(ficha4, true);
+        tablero.agregarFicha(ficha2, false);
+        tablero.agregarFicha(ficha1, false);
+        tablero.agregarFicha(ficha5, true);
         
-        lobby.agregarCuenta(karim);
-        lobby.agregarCuenta(luisa);
-        lobby.agregarCuenta(paul);
-        lobby.cambiarAvatar(paul, Avatar.SERPIENTE);
-        lobby.agregarCuenta(gibran);
-        lobby.obtenerAvataresDisponibles();
+        
     }
 }

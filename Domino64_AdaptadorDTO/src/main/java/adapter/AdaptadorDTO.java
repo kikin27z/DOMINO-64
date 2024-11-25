@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package adapter;
 
 import entidades.Avatar;
@@ -81,7 +77,7 @@ public class AdaptadorDTO {
     }
     
     public Ficha adaptarFichaDTO(FichaDTO ficha) {
-        return new Ficha(ficha.getDerecha(), ficha.getIzquierda());
+        return new Ficha(ficha.getIzquierda(), ficha.getDerecha());
     }
 
     public Cuenta adaptarCuentaDTO(CuentaDTO cuentaDTO) {
