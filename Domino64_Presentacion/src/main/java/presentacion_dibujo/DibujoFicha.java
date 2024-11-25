@@ -9,7 +9,7 @@ import javafx.scene.canvas.Canvas;
  */
 public class DibujoFicha extends Canvas {
     private boolean mula;
-    private boolean izquierda;
+    private boolean extremoIzq;
     private int extremo;
     private PosicionDTO posicion;
 
@@ -25,7 +25,7 @@ public class DibujoFicha extends Canvas {
         this.mula = mula;
     }
 
-    public boolean isMula() {
+    public boolean esMula() {
         return mula;
     }
 
@@ -54,11 +54,21 @@ public class DibujoFicha extends Canvas {
     }
 
     public boolean sePusoEnLaIzquierda() {
-        return izquierda;
+        return extremoIzq;
     }
 
-    public void setIzquierda(boolean izquierda) {
-        this.izquierda = izquierda;
+    public void setExtremoIzq(boolean extremoIzq) {
+        this.extremoIzq = extremoIzq;
+    }
+
+    public boolean isExtremoIzq() {
+        return extremoIzq;
+    }
+    
+
+    @Override
+    public String toString() {
+        return "DibujoFicha{" + "mula=" + mula + ", extremoIzq=" + extremoIzq + ", extremo=" + extremo + ", posicion=" + posicion + '}';
     }
     
     

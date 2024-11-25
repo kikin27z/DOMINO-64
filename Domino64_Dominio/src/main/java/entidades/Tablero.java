@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidades;
 
 import java.io.Serializable;
@@ -12,48 +8,69 @@ import java.util.Deque;
  *
  * @author luisa M
  */
-public class Tablero implements Serializable{
+public class Tablero {
     private Deque<Ficha> trenFichas;
-    public final int IZQUIERDA = 0;
-    public final int DERECHA = 1;
-    
+
     public Tablero() {
         trenFichas = new ArrayDeque<>();
     }
-    
-    public int obtenerExtremo(int extremo){
-        Ficha ficha;
-        int valor;
-        if(extremo == IZQUIERDA){
-            ficha = trenFichas.peekFirst();
-            valor = ficha.getIzquierda();
-        }else {
-            ficha = trenFichas.peekLast();
-            valor = ficha.getDerecha();
-        }
+
+    public int obtenerExtremoIzq() {
+        Ficha ficha = trenFichas.peekFirst();
+        return ficha.getIzquierda();
+    }
+
+    public int obtenerExtremoDer() {
+        Ficha ficha = trenFichas.peekLast();
+        int valor = ficha.getDerecha();
         return valor;
     }
-    
-    public boolean estaVacio(){
+
+    private boolean estaVacio() {
         return trenFichas.isEmpty();
     }
-    
-    public void agregarFicha(Ficha ficha, int extremo){
-        if(estaVacio()){
+
+    public void agregarFicha(Ficha ficha, boolean extremoIzq) {
+        if (estaVacio()) {
             trenFichas.offer(ficha);
-        }else{
-            if(extremo == IZQUIERDA)
-                trenFichas.offerFirst(ficha);
-            else
-                trenFichas.offerLast(ficha);
+            imprimirJugada(ficha);
+            return;
+        } 
+        if (extremoIzq) 
+            agregarFichaIzquierda(ficha);
+         else 
+            agregarFichaDerecha(ficha);
+        
+        
+//        imprimirJugada(ficha);
+    }
+
+    private void validarExtremoIzquierdo(Ficha ficha) {
+        Ficha validar = trenFichas.peekFirst();
+        if (validar.getIzquierda() != ficha.getDerecha()) {
+            ficha.girarFicha();
         }
     }
-    
-    public void agregarFichaDerecha(Ficha ficha){
+
+    private void validarExtremoDerecho(Ficha ficha) {
+        Ficha validar = trenFichas.peekLast();
+        if (validar.getDerecha() != ficha.getIzquierda()) {
+            ficha.girarFicha();
+        }
+    }
+
+    private void agregarFichaDerecha(Ficha ficha) {
+        validarExtremoDerecho(ficha);
         trenFichas.offerLast(ficha);
     }
-    
-    public void agregarFichaIzquierda(Ficha ficha){
+
+    private void agregarFichaIzquierda(Ficha ficha) {
+        validarExtremoIzquierdo(ficha);
         trenFichas.offerFirst(ficha);
+    }
+    
+    private void imprimirJugada(Ficha ficha){
+        System.out.println("Tablero se inserto " + ficha);
+        System.out.println("Jugada nueva: " + obtenerExtremoIzq() + "-" + obtenerExtremoDer());
     }
 }

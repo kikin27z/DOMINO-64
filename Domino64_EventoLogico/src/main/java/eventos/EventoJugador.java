@@ -1,8 +1,10 @@
 package eventos;
 
-import entidades.Cuenta;
-import entidades.Ficha;
-import entidades.Partida;
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.JugadaDTO;
+import entidadesDTO.JugadorDTO;
+import entidadesDTO.LobbyDTO;
+import entidadesDTO.PartidaDTO;
 import tiposLogicos.TiposJugador;
 
 
@@ -18,13 +20,15 @@ import tiposLogicos.TiposJugador;
  * @author luisa M
  * @author karim F
  */
-public class EventoJugador extends EventoLogico<Ficha>{
-    private Ficha context;
+public class EventoJugador extends EventoLogico{
+    private Object context;
     private TiposJugador tipo;
-    private Cuenta jugador;
-    private Partida partida;
+    private LobbyDTO lobby;
+    private JugadorDTO jugador;
     
-    public EventoJugador(){}
+    public EventoJugador(){
+        this.jugador = new JugadorDTO();
+    }
     
     public EventoJugador(TiposJugador tipo){
         this.tipo = tipo;
@@ -34,25 +38,41 @@ public class EventoJugador extends EventoLogico<Ficha>{
         this.tipo = tipo;
     }
     
-    public Cuenta getJugador(){
+    public JugadorDTO getJugador(){
         return jugador;
     }
     
-    public void setJugador(Cuenta jugador){
+    public void setJugador(JugadorDTO jugador){
         this.jugador = jugador;
     }
     
-    public void setPartida(Partida partida){
-        this.partida = partida;
+    public CuentaDTO getCuenta(){
+        return jugador.getCuenta();
     }
     
-    public Partida getPartida(){
-        return partida;
+    public void setCuenta(CuentaDTO jugador){
+        this.jugador.setCuenta(jugador);
+    }
+    
+    public LobbyDTO getLobby() {
+        return lobby;
+    }
+
+    public void setLobby(LobbyDTO lobby) {
+        this.lobby = lobby;
+    }
+    
+    public PartidaDTO getPartida(){
+        return lobby.getPartida();
+    }
+    
+    public void setPartida(PartidaDTO partida){
+        lobby.setPartida(partida);
     }
     
     @Override
-    public void agregarInfo(Ficha info) {
-        this.context = info;
+    public void agregarInfo(Object contexto) {
+        this.context = contexto;
     }
 
     @Override
@@ -61,7 +81,7 @@ public class EventoJugador extends EventoLogico<Ficha>{
     }
 
     @Override
-    public Ficha getInfo() {
+    public Object getInfo() {
         return context;
     }
 
@@ -70,7 +90,7 @@ public class EventoJugador extends EventoLogico<Ficha>{
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString());
         sb.append("{contexto= ").append(context);
-        sb.append(", jugador= ").append(jugador);
+        sb.append(", jugador= ").append(jugador.getCuenta().getUsername());
         sb.append(", tipo= ").append(tipo.toString());
         sb.append('}');
         return sb.toString();

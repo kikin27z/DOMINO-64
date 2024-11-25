@@ -4,6 +4,7 @@
  */
 package entidadesDTO;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,40 +12,26 @@ import java.util.List;
  *
  * @author luisa M
  */
-public class PartidaDTO {
+public class PartidaDTO implements Serializable {
     private List<JugadorDTO> jugadores;
-    private int cantidadJugadores;
     private int fichasPorJugador;
     private String codigoPartida;
-    private PozoDTO pozo;
 
     public PartidaDTO(){
-        this.pozo = new PozoDTO();
         this.jugadores = new ArrayList<>();
     }
     
-    public PozoDTO getPozo() {
-        return pozo;
+    public PartidaDTO(String codigoPartida){
+        this.codigoPartida = codigoPartida;
+        jugadores = new ArrayList<>();
     }
-
-    public void setPozo(PozoDTO pozo) {
-        this.pozo = pozo;
-    }
-
+    
     public String getCodigoPartida() {
         return codigoPartida;
     }
 
     public void setCodigoPartida(String codigoPartida) {
         this.codigoPartida = codigoPartida;
-    }
-
-    public int getCantidadJugadores() {
-        return cantidadJugadores;
-    }
-
-    public void setCantidadJugadores(int cantidadJugadores) {
-        this.cantidadJugadores = cantidadJugadores;
     }
 
     public int getFichasPorJugador() {
@@ -68,10 +55,8 @@ public class PartidaDTO {
         StringBuilder sb = new StringBuilder();
         sb.append("PartidaDTO{");
         sb.append("jugadores=").append(jugadores).append("\n");
-        sb.append(", cantidadJugadores=").append(cantidadJugadores).append("\n");
         sb.append(", fichasPorJugador=").append(fichasPorJugador).append("\n");
         sb.append(", codigoPartida=").append(codigoPartida).append("\n");
-        sb.append(", pozo=").append(pozo).append("\n");
         sb.append('}');
         return sb.toString();
     }

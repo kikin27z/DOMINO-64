@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package presentacion_dibujo;
 
 import entidadesDTO.PosicionDTO;
@@ -15,7 +11,7 @@ import javafx.scene.paint.Color;
  * @author karim
  */
 public class DibujoJugada extends Canvas{
-    private boolean extremo;
+    private boolean extremoIzq;
     private double width;
     private double height;
     private PosicionDTO posicion;
@@ -24,8 +20,8 @@ public class DibujoJugada extends Canvas{
     }
      
     public static void dibujarJugadaHorizontal(DibujoJugada canvas) {
-        canvas.setWidth(72);
-        canvas.setHeight(40);
+        canvas.setWidth(60);
+        canvas.setHeight(30);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         canvas.setId("jugada");
         // Dibujar el borde azul
@@ -37,8 +33,8 @@ public class DibujoJugada extends Canvas{
     }
 
      public static void  dibujarJugadaVertical(DibujoJugada canvas) {
-        canvas.setWidth(40);
-        canvas.setHeight(72);
+        canvas.setWidth(30);
+        canvas.setHeight(60);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         canvas.setId("jugada");
 
@@ -58,12 +54,12 @@ public class DibujoJugada extends Canvas{
         gc.strokeRect(0, 0, width, height);
     }
 
-    public boolean isExtremo() {
-        return extremo;
+    public boolean isExtremoIzq() {
+        return extremoIzq;
     }
 
-    public void setExtremo(boolean extremo) {
-        this.extremo = extremo;
+    public void setExtremoIzq(boolean extremoIzq) {
+        this.extremoIzq = extremoIzq;
     }
 
     public PosicionDTO getPosicion() {
@@ -73,4 +69,11 @@ public class DibujoJugada extends Canvas{
     public void setPosicion(PosicionDTO posicion) {
         this.posicion = posicion;
     }
+
+    @Override
+    public String toString() {
+        return "DibujoJugada{" + "extremoIzq=" + extremoIzq + ", width=" + width + ", height=" + height + ", posicion=" + posicion + '}';
+    }
+    
+    
 }

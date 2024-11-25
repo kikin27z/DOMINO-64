@@ -1,15 +1,16 @@
 package entidadesDTO;
 
+import java.io.Serializable;
+
 /**
  *
  * @author karim
  */
-public class JugadaDTO {
+public class JugadaDTO implements Serializable {
     private int izquierda;
     private int derecha;
-    private FichaDTO ficha;
 
-    private JugadaDTO() {
+    public JugadaDTO() {
     }
     
     public JugadaDTO(int izquierda, int derecha) {
@@ -17,17 +18,16 @@ public class JugadaDTO {
         this.derecha = derecha;
     }
     
-    
-    public JugadaValidaDTO determinarJugada(FichaDTO ficha){
-        JugadaValidaDTO jugada;
+    public PosibleJugadaDTO determinarJugada(FichaDTO ficha){
+        PosibleJugadaDTO jugada;
         if(sePuedeJugarAmbosExtremo(ficha)){
-            jugada = JugadaValidaDTO.AMBOS_EXTREMOS;
+            jugada = PosibleJugadaDTO.AMBOS_EXTREMOS;
         }else if(sePuedeJugarIzquierda(ficha)){
-            jugada = JugadaValidaDTO.SOLO_IZQUIERDA;
+            jugada = PosibleJugadaDTO.SOLO_IZQUIERDA;
         }else if(sePuedeJugarDerecha(ficha)){
-            jugada = JugadaValidaDTO.SOLO_DERECHA;
+            jugada = PosibleJugadaDTO.SOLO_DERECHA;
         }else{
-            jugada = JugadaValidaDTO.NINGUNA;
+            jugada = PosibleJugadaDTO.NINGUNA;
         }
         return jugada;
     }
@@ -43,14 +43,6 @@ public class JugadaDTO {
         return this.derecha == ficha.getIzquierda() || this.derecha == ficha.getDerecha();
     }
 
-    public FichaDTO getFicha() {
-        return ficha;
-    }
-
-    public void setFicha(FichaDTO ficha) {
-        this.ficha = ficha;
-    }
-
     public void setIzquierda(int izquierda) {
         this.izquierda = izquierda;
     }
@@ -59,15 +51,12 @@ public class JugadaDTO {
         this.derecha = derecha;
     }
     
-    
-    
-    
     @Override
     public String toString() {
         return "JugadaDTO{" + "extremoIzquierdo=" + izquierda + ", extremoDerecho=" + derecha + '}';
     }
 
-    public void imprimirJugada(FichaDTO ficha,JugadaValidaDTO jugada){
+    public void imprimirJugada(FichaDTO ficha, PosibleJugadaDTO jugada){
         System.out.print(this);
         System.out.println(" - " + ficha + ", jugada = " + jugada);
     }

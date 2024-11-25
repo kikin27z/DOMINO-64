@@ -22,14 +22,14 @@ public class DirectorSuscripcion extends DirectorEventos<BuilderEventoSuscripcio
     
     public EventoSuscripcion crearEventoSuscribirse(Enum<?> tipoEvento){
         builder.setIdPublicador(idPublicador);
-        builder.setInfo(tipoEvento);
+        builder.setContexto(tipoEvento);
         builder.setTipo(TipoSuscripcion.SUSCRIBIR);
         return builder.construirEvento();
     }
     
     public EventoSuscripcion crearEventoDesuscribirse(Enum<?> tipoEvento){
         builder.setIdPublicador(idPublicador);
-        builder.setInfo(tipoEvento);
+        builder.setContexto(tipoEvento);
         builder.setTipo(TipoSuscripcion.DESUSCRIBIR);
         return builder.construirEvento();
     }

@@ -20,7 +20,6 @@ import entidadesDTO.CuentaDTO;
  */
 public abstract class EventoMVC<T> implements Evento{
     private CuentaDTO publicador;
-    
     public void setPublicador(CuentaDTO cuenta){
         publicador = cuenta;
     }
@@ -33,6 +32,9 @@ public abstract class EventoMVC<T> implements Evento{
     public int getIdPublicador(){
         return publicador.getId();
     }
+    
+    @Override
+    public abstract Enum<?> getTipo();
     
     public abstract void agregarContexto(T contexto);
     

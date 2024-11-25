@@ -12,26 +12,26 @@ import tiposEventos.TipoLobbyMVC;
  *
  * @author luisa M
  */
-public class EventoMVCLobby extends EventoMVC<CuentaDTO> {
+public class EventoMVCLobby extends EventoMVC {
+    private Object contexto;
     private CuentaDTO cuentaActualizada;
     private TipoLobbyMVC tipo;
-    private PartidaDTO partida;
     
     public EventoMVCLobby(TipoLobbyMVC tipo){
         this.tipo = tipo;
     }
     
-    public void setPartida(PartidaDTO partida){
-        this.partida = partida;
+    public void setCuenta(CuentaDTO cuenta){
+        this.cuentaActualizada = cuenta;
     }
     
-    public PartidaDTO getPartida(){
-        return partida;
+    public CuentaDTO getCuenta(){
+        return cuentaActualizada;
     }
     
     @Override
-    public void agregarContexto(CuentaDTO contexto) {
-        cuentaActualizada = contexto;
+    public void agregarContexto(Object contexto) {
+        this.contexto = contexto;
     }
 
     @Override
@@ -40,8 +40,13 @@ public class EventoMVCLobby extends EventoMVC<CuentaDTO> {
     }
 
     @Override
-    public CuentaDTO getInfo() {
-        return cuentaActualizada;
+    public Object getInfo() {
+        return contexto;
+    }
+
+    @Override
+    public int getIdContexto() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

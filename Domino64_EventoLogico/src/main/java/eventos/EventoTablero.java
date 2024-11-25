@@ -4,22 +4,15 @@
  */
 package eventos;
 
-//import categorias.CategoriaEvento;
-import entidades.Cuenta;
-import entidades.Ficha;
-import com.luisa.excepcionesLogica.LogicException;
-import java.util.ArrayList;
-import java.util.List;
+import entidadesDTO.FichaDTO;
 import tiposLogicos.TipoLogicaTablero;
 
 /**
  *
  * @author luisa M
  */
-public class EventoTablero extends EventoLogico<Ficha>{
-    private List<Ficha> fichas;
-    private Ficha ficha;
-    private boolean flag;
+public class EventoTablero extends EventoLogico<FichaDTO>{
+    private FichaDTO ficha;
     private TipoLogicaTablero tipo;
     
     public EventoTablero(){}
@@ -27,30 +20,16 @@ public class EventoTablero extends EventoLogico<Ficha>{
     public EventoTablero(TipoLogicaTablero tipo) {
         super();
         this.tipo = tipo;
-        if(tipo.equals(TipoLogicaTablero.OBTENER_EXTREMOS)){
-            fichas = new ArrayList<>();
-            flag = true;
-        }
     }
 
     @Override
-    public void agregarInfo(Ficha info) {
-        if(flag){
-            fichas.add(info);
-        }else{
-            ficha = info;
-        }
+    public void agregarInfo(FichaDTO info) {
+        ficha = info;
     }
 
     @Override
-    public Ficha getInfo() {
+    public FichaDTO getInfo() {
         return ficha;
-    }
-    
-    public List<Ficha> getExtremos() throws LogicException{
-        if(flag)
-            return fichas;
-        throw new LogicException("ERROR: Accion invalida para este tipo de evento de tablero");
     }
 
     @Override

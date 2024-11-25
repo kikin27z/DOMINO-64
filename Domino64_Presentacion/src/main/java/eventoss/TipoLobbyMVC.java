@@ -2,15 +2,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
  */
-package entidadesDTO;
+package eventoss;
 
 /**
  *
- * @author karim
+ * @author luisa M
  */
-public enum JugadaValidaDTO {
-    NINGUNA,
-    SOLO_IZQUIERDA,
-    SOLO_DERECHA,
-    AMBOS_EXTREMOS
+public enum TipoLobbyMVC {
+    INICIALIZAR_PANELES_JUGADORES,
+    AGREGAR_PANEL_JUGADOR,
+    REMOVER_PANEL_JUGADOR,
+    GUARDAR_CONFIG_PARTIDA,
+    CAMBIAR_AVATAR;
 }

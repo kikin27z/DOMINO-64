@@ -25,6 +25,21 @@
             <artifactId>Domino64_Observers</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.domino64</groupId>
+            <artifactId>Domino64_Evento</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.luisa</groupId>
+            <artifactId>ManejadorTablero</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Observer</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 

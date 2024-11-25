@@ -1,7 +1,17 @@
 package lobby;
 
+//import domino64.eventos.base.Evento;
+import entidadesDTO.CuentaDTO;
+import eventoss.EventoMVCLobby;
+import eventoss.TipoLobbyMVC;
+import java.util.Map;
+import java.util.Map.Entry;
+import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import observer.Observer;
 
 /**
  * Controlador para la pantalla del lobby del juego.
@@ -9,12 +19,11 @@ import javafx.scene.input.MouseEvent;
  * Implementa el patrón MVC (Modelo-Vista-Controlador).
  * 
  * @author Luisa Fernanda Morales Espinoza - 00000233450
- * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class LobbyControl {
-    private final LobbyView view;  // Referencia a la vista (LobbyView)
-    private final LobbyModel modelo;  // Referencia al modelo (LobbyModel)
+public class LobbyControl implements Observer<EventoMVCLobby>{
+    private LobbyView view;  // Referencia a la vista (LobbyView)
+    private LobbyModel modelo;  // Referencia al modelo (LobbyModel)
 
     /**
      * Constructor del controlador del lobby.
@@ -27,6 +36,8 @@ public class LobbyControl {
         this.view = view;
         this.modelo = modelo;
         cargarEventos();  // Carga todos los eventos de la interfaz
+        view.agregarObserver(this);
+        view.crearJugadores();
     }
     
     /**
@@ -37,7 +48,7 @@ public class LobbyControl {
         view.mostrarConfiguracion(this::abrirConfiguracion);  // Evento para abrir la configuración
         view.mostrarAvatares(this::abrirAvatares);  // Evento para abrir la selección de avatares
         view.abandonarPartida(this::abandonarPartida);  // Evento para abandonar la partida
-        view.iniciarPartida(this::iniciarPartida);  // Evento para iniciar la partida
+        view.iniciarPartida(this::actualizarJugadorListo);  // Evento para iniciar la partida
         view.confirmarCambiosPartida(this::guardarConfiguracionPartida);  // Evento para guardar cambios en la configuración
         view.cancelarCambiosPartida(this::cancelarConfiguracionPartida);  // Evento para cancelar cambios en la configuración
         view.cerrarAvatares(this::cerrarAvatares);  // Evento para cancelar cambios en la configuración
@@ -51,6 +62,10 @@ public class LobbyControl {
      * @param e el evento de ratón que activa esta acción.
      */
     private void guardarConfiguracionPartida(MouseEvent e) {
+        System.out.println("button del mouse event: "+e.getButton().toString());
+        modelo.setCantidadFichas(view.getChoiceBoxSelected());
+        view.cerrarVentanaConfiguracion();
+        //modelo.setCantidadFichas(0);
     }
     
     /**
@@ -80,6 +95,7 @@ public class LobbyControl {
      * @param e el evento de ratón que activa esta acción.
      */
     private void abandonarPartida(MouseEvent e) {
+        modelo.avisarAbandonar();
         System.out.println("Abandonar");   //-------------------------------------------------Le falta aun
     }
     
@@ -102,9 +118,95 @@ public class LobbyControl {
     private void abrirAvatares(MouseEvent e) {
         view.mostrarVentanaAvatares();
     }
+    
+//    private void seleccionarGato(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("gato"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+//    
+//    private void seleccionarPanda(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("panda"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+//    
+//    private void seleccionarJaguar(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("jaguar"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+//    
+//    private void seleccionarKiwi(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("kiwi"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+//    
+//    private void seleccionarMariposa(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("mariposa"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+//    
+//    private void seleccionarSerpiente(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("serpiente"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+//    
+//    private void seleccionarTortuga(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("tortuga"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+//    
+//    private void seleccionarVenado(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("venado"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+//    
+//    private void seleccionarAve(MouseEvent e){
+//        CuentaDTO cuentaAct = modelo.getCuentaActual();
+//        cuentaAct.setAvatar(modelo.getAvatarPorAnimal("ave"));
+//        modelo.avisarCambioAvatar(cuentaAct);
+//    }
+    
+    private void setEventoAvatares(MouseEvent e) {
+        System.out.println("??");
+        System.out.println(e.getButton());
+    }
+    
     private void cerrarAvatares(MouseEvent e) {
         view.cerrarVentanaAvatares();
     }
     
+    private void actualizarJugadorListo(MouseEvent e){
+        modelo.actualizarJugadorListo();
+    }
 
+    @Override
+    public void update(EventoMVCLobby observable) {
+        TipoLobbyMVC tipo = observable.getTipo();
+        switch (tipo) {
+            case INICIALIZAR_PANELES_JUGADORES ->{
+                Map<String, AnchorPane> mapa = (Map<String, AnchorPane>)observable.getInfo();
+                System.out.println("mapa en control: "+mapa);
+                modelo.setPanelesJugadores((Map<String, AnchorPane>) observable.getInfo());
+            }
+            case AGREGAR_PANEL_JUGADOR -> {
+                AnchorPane panel = (AnchorPane)observable.getInfo();
+                System.out.println("id panel: "+panel.getId());
+                
+                modelo.agregarPanelJugador(panel.getId(), panel);
+            }
+            case CAMBIAR_AVATAR -> {
+                CuentaDTO cuentaAct = modelo.getCuentaActual();
+                String nombreAv = (String)observable.getInfo();
+                cuentaAct.setAvatar(modelo.getAvatarPorAnimal(nombreAv));
+                modelo.avisarCambioAvatar(cuentaAct);
+            }
+        }
+    }
 }

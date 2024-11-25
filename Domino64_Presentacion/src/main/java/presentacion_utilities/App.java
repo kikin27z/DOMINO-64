@@ -33,6 +33,7 @@ public class App extends Application{
         Navegacion.getInstance().setFondo(stage);
         Navegacion.getInstance().cambiarInicio();
         
+        
         // Establece el icono de la aplicación.
         Image icon = new Image(getClass().getResourceAsStream("/images/logo.png"));
         stage.getIcons().add(icon);

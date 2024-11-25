@@ -1,9 +1,6 @@
 package eventos;
 
-//import categorias.CategoriaEvento;
-import entidades.Ficha;
-import entidades.Cuenta;
-import com.luisa.excepcionesLogica.LogicException;
+import entidadesDTO.FichaDTO;
 import java.util.ArrayList;
 import java.util.List;
 import tiposLogicos.TipoLogicaPozo;
@@ -11,10 +8,10 @@ import tiposLogicos.TipoLogicaPozo;
  *
  * @author luisa M
  */
-public class EventoPozo extends EventoLogico<Ficha>{
-    private List<Ficha> fichas;
-    private Ficha ficha;
-    private boolean flag;
+public class EventoPozo extends EventoLogico{
+    private Object contexto;
+    private List<FichaDTO> fichas;
+    private FichaDTO ficha;
     private TipoLogicaPozo tipo;
     
     public EventoPozo(){}
@@ -22,31 +19,21 @@ public class EventoPozo extends EventoLogico<Ficha>{
     public EventoPozo( TipoLogicaPozo tipo){
         super();
         this.tipo = tipo;
-        if(tipo.equals(TipoLogicaPozo.REPARTIR_FICHAS)){
-            fichas = new ArrayList<>();
-            flag = true;
-        }
     }
     
     @Override
-    public void agregarInfo(Ficha info) {
-        if(flag){
-            fichas.add(info);
-        }else{
-            ficha = info;
-        }
+    public void agregarInfo(Object info) {
+        this.contexto = info;
     }
 
     @Override
-    public Ficha getInfo() {
-        return ficha;
+    public Object getInfo() {
+        return contexto;
     }
     
     
-    public List<Ficha> getFichas() throws LogicException{
-        if(flag)
-            return fichas;
-        throw new LogicException("ERROR: Accion invalida para este tipo de evento de pozo");
+    public List<FichaDTO> getFichas(){
+        return fichas;
     }
 
     @Override

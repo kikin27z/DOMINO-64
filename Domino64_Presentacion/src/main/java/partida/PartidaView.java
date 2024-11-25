@@ -1,10 +1,12 @@
 package partida;
 
 import entidadesDTO.FichaDTO;
+import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
-import entidadesDTO.JugadaValidaDTO;
+import entidadesDTO.PosibleJugadaDTO;
 import entidadesDTO.PosicionDTO;
 import eventosPartida.ObserverPartida;
+import eventosPartida.ObserverPartidaMVC;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -26,7 +28,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import presentacion_dibujo.BuilderFichaMazo;
-import presentacion_dibujo.DibujoTablero2;
+import presentacion_dibujo.DibujoTablero;
 
 /**
  * Clase que representa la vista de la partida en la aplicación. Esta clase se
@@ -34,26 +36,25 @@ import presentacion_dibujo.DibujoTablero2;
  * visualización relacionada con la partida.
  *
  * @author Luisa Fernanda Morales Espinoza - 00000233450
- * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class PartidaView implements ObserverPartida {
+public class PartidaView implements ObserverPartidaMVC {
 
     private static final Logger logger = Logger.getLogger(PartidaView.class.getName());
     private final PartidaModel modelo;
     private AnchorPane containerGameBoard;
     private HBox bottomPlayer;
-    public Deque<Canvas> trenFichasDibujos;
+//    public Deque<Canvas> trenFichasDibujos;
     private StackPane pozoIndicador;
     private StackPane surrenderButton;
     private StackPane pauseButton;
-    private DibujoTablero2 gameBoard;
+    private DibujoTablero gameBoard;
     private EventHandler<MouseEvent> evaluarFicha;
     private EventHandler<MouseEvent> colocarFicha;
 
     public PartidaView(PartidaModel modelo) {
         this.modelo = modelo;
-        trenFichasDibujos = new ArrayDeque<>();
+////        trenFichasDibujos = new ArrayDeque<>();
         this.modelo.agregarObserver(this);
     }
 
@@ -74,8 +75,10 @@ public class PartidaView implements ObserverPartida {
         bottomPlayer.getChildren().add(ficha);
     }
 
-    public void quitarFichaMazo(Canvas ficha) {
-        bottomPlayer.getChildren().remove(ficha);
+    public void quitarFichaMazo() {
+        Canvas dibujo = modelo.getDibujoSeleccionado();
+        bottomPlayer.getChildren().remove(dibujo);
+        modelo.quitarMapeoFichas();
     }
 
     private AnchorPane createGameInterface() {
@@ -121,7 +124,7 @@ public class PartidaView implements ObserverPartida {
         containerGameBoard.setStyle("-fx-background-color: fff;");
 
         // Inner white game board
-        gameBoard = new DibujoTablero2(evaluarFicha);
+        gameBoard = new DibujoTablero();
         gameBoard.setLayoutX(60);
         gameBoard.setLayoutY(40);
 
@@ -129,6 +132,10 @@ public class PartidaView implements ObserverPartida {
         return containerGameBoard;
     }
 
+    
+    public void asignarProcesarJugada(){
+        gameBoard.setOpcionJugada(colocarFicha);
+    }
     private AnchorPane createTopPlayer() {
         AnchorPane topPlayer = new AnchorPane();
         topPlayer.setId("jugador3");
@@ -313,8 +320,9 @@ public class PartidaView implements ObserverPartida {
     public void evaluarFicha(EventHandler<MouseEvent> e) {
         this.evaluarFicha = e;
     }
+
     public void procesarJugada(EventHandler<MouseEvent> e) {
-        colocarFicha = e;
+        this.colocarFicha = e;
     }
 
     public void clicPozo(EventHandler<MouseEvent> e) {
@@ -330,19 +338,39 @@ public class PartidaView implements ObserverPartida {
     }
 
     //--------------------------------Metodos Observador--------------------------------
-    @Override
-    public void avisarJugadaRealizada(JugadaRealizadaDTO jugadaDTO) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public void dibujarFichaPrueba(FichaDTO ficha) {
+        JugadaRealizadaDTO jugada;
+        if (cuenta == 0) {
+            jugada = new JugadaRealizadaDTO(PosicionDTO.ARRIBA, true, 30, 0, ficha);
+        } else if (cuenta == 1) {
+            jugada = new JugadaRealizadaDTO(PosicionDTO.ARRIBA, true, 30, 60, ficha);
 
-    @Override
-    public void avisarFichaSeleccionada(FichaDTO contexto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+        } else if (cuenta == 2) {
+            jugada = new JugadaRealizadaDTO(PosicionDTO.ARRIBA, true, 30, 120, ficha);
 
+        } else{
+            jugada = new JugadaRealizadaDTO(PosicionDTO.ARRIBA, true, 30, 180, ficha);
+        } 
+        gameBoard.dibujarFicha(jugada);
+        cuenta++;
+    }
+    
+    public void dibujarFicha(JugadaRealizadaDTO jugada){
+        gameBoard.dibujarFicha(jugada);
+        
+    }
+    
+    public void dibujarJugada(FichaDTO ficha, PosibleJugadaDTO jugada){
+        gameBoard.mostrarPosiblesJugadas(ficha, jugada);
+    }
+    
+    public void limpiarJugadas(){
+        gameBoard.limpiarJugadas();
+    }
+    
+    
     @Override
-    public void avisarDarFichas(List<FichaDTO> fichas) {
-        System.out.println("Dibuja");
+    public void actualizarDarFichas(List<FichaDTO> fichas) {
         BuilderFichaMazo dibujaFicha = new BuilderFichaMazo();
         for (FichaDTO ficha : fichas) {
             dibujaFicha.construirVertical(ficha);
@@ -354,7 +382,7 @@ public class PartidaView implements ObserverPartida {
     }
 
     @Override
-    public void avisarDarFicha(FichaDTO ficha) {
+    public void actualizarDarFicha(FichaDTO ficha) {
         BuilderFichaMazo dibujaFicha = new BuilderFichaMazo();
         dibujaFicha.construirVertical(ficha);
         Canvas dibujo = dibujaFicha.resultado();
@@ -362,8 +390,13 @@ public class PartidaView implements ObserverPartida {
         modelo.agregarMapeoFichas(dibujo, ficha);
         agregarDominoMazo(dibujo);
     }
-    
-    public void dibujarFicha(FichaDTO ficha){
-        gameBoard.dibujarFicha(ficha, 300, 270, PosicionDTO.DERECHA);
+
+    private int cuenta = 0;
+
+
+
+    @Override
+    public void actualizarTurno() {
+//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

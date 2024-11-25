@@ -1,12 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package entidades;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  *
@@ -15,39 +7,19 @@ import java.util.List;
 public class Dominio {
 
     public static void main(String[] args) {
-        List<Integer> numeros = new ArrayList<>();
-        numeros.add(7);
-        numeros.add(5);
-        numeros.add(12);
-        numeros.add(8);
-        numeros.add(2);
-        numeros.add(19);
+        Ficha ficha1 = new Ficha(2, 3);
+        Ficha ficha2 = new Ficha(6, 3);
+        Ficha ficha3 = new Ficha(1, 6);
+        Ficha ficha4 = new Ficha(1, 0);
+        Ficha ficha5 = new Ficha(0, 5);
         
-        insertionSort(numeros);
-        //printNumeros(numeros);
-    }
-    
-    public static List<Integer> insertionSort(List<Integer> numeros){
-        for (int i = 0; i < numeros.size(); i++) {
-            int key = numeros.get(i);
-            int j = i - 1;
-
-            while (j >= 0 && numeros.get(j)> key) {
-                numeros.set(j + 1, numeros.get(j));
-                j = j - 1;
-            }
-
-            numeros.set(j + 1, key);
-            printNumeros(numeros);
-            System.out.println("");
-
-        }
-        return numeros;
-    }
-    
-     private static void printNumeros(List<Integer> numeros){
-        for (Integer num : numeros) {
-            System.out.print("numero: "+num+", ");
-        }
+        Tablero tablero = new Tablero();
+        tablero.agregarFicha(ficha3, false);
+        tablero.agregarFicha(ficha4, true);
+        tablero.agregarFicha(ficha2, false);
+        tablero.agregarFicha(ficha1, false);
+        tablero.agregarFicha(ficha5, true);
+        
+        
     }
 }

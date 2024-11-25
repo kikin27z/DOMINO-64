@@ -5,17 +5,17 @@
 package logicaDisplay;
 
 import domino64.eventos.base.Evento;
-import presentacion_utilities.FachadaNavegador;
+import presentacion_utilities.FachadaPresentacion;
 
 /**
  *
  * @author luisa M
  */
 public class ManejadorDisplay extends ObservadorDisplay{
-    private FachadaNavegador nav;
+    private FachadaPresentacion nav;
     
     public ManejadorDisplay(){
-        nav = FachadaNavegador.getInstance();
+        nav = FachadaPresentacion.getInstance();
     }
     
     public void cambiarPantalla(int pantallaDestino){

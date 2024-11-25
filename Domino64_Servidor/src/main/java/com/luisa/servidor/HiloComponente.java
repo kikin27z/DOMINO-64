@@ -13,6 +13,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tiposLogicos.TipoSuscripcion;
@@ -38,6 +42,7 @@ public class HiloComponente  implements Runnable, Subscriber{
     private ObjectInputStream input;
     private ObjectOutputStream output;
     private final int id;
+    private final int idContexto = 0;
     private Publicador publicador;
     private List<Enum<?>> suscripciones;
     
@@ -58,7 +63,7 @@ public class HiloComponente  implements Runnable, Subscriber{
                 output = new ObjectOutputStream(socket.getOutputStream());
                 input = new ObjectInputStream(socket.getInputStream());
             } catch (IOException ex) {
-                Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(HiloComponente.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -75,17 +80,17 @@ public class HiloComponente  implements Runnable, Subscriber{
      */
     private void manejarEvento(Evento evento) {
         Enum<?> tipo = evento.getTipo();
-        System.out.println("tipo: "+tipo);
+        System.out.println("tipo: " + tipo);
         System.out.println("en el manejarTipo en componente");
-        if(tipo.equals(TipoSuscripcion.SUSCRIBIR)){
+        if (tipo.equals(TipoSuscripcion.SUSCRIBIR)) {
             suscribirEvento(tipo);
-        }else if(tipo.equals(TipoSuscripcion.DESUSCRIBIR)){
+        } else if (tipo.equals(TipoSuscripcion.DESUSCRIBIR)) {
             removerSuscripcion(tipo);
-        }else{
+        } else {
             publicador.publicarEvento(tipo, evento);
         }
     }
-    
+        
     /**
      * tarea principal que se va a estar ejecutando durante toda la 
      * vida de la clase. 
@@ -110,7 +115,7 @@ public class HiloComponente  implements Runnable, Subscriber{
                 manejarEvento(evento);
             }
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
             removerSuscripciones();
             Servidor.desconectarComponente(id);
         }
@@ -169,7 +174,7 @@ public class HiloComponente  implements Runnable, Subscriber{
         publicador.desuscribir(tipoEvento, this);
         //servidor.removerSuscripcionComponente(id, tipoEvento);
     }
-
+    
     /**
      * Metodo usado para enviarle al cliente (al componente) los eventos 
      * recibidos del bus.
@@ -187,6 +192,11 @@ public class HiloComponente  implements Runnable, Subscriber{
         }
     }
 
+    @Override
+    public int getIdContexto(){
+        return idContexto;
+    }
+    
     @Override
     public int getSubscriberId() {
         return id;

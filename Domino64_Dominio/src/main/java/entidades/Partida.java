@@ -14,11 +14,11 @@ import java.util.Random;
  * @author luisa M
  */
 public class Partida implements Serializable{
-    private List<Cuenta> jugadores;
+    private List<Jugador> jugadores;
     private int fichasPorJugador;
     private String codigoPartida;
 
-    public Partida(List<Cuenta> jugadores, int fichasPorJugador) {
+    public Partida(List<Jugador> jugadores, int fichasPorJugador) {
         this.jugadores = jugadores;
         this.fichasPorJugador = fichasPorJugador;
         setCodigo();
@@ -28,7 +28,7 @@ public class Partida implements Serializable{
         this.codigoPartida = codigoPartida;
     }
 
-    public void actualizarJugador(Cuenta jugador){
+    public void actualizarJugador(Jugador jugador){
         if(buscarJugador(jugador) != null){
             jugadores.set(jugadores.indexOf(jugador), jugador);
             System.out.println("jugador actualiazdo: "+jugador);
@@ -36,9 +36,9 @@ public class Partida implements Serializable{
             System.out.println("jugador no encontrado");
     }
     
-    public Cuenta buscarJugador(Cuenta jugador){
-        for (Cuenta j : jugadores) {
-            if(j.getId() == jugador.getId())
+    public Jugador buscarJugador(Jugador jugador){
+        for (Jugador j : jugadores) {
+            if(j.getCuenta().getId() == jugador.getCuenta().getId())
                 return j;
         }
         return null;
@@ -55,21 +55,21 @@ public class Partida implements Serializable{
         codigoPartida = builder.toString();
     }
     
-    public List<Cuenta> getJugadores() {
+    public List<Jugador> getJugadores() {
         return jugadores;
     }
 
-    public void setJugadores(List<Cuenta> jugadores) {
+    public void setJugadores(List<Jugador> jugadores) {
         this.jugadores = jugadores;
     }
     
-    public boolean agregarJugador(Cuenta jugador){
+    public boolean agregarJugador(Jugador jugador){
         if(!jugadores.contains(jugador))
             return jugadores.add(jugador);
         return false;
     }
 
-    public void removerJugador(Cuenta jugador){
+    public void removerJugador(Jugador jugador){
         jugadores.remove(jugador);
     }
     

@@ -31,7 +31,8 @@ public abstract class ObservadorLobbyLocal implements Observer<Evento>{
             List.of(
                     TipoError.ERROR_LOGICO,
                     TipoError.ERROR_DE_SERVIDOR,
-                    TipoLogicaLobby.ACTUALIZAR_JUGADORES_LISTO,
+                    TipoLogicaLobby.JUGADOR_LISTO,
+                    TipoLogicaLobby.JUGADOR_NO_LISTO,
                     TipoLogicaLobby.JUGADOR_NUEVO,
                     TipoLogicaLobby.JUGADOR_SALIO,
                     TipoLogicaLobby.ACTUALIZAR_AVATARES,
@@ -65,7 +66,8 @@ public abstract class ObservadorLobbyLocal implements Observer<Evento>{
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
         consumers.putIfAbsent(TipoError.ERROR_LOGICO, this::manejarError);
         consumers.putIfAbsent(TipoLogicaLobby.JUGADOR_NUEVO, this::actualizarJugadores);
-        consumers.putIfAbsent(TipoLogicaLobby.ACTUALIZAR_JUGADORES_LISTO, this::actualizarJugadoresListos);
+        consumers.putIfAbsent(TipoLogicaLobby.JUGADOR_LISTO, this::actualizarJugadoresListos);
+        consumers.putIfAbsent(TipoLogicaLobby.JUGADOR_NO_LISTO, this::actualizarJugadoresListos);
         consumers.putIfAbsent(TipoLogicaLobby.JUGADOR_SALIO, this::actualizarJugadores);
         consumers.putIfAbsent(TipoLogicaLobby.ACTUALIZAR_AVATARES, this::actualizarAvatares);
         consumers.putIfAbsent(TipoLogicaLobby.ACTUALIZAR_USERNAME, this::actualizarUsernames);

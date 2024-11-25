@@ -5,9 +5,8 @@
 package logicaLobby;
 
 import builder.EventBuilder;
-import entidades.Cuenta;
-import entidades.Ficha;
-import entidades.Partida;
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.LobbyDTO;
 import eventos.EventoJugador;
 import tiposLogicos.TiposJugador;
 
@@ -17,24 +16,20 @@ import tiposLogicos.TiposJugador;
  * para facilitar y encapsular la logica de construccion de eventos del jugador
  * @author luisa M
  */
-public class BuilderEventoJugador implements EventBuilder<Ficha> {
+public class BuilderEventoJugador implements EventBuilder {
     private EventoJugador evento;
+    private TiposJugador tipo;
     
     public BuilderEventoJugador(){
         evento = new EventoJugador();
     }
     
-    public void setPartida(Partida partida){
-        evento.setPartida(partida);
+    public void setPartida(LobbyDTO partida){
+        evento.setLobby(partida);
     }
     
-    public void setPublicador(Cuenta jugador){
+    public void setPublicador(CuentaDTO jugador){
         evento.setJugador(jugador);
-    }
-    
-    @Override
-    public void setTipo(Enum<?> tipo) {
-        evento.setTipo((TiposJugador)tipo);
     }
 
     @Override
@@ -43,8 +38,8 @@ public class BuilderEventoJugador implements EventBuilder<Ficha> {
     }
 
     @Override
-    public void setInfo(Ficha info) {
-        evento.agregarInfo(info);
+    public void setContexto(Object contexto) {
+        evento.agregarInfo(contexto);
     }
 
     @Override
@@ -57,6 +52,11 @@ public class BuilderEventoJugador implements EventBuilder<Ficha> {
     @Override
     public void reiniciar() {
         evento = new EventoJugador();
+    }
+
+    @Override
+    public void setTipo(Enum tipo) {
+        this.tipo = (TiposJugador)tipo;
     }
     
 }

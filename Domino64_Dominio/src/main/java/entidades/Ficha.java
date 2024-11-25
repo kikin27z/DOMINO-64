@@ -43,6 +43,12 @@ public class Ficha implements Comparable<Ficha>, Serializable{
     public void setDerecha(int derecha) {
         this.derecha = derecha;
     }
+    
+    public void girarFicha() {
+        int aux = izquierda;
+        izquierda = derecha;
+        derecha = aux;
+    }
 
     @Override
     public int hashCode() {

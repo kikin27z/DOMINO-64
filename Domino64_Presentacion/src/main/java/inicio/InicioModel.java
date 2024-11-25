@@ -1,6 +1,9 @@
 package inicio;
 
+import eventoss.EventoMVCJugador;
 import eventosPantallas.ObservablePantallas;
+import eventoss.TipoJugadorMVC;
+import presentacion_utilities.ControladorComunicacion;
 import presentacion_utilities.NotificadorEvento;
 
 /**
@@ -31,6 +34,8 @@ public class InicioModel {
      * ha elegido iniciar el modo de juego.
      */
     public void avisarModoJugar() {
+//        EventoMVCJugador evento = new EventoMVCJugador(TipoJugadorMVC.IR_OPCIONES_PARTIDA);
+//        ControladorComunicacion.enviarEventoALogica(evento);
         notificador.avisarMostrarOpcionesPartida();
     }
 

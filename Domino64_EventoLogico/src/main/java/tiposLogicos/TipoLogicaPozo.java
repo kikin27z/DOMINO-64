@@ -10,7 +10,7 @@ package tiposLogicos;
  * @author luisa M
  */
 public enum TipoLogicaPozo {
-    JALAR_FICHA,
-    REPARTIR_FICHAS,
+    FICHA_OBTENIDA,
+    FICHAS_REPARTIDAS,
     POZO_VACIO;
 }

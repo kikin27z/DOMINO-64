@@ -1,7 +1,7 @@
 package eventos;
 
-//import categorias.CategoriaEvento;
-import entidades.Cuenta;
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.PartidaDTO;
 import java.util.ArrayList;
 import java.util.List;
 import tiposLogicos.TipoLogicaTurno;
@@ -10,9 +10,10 @@ import tiposLogicos.TipoLogicaTurno;
  *
  * @author luisa M
  */
-public class EventoTurno extends EventoLogico<Cuenta>{
-    private List<Cuenta> jugadores;
-    private Cuenta jugador;
+public class EventoTurno extends EventoLogico<CuentaDTO>{
+    private List<CuentaDTO> jugadores;
+    private CuentaDTO jugador;
+    private PartidaDTO partida;
     private boolean flag;
     private TipoLogicaTurno tipo;
     
@@ -21,7 +22,7 @@ public class EventoTurno extends EventoLogico<Cuenta>{
     public EventoTurno(TipoLogicaTurno tipo){
         super();
         this.tipo = tipo;
-        if(tipo.equals(TipoLogicaTurno.DESIGNAR_OTROS_TURNOS)){
+        if(tipo.equals(TipoLogicaTurno.TURNOS_DESIGNADOS)){
             jugadores = new ArrayList<>();
             flag = true;
         }
@@ -34,7 +35,7 @@ public class EventoTurno extends EventoLogico<Cuenta>{
      * @param info Cuenta del contexto de este evento
      */
     @Override
-    public void agregarInfo(Cuenta info) {
+    public void agregarInfo(CuentaDTO info) {
         if(flag)
             jugadores.add(info);
         else{
@@ -48,7 +49,7 @@ public class EventoTurno extends EventoLogico<Cuenta>{
      * @return La cuenta como parte del contexto
      */
     @Override
-    public Cuenta getInfo() {
+    public CuentaDTO getInfo() {
         return jugador;
     }
     /**
@@ -60,12 +61,18 @@ public class EventoTurno extends EventoLogico<Cuenta>{
      * designaron los turnos.
      * @return La lista de jugadores como contexto del evento
      */
-    public List<Cuenta> getJugadores(){
-        if(flag)
-            return jugadores;
-        return null;
+    public List<CuentaDTO> getJugadores(){
+        return jugadores;
     }
 
+    public void setPartida(PartidaDTO partida){
+        this.partida = partida;
+    }
+    
+    public PartidaDTO getPartida(){
+        return partida;
+    }
+    
     @Override
     public TipoLogicaTurno getTipo() {
         return tipo;
@@ -73,5 +80,10 @@ public class EventoTurno extends EventoLogico<Cuenta>{
     
     public void setTipo(TipoLogicaTurno tipo){
         this.tipo = tipo;
+        if (tipo.equals(TipoLogicaTurno.TURNOS_DESIGNADOS) ||
+                tipo.equals(TipoLogicaTurno.JUGADORES_SIN_MULAS)) {
+            jugadores = new ArrayList<>();
+            flag = true;
+        }
     }
 }

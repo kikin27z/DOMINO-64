@@ -10,55 +10,49 @@ import java.util.Random;
  */
 public class Cuenta implements Serializable{
     private String username;
-    private String avatarUrl;
+    private Avatar avatar;
     private int id;
     private String idCadena;
-    private Jugador jugador;
+    //private Jugador jugador;
 
     public Cuenta(int id) {
         this.id = id;
     }
 
     public Cuenta() {
-        idCadena = generateLetterString();
+        idCadena = crearId();
     }
-    
-    
 
     public int getId(){
         return id;
     }
     
-    public String getUsername() {
+    public String getNombre() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
+        username = avatar.getNombre();
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public Avatar getAvatar() {
+        return avatar;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
-    }
+//    public Jugador getJugador() {
+//        return jugador;
+//    }
+//
+//    public void setJugador(Jugador jugador) {
+//        this.jugador = jugador;
+//    }
 
-    public Jugador getJugador() {
-        return jugador;
-    }
-
-    public void setJugador(Jugador jugador) {
-        this.jugador = jugador;
-    }
-
-    
     
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 73 * hash + Objects.hashCode(this.username);
+        hash = 73 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -79,10 +73,10 @@ public class Cuenta implements Serializable{
 
     @Override
     public String toString() {
-        return "Cuenta{" +"user= " + username + ", id=" + id + '}';
+        return "Cuenta{" + "nombre=" + username + ", avatar=" + avatar + ", idCadena=" + idCadena + '}';
     }
-    
-    public  String generateLetterString() {
+
+    public  String crearId() {
         String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         Random random = new Random();
         StringBuilder result = new StringBuilder();

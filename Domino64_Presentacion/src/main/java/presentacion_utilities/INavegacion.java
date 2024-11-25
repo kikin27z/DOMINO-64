@@ -18,6 +18,7 @@ public interface INavegacion {
      * Este método debería configurar la escena inicial y mostrar la vista principal.
      */
     public void iniciarApp();
+    public void iniciarAppPruebas();
 
     /**
      * Método para cambiar la vista a la pantalla de inicio.
@@ -29,7 +30,7 @@ public interface INavegacion {
      * Método para cambiar la vista a la pantalla de lobby.
      * Este método debería gestionar la transición de la vista actual a la vista del lobby.
      */
-    public void cambiarLobby(LobbyDTO lobby);
+    public void cambiarLobby();
 
     /**
      * Método para cambiar la vista a la pantalla de partida.
@@ -42,4 +43,6 @@ public interface INavegacion {
      * Este método debería gestionar la transición de la vista actual a la vista de opciones de partida.
      */
     public void cambiarOpcionesPartida();
+    
+    public void cambiarCreditos();
 }

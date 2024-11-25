@@ -1,26 +1,33 @@
 package entidadesDTO;
 
+import java.io.Serializable;
+
 /**
  *
  * @author luisa M
  */
-public class FichaDTO {
+public class FichaDTO implements Serializable {
+
     private int izquierda;
     private int derecha;
-    
+
     public FichaDTO(int izquierda, int derecha) {
         this.izquierda = izquierda;
         this.derecha = derecha;
     }
-    
+
     public boolean esMula() {
         return izquierda == derecha;
     }
-    
+
     public void girarFicha() {
         int aux = izquierda;
         izquierda = derecha;
         derecha = aux;
+    }
+
+    public int sumaPuntos() {
+        return izquierda + derecha;
     }
 
     public int getIzquierda() {
@@ -39,15 +46,16 @@ public class FichaDTO {
         this.derecha = derecha;
     }
 
+    public boolean esLaMismaFicha(FichaDTO ficha) {
+        return ficha.getDerecha() == this.derecha && ficha.getIzquierda() == this.izquierda
+                || ficha.getDerecha() == this.izquierda && ficha.getIzquierda() == this.derecha;
+    }
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Ficha{");
-        sb.append("izquierda=").append(izquierda);
-        sb.append(", derecha=").append(derecha);
-        sb.append('}');
-        return sb.toString();
+        return "FichaDTO{" + "izquierda=" + izquierda + ", derecha=" + derecha + '}';
     }
-    
-    
+
+
+
 }

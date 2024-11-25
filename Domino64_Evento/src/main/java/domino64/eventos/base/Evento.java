@@ -35,5 +35,15 @@ public interface Evento<T> extends Serializable{
      * en la clase de evento concreta
      */
     public T getInfo();
-    
+    /**
+     * Obtiene el id del contexto del evento.
+     * Los eventos deben tener un identificador del
+     * contexto al que pertenece el evento. Por ejemplo,
+     * ciertos grupos de suscriptores pueden estar esperando
+     * el mismo tipo de evento, pero los grupos son de contextos
+     * diferentes. El id del contexto tiene el objetivo de 
+     * distinguir entre un contexto y otro.
+     * @return 
+     */
+    public int getIdContexto();
 }

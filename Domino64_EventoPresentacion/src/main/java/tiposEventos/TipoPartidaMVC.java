@@ -9,9 +9,4 @@ package tiposEventos;
  * @author luisa M
  */
 public enum TipoPartidaMVC {
-    ABANDONAR_PARTIDA,
-    PETICION_RENDIRSE,
-    COLOCAR_FICHA,
-    PASAR_TURNO,
-    JALAR_FICHA;
 }

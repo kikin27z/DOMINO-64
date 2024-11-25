@@ -27,4 +27,6 @@ public interface Subscriber extends Suscriptor , Comparable<Subscriber> {
      */
     public int getSubscriberId();
     
+    public int getIdContexto();
+    
 }

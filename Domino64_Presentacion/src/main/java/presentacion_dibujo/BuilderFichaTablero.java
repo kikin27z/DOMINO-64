@@ -5,42 +5,43 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class BuilderFichaTablero extends BuilderFicha<DibujoFicha> {
-    private DibujoFicha ficha;
+    private DibujoFicha dibujoFicha;
 
     public BuilderFichaTablero() {
     }
 
     @Override
     public void reiniciar() {
-        ficha = new DibujoFicha();
+        dibujoFicha = new DibujoFicha();
     }
 
     @Override
     public void construirVertical(FichaDTO fichaDTO) {
         reiniciar();
-        this.ficha = dibujarFicha(fichaDTO.getIzquierda(), fichaDTO.getDerecha(), Orientation.VERTICAL);
+        this.dibujoFicha = dibujarFicha(fichaDTO, BuilderFicha.Orientation.VERTICAL);
     }
 
     @Override
     public void construirHorizontal(FichaDTO fichaDTO) {
         reiniciar();
-        this.ficha = dibujarFicha(fichaDTO.getIzquierda(), fichaDTO.getDerecha(), Orientation.HORIZONTAL);
+        this.dibujoFicha = dibujarFicha(fichaDTO, BuilderFicha.Orientation.HORIZONTAL);
     }
 
     @Override
     public DibujoFicha resultado() {
-        return this.ficha;
+        return this.dibujoFicha;
     }
     
-    public DibujoFicha dibujarFicha(int izquierda, int derecha, Orientation orientation) {
-        int width = orientation == Orientation.HORIZONTAL ? 60 : 30;
-        int height = orientation == Orientation.HORIZONTAL ? 30 : 60;
-        
+    public DibujoFicha dibujarFicha(FichaDTO ficha, BuilderFicha.Orientation orientation) {
+        int width = orientation == BuilderFicha.Orientation.HORIZONTAL ? 60 : 30;
+        int height = orientation == BuilderFicha.Orientation.HORIZONTAL ? 30 : 60;
+        int derecha =  ficha.getDerecha();
+        int izquierda = ficha.getIzquierda();
         // Create new DibujoFicha with the proper dimensions
-        ficha.definirAncho(width);
-        ficha.definirLargo(height);
+        dibujoFicha.definirAncho(width);
+        dibujoFicha.definirLargo(height);
         
-        GraphicsContext gc = ficha.getGraphicsContext2D();
+        GraphicsContext gc = dibujoFicha.getGraphicsContext2D();
 
         // Dibujar el fondo de la ficha
         gc.setFill(Color.WHITE);
@@ -48,32 +49,32 @@ public class BuilderFichaTablero extends BuilderFicha<DibujoFicha> {
 
         // Dibujar la línea divisoria
         gc.setStroke(Color.BLACK);
-        if (orientation == Orientation.HORIZONTAL) {
+        if (orientation == BuilderFicha.Orientation.HORIZONTAL) {
             gc.strokeLine(width / 2, 0, width / 2, height);
         } else {
             gc.strokeLine(0, height / 2, width, height / 2);
         }
 
         // Dibujar los puntos en cada lado
-        if (orientation == Orientation.HORIZONTAL) {
+        if (orientation == BuilderFicha.Orientation.HORIZONTAL) {
             dibujarPuntos(gc, izquierda, 0, 0, orientation);
             dibujarPuntos(gc, derecha, width / 2, 0, orientation);
         } else {
             dibujarPuntos(gc, izquierda, 0, 0, orientation);
-            dibujarPuntos(gc, derecha, 0, height / 2, orientation);
+            dibujarPuntos(gc, derecha, 0, height / 2, orientation); //Derecha es abajo
         }
 
-        return ficha;
+        return dibujoFicha;
     }
 
-    private void dibujarPuntos(GraphicsContext gc, int valor, int offsetX, int offsetY, Orientation orientation) {
+    private void dibujarPuntos(GraphicsContext gc, int valor, int offsetX, int offsetY, BuilderFicha.Orientation orientation) {
         gc.setFill(Color.BLACK);
         int grosorBolita = 4;  // Reducido para mantener proporción
         int grosorBola1 = 6;   // Reducido para mantener proporción
         int grosorBola2 = 5;   // Reducido para mantener proporción
 
-        int ancho = orientation == Orientation.HORIZONTAL ? 30 : 30;  // Mitad del ancho total para fichas horizontales
-        int alto = orientation == Orientation.HORIZONTAL ? 30 : 30;   // Mitad del alto total para fichas verticales
+        int ancho = orientation == BuilderFicha.Orientation.HORIZONTAL ? 30 : 30;  // Mitad del ancho total para fichas horizontales
+        int alto = orientation == BuilderFicha.Orientation.HORIZONTAL ? 30 : 30;   // Mitad del alto total para fichas verticales
 
         switch (valor) {
             case 0 -> {

@@ -19,9 +19,11 @@ import domino64.eventos.base.Evento;
  */
 public abstract class EventoLogico<T> implements Evento{
     private int idPublicador;
+    private int idContexto;
     
     public EventoLogico(){
         this.idPublicador = 0;
+        this.idContexto = 0;
     }
     /**
      * este metodo es abstracto pensando en la posibilidad
@@ -38,6 +40,15 @@ public abstract class EventoLogico<T> implements Evento{
         this.idPublicador = id;
     }
 
+    public void setIdContexto(int id){
+        this.idContexto = id;
+    }
+    
+    @Override
+    public int getIdContexto(){
+        return idContexto;
+    }
+    
     @Override
     public int getIdPublicador(){
         return idPublicador;
@@ -48,6 +59,7 @@ public abstract class EventoLogico<T> implements Evento{
         StringBuilder sb = new StringBuilder();
         sb.append("EventoLogico{");
         sb.append(", idPublicador=").append(idPublicador);
+        sb.append(", idContexto=").append(idContexto);
         sb.append('}');
         return sb.toString();
     }

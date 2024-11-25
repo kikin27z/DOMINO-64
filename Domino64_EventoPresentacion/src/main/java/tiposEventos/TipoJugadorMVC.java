@@ -9,6 +9,8 @@ package tiposEventos;
  * @author luisa M
  */
 public enum TipoJugadorMVC {
+    IR_INICIO,
+    IR_OPCIONES_PARTIDA,
     CAMBIAR_USERNAME,
     CAMBIAR_AVATAR,
     ABANDONAR_PARTIDA,

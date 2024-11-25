@@ -30,8 +30,8 @@ public class BuilderEventoSuscripcion implements EventBuilder<Enum<?>>{
     }
 
     @Override
-    public void setInfo(Enum<?> info) {
-        evento.agregarInfo(info);
+    public void setContexto(Enum<?> contexto) {
+        evento.agregarInfo(contexto);
     }
 
     @Override

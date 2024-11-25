@@ -5,6 +5,7 @@
 package eventos;
 
 import entidadesDTO.JugadorDTO;
+import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
 import tiposEventos.TipoJugadorMVC;
 
@@ -16,8 +17,23 @@ public class EventoMVCJugador extends EventoMVC<JugadorDTO> {
     private TipoJugadorMVC tipo;
     private JugadorDTO contexto;
     private PartidaDTO partida;
+    private LobbyDTO lobby;
+    
+    public EventoMVCJugador(){}
     
     public EventoMVCJugador(TipoJugadorMVC tipo){
+        this.tipo = tipo;
+    }
+    
+    public void setLobby(LobbyDTO lobby){
+        this.lobby = lobby;
+    }
+    
+    public LobbyDTO getLobby(){
+        return lobby;
+    }
+    
+    public void setTipo(TipoJugadorMVC tipo){
         this.tipo = tipo;
     }
     
@@ -42,6 +58,11 @@ public class EventoMVCJugador extends EventoMVC<JugadorDTO> {
     @Override
     public JugadorDTO getInfo() {
         return contexto;
+    }
+
+    @Override
+    public int getIdContexto() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

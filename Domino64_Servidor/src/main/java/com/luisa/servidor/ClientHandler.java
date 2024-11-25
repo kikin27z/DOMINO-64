@@ -160,4 +160,9 @@ public class ClientHandler extends Publisher implements Subscriber{
         this.evento = (EventoLogico)evento;
     }
 
+    @Override
+    public int getIdContexto() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }
