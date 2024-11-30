@@ -30,7 +30,7 @@ import presentacion_utilities.NotificadorEvento;
 public class MediadorManejadores {
     private static MediadorManejadores instance;
     private static ManejadorDisplay display;
-    private static ManejadorCuenta cuenta;
+//    private static ManejadorCuenta cuenta;
     //private final INotificadorEvento notificador;
     private final ExecutorService hiloPrincipal;
     private final MediadorModelos mediadorModelos;
@@ -39,9 +39,8 @@ public class MediadorManejadores {
     private final ObserverLobby observerLobby;
 
     private MediadorManejadores() {
-        cuenta = new ManejadorCuenta();
+//        cuenta = new ManejadorCuenta();
         display = new ManejadorDisplay();
-        //cuenta.setManejadorDisplay(display);
         
         mediadorModelos = MediadorModelos.getInstance();
         //notificador = NotificadorEvento.getInstance();
@@ -64,9 +63,9 @@ public class MediadorManejadores {
         return instance;
     }
     
-    protected static ManejadorCuenta getManejadorCuenta(){
-        return cuenta;
-    }
+//    protected static ManejadorCuenta getManejadorCuenta(){
+//        return cuenta;
+//    }
     
     protected static ManejadorDisplay getManejadorDisplay(){
         return display;

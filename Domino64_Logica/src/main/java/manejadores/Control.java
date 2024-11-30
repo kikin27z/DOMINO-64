@@ -1,6 +1,7 @@
 package manejadores;
 
 import abstraccion.ICliente;
+import comunicadores_logica.ReceptorLogica;
 import eventoss.EventoMVCJugador;
 import eventoss.TipoJugadorMVC;
 import implementacion.Client;
@@ -52,12 +53,13 @@ public class Control {
         hiloPrincipal.execute(() -> {
             try {
                 // Inicializar los manejadores
-
+                ReceptorLogica receptor = new ReceptorLogica();
+                receptor.iniciaConexion();
 //                cuenta = new ManejadorCuenta();
                 modelo = MediadorManejadores.getInstance();
 ////                display = new ManejadorDisplay();
 //                cuenta.setManejadorDisplay(display);
-                subscribirManejadores();
+//                subscribirManejadores();
                 MediadorManejadores.getManejadorDisplay().iniciarJuego();
                 iniciarHiloLogica();
             } catch (Exception e) {
@@ -92,20 +94,20 @@ public class Control {
         consumers.remove(tipo, consumer);
     }
     
-    private void subscribirManejadores() {
-        Client client = Client.iniciarComunicacion();
-
-        for (Enum<?> evento : MediadorManejadores.getManejadorCuenta().getEventos()) {
-            client.addObserver(evento, MediadorManejadores.getManejadorCuenta());
-        }
-
-        MediadorManejadores.getManejadorCuenta().init(client);
-        client.iniciar();
-        MediadorManejadores.getManejadorCuenta().setClientId(client.getClientId());
-
-        //display.iniciarJuego();
-
-    }
+//    private void subscribirManejadores() {
+//        Client client = Client.iniciarComunicacion();
+//
+//        for (Enum<?> evento : MediadorManejadores.getManejadorCuenta().getEventos()) {
+//            client.addObserver(evento, MediadorManejadores.getManejadorCuenta());
+//        }
+//
+//        MediadorManejadores.getManejadorCuenta().init(client);
+//        client.iniciar();
+//        MediadorManejadores.getManejadorCuenta().setClientId(client.getClientId());
+//
+//        //display.iniciarJuego();
+//
+//    }
 
     /**
      * Obtiene la instancia única de la clase {@link Control}. Si la instancia
@@ -134,9 +136,9 @@ public class Control {
      *
      * @return El manejador de cuentas.
      */
-    public static ManejadorCuenta obtenerManejadorCuenta() {
-        return cuenta;
-    }
+//    public static ManejadorCuenta obtenerManejadorCuenta() {
+//        return cuenta;
+//    }
 
     /**
      * Obtiene el manejador de la visualización (display).

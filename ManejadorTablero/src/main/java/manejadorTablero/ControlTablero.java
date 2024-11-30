@@ -3,10 +3,10 @@ package manejadorTablero;
 import abstraccion.ICliente;
 import domino64.eventos.base.Evento;
 import entidadesDTO.JugadaRealizadaDTO;
-import eventos.EventoJugador;
 import eventos.EventoJugadorFicha;
 import implementacion.Client;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -29,6 +29,9 @@ public class ControlTablero extends IControlTablero implements Runnable {
 
     public ControlTablero() {
         this.manejador = new ManejadorTablero();
+        setConsumers();
+        ejecutorEventos = Executors.newSingleThreadExecutor();
+        running = new AtomicBoolean(true);
     }
 
     @Override

@@ -41,10 +41,6 @@ public class MediadorModelos {
         modeloOpciones2 = new OpcionesPartidaModel();
         modeloLobby2 = LobbyModel.getInstance();
         modeloPartida2 = new PartidaModel();
-        
-//        modeloOpciones = modeloOpciones2;
-//        modeloLobby = modeloLobby2;
-//        modeloPartida = modeloPartida2;
     }
     
     public static MediadorModelos getInstance(){
@@ -122,13 +118,5 @@ public class MediadorModelos {
     
     public void agregarObserverOpciones(ObserverOpcionesPartida observer){
         modeloOpciones2.agregarObserver(observer);
-    }
-    
-    public void respuesta(String respuesta){
-        Platform.runLater(()-> {
-            System.out.println("Imprimiendo en mediador ");
-            System.out.println(respuesta);
-            System.out.println(Thread.currentThread());
-        });
     }
 }

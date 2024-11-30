@@ -71,10 +71,6 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
         setConsumers();
     }
 
-    protected void setIdManejador(int idManejador) {
-        id = idManejador;
-    }
-
     @Override
     public void run() {
         while (running.get()) {
@@ -90,19 +86,6 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
                 break;
             }
         }
-    }
-
-    protected int getIdManejador() {
-        return id;
-    }
-
-    protected void setDirector(DirectorLobby directorLobby) {
-        director = directorLobby;
-    }
-
-    protected void setCliente(ICliente client) {
-        this.cliente = client;
-        cliente.establecerSuscripciones(eventos);
     }
     
     @Override
@@ -395,5 +378,15 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
         id = _cliente.getClientId();
         director = new DirectorLobby(new BuilderEventoLobby(), id);
         ejecutorEventos.submit(this);
+    }
+    
+    public void iniciaConexion(){
+        Client c = Client.iniciarComunicacion();
+
+        for (Enum<?> suscripcion : eventos) {
+            c.addObserver(suscripcion, this);
+        }
+
+        this.vincularCliente(c);
     }
 }

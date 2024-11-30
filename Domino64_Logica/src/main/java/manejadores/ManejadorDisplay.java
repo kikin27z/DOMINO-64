@@ -18,7 +18,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import presentacion_utilities.ControladorComunicacion;
 import presentacion_utilities.FachadaPresentacion;
 import presentacion_utilities.INavegacion;
 import presentacion_utilities.Navegacion;
