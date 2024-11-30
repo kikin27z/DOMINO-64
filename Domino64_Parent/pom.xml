@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>arqui</groupId>
+    <artifactId>Domino64_Parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    
+    <modules>
+        <module>../Domino64_Dominio</module>
+        <module>../Domino64_DTO</module>
+        <module>../Domino64_Evento</module>
+        <module>../Observer</module>
+        <module>../Domino64_Observers</module>
+        <module>../PublicadorSuscriptor</module>
+        <module>../Domino64_AdaptadorDTO</module>
+        <module>../Domino64_Cliente</module>
+        <module>../Domino64_EventBuilder</module>
+        <module>../Domino64_EventBus</module>
+        <module>../Domino64_EventoLogico</module>
+        <module>../Domino64_EventoPresentacion</module>
+        <module>../Domino64_Servidor</module>
+        <module>../ManejadorLobby</module>
+        <module>../ManejadorPartida</module>
+        <module>../ManejadorPozo</module>
+        <module>../ManejadorTablero</module>
+        <module>../Domino64_Presentacion</module>
+        <module>../Domino64_Logica</module>
+    </modules>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>21</maven.compiler.release>
+        <exec.mainClass>arqui.domino64_parent.Domino64_Parent</exec.mainClass>
+    </properties>
+    
+</project>

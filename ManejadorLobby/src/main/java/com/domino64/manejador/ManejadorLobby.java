@@ -44,6 +44,7 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
     private AdaptadorEntidad adaptador;
     private AdaptadorDTO adaptadorDTO;
     private Map<Lobby, List<Cuenta>> jugadoresPartidas;
+    private Lobby lobby;
     private List<Partida> partidas;
     private Map<Lobby, List<Cuenta>> jugadoresListos;
     private AtomicBoolean running;

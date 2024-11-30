@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.luisa.manejador;
 
 import abstraccion.ICliente;
@@ -119,7 +115,7 @@ public class ManejadorTurnos extends ObservadorTurno{
         CuentaDTO cuentaDTO = adaptador.adaptarEntidadCuenta(primerJugador.getCuenta());
         
         EventoTurno buscarMula = new EventoTurno(TipoLogicaTurno.JUGADORES_SIN_MULAS);
-        buscarMula.agregarInfo(cuentaDTO);
+        buscarMula.agregarCuenta(cuentaDTO);
         buscarMula.setIdContexto(idContexto);
         buscarMula.setIdPublicador(id);
         
@@ -156,7 +152,7 @@ public class ManejadorTurnos extends ObservadorTurno{
         partidaDTO = adaptador.adaptarEntidadPartida(partida);
         
         for (JugadorDTO jugadorDTO : partidaDTO.getJugadores()) {
-            turnosDesignados.agregarInfo(jugadorDTO.getCuenta());
+            turnosDesignados.agregarCuenta(jugadorDTO.getCuenta());
         }
         turnosDesignados.setPartida(partidaDTO);
         turnosDesignados.setIdContexto(eventoPozo.getIdContexto());
@@ -174,7 +170,7 @@ public class ManejadorTurnos extends ObservadorTurno{
         
         EventoTurno cambioTurno = new EventoTurno(TipoLogicaTurno.CAMBIO_TURNO);
         cambioTurno.setIdContexto(eventoJ.getIdContexto());
-        cambioTurno.agregarInfo(jugadorEnTurnoDTO);
+        cambioTurno.agregarCuenta(jugadorEnTurnoDTO);
         cambioTurno.setIdPublicador(id);
         
         cliente.enviarEvento(cambioTurno);

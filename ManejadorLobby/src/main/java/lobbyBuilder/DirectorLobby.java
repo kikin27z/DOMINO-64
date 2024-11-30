@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package lobbyBuilder;
 
 import builder.DirectorEventos;
@@ -66,7 +62,7 @@ public class DirectorLobby extends DirectorEventos<BuilderEventoLobby> {
     
     public EventoLobby crearEventoActualizarUsername(CuentaDTO cuentaActualizada){
         builder.setIdPublicador(cuentaActualizada.getId());
-        builder.setContexto(cuentaActualizada);
+        builder.setCuenta(cuentaActualizada);
         builder.setTipo(TipoLogicaLobby.ACTUALIZAR_USERNAME);
         return builder.construirEvento();
     }

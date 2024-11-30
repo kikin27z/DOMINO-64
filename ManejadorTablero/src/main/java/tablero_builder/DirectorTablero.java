@@ -1,4 +1,4 @@
-package tablero_notificador;
+package tablero_builder;
 
 import builder.DirectorEventos;
 import entidadesDTO.CuentaDTO;

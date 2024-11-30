@@ -1,19 +1,17 @@
 package lobbyBuilder;
 
 import builder.EventBuilder;
-import entidades.Cuenta;
-import entidades.Partida;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
-import entidadesDTO.PartidaDTO;
 import eventos.EventoLobby;
 import tiposLogicos.TipoLogicaLobby;
 
 /**
  *
- * @author luisa M
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
-public class BuilderEventoLobby implements EventBuilder<CuentaDTO>{
+public class BuilderEventoLobby implements EventBuilder<TipoLogicaLobby>{
     private EventoLobby evento;
     
     public BuilderEventoLobby(){
@@ -21,8 +19,8 @@ public class BuilderEventoLobby implements EventBuilder<CuentaDTO>{
     }
     
     @Override
-    public void setTipo(Enum<?> tipo) {
-        this.evento.setTipo((TipoLogicaLobby)tipo);
+    public void setTipo(TipoLogicaLobby tipo) {
+        this.evento.setTipo(tipo);
     }
 
     @Override
@@ -35,9 +33,8 @@ public class BuilderEventoLobby implements EventBuilder<CuentaDTO>{
         this.evento.setIdContexto(idContexto);
     }
 
-    @Override
-    public void setContexto(CuentaDTO info) {
-        this.evento.agregarInfo(info);
+    public void setCuenta(CuentaDTO info) {
+        this.evento.setPublicador(info);
     }
 
     public void agregarLobby(LobbyDTO lobby){

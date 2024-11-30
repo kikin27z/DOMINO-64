@@ -3,7 +3,6 @@ package eventos;
 
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
-import entidadesDTO.PartidaDTO;
 import tiposLogicos.TipoLogicaLobby;
 
 /**
@@ -14,8 +13,9 @@ import tiposLogicos.TipoLogicaLobby;
  * esta el contexto (la partida donde esta el jugador)
  * Este evento puede ser de cualquier tipo definido en el
  * enum TipoLogicaLobby
- * @author luisa M
- * @author karim F
+ * 
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class EventoLobby extends EventoLogico {
     private LobbyDTO lobby;
@@ -46,10 +46,10 @@ public class EventoLobby extends EventoLogico {
         return publicador;
     }
     
-    @Override
-    public void agregarInfo(Object info) {
-        contexto = info;
-    }
+//    @Override
+//    public void agregarInfo(Object info) {
+//        contexto = info;
+//    }
 
     @Override
     public Object getInfo() {

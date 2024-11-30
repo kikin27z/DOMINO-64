@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
- */
 package tiposLogicos;
 
 /**
@@ -9,7 +5,9 @@ package tiposLogicos;
  * a varios suscriptores.
  * Este tipo de eventos puede ser asignado
  * a cualquier evento logico.
- * @author luisa M
+ * 
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public enum TipoSuscripcion {
     SUSCRIBIR,

@@ -1,6 +1,7 @@
 package eventos;
 
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.LobbyDTO;
@@ -17,11 +18,10 @@ import tiposLogicos.TiposJugador;
  * Asi como se le puede agregar el jugador que genero el evento
  * Este evento puede ser de cualquier tipo definido en el
  * enum TiposJugador
- * @author luisa M
- * @author karim F
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class EventoJugador extends EventoLogico{
-    private Object context;
     private TiposJugador tipo;
     private LobbyDTO lobby;
     private JugadorDTO jugador;
@@ -69,11 +69,6 @@ public class EventoJugador extends EventoLogico{
     public void setPartida(PartidaDTO partida){
         lobby.setPartida(partida);
     }
-    
-    @Override
-    public void agregarInfo(Object contexto) {
-        this.context = contexto;
-    }
 
     @Override
     public TiposJugador getTipo() {
@@ -82,15 +77,14 @@ public class EventoJugador extends EventoLogico{
 
     @Override
     public Object getInfo() {
-        return context;
+        return null;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString());
-        sb.append("{contexto= ").append(context);
-        sb.append(", jugador= ").append(jugador.getCuenta().getUsername());
+        sb.append("{ jugador= ").append(jugador.getCuenta().getUsername());
         sb.append(", tipo= ").append(tipo.toString());
         sb.append('}');
         return sb.toString();

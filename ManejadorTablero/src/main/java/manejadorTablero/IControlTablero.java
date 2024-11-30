@@ -10,8 +10,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Consumer;
-import observer.Observer;
 import tiposLogicos.TiposJugador;
+import observer.Observer;
+import tiposLogicos.TipoJugadorFicha;
 
 /**
  *
@@ -23,7 +24,7 @@ public abstract class IControlTablero implements Observer<Evento> {
     protected static final List<Enum<?>> eventos = new ArrayList<>(
             List.of(
                     TipoError.ERROR_DE_SERVIDOR,
-                    TiposJugador.COLOCAR_FICHA
+                    TipoJugadorFicha.COLOCAR_FICHA
             ));
     
     protected IControlTablero(){
@@ -38,7 +39,7 @@ public abstract class IControlTablero implements Observer<Evento> {
     
     //
     protected void setConsumers(){
-        consumers.putIfAbsent(TiposJugador.COLOCAR_FICHA, this::colocarFicha);
+        consumers.putIfAbsent(TipoJugadorFicha.COLOCAR_FICHA, this::colocarFicha);
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
     }
     

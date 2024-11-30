@@ -31,7 +31,7 @@ public class App extends Application{
     public void start(Stage stage) throws Exception {
         // Establece el fondo (escenario).
         Navegacion.getInstance().setFondo(stage);
-        Navegacion.getInstance().cambiarPartida();
+        Navegacion.getInstance().cambiarInicio();
         
         
         // Establece el icono de la aplicación.

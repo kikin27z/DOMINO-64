@@ -86,7 +86,7 @@ public class ManejadorPartida extends ObservadorPartida implements Runnable{
         EventoPartida terminoPartida = new EventoPartida(TipoLogicaPartida.TERMINO_PARTIDA);
         terminoPartida.setIdContexto(idsContextos.get(partida));
         terminoPartida.setIdPublicador(id);
-        terminoPartida.agregarInfo(adaptador.adaptarEntidadPartida(partida));
+        terminoPartida.agregarPartida(adaptador.adaptarEntidadPartida(partida));
         
         partidas.remove(partida);
         idsContextos.remove(partida);
@@ -109,7 +109,7 @@ public class ManejadorPartida extends ObservadorPartida implements Runnable{
                 });
                 
                 EventoPartida jugadorSalio = new EventoPartida(TipoLogicaPartida.JUGADOR_SALIO);
-                jugadorSalio.agregarInfo(adaptador.adaptarEntidadPartida(partida));
+                jugadorSalio.agregarPartida(adaptador.adaptarEntidadPartida(partida));
                 jugadorSalio.setJugador(adaptador.adaptarEntidadJugador(exJugador));
                 jugadorSalio.setIdContexto(idsContextos.get(partida));
                 jugadorSalio.setIdPublicador(id);

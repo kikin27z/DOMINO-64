@@ -9,15 +9,16 @@ import domino64.eventos.base.Evento;
  * Al igual que Evento, maneja tipos genericos; esto es para que 
  * los eventos logicos concretos puedan definir que entidad va 
  * a ser el contexto del evento. 
+ * 
  * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author José Karim Franco Valencia - 00000245138
  * @param <T> Tipo de entidad que va a tener como contexto este evento
  */
-public abstract class EventoLogico<T> implements Evento{
+public abstract class EventoSub<T> implements Evento{
     private int idPublicador;
     private int idContexto;
     
-    public EventoLogico(){
+    public EventoSub(){
         this.idPublicador = 0;
         this.idContexto = 0;
     }
@@ -30,7 +31,7 @@ public abstract class EventoLogico<T> implements Evento{
      * y no un solo objeto de dicha entidad.
      * @param info Contexto que se va a agregar al evento
      */
-//    public abstract void agregarInfo(T info);
+    public abstract void agregarInfo(T info);
 
     public void setIdPublicador(int id){
         this.idPublicador = id;

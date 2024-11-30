@@ -13,7 +13,7 @@ import tiposLogicos.TipoSuscripcion;
  * @author luisa M
  */
 public class DirectorSuscripcion extends DirectorEventos<BuilderEventoSuscripcion> {
-    private int idPublicador;
+    private final int idPublicador;
     
     public DirectorSuscripcion(BuilderEventoSuscripcion builder, int idPublicador) {
         super(builder);

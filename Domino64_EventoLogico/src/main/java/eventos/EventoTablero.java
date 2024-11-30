@@ -22,10 +22,10 @@ public class EventoTablero extends EventoLogico<FichaDTO>{
         this.tipo = tipo;
     }
 
-    @Override
-    public void agregarInfo(FichaDTO info) {
-        ficha = info;
-    }
+//    @Override
+//    public void agregarInfo(FichaDTO info) {
+//        ficha = info;
+//    }
 
     @Override
     public FichaDTO getInfo() {

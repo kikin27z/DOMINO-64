@@ -1,5 +1,6 @@
-package implementacion;
+package cliente_conexion;
 
+import implementacion.*;
 import abstraccion.ICliente;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.EventoError;
@@ -18,15 +19,15 @@ import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import observer.Observable;
-import observer.Observer;
+import cliente_suscripciones.ObservableCliente;
+import cliente_suscripciones.ObserverCliente;
 
 /**
  *
  * @author luisa M
  */
-public class Client extends Observable<Evento> implements ICliente{
-    private static Client cliente;
+public class Client2 extends ObservableCliente<Evento> implements ICliente2{
+    private static Client2 cliente;
     private String host;
     private final int port;
     private int clientId;
@@ -41,7 +42,7 @@ public class Client extends Observable<Evento> implements ICliente{
     private BlockingQueue<Evento> colaEventos;
     
     
-    private Client(){
+    private Client2(){
         String ip = pedirIP();
         this.host = ip;
         this.port = 5000;
@@ -59,9 +60,9 @@ public class Client extends Observable<Evento> implements ICliente{
         colaEventos = new LinkedBlockingQueue();
     }
     
-    public static synchronized Client iniciarComunicacion(){
+    public static synchronized Client2 iniciarComunicacion(){
         if(cliente == null)
-            cliente = new Client();
+            cliente = new Client2();
         return cliente;
     }
     
@@ -237,14 +238,14 @@ public class Client extends Observable<Evento> implements ICliente{
     
 
     @Override
-    public void agregarSuscripcion(Evento evento, Observer ob) {
+    public void agregarSuscripcion(Evento evento, ObserverCliente ob) {
         suscripcionesEventos.add((Enum<?>)evento.getInfo());
         addObserver((Enum<?>)evento.getInfo(), ob);
         enviarEvento(evento);
     }
 
     @Override
-    public void removerSuscripcion(Evento evento, Observer ob) {
+    public void removerSuscripcion(Evento evento, ObserverCliente ob) {
         suscripcionesEventos.remove((Enum<?>)evento.getInfo());
         removeObserver((Enum<?>)evento.getInfo(), ob);
         enviarEvento(evento);

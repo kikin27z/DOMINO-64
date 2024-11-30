@@ -1,7 +1,6 @@
 package manejadorTablero;
 
 import adapter.AdaptadorDTO;
-import adapter.AdaptadorEntidad;
 import entidades.Ficha;
 import entidades.Tablero;
 import entidadesDTO.FichaDTO;

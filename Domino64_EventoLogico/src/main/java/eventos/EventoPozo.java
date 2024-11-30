@@ -1,7 +1,6 @@
 package eventos;
 
 import entidadesDTO.FichaDTO;
-import java.util.ArrayList;
 import java.util.List;
 import tiposLogicos.TipoLogicaPozo;
 /**
@@ -9,7 +8,7 @@ import tiposLogicos.TipoLogicaPozo;
  * @author luisa M
  */
 public class EventoPozo extends EventoLogico{
-    private Object contexto;
+//    private Object contexto;
     private List<FichaDTO> fichas;
     private FichaDTO ficha;
     private TipoLogicaPozo tipo;
@@ -21,15 +20,19 @@ public class EventoPozo extends EventoLogico{
         this.tipo = tipo;
     }
     
-    @Override
-    public void agregarInfo(Object info) {
-        this.contexto = info;
+    public void agregarFicha(FichaDTO ficha){
+        this.ficha = ficha;
     }
+    
+//    @Override
+//    public void agregarInfo(Object info) {
+//        this.contexto = info;
+//    }
 
-    @Override
-    public Object getInfo() {
-        return contexto;
-    }
+//    @Override
+//    public Object getInfo() {
+//        return contexto;
+//    }
     
     
     public List<FichaDTO> getFichas(){
@@ -43,5 +46,10 @@ public class EventoPozo extends EventoLogico{
     
     public void setTipo(TipoLogicaPozo tipo){
         this.tipo = tipo;
+    }
+
+    @Override
+    public Object getInfo() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

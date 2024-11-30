@@ -160,7 +160,7 @@ public class ManejadorPozo extends ObservadorPozo implements Runnable{
             Ficha ficha = jalarFicha(pozos.get(partida));
             
             eventoPozo = new EventoPozo(TipoLogicaPozo.FICHA_OBTENIDA);
-            eventoPozo.agregarInfo(adaptadorEntidad.adaptarEntidadFicha(ficha));
+            eventoPozo.agregarFicha(adaptadorEntidad.adaptarEntidadFicha(ficha));
             eventoPozo.setIdContexto(eventoJugador.getIdContexto());
             eventoPozo.setIdPublicador(id);
             
@@ -190,7 +190,7 @@ public class ManejadorPozo extends ObservadorPozo implements Runnable{
         pozos.put(partida, pozo);
         
         EventoPozo fichasRepartidas = new EventoPozo(TipoLogicaPozo.FICHAS_REPARTIDAS);
-        fichasRepartidas.agregarInfo(adaptadorEntidad.adaptarEntidadPartida(partida));
+//        fichasRepartidas.agregarInfo(adaptadorEntidad.adaptarEntidadPartida(partida));
         fichasRepartidas.setIdContexto(eventoLobby.getIdContexto());
         fichasRepartidas.setIdPublicador(id);
         

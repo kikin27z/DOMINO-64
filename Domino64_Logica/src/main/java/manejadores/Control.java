@@ -1,13 +1,10 @@
 package manejadores;
 
 import abstraccion.ICliente;
-import eventoss.EventoMVC;
-import eventoss.EventoMVCDisplay;
 import eventoss.EventoMVCJugador;
 import eventoss.TipoJugadorMVC;
 import implementacion.Client;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import logicaLobby.ManejadorCuenta;
@@ -96,8 +93,7 @@ public class Control {
     }
     
     private void subscribirManejadores() {
-        String ip = pedirIP();
-        Client client = Client.getClient(ip, 5000);
+        Client client = Client.iniciarComunicacion();
 
         for (Enum<?> evento : MediadorManejadores.getManejadorCuenta().getEventos()) {
             client.addObserver(evento, MediadorManejadores.getManejadorCuenta());
@@ -186,19 +182,4 @@ public class Control {
         });
     }
 
-    private void solicitarCrearCliente() {
-        System.out.println("");
-    }
-
-    private static String pedirIP() {
-        Scanner input = new Scanner(System.in);
-        System.out.print("Escribe la ip del servidor: ");
-        String ip = input.nextLine();
-
-        if (ip.isBlank()) {
-            return "localhost";
-        }
-        return ip;
-
-    }
 }
