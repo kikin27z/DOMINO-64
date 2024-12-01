@@ -152,6 +152,7 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
         CuentaDTO cuentaDTO = adapterEntidad.adaptarEntidadCuenta(cuenta);
         EventoJugador eventoJ = directorEventos.crearEventoAbandonarPartida(lobbyDTO, cuentaDTO);
         cliente.enviarEvento(eventoJ);
+        removerIdContexto();
     }
     
     public void actualizarJugadorListo(EventoMVCJugador evento){
@@ -198,6 +199,8 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
             ControlEventos.procesarEventosAPresentacion();
             ControlEventos.enviarEventoAPresentacion(evento);
             removerSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA);
+            agregarIdContexto(generarIdContextoPartida(lobbyDTO));
+            
             //lobbyDTO.asignarIdJugadorActual(cuenta.getIdCadena());
 //            manejadorDisplay.avisarMostrarLobby(lobbyDTO);
         }
@@ -215,6 +218,17 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
             }
         }
     }
+    
+    private void agregarIdContexto(int idContexto){
+        EventoSuscripcion suscripcion = directorSuscripciones.crearEventoEstablecerIdContexto(idContexto);
+        cliente.enviarEvento(suscripcion);
+    }
+    
+    private void removerIdContexto(){
+        EventoSuscripcion desuscripcion = directorSuscripciones.crearEventoRemoverIdContexto();
+        cliente.enviarEvento(desuscripcion);
+    }
+    
     
     private void agregarSuscripcion(Enum tipoEvento, Consumer<Evento> consumer){
         EventoSuscripcion suscripcion = directorSuscripciones.crearEventoSuscribirse(tipoEvento);

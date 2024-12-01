@@ -65,13 +65,13 @@ public class ControlEventos {
         enviarEventoALogica(evento);
     }
     
-    public static int mensajesLobby(boolean listo) {
+    public static int mensajesLobby(boolean listoActualmente) {
         int opcion;
         String msjListo;
-        if(!listo)
-            msjListo="estas";
-        else
+        if(listoActualmente)
             msjListo="no estas";
+        else
+            msjListo="estas";
         System.out.println("------------------------");
         do {
             System.out.println("Presiona 1 para abandonar la partida");
@@ -88,10 +88,10 @@ public class ControlEventos {
                 evento.setTipo(TipoJugadorMVC.ABANDONAR_LOBBY);
             }
             case 2 -> {
-                if(listo)
-                    evento.setTipo(TipoJugadorMVC.JUGADOR_LISTO);
-                else
+                if(listoActualmente)
                     evento.setTipo(TipoJugadorMVC.JUGADOR_NO_LISTO);
+                else
+                    evento.setTipo(TipoJugadorMVC.JUGADOR_LISTO);
             }
             case 3 -> {
                 evento.setTipo(TipoJugadorMVC.CAMBIAR_AVATAR);
