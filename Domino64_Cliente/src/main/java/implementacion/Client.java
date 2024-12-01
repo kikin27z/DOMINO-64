@@ -56,11 +56,7 @@ public class Client extends Observable<Evento> implements ICliente{
             return t;
         });
         
-        this.ejecutorEventos = Executors.newSingleThreadExecutor(r -> {
-            Thread t = new Thread(r);
-            return t;
-        });
-        
+        this.ejecutorEventos = Executors.newCachedThreadPool();
         suscripcionesEventos = new ArrayList<>();
         colaEventos = new LinkedBlockingQueue();
     }

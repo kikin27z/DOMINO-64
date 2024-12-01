@@ -60,7 +60,7 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
         partidas = new CopyOnWriteArrayList<>();
         adaptador = new AdaptadorEntidad();
         adaptadorDTO = new AdaptadorDTO();
-        ejecutorEventos = Executors.newSingleThreadExecutor();
+        ejecutorEventos = Executors.newFixedThreadPool(2);
         running = new AtomicBoolean(true);
         setConsumers();
     }
@@ -451,9 +451,10 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
         _cliente.iniciar();
         id = _cliente.getClientId();
         director = new DirectorLobby(new BuilderEventoLobby(), id);
-        Thread t = new Thread(this::sendEvent);
-        t.setName("hilo 2 manejador lobby");
-        t.start();
+//        Thread t = new Thread(this::sendEvent);
+//        t.setName("hilo 2 manejador lobby");
+//        t.start();
+        ejecutorEventos.submit(this::sendEvent);
         ejecutorEventos.submit(this);
     }
 }
