@@ -32,7 +32,7 @@ public class HiloJugador implements Runnable, Subscriber{
     private final Publicador publicador;
     private ObjectOutputStream output;
     private ObjectInputStream input;
-    private List<Enum<?>> suscripciones;
+    private List<Enum> suscripciones;
     private volatile boolean running;
     private ExecutorService ejecutorEventos;
     private BlockingQueue<Evento> colaEventosBus;
@@ -105,10 +105,10 @@ public class HiloJugador implements Runnable, Subscriber{
      */
     private void recibirSuscripciones() throws IOException, ClassNotFoundException{
         suscripciones = null;
-        suscripciones = (List<Enum<?>>) input.readObject();
+        suscripciones = (List<Enum>) input.readObject();
 
         if (suscripciones != null) {
-            for (Enum<?> suscripcion : suscripciones) {
+            for (Enum suscripcion : suscripciones) {
                 suscribirEvento(suscripcion);
             }
         }
@@ -120,7 +120,7 @@ public class HiloJugador implements Runnable, Subscriber{
      * 
      * @param tipoEvento Tipo de evento al cual se va a suscribir
      */
-    private void suscribirEvento(Enum<?> tipoEvento){
+    private void suscribirEvento(Enum tipoEvento){
        publicador.suscribir(tipoEvento,this);
     }
     
@@ -130,7 +130,7 @@ public class HiloJugador implements Runnable, Subscriber{
      * 
      * @param tipoEvento Tipo de evento al cual se va a desuscribir
      */
-    private void removerSuscripcion(Enum<?> tipoEvento){
+    private void removerSuscripcion(Enum tipoEvento){
         publicador.desuscribir(tipoEvento,this);
     }
 
@@ -139,17 +139,17 @@ public class HiloJugador implements Runnable, Subscriber{
      * eventos en el bus
      */
     private void removerSuscripciones(){
-        for (Enum<?> suscripcion : suscripciones) {
+        for (Enum suscripcion : suscripciones) {
             removerSuscripcion(suscripcion);
         }
     }
     
     private void manejarEvento(Evento evento) {
-        Enum<?> tipo = evento.getTipo();
+        Enum tipo = evento.getTipo();
         if (tipo instanceof TipoSuscripcion tipoSub){
             switch (tipoSub) {
-                case SUSCRIBIR -> suscribirEvento((Enum<?>) evento.getInfo());
-                case DESUSCRIBIR -> removerSuscripcion((Enum<?>) evento.getInfo());
+                case SUSCRIBIR -> suscribirEvento((Enum) evento.getInfo());
+                case DESUSCRIBIR -> removerSuscripcion((Enum) evento.getInfo());
                 case ESTABLECER_ID_CONTEXTO -> setIdContexto(evento.getIdContexto());
                 case REMOVER_ID_CONTEXTO -> setIdContexto(0);
             }

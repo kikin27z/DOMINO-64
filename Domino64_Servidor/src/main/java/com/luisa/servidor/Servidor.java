@@ -122,7 +122,7 @@ public class Servidor {
     private void recibirComponentes() {
         Socket socket;
         try {
-            while (clientesComponentes.size()<6) {
+            while (clientesComponentes.size()<2) {
                 socket = servidor.accept();
                 componenteId++;
                 Publisher publicador = new Publisher();
@@ -179,7 +179,7 @@ public class Servidor {
             imprimirIP();
             recibirComponentes();
             System.out.println("componentes conectados");
-            //recibirJugadores();
+            recibirJugadores();
         } catch (IOException e) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, e);
             desconectarClientes();

@@ -58,9 +58,9 @@ public class ManejadorPartida extends ObservadorPartida implements Runnable{
         _cliente.iniciar();
         this.cliente = _cliente;
         id = _cliente.getClientId();
-        Thread t = new Thread(this::sendEvent);
-        t.setName("hilo 2 manejador partida");
-        t.start();
+//        Thread t = new Thread(this::sendEvent);
+//        t.setName("hilo 2 manejador partida");
+//        t.start();
         ejecutorEventos.submit(this);
     }
     
@@ -148,28 +148,28 @@ public class ManejadorPartida extends ObservadorPartida implements Runnable{
         EventoJugador eventoJ = (EventoJugador)evento;
         System.out.println("ME LLEGO EL EVENTO DE ABANDONAR PARTIDA!!!");
         System.out.println("info: "+eventoJ.getInfo());
-//        Partida partida = adaptadorDTO.adaptarPartidaDTO(eventoJ.getPartida());
-//        
-//        if(partidas.containsKey(partida)){
-//            List<Jugador> jugadoresActuales = partidas.get(partida);
-//            if(jugadoresActuales.size() == 2){
-//                terminarPartida(partida);
-//            }else{
-//                Jugador exJugador = adaptadorDTO.adaptarJugadorDTO(eventoJ.getJugador());
-//                partidas.compute(partida, (p, j) -> {
-//                    j.remove(exJugador);
-//                    return j;
-//                });
-//                
-//                EventoPartida jugadorSalio = new EventoPartida(TipoLogicaPartida.JUGADOR_SALIO);
-//                jugadorSalio.agregarInfo(adaptador.adaptarEntidadPartida(partida));
-//                jugadorSalio.setJugador(adaptador.adaptarEntidadJugador(exJugador));
-//                jugadorSalio.setIdContexto(idsContextos.get(partida));
-//                jugadorSalio.setIdPublicador(id);
-//                
-//                
-//            }
-//        }
+        Partida partida = adaptadorDTO.adaptarPartidaDTO(eventoJ.getPartida());
+        
+        if(partidas.containsKey(partida)){
+            List<Jugador> jugadoresActuales = partidas.get(partida);
+            if(jugadoresActuales.size() == 2){
+                terminarPartida(partida);
+            }else{
+                Jugador exJugador = adaptadorDTO.adaptarJugadorDTO(eventoJ.getJugador());
+                partidas.compute(partida, (p, j) -> {
+                    j.remove(exJugador);
+                    return j;
+                });
+                
+                EventoPartida jugadorSalio = new EventoPartida(TipoLogicaPartida.JUGADOR_SALIO);
+                jugadorSalio.agregarInfo(adaptador.adaptarEntidadPartida(partida));
+                jugadorSalio.setJugador(adaptador.adaptarEntidadJugador(exJugador));
+                jugadorSalio.setIdContexto(idsContextos.get(partida));
+                jugadorSalio.setIdPublicador(id);
+                
+                
+            }
+        }
     }
     
     private boolean suficientesPeticiones(Partida partida){
@@ -185,19 +185,19 @@ public class ManejadorPartida extends ObservadorPartida implements Runnable{
         System.out.println("ME LLEGO EL EVENTO DE PETICION RENDIRSE");
         System.out.println("info: "+eventoJ.getInfo());
         
-//        Partida partida = adaptadorDTO.adaptarPartidaDTO(eventoJ.getPartida());
-//        
-//        if(eventoJ.getCuenta() != null){
-//            if (peticionesRendirse.containsKey(partida)) {
-//                peticionesRendirse.compute(partida, (p, pet) -> pet++);
-//            } else {
-//                peticionesRendirse.put(partida, 1);
-//            }
-//        }
-//        if(suficientesPeticiones(partida)){
-//            terminarPartida(partida);
-//            peticionesRendirse.remove(partida);
-//        }
+        Partida partida = adaptadorDTO.adaptarPartidaDTO(eventoJ.getPartida());
+        
+        if(eventoJ.getCuenta() != null){
+            if (peticionesRendirse.containsKey(partida)) {
+                peticionesRendirse.compute(partida, (p, pet) -> pet++);
+            } else {
+                peticionesRendirse.put(partida, 1);
+            }
+        }
+        if(suficientesPeticiones(partida)){
+            terminarPartida(partida);
+            peticionesRendirse.remove(partida);
+        }
     }
 
     @Override

@@ -55,7 +55,7 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
     public ManejadorCuenta() {
         super();
         cuenta = new Cuenta();
-        cliente = Control.obtenerCliente();
+        //cliente = Client.;
         adapterEntidad = new AdaptadorEntidad();
         adapterDTO = new AdaptadorDTO();
         directorEventos = new DirectorEventosLobby(new BuilderEventoJugador());
@@ -207,7 +207,7 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
         removerEvento(tipoEvento);
     }
     
-    public void init(Client cliente) {
+    public void init(ICliente cliente) {
         directorEventos = new DirectorEventosLobby(new BuilderEventoJugador());
         cliente.establecerSuscripciones(eventos);
         this.cliente = cliente;
@@ -230,7 +230,9 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
                 jugadoresListos.compute(jugadorEvento, (j,b) -> b = false);
         }
         
-        MediadorManejadores.enviarADisplay(ev);
+        System.out.println("");
+        
+        //MediadorManejadores.enviarADisplay(ev);
     }
 
     @Override

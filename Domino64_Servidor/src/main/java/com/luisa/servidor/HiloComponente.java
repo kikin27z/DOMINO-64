@@ -132,7 +132,6 @@ public class HiloComponente  implements Runnable, Subscriber{
             Thread t = new Thread(this::sendEvent);
             t.setName("hilo 2");
             t.start();
-            System.out.println("¡???¡¡¡");
             Evento evento;
             while((evento = (Evento)input.readObject()) != null){
                 manejarEvento(evento);

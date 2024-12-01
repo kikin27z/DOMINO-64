@@ -266,15 +266,15 @@ public class Client extends Observable<Evento> implements ICliente{
 
     @Override
     public void agregarSuscripcion(Evento evento, Observer ob) {
-        suscripcionesEventos.add((Enum<?>)evento.getInfo());
-        addObserver((Enum<?>)evento.getInfo(), ob);
+        suscripcionesEventos.add((Enum)evento.getInfo());
+        addObserver((Enum)evento.getInfo(), ob);
         enviarEvento(evento);
     }
 
     @Override
     public void removerSuscripcion(Evento evento, Observer ob) {
-        suscripcionesEventos.remove((Enum<?>)evento.getInfo());
-        removeObserver((Enum<?>)evento.getInfo(), ob);
+        suscripcionesEventos.remove((Enum)evento.getInfo());
+        removeObserver((Enum)evento.getInfo(), ob);
         enviarEvento(evento);
     }
 
