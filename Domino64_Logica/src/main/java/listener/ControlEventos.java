@@ -68,7 +68,7 @@ public class ControlEventos {
     public static int mensajesLobby(boolean listo) {
         int opcion;
         String msjListo;
-        if(listo)
+        if(!listo)
             msjListo="estas";
         else
             msjListo="no estas";

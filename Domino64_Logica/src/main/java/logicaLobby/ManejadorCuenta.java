@@ -42,7 +42,16 @@ import utilities.DirectorSuscripcion;
  * @author José Karim Franco Valencia - 00000245138
  */
 public class ManejadorCuenta extends ObservadorLobbyLocal {
-
+    private List<AvatarDTO> avatares = new ArrayList<>(List.of(
+            AvatarDTO.AVE,
+            AvatarDTO.GATO,
+            AvatarDTO.JAGUAR,
+            AvatarDTO.KIWI,
+            AvatarDTO.MARIPOSA,
+            AvatarDTO.PANDA,
+            AvatarDTO.SERPIENTE,
+            AvatarDTO.TORTUGA,
+            AvatarDTO.VENADO));
     private ICliente cliente;
     private DirectorEventosLobby directorEventos;
     private DirectorSuscripcion directorSuscripciones;
@@ -52,6 +61,7 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
     private LobbyDTO lobbyDTO;
     private Map<CuentaDTO, Boolean> jugadoresListos;
     private List<CuentaDTO> jugadoresLobby;
+    private boolean listo;
     
     public ManejadorCuenta() {
         super();
@@ -72,19 +82,41 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
     }
     
     public void actualizarAvatar(EventoMVCJugador evento){
-        CuentaDTO cuentaDTO = evento.getPublicador();
-        if(validarCambioAvatar(cuentaDTO.getAvatar())){
-            cuenta.setAvatar(adapterDTO.adaptarAvatarDTO(cuentaDTO.getAvatar()));
-            EventoJugador cambioAv = directorEventos.crearEventoCambiarAvatar(lobbyDTO, cuentaDTO);
-            
-            System.out.println("-------------------");
-            System.out.println("Ahora tu avatar es "+cuentaDTO.getAvatar().getAnimal());
-            System.out.println("-------------------");
-            
-            //MediadorManejadores.enviarADisplay(cambioAv);
-            
-            cliente.enviarEvento(cambioAv);
+        List<AvatarDTO> avataresLibres = new ArrayList<>(avatares);
+        for (CuentaDTO c : jugadoresLobby) {
+            avataresLibres.remove(c.getAvatar());
         }
+        
+        int indexAvatarElegido = ControlEventos.mensajesSeleccionAvatar(avataresLibres);
+        
+        AvatarDTO avatarElegido = avataresLibres.get(indexAvatarElegido);
+        cuenta.setAvatar(adapterDTO.adaptarAvatarDTO(avatarElegido));
+        
+        CuentaDTO cuentaDTO = adapterEntidad.adaptarEntidadCuenta(cuenta);
+        
+        EventoJugador cambioAv = directorEventos.crearEventoCambiarAvatar(lobbyDTO, cuentaDTO);
+        
+        System.out.println("-------------------");
+        System.out.println("Ahora tu avatar es " + cuentaDTO.getAvatar().getAnimal());
+        System.out.println("-------------------");
+
+        cliente.enviarEvento(cambioAv);
+        
+        ControlEventos.mensajesLobby(listo);
+        
+//        CuentaDTO cuentaDTO = evento.getPublicador();
+//        if(validarCambioAvatar(cuentaDTO.getAvatar())){
+//            cuenta.setAvatar(adapterDTO.adaptarAvatarDTO(cuentaDTO.getAvatar()));
+//            EventoJugador cambioAv = directorEventos.crearEventoCambiarAvatar(lobbyDTO, cuentaDTO);
+//            
+//            System.out.println("-------------------");
+//            System.out.println("Ahora tu avatar es "+cuentaDTO.getAvatar().getAnimal());
+//            System.out.println("-------------------");
+//            
+//            //MediadorManejadores.enviarADisplay(cambioAv);
+//            
+//            cliente.enviarEvento(cambioAv);
+//        }
         
     }
     
@@ -125,15 +157,20 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
     public void actualizarJugadorListo(EventoMVCJugador evento){
         CuentaDTO cuentaDTO = adapterEntidad.adaptarEntidadCuenta(cuenta);
         
-        boolean flag =evento.getTipo().equals(TipoJugadorMVC.JUGADOR_LISTO);
-        EventoJugador ev = directorEventos.crearEventoActualizarJugadorListo(lobbyDTO,cuentaDTO, flag);
-        
-        //MediadorManejadores.enviarADisplay(ev);
+        listo =evento.getTipo().equals(TipoJugadorMVC.JUGADOR_LISTO);
+        EventoJugador ev = directorEventos.crearEventoActualizarJugadorListo(lobbyDTO,cuentaDTO, listo);
+        String msj;
+        if(listo)
+            msj = "Ahora estas listo";
+        else
+            msj = "Ahora no estas listo";
         System.out.println("-------------------");
-        System.out.println("Jugador "+ cuenta.getNombre()+" listo");
+        System.out.println(msj);
         System.out.println("-------------------");
 
         cliente.enviarEvento(ev);
+        
+        ControlEventos.mensajesLobby(listo);
     }
     
     private int generarIdContextoPartida(LobbyDTO partida){
@@ -154,7 +191,6 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
             cuenta = adapterDTO.adaptarCuentaDTO(lobbyDTO.getCuentaActual());
             
             jugadoresLobby = lobbyDTO.getCuentas();
-            
             jugadoresListos = lobbyDTO.getMapaJugadoresListos();
             //establecerJugadoresListos();
             
@@ -209,13 +245,22 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
         EventoLobby ev = esEventoDeEsteLobby(evento);
         if(ev != null){
             CuentaDTO jugadorEvento = ev.getPublicador();
+            StringBuilder msj = new StringBuilder("El jugador "+jugadorEvento.getUsername());
             if(ev.getTipo().equals(TipoLogicaLobby.JUGADOR_LISTO)){
                 jugadoresListos.compute(jugadorEvento, (j,b) -> b = true);
-            }else
+                msj.append(" esta listo");
+            }else{
                 jugadoresListos.compute(jugadorEvento, (j,b) -> b = false);
+                msj.append(" no esta listo");
+            }
+            
+            System.out.println("-------------------");
+            System.out.println(msj.toString());
+            System.out.println("-------------------");
+            
         }
         
-        System.out.println("");
+        
         
         //MediadorManejadores.enviarADisplay(ev);
     }

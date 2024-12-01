@@ -20,6 +20,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import listener.ControlEventos;
 import presentacion_utilities.ControladorComunicacion;
 import presentacion_utilities.FachadaPresentacion;
 import presentacion_utilities.INavegacion;
@@ -178,6 +179,7 @@ public final class ManejadorDisplay implements ObserverPantalla{
 
         LobbyDTO lobbyDTO = eventoLobby.obtenerLobby();
         
+        ControlEventos.mensajesLobby(false);
         
 //        EventoLobby ev = (EventoLobby)evento;
 //        EventoMVCDisplay eventoDisplay = new EventoMVCDisplay();

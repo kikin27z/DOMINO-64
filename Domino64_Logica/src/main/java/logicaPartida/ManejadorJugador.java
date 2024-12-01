@@ -45,8 +45,8 @@ public class ManejadorJugador extends ObservadorPartidaLocal{
     public void init(Client cliente) {
         cliente.establecerSuscripciones(eventos);
         this.cliente = cliente;
-        directorEventos = new DirectorEventosPartida(new BuilderEventoJugador(),
-                adaptadorEntidad.adaptarEntidadCuenta(jugador.getCuenta()));
+//        directorEventos = new DirectorEventosPartida(new BuilderEventoJugador(),
+//                adaptadorEntidad.adaptarEntidadCuenta(jugador.getCuenta()));
         setConsumers();
     }
     
