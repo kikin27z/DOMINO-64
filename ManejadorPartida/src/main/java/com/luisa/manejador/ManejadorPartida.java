@@ -55,7 +55,6 @@ public class ManejadorPartida extends ObservadorPartida implements Runnable{
      * @param _cliente el cliente a establecerle al manejador
      */
     public void vincularCliente(Client _cliente) {
-        _cliente.establecerSuscripciones(eventos);
         _cliente.iniciar();
         this.cliente = _cliente;
         id = _cliente.getClientId();

@@ -131,7 +131,7 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
                 }
             }
             evento.agregarInfo(msj);
-            evento.setIdPublicador(id);
+            evento.setIdPublicador(getIdManejador());
             
             System.out.println("Evento creado: " + evento.getTipo());
             System.out.println("Mensaje evento: " + evento.getInfo());

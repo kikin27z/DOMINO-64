@@ -14,7 +14,7 @@ public class Principal {
         Client c = Client.getClient(ip, 5000);
         ManejadorLobby manejador = new ManejadorLobby();
 
-        for (Enum<?> suscripcion : eventos) {
+        for (Enum suscripcion : eventos) {
             c.addObserver(suscripcion, manejador);
         }
         

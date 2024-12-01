@@ -22,8 +22,6 @@ public abstract class EventoLogico<T> implements Evento{
     private int idContexto;
     
     public EventoLogico(){
-        this.idPublicador = 0;
-        this.idContexto = 0;
     }
     /**
      * este metodo es abstracto pensando en la posibilidad

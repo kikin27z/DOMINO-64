@@ -126,7 +126,7 @@ public class Servidor {
                 socket = servidor.accept();
                 componenteId++;
                 Publisher publicador = new Publisher();
-                publicador.setId(jugadorId);
+                publicador.setId(componenteId);
                 HiloComponente componente = new HiloComponente(publicador, socket, componenteId);
                 threadPoolComponentes.execute(componente);
                 clientesComponentes.putIfAbsent(componenteId, componente);

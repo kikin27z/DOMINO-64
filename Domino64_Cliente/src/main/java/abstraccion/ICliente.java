@@ -14,7 +14,7 @@ import observer.Observer;
  */
 public interface ICliente {
     public void enviarEvento(Evento evento);
-    public void establecerSuscripciones(List<Enum<?>> suscripciones);
+    public void establecerSuscripciones(List<Enum> suscripciones);
     public void agregarSuscripcion(Evento evento, Observer ob);
     public void removerSuscripcion(Evento evento, Observer ob);
     //public void enviarTiposEventos(List<Enum<?>> tiposEvento);

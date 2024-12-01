@@ -33,7 +33,7 @@ public class BusCore {
      * @param tipo El tipo de evento a publicar
      * @param evento El evento a publicar
      */
-    public void postEvent(Enum<?> tipo, Evento evento){
+    public void postEvent(Enum tipo, Evento evento){
         if(evento instanceof EventoError eventoError){
             messenger.notifyError(eventoError);
         }else{
@@ -47,7 +47,7 @@ public class BusCore {
      * @param sub El suscriptor a agregar al conjunto de suscriptores para dicho evento
      * @param eventType El tipo de evento al cual se quiere suscribir
      */
-    public void addSub(Subscriber sub, Enum<?> eventType){
+    public void addSub(Subscriber sub, Enum eventType){
         messenger.addSubscriber(sub, eventType);
         System.out.println("se agergo sub "+sub.getSubscriberId()+" a categoria: "+eventType.toString());
     }
@@ -57,7 +57,7 @@ public class BusCore {
      * @param sub El suscriptor a eliminar del conjunto de suscriptores para dicho evento
      * @param eventType El tipo de evento del cual se quiere desuscribir
      */
-    public void removeSub(Subscriber sub, Enum<?> eventType){
+    public void removeSub(Subscriber sub, Enum eventType){
         messenger.removeSubscriber(sub, eventType);
     }
 }

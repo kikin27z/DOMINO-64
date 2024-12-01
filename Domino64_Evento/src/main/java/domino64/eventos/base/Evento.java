@@ -23,7 +23,7 @@ public interface Evento<T> extends Serializable{
      * posibles tipos que puede ser un evento
      * @return El enum indicando el tipo de evento
      */
-    public Enum<?> getTipo() ;
+    public Enum getTipo() ;
     /**
      * Obtiene el id del publicador del evento
      * @return un entero representando el id

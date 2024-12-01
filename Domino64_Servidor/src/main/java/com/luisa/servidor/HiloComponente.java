@@ -54,13 +54,14 @@ public class HiloComponente  implements Runnable, Subscriber{
     private final int id;
     private final int idContexto = 0;
     private Publicador publicador;
-    private List<Enum<?>> suscripciones;
+    private List<Enum> suscripciones;
     private AtomicBoolean running;
-    private static BlockingQueue<Evento> colaEventos;
+    private final BlockingQueue<Evento> colaEventos;
     
     public HiloComponente(Publicador publicador, Socket socket, int id){
         this.publicador = publicador;
         this.id = id;
+        
         this.socket = socket;
         colaEventos = new LinkedBlockingQueue();
         running = new AtomicBoolean(true);
@@ -99,7 +100,7 @@ public class HiloComponente  implements Runnable, Subscriber{
         System.out.println("mensaje recibido: "+evento.getInfo());
         System.out.println("componente: "+id);
         System.out.println("------");
-        Enum<?> tipo = evento.getTipo();
+        Enum tipo = evento.getTipo();
         System.out.println("tipo: " + tipo);
         if (tipo.equals(TipoSuscripcion.SUSCRIBIR)) {
             suscribirEvento(tipo);
@@ -126,7 +127,6 @@ public class HiloComponente  implements Runnable, Subscriber{
             //enviar el id asignado al cliente
             output.writeInt(id);
             output.flush();
-            //input = new ObjectInputStream(socket.getInputStream());
             
             recibirSuscripciones();
             Thread t = new Thread(this::sendEvent);
@@ -138,7 +138,7 @@ public class HiloComponente  implements Runnable, Subscriber{
                 manejarEvento(evento);
             }
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
+            Logger.getLogger(HiloComponente.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
             removerSuscripciones();
             Servidor.desconectarComponente(id);
         }
@@ -157,10 +157,10 @@ public class HiloComponente  implements Runnable, Subscriber{
      */
     private void recibirSuscripciones() throws IOException, ClassNotFoundException{
         suscripciones = null;
-        suscripciones = (List<Enum<?>>)input.readObject();
+        suscripciones = (List<Enum>)input.readObject();
         
         if(suscripciones != null){
-            for (Enum<?> suscripcion : suscripciones) {
+            for (Enum suscripcion : suscripciones) {
                 suscribirEvento(suscripcion);
             }
         }
@@ -170,7 +170,7 @@ public class HiloComponente  implements Runnable, Subscriber{
      * eventos en el bus
      */
     private void removerSuscripciones(){
-        for (Enum<?> suscripcion : suscripciones) {
+        for (Enum suscripcion : suscripciones) {
             removerSuscripcion(suscripcion);
         }
     }
@@ -181,7 +181,7 @@ public class HiloComponente  implements Runnable, Subscriber{
      * 
      * @param tipoEvento Tipo de evento al cual se va a suscribir
      */
-    private void suscribirEvento(Enum<?> tipoEvento) {
+    private void suscribirEvento(Enum tipoEvento) {
         publicador.suscribir(tipoEvento, this);
         //servidor.suscribirComponente(id, tipoEvento);
     }
@@ -192,7 +192,7 @@ public class HiloComponente  implements Runnable, Subscriber{
      * 
      * @param tipoEvento Tipo de evento al cual se va a desuscribir
      */
-    private void removerSuscripcion(Enum<?> tipoEvento) {
+    private void removerSuscripcion(Enum tipoEvento) {
         publicador.desuscribir(tipoEvento, this);
         //servidor.removerSuscripcionComponente(id, tipoEvento);
     }
@@ -209,12 +209,12 @@ public class HiloComponente  implements Runnable, Subscriber{
 
     private void sendEvent(){
         try {
-            output = new ObjectOutputStream(socket.getOutputStream());
+            //output = new ObjectOutputStream(socket.getOutputStream());
             while (running.get()) {
                 Evento evento = colaEventos.take();
                 synchronized (output) {
                     System.out.println("evento recibido del bus en el HiloCom " + id + ": " + evento.getInfo());
-                    //output.reset();
+                    output.reset();
                     output.writeObject(evento);
                     output.flush();
                 }

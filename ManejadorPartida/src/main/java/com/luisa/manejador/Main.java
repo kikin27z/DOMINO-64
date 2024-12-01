@@ -21,8 +21,8 @@ public class Main {
         String ip = pedirIP();
         Client c = Client.getClient(ip, 5000);
         ManejadorPartida manejador = new ManejadorPartida();
-
-        for (Enum<?> suscripcion : eventos) {
+        c.establecerSuscripciones(eventos);
+        for (Enum suscripcion : eventos) {
             c.addObserver(suscripcion, manejador);
         }
 

@@ -38,8 +38,8 @@ public class Client extends Observable<Evento> implements ICliente{
     private ObjectInputStream input;
     private volatile boolean running;
     private volatile boolean connected;
-    private List<Enum<?>> suscripcionesEventos;
-    private static BlockingQueue<Evento> colaEventos;
+    private List<Enum> suscripcionesEventos;
+    private final BlockingQueue<Evento> colaEventos;
     
     /**
      * para conexion en equipos diferentes (diferentes ip)
@@ -120,12 +120,12 @@ public class Client extends Observable<Evento> implements ICliente{
             input = new ObjectInputStream(socket.getInputStream());
             
             connected = true;
+            enviarSuscripciones();
             
             //recibir el id del cliente
             clientId = input.readInt();
             System.out.println("id cliente: "+clientId);
             
-            enviarSuscripciones();
             
         }catch (IOException ex){
             System.out.println("Error al conectar cliente "+clientId);
@@ -196,8 +196,8 @@ public class Client extends Observable<Evento> implements ICliente{
     }
 
     @Override
-    public void establecerSuscripciones(List<Enum<?>> subs){
-        for (Enum<?> sub : subs) {
+    public void establecerSuscripciones(List<Enum> subs){
+        for (Enum sub : subs) {
             suscripcionesEventos.add(sub);
         }
     }
