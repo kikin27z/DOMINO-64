@@ -211,15 +211,15 @@ public class ManejadorPartida extends ObservadorPartida implements Runnable{
         EventoLobby evLobby = (EventoLobby)evento;
         System.out.println("ME LLEGO EL EVENTO DE PREPARAR PARTIDA");
         System.out.println("info: "+evLobby.getInfo());
-//        Partida partida = adaptadorDTO.adaptarPartidaDTO(
-//                evLobby.obtenerLobby().getPartida());
-//        
-//        partidas.put(partida, partida.getJugadores());
-//        idsContextos.put(partida, evLobby.getIdContexto());
+        Partida partida = adaptadorDTO.adaptarPartidaDTO(
+                evLobby.obtenerLobby().getPartida());
         
-//        EventoPartida inicioPartida = new EventoPartida(TipoLogicaPartida.INICIO_PARTIDA);
-//        inicioPartida.setIdContexto(evLobby.getIdContexto());
-//        inicioPartida.agregarInfo(adaptador.adaptarEntidadPartida(partida));
+        partidas.put(partida, partida.getJugadores());
+        idsContextos.put(partida, evLobby.getIdContexto());
+        
+        EventoPartida inicioPartida = new EventoPartida(TipoLogicaPartida.INICIO_PARTIDA);
+        inicioPartida.setIdContexto(evLobby.getIdContexto());
+        inicioPartida.agregarInfo(adaptador.adaptarEntidadPartida(partida));
     }
 
     @Override

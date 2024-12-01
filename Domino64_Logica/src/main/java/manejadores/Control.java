@@ -95,18 +95,18 @@ public class Control {
         consumers.remove(tipo, consumer);
     }
     
-    private void subscribirManejadores() {
+    public static void subscribirManejadores() {
         String ip = pedirIP();
         Client client = Client.getClient(ip, 5000);
 
-        for (Enum<?> evento : MediadorManejadores.getManejadorCuenta().getEventos()) {
+        for (Enum evento : MediadorManejadores.getManejadorCuenta().getEventos()) {
             client.addObserver(evento, MediadorManejadores.getManejadorCuenta());
         }
 
         MediadorManejadores.getManejadorCuenta().init(client);
         client.iniciar();
         MediadorManejadores.getManejadorCuenta().setClientId(client.getClientId());
-
+        
         //display.iniciarJuego();
 
     }

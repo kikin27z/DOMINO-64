@@ -34,7 +34,7 @@ public class MediadorManejadores {
     private static ManejadorCuenta cuenta;
     private static ManejadorJugador jugador;
     //private final INotificadorEvento notificador;
-    private final ExecutorService hiloPrincipal;
+    //private final ExecutorService hiloPrincipal;
     private final MediadorModelos mediadorModelos;
     private final ObserverPartida observerPartida;
     private final ObserverOpcionesPartida observerOpciones;
@@ -48,7 +48,7 @@ public class MediadorManejadores {
         
         mediadorModelos = MediadorModelos.getInstance();
         //notificador = NotificadorEvento.getInstance();
-        hiloPrincipal = Control.getHiloPrincipal();
+        //hiloPrincipal = Control.getHiloPrincipal();
         
         observerOpciones = new  ControlEventosOpcionesPartida();
         mediadorModelos.agregarObserverOpciones(observerOpciones);
@@ -67,15 +67,15 @@ public class MediadorManejadores {
         return instance;
     }
     
-    protected static ManejadorCuenta getManejadorCuenta(){
+    public static ManejadorCuenta getManejadorCuenta(){
         return cuenta;
     }
     
-    protected static ManejadorJugador getManejadorJugador(){
+    public static ManejadorJugador getManejadorJugador(){
         return jugador;
     }
     
-    protected static ManejadorDisplay getManejadorDisplay(){
+    public static ManejadorDisplay getManejadorDisplay(){
         return display;
     }
     

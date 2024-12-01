@@ -4,6 +4,8 @@ import abstraccion.ICliente;
 import adapter.AdaptadorDTO;
 import adapter.AdaptadorEntidad;
 import domino64.eventos.base.Evento;
+import domino64.eventos.base.error.EventoError;
+import domino64.eventos.base.error.TipoError;
 import entidades.Jugador;
 import entidades.Partida;
 import entidadesDTO.JugadorDTO;
@@ -46,12 +48,19 @@ public class ManejadorJugador extends ObservadorPartidaLocal{
     
     @Override
     public void manejarError(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoError error = (EventoError)evento;
+        String tipo;
+        if(error.getTipo().equals(TipoError.ERROR_DE_SERVIDOR))
+            tipo = "servidor";
+        else
+            tipo="logico";
+        System.out.println("-------------------");
+        System.out.println("Error de tipo "+tipo+":" + error.getInfo());
+        System.out.println("-------------------");
     }
 
     @Override
     public void buscarMula(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
@@ -64,7 +73,13 @@ public class ManejadorJugador extends ObservadorPartidaLocal{
         partida.agregarJugador(jugador);
         
         inicioPartida.setJugador(jugadorDTO);
-        MediadorManejadores.enviarADisplay(inicioPartida);
+        
+        System.out.println("-------------------");
+        System.out.println("Inicio la partida\nTus fichas son:");
+        System.out.println(jugadorDTO.getFichas());
+        System.out.println("-------------------");
+        
+        //MediadorManejadores.enviarADisplay(inicioPartida);
     }
 
     @Override

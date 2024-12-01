@@ -28,8 +28,8 @@ import tiposLogicos.TipoLogicaLobby;
  * @author José Karim Franco Valencia - 00000245138
  */
 public abstract class ObservadorLobbyLocal implements Observer<Evento>{
-    protected Map<Enum<?>, Consumer<Evento>> consumers;
-    protected final List<Enum<?>> eventos = new ArrayList<>(
+    protected Map<Enum, Consumer<Evento>> consumers;
+    protected final List<Enum> eventos = new ArrayList<>(
             List.of(
                     TipoError.ERROR_LOGICO,
                     TipoError.ERROR_DE_SERVIDOR,
@@ -53,16 +53,16 @@ public abstract class ObservadorLobbyLocal implements Observer<Evento>{
         }
     }
 
-    public List<Enum<?>> getEventos(){
+    public List<Enum> getEventos(){
         return eventos;
     }
     
-    public void agregarEvento(Enum<?> evento, Consumer<Evento> consumer){
+    public void agregarEvento(Enum evento, Consumer<Evento> consumer){
         this.eventos.add(evento);
         consumers.putIfAbsent(evento, consumer);
     }
     
-    public void removerEvento(Enum<?> evento){
+    public void removerEvento(Enum evento){
         System.out.println("evento a borrar: "+evento);
         this.eventos.remove(evento);
         consumers.remove(evento);
