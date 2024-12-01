@@ -38,7 +38,7 @@ public class CreditosControl {
      * @param e el evento de ratón que activa este método
      */
     private void irInicio(MouseEvent e) {
-        this.modelo.avisarMostrarInicio();
+        this.modelo.avisarIrInicio();
     }
 
 }

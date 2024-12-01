@@ -10,7 +10,7 @@ import tiposLogicos.TipoLogicaPartida;
  */
 public class EventoPartida extends EventoLogico<PartidaDTO> {
     private JugadorDTO jugador;
-    private PartidaDTO contexto;
+    private PartidaDTO partida;
     private TipoLogicaPartida tipo;
     
     public EventoPartida(){}
@@ -19,9 +19,13 @@ public class EventoPartida extends EventoLogico<PartidaDTO> {
         this.tipo = tipo;
     }
     
-    @Override
-    public void agregarInfo(PartidaDTO partida) {
-        contexto = partida;
+//    @Override
+//    public void agregarInfo(PartidaDTO partida) {
+//        contexto = partida;
+//    }
+    
+    public void agregarPartida(PartidaDTO partida){
+        this.partida = partida;
     }
 
     public void setJugador(JugadorDTO jugador){
@@ -34,7 +38,7 @@ public class EventoPartida extends EventoLogico<PartidaDTO> {
     
     @Override
     public PartidaDTO getInfo() {
-        return contexto;
+        return partida;
     }
 
     @Override

@@ -1,16 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package eventos;
 
 import tiposLogicos.TipoSuscripcion;
 
 /**
  *
- * @author luisa M
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138 
  */
-public class EventoSuscripcion extends EventoLogico<Enum<?>> {
+public class EventoSuscripcion extends EventoSub<Enum<?>> {
     private Enum<?> evento;
     private TipoSuscripcion tipo;
     
@@ -51,6 +48,11 @@ public class EventoSuscripcion extends EventoLogico<Enum<?>> {
     @Override
     public Enum<?> getInfo() {
         return evento;
+    }
+
+    @Override
+    public int getIdDestinatario() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

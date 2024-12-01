@@ -82,7 +82,7 @@ public class Servidor {
                     socket.close();
                 }
             } catch (IOException e) {
-                Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, null, e);
+                Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, "Se desconecto jugador {0}", idCliente);
             }
             clientesJugadores.remove(idCliente);
         }
@@ -108,7 +108,7 @@ public class Servidor {
                     socket.close();
                 }
             } catch (IOException e) {
-                Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, null, e);
+                Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, "Se desconecto componente {0}", idCliente);
             }
             clientesComponentes.remove(idCliente);
         }
@@ -180,7 +180,7 @@ public class Servidor {
             System.out.println("componentes conectados");
             recibirJugadores();
         } catch (IOException e) {
-            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, "Se desconecto el server", e);
             desconectarClientes();
             closeServer();
         }

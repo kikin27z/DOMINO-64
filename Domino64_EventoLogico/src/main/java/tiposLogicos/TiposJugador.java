@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
- */
 package tiposLogicos;
 
 /**
@@ -15,10 +11,10 @@ public enum TiposJugador {
     JALAR_FICHA,
     ABANDONAR_PARTIDA,
     CAMBIAR_AVATAR,
-    CAMBIAR_USERNAME,
+    AVATAR_ESCOGIDO,
     PETICION_RENDIRSE,
-    JUGADOR_LISTO,
-    JUGADOR_NO_LISTO,
+    CUENTA_LISTA,
+    CUENTA_NO_LISTA,
     PASAR_TURNO,
     CAMBIAR_CONFIG_PARTIDA
     ;

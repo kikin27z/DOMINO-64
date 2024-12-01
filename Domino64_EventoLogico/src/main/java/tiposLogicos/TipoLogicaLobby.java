@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
- */
 package tiposLogicos;
 
 /**
@@ -10,12 +6,13 @@ package tiposLogicos;
  * @author luisa M
  */
 public enum TipoLogicaLobby {
-    JUGADOR_NUEVO,
-    JUGADOR_SALIO,
-    ACTUALIZAR_AVATARES,
-    ACTUALIZAR_USERNAME,
-    JUGADOR_LISTO,
-    JUGADOR_NO_LISTO,
+    CUENTA_ABANDONO,
+    ABANDONO_ADMIN,
+    AVATAR_ACTUALIZADO,
+    CUENTA_LISTO,
+    CUENTA_NO_LISTO,
     PARTIDA_ENCONTRADA, 
-    PREPARAR_PARTIDA;
+    PARTIDA_CREADA,
+    PREPARAR_PARTIDA,
+    NO_SE_PUDO_UNIR;
 }

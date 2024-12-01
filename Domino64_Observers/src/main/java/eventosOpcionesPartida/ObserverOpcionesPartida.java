@@ -27,4 +27,5 @@ public interface ObserverOpcionesPartida {
      * @param unirse el código único de la partida que se desea buscar.
      */
     public void buscarPartida(UnirseDTO unirse);
+    public void avisarIrInicio();
 }

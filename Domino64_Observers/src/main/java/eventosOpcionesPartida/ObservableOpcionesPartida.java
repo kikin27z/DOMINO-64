@@ -37,4 +37,6 @@ public interface ObservableOpcionesPartida {
      * Los observadores reaccionarán a este evento según lo definido en su implementación del método correspondiente.
      */
     void avisarBuscarPartida();
+    
+    public void avisarIrInicio();
 }

@@ -7,26 +7,17 @@ import java.io.Serializable;
  * @author luisa M
  */
 public class CuentaDTO implements Serializable{
-    private int id;
     private String username;
     private AvatarDTO avatar;
     private String idCadena;
+    private boolean admin;
 
     public CuentaDTO() {
     }
 
-    public CuentaDTO(int id, String username, AvatarDTO avatar) {
-        this.id = id;
+    public CuentaDTO(String username, AvatarDTO avatar) {
         this.username = username;
         this.avatar = avatar;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -54,40 +45,26 @@ public class CuentaDTO implements Serializable{
         this.idCadena = idCadena;
     }
 
+    public boolean esAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("CuentaDTO{");
-        sb.append("id=").append(id);
-        sb.append(", username=").append(username);
+        sb.append("username=").append(username);
         sb.append(", avatar=").append(avatar);
         sb.append(", idCadena=").append(idCadena);
+        sb.append(", admin=").append(admin);
         sb.append('}');
         return sb.toString();
     }
+    
 
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 79 * hash + this.id;
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final CuentaDTO other = (CuentaDTO) obj;
-        return this.id == other.id;
-    }
-    
-    
-    
+   
 }

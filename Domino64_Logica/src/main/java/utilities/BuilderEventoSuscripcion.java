@@ -6,9 +6,10 @@ import tiposLogicos.TipoSuscripcion;
 
 /**
  *
- * @author luisa M
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
-public class BuilderEventoSuscripcion implements EventBuilder<Enum<?>>{
+public class BuilderEventoSuscripcion implements EventBuilder<TipoSuscripcion>{
     private EventoSuscripcion evento;
     
     public BuilderEventoSuscripcion(){
@@ -16,8 +17,8 @@ public class BuilderEventoSuscripcion implements EventBuilder<Enum<?>>{
     }
     
     @Override
-    public void setTipo(Enum<?> tipo) {
-        evento.setTipo((TipoSuscripcion)tipo);
+    public void setTipo(TipoSuscripcion tipo) {
+        evento.setTipo(tipo);
     }
 
     @Override
@@ -30,7 +31,7 @@ public class BuilderEventoSuscripcion implements EventBuilder<Enum<?>>{
         evento.setIdContexto(idContexto);
     }
 
-    @Override
+//    @Override
     public void setContexto(Enum<?> info) {
         evento.agregarInfo(info);
     }
@@ -45,6 +46,10 @@ public class BuilderEventoSuscripcion implements EventBuilder<Enum<?>>{
     @Override
     public void reiniciar() {
         evento = new EventoSuscripcion();
+    }
+
+    @Override
+    public void setIdDestinatario(int idDestinatario) {
     }
     
 }

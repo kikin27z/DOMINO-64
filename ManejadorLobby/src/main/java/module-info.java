@@ -13,5 +13,5 @@ module ManejadorLobby {
     uses java.util.logging.Logger;
     uses abstraccion.ICliente;
     uses implementacion.Client;
-    uses observer.Observer;
+//    uses cliente_suscripciones.ObserverCliente;
 }

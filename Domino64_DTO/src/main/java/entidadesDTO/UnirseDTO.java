@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public class UnirseDTO implements Serializable {
     private String codigoPartida;
-    private int idJugador;
+    private CuentaDTO cuenta;
 
     public UnirseDTO(String codigoPartida) {
         this.codigoPartida = codigoPartida;
@@ -22,12 +22,12 @@ public class UnirseDTO implements Serializable {
         this.codigoPartida = codigoPartida;
     }
 
-    public int getIdJugador() {
-        return idJugador;
+    public CuentaDTO getCuenta() {
+        return cuenta;
     }
 
-    public void setIdJugador(int idJugador) {
-        this.idJugador = idJugador;
+    public void setCuenta(CuentaDTO cuenta) {
+        this.cuenta = cuenta;
     }
     
     

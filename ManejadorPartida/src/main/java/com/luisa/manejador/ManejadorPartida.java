@@ -86,7 +86,7 @@ public class ManejadorPartida extends ObservadorPartida implements Runnable{
         EventoPartida terminoPartida = new EventoPartida(TipoLogicaPartida.TERMINO_PARTIDA);
         terminoPartida.setIdContexto(idsContextos.get(partida));
         terminoPartida.setIdPublicador(id);
-        terminoPartida.agregarInfo(adaptador.adaptarEntidadPartida(partida));
+        terminoPartida.agregarPartida(adaptador.adaptarEntidadPartida(partida));
         
         partidas.remove(partida);
         idsContextos.remove(partida);
@@ -94,29 +94,29 @@ public class ManejadorPartida extends ObservadorPartida implements Runnable{
     
     @Override
     protected void removerJugador(Evento evento) {
-        EventoJugador eventoJ = (EventoJugador)evento;
-        Partida partida = adaptadorDTO.adaptarPartidaDTO(eventoJ.getPartida());
-        
-        if(partidas.containsKey(partida)){
-            List<Jugador> jugadoresActuales = partidas.get(partida);
-            if(jugadoresActuales.size() == 2){
-                terminarPartida(partida);
-            }else{
-                Jugador exJugador = adaptadorDTO.adaptarJugadorDTO(eventoJ.getJugador());
-                partidas.compute(partida, (p, j) -> {
-                    j.remove(exJugador);
-                    return j;
-                });
-                
-                EventoPartida jugadorSalio = new EventoPartida(TipoLogicaPartida.JUGADOR_SALIO);
-                jugadorSalio.agregarInfo(adaptador.adaptarEntidadPartida(partida));
-                jugadorSalio.setJugador(adaptador.adaptarEntidadJugador(exJugador));
-                jugadorSalio.setIdContexto(idsContextos.get(partida));
-                jugadorSalio.setIdPublicador(id);
-                
-                
-            }
-        }
+//        EventoJugador eventoJ = (EventoJugador)evento;
+//        Partida partida = adaptadorDTO.adaptarPartidaDTO(eventoJ.getPartida());
+//        
+//        if(partidas.containsKey(partida)){
+//            List<Jugador> jugadoresActuales = partidas.get(partida);
+//            if(jugadoresActuales.size() == 2){
+//                terminarPartida(partida);
+//            }else{
+//                Jugador exJugador = adaptadorDTO.adaptarJugadorDTO(eventoJ.getJugador());
+//                partidas.compute(partida, (p, j) -> {
+//                    j.remove(exJugador);
+//                    return j;
+//                });
+//                
+//                EventoPartida jugadorSalio = new EventoPartida(TipoLogicaPartida.JUGADOR_SALIO);
+//                jugadorSalio.agregarPartida(adaptador.adaptarEntidadPartida(partida));
+//                jugadorSalio.setJugador(adaptador.adaptarEntidadJugador(exJugador));
+//                jugadorSalio.setIdContexto(idsContextos.get(partida));
+//                jugadorSalio.setIdPublicador(id);
+//                
+//                
+//            }
+//        }
     }
     
     private boolean suficientesPeticiones(Partida partida){
@@ -127,20 +127,20 @@ public class ManejadorPartida extends ObservadorPartida implements Runnable{
 
     @Override
     protected void recibirPeticion(Evento evento) {
-        EventoJugador eventoJ = (EventoJugador)evento;
-        Partida partida = adaptadorDTO.adaptarPartidaDTO(eventoJ.getPartida());
-        
-        if(eventoJ.getCuenta() != null){
-            if (peticionesRendirse.containsKey(partida)) {
-                peticionesRendirse.compute(partida, (p, pet) -> pet++);
-            } else {
-                peticionesRendirse.put(partida, 1);
-            }
-        }
-        if(suficientesPeticiones(partida)){
-            terminarPartida(partida);
-            peticionesRendirse.remove(partida);
-        }
+//        EventoJugador eventoJ = (EventoJugador)evento;
+//        Partida partida = adaptadorDTO.adaptarPartidaDTO(eventoJ.getPartida());
+//        
+//        if(eventoJ.getCuenta() != null){
+//            if (peticionesRendirse.containsKey(partida)) {
+//                peticionesRendirse.compute(partida, (p, pet) -> pet++);
+//            } else {
+//                peticionesRendirse.put(partida, 1);
+//            }
+//        }
+//        if(suficientesPeticiones(partida)){
+//            terminarPartida(partida);
+//            peticionesRendirse.remove(partida);
+//        }
     }
 
     @Override
@@ -150,12 +150,12 @@ public class ManejadorPartida extends ObservadorPartida implements Runnable{
 
     @Override
     protected void recibirPartida(Evento evento) {
-        EventoLobby evLobby = (EventoLobby)evento;
-        Partida partida = adaptadorDTO.adaptarPartidaDTO(
-                evLobby.obtenerLobby().getPartida());
-        
-        partidas.put(partida, partida.getJugadores());
-        idsContextos.put(partida, evLobby.getIdContexto());
+//        EventoLobby evLobby = (EventoLobby)evento;
+//        Partida partida = adaptadorDTO.adaptarPartidaDTO(
+//                evLobby.obtenerLobby().getPartida());
+//        
+//        partidas.put(partida, partida.getJugadores());
+//        idsContextos.put(partida, evLobby.getIdContexto());
     }
 
     @Override

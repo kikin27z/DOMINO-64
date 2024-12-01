@@ -34,12 +34,20 @@ public class EventoTurno extends EventoLogico<CuentaDTO>{
      * el contexto que se va a agregar es el jugador que esta en turno.
      * @param info Cuenta del contexto de este evento
      */
-    @Override
-    public void agregarInfo(CuentaDTO info) {
+//    @Override
+//    public void agregarInfo(CuentaDTO info) {
+//        if(flag)
+//            jugadores.add(info);
+//        else{
+//            jugador = info;
+//        }
+//    }
+    
+    public void agregarCuenta(CuentaDTO cuenta){
         if(flag)
-            jugadores.add(info);
+            jugadores.add(cuenta);
         else{
-            jugador = info;
+            jugador = cuenta;
         }
     }
 

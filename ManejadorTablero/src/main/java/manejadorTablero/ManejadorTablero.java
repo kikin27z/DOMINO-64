@@ -1,7 +1,6 @@
 package manejadorTablero;
 
 import adapter.AdaptadorDTO;
-import adapter.AdaptadorEntidad;
 import entidades.Ficha;
 import entidades.Tablero;
 import entidadesDTO.FichaDTO;
@@ -14,16 +13,13 @@ import entidadesDTO.JugadaRealizadaDTO;
  */
 public class ManejadorTablero {
 
-    private Tablero tablero;
-    private int extremoIzq, extremoDer;
-    private AdaptadorDTO adaptadorDTO;
-    private AdaptadorEntidad adaptadorEntidad;
+    private final Tablero tablero;
+    private final AdaptadorDTO adaptadorDTO;
     
     
     public ManejadorTablero(){
         this.tablero = new Tablero();
         this.adaptadorDTO = new AdaptadorDTO();
-        this.adaptadorEntidad = new AdaptadorEntidad();
     }
     
 

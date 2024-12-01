@@ -2,16 +2,14 @@ package lobby;
 
 import entidadesDTO.AvatarDTO;
 import entidadesDTO.CuentaDTO;
-import eventoss.EventoMVCLobby;
+import entidadesDTO.LobbyDTO;
 import eventosLobby.ObserverLobbyMVC;
-import eventoss.TipoLobbyMVC;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -36,8 +34,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import observer.Observable;
-import observer.Observer;
 
 /**
  * La clase LobbyView gestiona la interfaz gráfica (GUI) de la pantalla de lobby
@@ -52,7 +48,7 @@ import observer.Observer;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLobbyMVC {
+public class LobbyView implements ObserverLobbyMVC {
 
     private final LobbyModel modelo;
     private Stage fondo;
@@ -64,8 +60,8 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
     private Label lblJugadoresListos;
     private Label lblMensaje;
     private ImageView ajustesImg;
-    private static List<ImageView> avatares;
-    private static List<AnchorPane> panelesJugadores;
+    private List<ImageView> avatares;
+    private List<AnchorPane> panelesJugadores;
     private ImageView btnAvatar;
     private Button btnConfirmarCambios;
     private Button btnCancelarCambios;
@@ -76,6 +72,7 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
     private Stage ventanaConfiguracion;
     private Stage ventanaAvatares;
     private AnchorPane fondoAvatares;
+    private Label lblCodigo;
     private EventHandler seleccionAvatar;
 
     /**
@@ -121,8 +118,8 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         // Label para jugadores listos
         int jugadoresListos = modelo.getJugadoresListos().size();
         int cantidadJugadores = modelo.getCuentas().size();
-        String str =jugadoresListos +"/" + cantidadJugadores + " listos para iniciar";
-        
+        String str = jugadoresListos + "/" + cantidadJugadores + " listos para iniciar";
+
         lblJugadoresListos = new Label(str);
         lblJugadoresListos.setFont(Font.font("Verdana Bold", 48));
         lblJugadoresListos.setTextFill(Color.valueOf("#2f1c1c"));
@@ -141,7 +138,6 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         AnchorPane.setTopAnchor(jugadoresContainer, 216.0);
 
         // Agregar 4 paneles de jugadores
-        
         panel.getChildren().add(jugadoresContainer);
 
         // Label de fin de juego
@@ -174,7 +170,7 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         btnIniciar.setPrefWidth(420);
         btnIniciar.setMaxHeight(70);
         btnIniciar.setCursor(Cursor.HAND);
-        if(modelo.getCuentas().size()==1){
+        if (modelo.getCuentas().size() == 1) {
             btnIniciar.setDisable(true);
         }
         AnchorPane.setLeftAnchor(btnIniciar, 507.0);
@@ -182,11 +178,18 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         panel.getChildren().add(btnIniciar);
 
         // Botón de ajustes
-        btnAjustes = crearBotonAjustes();
-        AnchorPane.setRightAnchor(btnAjustes, 66.0);
-        AnchorPane.setTopAnchor(btnAjustes, 46.0);
-        panel.getChildren().add(btnAjustes);
+        
+        if(modelo.getCuentaActual().esAdmin()){
+            btnAjustes = crearBotonAjustes();
+            AnchorPane.setRightAnchor(btnAjustes, 66.0);
+            AnchorPane.setTopAnchor(btnAjustes, 46.0);
+            panel.getChildren().add(btnAjustes);
+        }
+            
+        cargarBtnModal();
+    }
 
+    private void cargarCodigoPartida(LobbyDTO lobby) {
         // Labels del código de partida
         Label lblCodigoTitulo = new Label("Código de la partida");
         lblCodigoTitulo.setFont(Font.font("Russo One", 15));
@@ -198,7 +201,7 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         AnchorPane.setTopAnchor(lblCodigoTitulo, 21.0);
         panel.getChildren().add(lblCodigoTitulo);
 
-        Label lblCodigo = new Label(modelo.obtenerCodigoPartida());
+        lblCodigo = new Label(lobby.getCodigo());
         lblCodigo.setFont(Font.font("Russo One", 20));
         lblCodigo.setTextFill(Color.valueOf("#2f1c1c"));
         lblCodigo.setAlignment(Pos.CENTER);
@@ -208,28 +211,26 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         AnchorPane.setLeftAnchor(lblCodigo, 30.0);
         AnchorPane.setTopAnchor(lblCodigo, 46.0);
         panel.getChildren().add(lblCodigo);
-        cargarBtnModal();
     }
-    
-    
-    protected void crearJugadores(){
+
+    protected void crearJugadores() {
         List<CuentaDTO> cuentas = modelo.getCuentas();
         Map<String, AnchorPane> paneles = new HashMap<>();
-        for(var cuenta : cuentas){
-            if(cuenta.getIdCadena().equalsIgnoreCase(modelo.obtenerIdCuentaActual())){
-                paneles.put(cuenta.getIdCadena(),ponerJugadorActual(cuenta));
-            }else{
-                paneles.put(cuenta.getIdCadena(),ponerJugadorOtro(cuenta));
+        for (var cuenta : cuentas) {
+            if (cuenta.getIdCadena().equalsIgnoreCase(modelo.obtenerIdCuentaActual())) {
+                paneles.put(cuenta.getIdCadena(), ponerJugadorActual(cuenta));
+            } else {
+                paneles.put(cuenta.getIdCadena(), ponerJugadorOtro(cuenta));
             }
         }
-        EventoMVCLobby evento = new EventoMVCLobby(TipoLobbyMVC.INICIALIZAR_PANELES_JUGADORES);
-        evento.agregarContexto(paneles);
-        notifyObservers(evento.getTipo(), evento);
+//        EventoMVCLobby evento = new EventoMVCLobby(TipoLobbyMVC.INICIALIZAR_PANELES_JUGADORES);
+//        evento.agregarContexto(paneles);
+//        notifyObservers(evento.getTipo(), evento);
     }
 
     private AnchorPane ponerJugadorActual(CuentaDTO cuenta) {
 //        boolean listo = modelo.getJugadoresListos().contains(cuenta);
-        AnchorPane panelJugadorAct = crearPanelJugadorActual(cuenta, false);
+        AnchorPane panelJugadorAct = crearPanelJugadorActual(cuenta);
         panelesJugadores.add(panelJugadorAct);
         jugadoresContainer.getChildren().add(panelJugadorAct);
         return panelJugadorAct;
@@ -243,8 +244,8 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         return panelJugadorAct;
     }
 
-    private ImageView pintarIconoListo(){
-        
+    private ImageView pintarIconoListo() {
+
         ImageView iconoListo = new ImageView(new Image(getClass().getResourceAsStream("/images/listo.png")));
         iconoListo.setId("iconoListo");
         iconoListo.setFitHeight(150);
@@ -252,12 +253,12 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         iconoListo.setPreserveRatio(true);
         AnchorPane.setLeftAnchor(iconoListo, 148.0);
         AnchorPane.setTopAnchor(iconoListo, 8.0);
-        
+
         //panelJugador.getChildren().add(iconoListo);
         return iconoListo;
     }
-    
-    private AnchorPane crearPanelJugadorActual(CuentaDTO cuenta, boolean listo) {
+
+    private AnchorPane crearPanelJugadorActual(CuentaDTO cuenta) {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setId(cuenta.getIdCadena());
         anchorPane.setMaxSize(222, 278);
@@ -271,13 +272,11 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         AnchorPane.setTopAnchor(btnAvatar, 15.0);
 
 //        btnAvatar = cambiarFiltroAvatar(cuenta, btnAvatar);
-        
         // Icono de listo
-        ImageView iconoListo = null;
-        if(listo){
-            iconoListo = pintarIconoListo();
-        }
-        
+//        ImageView iconoListo = null;
+//        if (listo) {
+//            iconoListo = pintarIconoListo();
+//        }
         // Nombre del jugador
         Label lblNombre = new Label(cuenta.getUsername());
         lblNombre.setId("nombre");
@@ -290,12 +289,9 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         lblNombre.setPrefWidth(192);
         AnchorPane.setLeftAnchor(lblNombre, 15.0);
         AnchorPane.setTopAnchor(lblNombre, 180.0);
-        
-        if(listo)
-            anchorPane.getChildren().addAll(btnAvatar, iconoListo, lblNombre);
-        else
-            anchorPane.getChildren().addAll(btnAvatar, lblNombre);
-        
+
+        anchorPane.getChildren().addAll(btnAvatar, lblNombre);
+
         return anchorPane;
     }
 
@@ -316,10 +312,9 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         AnchorPane.setTopAnchor(avatar, 15.0);
 
         //cambiarFiltroAvatar(cuenta, avatar);
-        
         // Icono de listo
         ImageView iconoListo = null;
-        if(listo){
+        if (listo) {
             iconoListo = pintarIconoListo();
         }
 
@@ -337,11 +332,8 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         AnchorPane.setLeftAnchor(lblNombre, 15.0);
         AnchorPane.setTopAnchor(lblNombre, 180.0);
 
-        if(listo)
-            anchorPane.getChildren().addAll(avatar, iconoListo, lblNombre);
-        else
-            anchorPane.getChildren().addAll(avatar, lblNombre);
-        
+        anchorPane.getChildren().addAll(avatar, lblNombre);
+
         return anchorPane;
     }
 
@@ -367,20 +359,21 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
 
         return stackPane;
     }
-    
-    private void removerPanelJugador(CuentaDTO cuenta){
+
+    private void removerPanelJugador(CuentaDTO cuenta) {
         AnchorPane panelExJugador = modelo.obtenerPanelJugador(cuenta.getIdCadena());
         panelesJugadores.remove(panelExJugador);
         jugadoresContainer.getChildren().remove(panelExJugador);
 //        jugadoresContainer.getChildren().removeIf(p -> p.getId().equals(cuenta.getIdCadena()));
     }
+
     //--------------------------------------------------------Modal windows--------------------------------------------------------
     private void cargarBtnModal() {
         btnAvatar = new ImageView();
         btnAvatar.setFitHeight(150);
         btnAvatar.setFitWidth(200);
         btnAvatar.setPreserveRatio(true);
-        
+
         btnCancelarCambios = new Button("Cancelar");
         btnCancelarCambios.setLayoutX(89);
         btnCancelarCambios.setLayoutY(327);
@@ -418,22 +411,21 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
 ////        }
 //        
 //    }
-    
-    protected void removeEffect(ImageView view){
-        if(view.getEffect() != null){
+    protected void removeEffect(ImageView view) {
+        if (view.getEffect() != null) {
             view.setEffect(null);
         }
     }
-    
-    protected ImageView setEffect(ImageView imgView){
-        if(imgView.getEffect() == null){
+
+    protected ImageView setEffect(ImageView imgView) {
+        if (imgView.getEffect() == null) {
             ColorAdjust filtro = new ColorAdjust();
             filtro.setSaturation(-1);
             imgView.setEffect(filtro);
         }
         return imgView;
     }
-    
+
     /**
      * Carga la ventana modal de selección de avatares.
      */
@@ -469,7 +461,7 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
 //            });
 
             gridPane.add(imageView, i % 3, i / 3);
-            
+
         }
 
         // Añadir elementos al AnchorPane
@@ -501,29 +493,28 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         // Cargar la imagen
         Image image = new Image(getClass().getResourceAsStream("/avatar/" + avatarName + ".png"));
         imageView.setImage(image);
-        
+
         // Si es el panda, añadir efecto de ajuste de color
         if (avatarName.equals("panda")) {
             imageView.setEffect(new ColorAdjust());
         }
-        
+
         AvatarDTO avatarJugActual;
         for (CuentaDTO cuenta : modelo.getCuentas()) {
             avatarJugActual = cuenta.getAvatar();
-            if(avatarName.equals(avatarJugActual.getAnimal())){
+            if (avatarName.equals(avatarJugActual.getAnimal())) {
                 imageView = setEffect(imageView);
                 break;
             }
         }
-        
+
         // Añadir cursor de mano
         imageView.setCursor(Cursor.HAND);
 
         return imageView;
     }
 
-    
-        /**
+    /**
      * Carga la ventana modal de configuración de la partida.
      */
     private void cargarConfiguracion() {
@@ -578,7 +569,7 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         tilesChoiceBox.setStyle("-fx-background-color: #FFF;");
         tilesChoiceBox.setCursor(Cursor.HAND);
         tilesChoiceBox.getItems().addAll("2", "3", "4", "5", "6", "7");
-        tilesChoiceBox.setValue(String.valueOf(modelo.getCantidadFichas()));
+//        tilesChoiceBox.setValue(String.valueOf(modelo.getCantidadFichas()));
 
         // Radio buttons
         ToggleGroup playerToggleGroup = new ToggleGroup();
@@ -628,6 +619,7 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         Scene scene = new Scene(fondoConfiguracionPartida, 640, 400);
         ventanaConfiguracion.setScene(scene);
     }
+
     /**
      * Muestra la ventana de configuración de la partida. La ventana es modal,
      * lo que significa que bloquea la interacción con otras ventanas hasta que
@@ -645,6 +637,7 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
     public void cerrarVentanaConfiguracion() {
         ventanaConfiguracion.close();
     }
+
     /**
      * Cierra la ventana de configuración de la partida.
      */
@@ -669,48 +662,48 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         //Que se actualice en los demas jugadores
         //Si es el admin que se acabe la partida y saque a todos
     }
-    
+
     public void iniciarPartida(EventHandler<MouseEvent> e) {
         btnIniciar.setOnMouseClicked(e);//---------------------------Falta terminar----------
     }
-    
+
     public void mostrarAvatares(EventHandler<MouseEvent> e) {
         btnAvatar.setOnMouseClicked(e);
     }
 
-    public void cerrarAvatares(EventHandler<MouseEvent> e){
+    public void cerrarAvatares(EventHandler<MouseEvent> e) {
         btnCerrarAvatares.setOnMouseClicked(e);
     }
-    
+
     public void mostrarConfiguracion(EventHandler<MouseEvent> e) {
         btnAjustes.setOnMouseClicked(e);
     }
-    
+
     public void confirmarCambiosPartida(EventHandler<MouseEvent> e) {
         btnConfirmarCambios.setOnMouseClicked(e);
     }
 
-    protected int getChoiceBoxSelected(){
+    protected int getChoiceBoxSelected() {
         return Integer.parseInt(tilesChoiceBox.getValue());
     }
-    
+
     public void cancelarCambiosPartida(EventHandler<MouseEvent> e) {
         btnCancelarCambios.setOnMouseClicked(e);
     }
 
-    private EventHandler<MouseEvent> seleccionarAvatar(String nombreAvatar){
+    private EventHandler<MouseEvent> seleccionarAvatar(String nombreAvatar) {
         EventHandler<MouseEvent> handler = (MouseEvent t) -> {
-            EventoMVCLobby evento = new EventoMVCLobby(TipoLobbyMVC.CAMBIAR_AVATAR);
-            evento.agregarContexto(nombreAvatar);
-            notifyObservers(evento.getTipo(), evento);
+//            EventoMVCLobby evento = new EventoMVCLobby(TipoLobbyMVC.CAMBIAR_AVATAR);
+//            evento.agregarContexto(nombreAvatar);
+//            notifyObservers(evento.getTipo(), evento);
         };
         return handler;
     }
-    
+
     //----------------------Eventos de Modelo------------------------------------
-    private AnchorPane actualizarPanel(AnchorPane pane, AvatarDTO avatarNuevo){
-        ImageView iconoListo = (ImageView)pane.getChildren().filtered(node -> node.getId().equals("iconoListo")).get(0);
-        
+    private AnchorPane actualizarPanel(AnchorPane pane, AvatarDTO avatarNuevo) {
+        ImageView iconoListo = (ImageView) pane.getChildren().filtered(node -> node.getId().equals("iconoListo")).get(0);
+
         ObservableList<Node> nodes = pane.getChildren();
         Image imgAvatar = new Image(avatarNuevo.getUrl());
         ImageView avatar = ((ImageView) nodes.get(0));
@@ -720,21 +713,23 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
 
         pane.getChildren().removeAll();
 
-        if (iconoListo != null)
+        if (iconoListo != null) {
             pane.getChildren().addAll(avatar, iconoListo, nombre);
-        else
+        } else {
             pane.getChildren().addAll(avatar, nombre);
-        
+        }
+
         return pane;
     }
-    
-    private void cambiarAvatar(AvatarDTO avatarDTO, boolean agregarEfecto){
+
+    private void cambiarAvatar(AvatarDTO avatarDTO, boolean agregarEfecto) {
         for (ImageView avatar : avatares) {
-            if(avatar.getId().equals(avatarDTO.getAnimal())){
-                if(agregarEfecto)
+            if (avatar.getId().equals(avatarDTO.getAnimal())) {
+                if (agregarEfecto) {
                     setEffect(avatar);
-                else
+                } else {
                     removeEffect(avatar);
+                }
                 break;
             }
         }
@@ -751,14 +746,14 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
 //            fondoAvatares.getChildren().addAll(grid, btnCerrarAvatares);
 //        }
     }
-    
+
     @Override
-    public void actualizarAvatarJugador(CuentaDTO cuenta) {
+    public void actualizarAvatarCuenta(CuentaDTO cuenta) {
         AnchorPane pane = modelo.obtenerPanelJugador(cuenta.getIdCadena());
         cambiarAvatar(cuenta.getAvatar(), true);
 //        ObservableList<Node> nodes = pane.getChildren().filtered(node -> node.getId().equals("avatar"));
         AnchorPane panelAct = actualizarPanel(pane, cuenta.getAvatar());
-        
+
         int index = jugadoresContainer.getChildren().indexOf(pane);
         jugadoresContainer.getChildren().remove(index);
         jugadoresContainer.getChildren().add(index, panelAct);
@@ -770,32 +765,33 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         cambiarAvatar(cuenta.getAvatar(), true);
         actualizarEncabezado(modelo.ACTUALIZACION_CANTIDAD_JUGADORES, true);
         btnIniciar.setDisable(false);
-        EventoMVCLobby evento = new EventoMVCLobby(TipoLobbyMVC.AGREGAR_PANEL_JUGADOR);
-        evento.agregarContexto(nuevoPanel);
-        notifyObservers(evento.getTipo(), evento);
+//        EventoMVCLobby evento = new EventoMVCLobby(TipoLobbyMVC.AGREGAR_PANEL_JUGADOR);
+//        evento.agregarContexto(nuevoPanel);
+//        notifyObservers(evento.getTipo(), evento);
     }
 
     @Override
-    public void actualizarQuitarJugador(CuentaDTO cuenta) {
+    public void actualizarQuitarCuenta(CuentaDTO cuenta) {
         removerPanelJugador(cuenta);
-        if(modelo.getCuentas().size() == 1)
+        if (modelo.getCuentas().size() == 1) {
             btnIniciar.setDisable(true);
+        }
         cambiarAvatar(cuenta.getAvatar(), false);
         actualizarEncabezado(modelo.ACTUALIZACION_CANTIDAD_JUGADORES, false);
     }
 
     @Override
-    public void actualizarJugadorListo(CuentaDTO cuenta) {
+    public void actualizarCuentaLista(CuentaDTO cuenta) {
         ImageView icono = pintarIconoListo();
         actualizarEncabezado(modelo.ACTUALIZACION_JUGADORES_LISTOS, true);
         AnchorPane pane = modelo.obtenerPanelJugador(cuenta.getIdCadena());
         pane.getChildren().add(icono);
         btnIniciar.setText("No listo");
-        
+
     }
 
     @Override
-    public void actualizarJugadorNoListo(CuentaDTO cuenta) {
+    public void actualizarCuentaNoLista(CuentaDTO cuenta) {
         actualizarEncabezado(modelo.ACTUALIZACION_JUGADORES_LISTOS, false);
         AnchorPane pane = modelo.obtenerPanelJugador(cuenta.getIdCadena());
         pane.getChildren().removeIf(node -> node.getId().equals("iconoListo"));
@@ -810,8 +806,8 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
     public Button getBtnIniciar() {
         return btnIniciar;
     }
-    
-    public static List<ImageView> getAvatares(){
+
+    public List<ImageView> getAvatares() {
         return avatares;
     }
 
@@ -877,8 +873,6 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         avatar.setEffect(colorAdjust);
     }
 
-
-
     /**
      * Actualiza el mensaje de aviso en la interfaz de usuario.
      */
@@ -900,14 +894,15 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         char numJugadoresAnt = lblJugadoresListos.getText().charAt(tipoActualizacion);
         int num = Integer.parseInt(String.valueOf(numJugadoresAnt));
         char numNuevo;
-        if(agregar){
-            numNuevo = String.valueOf(num+1).charAt(0);
-        }else
-            numNuevo = String.valueOf(num-1).charAt(0);
-        
+        if (agregar) {
+            numNuevo = String.valueOf(num + 1).charAt(0);
+        } else {
+            numNuevo = String.valueOf(num - 1).charAt(0);
+        }
+
         String oldTxt = lblJugadoresListos.getText();
         String newTxt = oldTxt.replace(numJugadoresAnt, numNuevo);
-        
+
         lblJugadoresListos.setText(newTxt);
         //lblEncabezado.setText(modelo.getEncabezadoLobby());//---------------------------Falta terminar----------
         //Aparezca cuantos esten listos
@@ -935,9 +930,48 @@ public class LobbyView extends Observable<EventoMVCLobby> implements ObserverLob
         quitarListoJugador(panelJugador);
     }
 //-----------------------------------------------------
-    
-    public void agregarObserver(Observer<EventoMVCLobby> observer){
-        addObserver(TipoLobbyMVC.AGREGAR_PANEL_JUGADOR, observer);
-        addObserver(TipoLobbyMVC.INICIALIZAR_PANELES_JUGADORES, observer);
+
+    @Override
+    public void inicializarLobby(LobbyDTO lobby) {
+        if (lblCodigo == null) {
+            cargarCodigoPartida(lobby);
+
+        }
+        for (CuentaDTO cuenta : lobby.getCuentas()) {
+            System.out.println("cuenta-- " + cuenta);
+            if (!yaEstaCuenta(cuenta)) {
+                verificarCuenta(cuenta);
+            }
+        }
+    }
+
+    private boolean yaEstaCuenta(CuentaDTO cuenta) {
+        boolean flag = false;
+
+        for (AnchorPane panel : panelesJugadores) {
+            System.out.println("si busca");
+            if (panel.getId().equalsIgnoreCase(cuenta.getIdCadena())) {
+                System.out.print("Panel id: " + panel.getId());
+                System.out.println(" ID cuenta: " + cuenta.getIdCadena());
+                return true;
+            }
+        }
+        return flag;
+    }
+
+    private void verificarCuenta(CuentaDTO cuenta) {
+        if (modelo.esCuentaActual(cuenta)) {
+            ponerJugadorActual(cuenta);
+        } else {
+            ponerJugadorOtro(cuenta);
+        }
+    }
+
+    @Override
+    public void mostrarVentanaAvatares(List<AvatarDTO> avataresUsados) {
+        System.out.println("Se muestran que avares ya se usaron");
+        for (AvatarDTO avatar : avataresUsados) {
+            System.out.println(avatar);
+        }
     }
 }

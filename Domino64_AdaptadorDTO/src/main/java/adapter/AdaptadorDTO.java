@@ -22,7 +22,7 @@ import java.util.List;
 public class AdaptadorDTO {
 
     public Lobby adaptarLobbyDTO(LobbyDTO lobbyDTO){
-        Lobby lobby = new Lobby(lobbyDTO.getCodigoPartida());
+        Lobby lobby = new Lobby(lobbyDTO.getCodigo());
         
         List<Cuenta> cuentas = adaptarCuentasDTO(lobbyDTO.getCuentas());
         lobby.agregarCuentas(cuentas);
@@ -81,15 +81,16 @@ public class AdaptadorDTO {
     }
 
     public Cuenta adaptarCuentaDTO(CuentaDTO cuentaDTO) {
-        System.out.println("en adaptar entidad cuenta");
         Cuenta entidad = new Cuenta();
-
-        entidad.setId(cuentaDTO.getId());
         if (cuentaDTO.getAvatar() != null) {
             entidad.setAvatar(adaptarAvatarDTO(cuentaDTO.getAvatar()));
         }
+        if(cuentaDTO.esAdmin()){
+            entidad.setAdmin(true);
+        }else{
+            entidad.setAdmin(false);
+        }
         entidad.setIdCadena(cuentaDTO.getIdCadena());
-        System.out.println("entidad: "+entidad);
         return entidad;
     }
 

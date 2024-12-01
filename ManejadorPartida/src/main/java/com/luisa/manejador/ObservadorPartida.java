@@ -13,11 +13,11 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Consumer;
-import observer.Observer;
 import tiposLogicos.TipoLogicaLobby;
 import tiposLogicos.TipoLogicaPozo;
 import tiposLogicos.TipoLogicaTurno;
 import tiposLogicos.TiposJugador;
+import observer.Observer;
 
 /**
  *

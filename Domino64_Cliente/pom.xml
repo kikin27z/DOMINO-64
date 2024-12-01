@@ -5,17 +5,22 @@
     <artifactId>Domino64_Cliente</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <dependencies>
-        <dependency>
-            <groupId>com.mycompany</groupId>
-            <artifactId>Observer</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
         <exec.mainClass>client.main</exec.mainClass>
     </properties>
     <name>Domino64_Cliente</name>
+    <dependencies>
+        <dependency>
+            <groupId>com.domino64</groupId>
+            <artifactId>Domino64_Evento</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mycompany</groupId>
+            <artifactId>Observer</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>

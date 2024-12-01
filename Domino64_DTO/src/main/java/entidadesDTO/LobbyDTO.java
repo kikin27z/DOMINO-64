@@ -14,11 +14,16 @@ import java.util.Random;
 public class LobbyDTO implements Serializable{
     private List<CuentaDTO> cuentas;
     private Map<CuentaDTO, Boolean> jugadoresListos;
-    private PartidaDTO partida;
     private CuentaDTO cuentaActual;
+    private String codigo;
+
+    public LobbyDTO() {
+        cuentas = new ArrayList<>();
+    }
+    
+    
     
     public LobbyDTO(String codigoPartida) {
-        partida = new PartidaDTO(codigoPartida);
         jugadoresListos = new HashMap<>();
         cuentas = new ArrayList<>();
     }
@@ -28,20 +33,14 @@ public class LobbyDTO implements Serializable{
         cuentas = new ArrayList<>();
     }
     
-    public void setCantidadFichas(int cantidadFichas){
-        this.partida.setFichasPorJugador(cantidadFichas);
-    }
     
-    public int getCantidadFichas(){
-        return partida.getFichasPorJugador();
+
+    public String getCodigo() {
+        return codigo;
     }
-    
-    public PartidaDTO getPartida(){
-        return partida;
-    }
-    
-    public void setPartida(PartidaDTO partida){
-        this.partida = partida;
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
     
     public void agregarJugadoresListos(List<CuentaDTO> listos){
@@ -80,14 +79,6 @@ public class LobbyDTO implements Serializable{
         this.cuentas = cuentas;
     }
 
-    public String getCodigoPartida() {
-        return partida.getCodigoPartida();
-    }
-
-    public void setCodigoPartida(String codigoPartida) {
-        this.partida.setCodigoPartida(codigoPartida);
-    }
-
     public void asignarIdJugadorActual(String id){
         cuentaActual.setIdCadena(id);
     }
@@ -109,20 +100,16 @@ public class LobbyDTO implements Serializable{
                 builder.append('-');
             builder.append(rnd.nextInt(10));
         }
-        partida.setCodigoPartida(builder.toString());
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("LobbyDTO{");
-        sb.append("cuentas=").append(cuentas);
-        sb.append(", codigoPartida=").append(partida.getCodigoPartida());
-        sb.append(", cuentaActual=").append(cuentaActual);
-        sb.append(", jugadoresListos=").append(jugadoresListos);
-        sb.append('}');
-        return sb.toString();
+        return "LobbyDTO{" + "cuentas=" + cuentas + ", cuentaActual=" + cuentaActual + ", codigo=" + codigo + '}';
     }
+
+ 
+
+    
     
     
 }
