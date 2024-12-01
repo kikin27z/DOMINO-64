@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import listener.ControlEventos;
 import manejadores.Control;
 import manejadores.ManejadorDisplay;
 import manejadores.MediadorManejadores;
@@ -55,25 +56,13 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
     public ManejadorCuenta() {
         super();
         cuenta = new Cuenta();
-        //cliente = Client.;
         adapterEntidad = new AdaptadorEntidad();
         adapterDTO = new AdaptadorDTO();
         directorEventos = new DirectorEventosLobby(new BuilderEventoJugador());
         jugadoresLobby = new ArrayList<>();
         jugadoresListos = new HashMap<>();
-        setConsumersMVC();
     }
 
-    private void setConsumersMVC(){
-        Control.agregarConsumer(TipoJugadorMVC.CREAR_PARTIDA, this::crearPartida);
-        Control.agregarConsumer(TipoJugadorMVC.UNIRSE_PARTIDA, this::buscarPartida);
-        Control.agregarConsumer(TipoJugadorMVC.ABANDONAR_PARTIDA, this::abandonarPartida);
-        Control.agregarConsumer(TipoJugadorMVC.JUGADOR_LISTO, this::actualizarJugadorListo);
-        Control.agregarConsumer(TipoJugadorMVC.JUGADOR_NO_LISTO, this::actualizarJugadorListo);
-        Control.agregarConsumer(TipoJugadorMVC.CAMBIAR_AVATAR, this::actualizarAvatar);
-        Control.agregarConsumer(TipoJugadorMVC.CAMBIAR_CONFIG_PARTIDA, this::actualizarConfigPartida);
-    }
-    
     public void actualizarConfigPartida(EventoMVCJugador evento){
         LobbyDTO lobbyAct = evento.getLobby();
         lobbyDTO.setCantidadFichas(lobbyAct.getCantidadFichas());
@@ -123,7 +112,7 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
         agregarSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA, this::recibirPartida);
     }
 
-    public void abandonarPartida(EventoMVCJugador evento){
+    public void abandonarLobby(EventoMVCJugador evento){
         System.out.println("-------------------");
         System.out.println("Saliste del lobby");
         System.out.println("-------------------");
@@ -169,13 +158,9 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
             jugadoresListos = lobbyDTO.getMapaJugadoresListos();
             //establecerJugadoresListos();
             
-            
-            System.out.println("-------------------");
-            System.out.println("Se encontro la partida");
-            System.out.println("La partida recibida es\n"+ lobbyDTO);
-            System.out.println("-------------------");
             //MediadorManejadores.enviarADisplay(eventoLobby);
-            
+            ControlEventos.procesarEventosAPresentacion();
+            ControlEventos.enviarEventoAPresentacion(evento);
             removerSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA);
             //lobbyDTO.asignarIdJugadorActual(cuenta.getIdCadena());
 //            manejadorDisplay.avisarMostrarLobby(lobbyDTO);

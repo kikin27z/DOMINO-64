@@ -103,9 +103,15 @@ public class Control {
             client.addObserver(evento, MediadorManejadores.getManejadorCuenta());
         }
 
+        for (Enum evento : MediadorManejadores.getManejadorJugador().getEventos()) {
+            client.addObserver(evento, MediadorManejadores.getManejadorJugador());
+        }
+
         MediadorManejadores.getManejadorCuenta().init(client);
+        MediadorManejadores.getManejadorJugador().init(client);
         client.iniciar();
         MediadorManejadores.getManejadorCuenta().setClientId(client.getClientId());
+        MediadorManejadores.getManejadorJugador().setClientId(client.getClientId());
         
         //display.iniciarJuego();
 

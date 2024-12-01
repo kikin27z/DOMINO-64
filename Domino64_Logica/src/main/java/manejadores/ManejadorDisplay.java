@@ -13,6 +13,7 @@ import eventosPantallas.ObserverPantalla;
 import eventoss.TipoDisplayMVC;
 import eventoss.TipoJugadorMVC;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -38,7 +39,8 @@ public final class ManejadorDisplay implements ObserverPantalla{
     private FachadaPresentacion fachada;
     private INavegacion navegacion;
     private static final BlockingQueue<Evento> colaEventosAPresentacion = new LinkedBlockingQueue<>();
-    private static final Map<Enum<?>, Consumer<Evento>> consumers = new ConcurrentHashMap<>();
+    private static final Map<Enum, Consumer<Evento>> consumers = new ConcurrentHashMap<>();
+    private Scanner scan = new Scanner(System.in);
     
     public ManejadorDisplay() {
         fachada = FachadaPresentacion.getInstance();
@@ -99,18 +101,18 @@ public final class ManejadorDisplay implements ObserverPantalla{
         Control.agregarConsumer(TipoJugadorMVC.IR_INICIO, this::updateDisplay);
     }
     
-    private void entrarAPartida(Evento evento){
+    public void entrarAPartida(Evento evento){
         EventoPartida partidaIniciada = (EventoPartida)evento;
         EventoMVCDisplay irPartida = new EventoMVCDisplay(TipoDisplayMVC.IR_PARTIDA);
         irPartida.setJugador(partidaIniciada.getJugador());
         fachada.cambiarPantalla(irPartida);
     }
     
-    private void buscarMula(Evento evento){
+    public void buscarMula(Evento evento){
         
     }
     
-    private void actualizarAvatarJugadorActual(Evento evento){
+    public void actualizarAvatarJugadorActual(Evento evento){
         EventoJugador ev = (EventoJugador)evento;
         EventoMVCDisplay eventoDisplay = new EventoMVCDisplay();
         eventoDisplay.setTipo(TipoDisplayMVC.ACTUALIZAR_AVATARES);
@@ -118,7 +120,7 @@ public final class ManejadorDisplay implements ObserverPantalla{
         fachada.actualizarLobby(eventoDisplay);
     }
     
-    private void updateDisplay(EventoMVCJugador evento){
+    public void updateDisplay(EventoMVCJugador evento){
         TipoJugadorMVC tipo = evento.getTipo();
         switch (tipo) {
             case IR_INICIO -> mostrarInicio();
@@ -126,7 +128,7 @@ public final class ManejadorDisplay implements ObserverPantalla{
         }
     }
     
-    private void agregarJugador(Evento evento){
+    public void agregarJugador(Evento evento){
         EventoLobby ev = (EventoLobby)evento;
         EventoMVCDisplay eventoDisplay = new EventoMVCDisplay();
         eventoDisplay.setTipo(TipoDisplayMVC.AGREGAR_JUGADOR);
@@ -134,7 +136,7 @@ public final class ManejadorDisplay implements ObserverPantalla{
         fachada.actualizarLobby(eventoDisplay);
     }
     
-    private void actualizarJugadorActualListo(Evento evento){
+    public void actualizarJugadorActualListo(Evento evento){
         EventoJugador ev = (EventoJugador)evento;
         EventoMVCDisplay eventoDisplay = new EventoMVCDisplay();
         TiposJugador tipo = ev.getTipo();
@@ -148,7 +150,7 @@ public final class ManejadorDisplay implements ObserverPantalla{
         fachada.actualizarLobby(eventoDisplay);
      }
     
-    private void actualizarJugadorListo(Evento evento){
+    public void actualizarJugadorListo(Evento evento){
         EventoLobby ev = (EventoLobby)evento;
         EventoMVCDisplay eventoDisplay = new EventoMVCDisplay();
         TipoLogicaLobby tipo = ev.getTipo();
@@ -162,7 +164,7 @@ public final class ManejadorDisplay implements ObserverPantalla{
         fachada.actualizarLobby(eventoDisplay);
     }
     
-    private void removerJugador(Evento evento){
+    public void removerJugador(Evento evento){
         EventoLobby ev = (EventoLobby)evento;
         EventoMVCDisplay eventoDisplay = new EventoMVCDisplay();
         eventoDisplay.setTipo(TipoDisplayMVC.REMOVER_JUGADOR);
@@ -170,24 +172,30 @@ public final class ManejadorDisplay implements ObserverPantalla{
         fachada.actualizarLobby(eventoDisplay);
     }
     
-    private void mostrarLobby(Evento evento){
-        EventoLobby ev = (EventoLobby)evento;
-        EventoMVCDisplay eventoDisplay = new EventoMVCDisplay();
-        eventoDisplay.setTipo(TipoDisplayMVC.IR_LOBBY);
-        eventoDisplay.setLobby(ev.obtenerLobby());
-        System.out.println("lobby del display: "+eventoDisplay.getLobby());
-        fachada.cambiarPantalla(eventoDisplay);
+    public void mostrarLobby(Evento evento){
+        EventoLobby eventoLobby = (EventoLobby) evento;
+        System.out.println("\nevento: " + eventoLobby);
+
+        LobbyDTO lobbyDTO = eventoLobby.obtenerLobby();
+        
+        
+//        EventoLobby ev = (EventoLobby)evento;
+//        EventoMVCDisplay eventoDisplay = new EventoMVCDisplay();
+//        eventoDisplay.setTipo(TipoDisplayMVC.IR_LOBBY);
+//        eventoDisplay.setLobby(ev.obtenerLobby());
+//        System.out.println("lobby del display: "+eventoDisplay.getLobby());
+//        fachada.cambiarPantalla(eventoDisplay);
     }
     
-    private void abandonarPartida(Evento evento){
+    public void abandonarPartida(Evento evento){
         mostrarOpcionesPartida();
     }
     
-    private void mostrarInicio(){
+    public void mostrarInicio(){
         navegacion.cambiarInicio();
     }
     
-    private void mostrarOpcionesPartida(){
+    public void mostrarOpcionesPartida(){
         fachada.cambiarPantalla(new EventoMVCDisplay(TipoDisplayMVC.IR_OPCIONES_PARTIDA));
     }
     

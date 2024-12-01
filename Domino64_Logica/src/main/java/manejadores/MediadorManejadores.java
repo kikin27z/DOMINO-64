@@ -17,11 +17,15 @@ import eventoss.TipoJugadorMVC;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import javafx.application.Platform;
+import listener.ControlEventos;
 import logicaPartida.ManejadorJugador;
 import presentacion_utilities.ControladorComunicacion;
 import presentacion_utilities.INotificadorEvento;
 import presentacion_utilities.MediadorModelos;
 import presentacion_utilities.NotificadorEvento;
+import tiposLogicos.TipoLogicaLobby;
+import tiposLogicos.TipoLogicaPartida;
+import tiposLogicos.TiposJugador;
 
 /**
  *
@@ -58,6 +62,44 @@ public class MediadorManejadores {
         
         observerLobby = new ControlEventosLobby();
         mediadorModelos.agregarObserverLobby(observerLobby);
+        
+        setConsumersManejadorCuenta();
+        setConsumersManejadorJugador();
+        setConsumersManejadorDisplay();
+    }
+    
+    private void setConsumersManejadorCuenta() {
+        ControlEventos.agregarConsumerLogica(TipoJugadorMVC.CREAR_PARTIDA, cuenta::crearPartida);
+        ControlEventos.agregarConsumerLogica(TipoJugadorMVC.UNIRSE_PARTIDA, cuenta::buscarPartida);
+        ControlEventos.agregarConsumerLogica(TipoJugadorMVC.ABANDONAR_LOBBY, cuenta::abandonarLobby);
+        ControlEventos.agregarConsumerLogica(TipoJugadorMVC.JUGADOR_LISTO, cuenta::actualizarJugadorListo);
+        ControlEventos.agregarConsumerLogica(TipoJugadorMVC.JUGADOR_NO_LISTO, cuenta::actualizarJugadorListo);
+        ControlEventos.agregarConsumerLogica(TipoJugadorMVC.CAMBIAR_AVATAR, cuenta::actualizarAvatar);
+        ControlEventos.agregarConsumerLogica(TipoJugadorMVC.CAMBIAR_CONFIG_PARTIDA, cuenta::actualizarConfigPartida);
+    }
+    
+    private void setConsumersManejadorJugador() {
+        ControlEventos.agregarConsumerLogica(TipoJugadorMVC.COLOCAR_FICHA,jugador::colocarFicha);
+        ControlEventos.agregarConsumerLogica(TipoJugadorMVC.ABANDONAR_PARTIDA, jugador::abandonarPartida);
+        ControlEventos.agregarConsumerLogica(TipoJugadorMVC.PASAR_TURNO, jugador::pasarTurno);
+        ControlEventos.agregarConsumerLogica(TipoJugadorMVC.PETICION_RENDIRSE, jugador::peticionRendirse);
+        
+    }
+    
+    private void setConsumersManejadorDisplay() {
+        ControlEventos.agregarConsumerPresentacion(TipoLogicaLobby.PARTIDA_ENCONTRADA, display::mostrarLobby);
+        ControlEventos.agregarConsumerPresentacion(TipoLogicaLobby.JUGADOR_NUEVO, display::agregarJugador);
+        ControlEventos.agregarConsumerPresentacion(TipoLogicaLobby.JUGADOR_SALIO, display::removerJugador);
+        ControlEventos.agregarConsumerPresentacion(TipoLogicaLobby.JUGADOR_NO_LISTO, display::actualizarJugadorListo);
+        ControlEventos.agregarConsumerPresentacion(TipoLogicaLobby.JUGADOR_LISTO, display::actualizarJugadorListo);
+        ControlEventos.agregarConsumerPresentacion(TiposJugador.ABANDONAR_PARTIDA, display::abandonarPartida);
+        ControlEventos.agregarConsumerPresentacion(TiposJugador.JUGADOR_LISTO, display::actualizarJugadorActualListo);
+        ControlEventos.agregarConsumerPresentacion(TiposJugador.JUGADOR_NO_LISTO, display::actualizarJugadorActualListo);
+        ControlEventos.agregarConsumerPresentacion(TiposJugador.CAMBIAR_AVATAR, display::actualizarAvatarJugadorActual);
+        ControlEventos.agregarConsumerPresentacion(TipoLogicaPartida.INICIO_PARTIDA, display::entrarAPartida);
+        ControlEventos.agregarConsumerPresentacion(TipoLogicaPartida.BUSCAR_PRIMERA_MULA, display::buscarMula);
+        ControlEventos.agregarConsumerLogica(TipoJugadorMVC.IR_OPCIONES_PARTIDA, display::updateDisplay);
+        ControlEventos.agregarConsumerLogica(TipoJugadorMVC.IR_INICIO, display::updateDisplay);
     }
     
     public static synchronized MediadorManejadores getInstance(){
@@ -81,6 +123,10 @@ public class MediadorManejadores {
     
     public static void enviarADisplay(Evento evento){
         display.recibirEventoLogico(evento);
+    }
+    
+    public static void enviarACuenta(Evento evento){
+        //cuenta.recibirEventoPresentacion(evento);
     }
     
     public void crearObserverOpcionesPartida() {

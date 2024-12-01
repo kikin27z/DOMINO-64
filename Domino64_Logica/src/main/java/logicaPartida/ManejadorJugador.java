@@ -11,9 +11,12 @@ import entidades.Partida;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaIniciadaDTO;
 import eventos.EventoPartida;
+import eventoss.EventoMVCJugador;
 import implementacion.Client;
 import manejadores.MediadorManejadores;
 import utilities.BuilderEventoJugador;
+import utilities.BuilderEventoSuscripcion;
+import utilities.DirectorSuscripcion;
 
 /**
  *
@@ -22,6 +25,7 @@ import utilities.BuilderEventoJugador;
  */
 public class ManejadorJugador extends ObservadorPartidaLocal{
     private DirectorEventosPartida directorEventos;
+    private DirectorSuscripcion directorSuscripciones;
     private ICliente cliente;
     private Jugador jugador;
     private Partida partida;
@@ -39,11 +43,15 @@ public class ManejadorJugador extends ObservadorPartidaLocal{
     }
     
     public void init(Client cliente) {
+        cliente.establecerSuscripciones(eventos);
         this.cliente = cliente;
         directorEventos = new DirectorEventosPartida(new BuilderEventoJugador(),
                 adaptadorEntidad.adaptarEntidadCuenta(jugador.getCuenta()));
-        cliente.establecerSuscripciones(eventos);
         setConsumers();
+    }
+    
+    public void setClientId(int id) {
+        directorSuscripciones = new DirectorSuscripcion(new BuilderEventoSuscripcion(), id);
     }
     
     @Override
@@ -100,6 +108,23 @@ public class ManejadorJugador extends ObservadorPartidaLocal{
     @Override
     public void salirPartida(Evento evento) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+    
+    public void colocarFicha(EventoMVCJugador evento){
+        
+    }
+    
+    public void abandonarPartida(EventoMVCJugador evento){
+        
+    }
+    
+    public void peticionRendirse(EventoMVCJugador evento){
+        
+    }
+    
+    public void pasarTurno(EventoMVCJugador evento){
+        
     }
     
 }
