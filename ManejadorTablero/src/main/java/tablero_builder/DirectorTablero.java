@@ -3,7 +3,6 @@ package tablero_builder;
 import builder.DirectorEventos;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.JugadaDTO;
-import entidadesDTO.LobbyDTO;
 import eventos.EventoTablero;
 import tiposLogicos.TipoLogicaTablero;
 
@@ -24,7 +23,7 @@ public class DirectorTablero extends DirectorEventos<BuilderEventoTablero> {
     }
     
     public EventoTablero crearEventoJugadorNuevo(JugadaDTO jugada, CuentaDTO jugador){
-        builder.setIdPublicador(jugador.getId());
+        builder.setIdPublicador(idPublicador);
 //        builder.agregarLobby(lobby);
 //        builder.setPublicador(jugador);
         builder.setTipo(TipoLogicaTablero.OBTENER_EXTREMOS);

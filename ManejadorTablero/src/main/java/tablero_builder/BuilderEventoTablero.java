@@ -58,10 +58,14 @@ public class BuilderEventoTablero implements EventBuilder<TipoLogicaTablero>{//,
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-
     @Override
     public void setTipo(TipoLogicaTablero tipo) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void setIdDestinatario(int idDestinatario) {
+        evento.setIdDestinatario(idDestinatario);
     }
     
     

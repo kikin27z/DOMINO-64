@@ -14,6 +14,7 @@ import java.util.Random;
 public class Lobby {
     private Map<Cuenta, Boolean> jugadoresListos;
     private List<Cuenta> cuentas;
+    private Cuenta admin;
     private String codigoPartida;
 
     public Lobby(String codigoPartida){
@@ -58,16 +59,23 @@ public class Lobby {
         this.cuentas = cuentas;
     }
     
-    public void agregarCuenta(Cuenta cuenta) {
-        //cuenta = asignarAvatar(cuenta);
+    public Cuenta agregarCuenta(Cuenta cuenta) {
+        if(cuentas.isEmpty()){
+            admin = cuenta;
+            admin.setAdmin(true);
+        }else{
+            admin.setAdmin(false);
+        }
+        cuenta = asignarAvatar(cuenta);
         cuentas.add(cuenta);
-        jugadoresListos.putIfAbsent(cuenta, false);
+        return cuenta;
     }
 
     public void removerCuenta(Cuenta cuenta) {
-        //cuenta = asignarAvatar(cuenta);
-        cuentas.remove(cuenta);
-        jugadoresListos.remove(cuenta);
+        Cuenta c = obtenerCuenta(cuenta);
+        
+        cuentas.remove(c);
+        System.out.println("se borro "+ this);
     }
 
     public String getCodigoPartida(){
@@ -122,7 +130,7 @@ public class Lobby {
 
     private Cuenta obtenerCuenta(Cuenta cuenta) {
         for (var c : cuentas) {
-            if (c.getIdCadena().equalsIgnoreCase(cuenta.getIdCadena())) {
+            if (esLaMismaCuenta(c, cuenta)) {
                 return c;
             }
         }
@@ -150,34 +158,13 @@ public class Lobby {
 
         return disponibles;
     }
+    
+    private boolean esLaMismaCuenta(Cuenta cuenta1, Cuenta cuenta2){
+        return cuenta1.getIdCadena().equalsIgnoreCase(cuenta2.getIdCadena());
+    }
 
     @Override
     public String toString() {
         return "Lobby{" + "cuentas=" + cuentas + ", codigoPartida=" + codigoPartida + '}';
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.codigoPartida);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Lobby other = (Lobby) obj;
-        return Objects.equals(this.codigoPartida, other.codigoPartida);
-    }
-    
-    
-    
 }

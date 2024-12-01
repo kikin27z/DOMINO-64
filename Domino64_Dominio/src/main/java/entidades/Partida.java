@@ -29,20 +29,20 @@ public class Partida implements Serializable{
     }
 
     public void actualizarJugador(Jugador jugador){
-        if(buscarJugador(jugador) != null){
-            jugadores.set(jugadores.indexOf(jugador), jugador);
-            System.out.println("jugador actualiazdo: "+jugador);
-        }else
-            System.out.println("jugador no encontrado");
+//        if(buscarJugador(jugador) != null){
+//            jugadores.set(jugadores.indexOf(jugador), jugador);
+//            System.out.println("jugador actualiazdo: "+jugador);
+//        }else
+//            System.out.println("jugador no encontrado");
     }
     
-    public Jugador buscarJugador(Jugador jugador){
-        for (Jugador j : jugadores) {
-            if(j.getCuenta().getId() == jugador.getCuenta().getId())
-                return j;
-        }
-        return null;
-    }
+//    public Jugador buscarJugador(Jugador jugador){
+//        for (Jugador j : jugadores) {
+//            if(j.getCuenta().getId() == jugador.getCuenta().getId())
+//                return j;
+//        }
+//        return null;
+//    }
     
     private void setCodigo(){
         Random rnd = new Random();

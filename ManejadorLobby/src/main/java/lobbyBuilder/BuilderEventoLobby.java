@@ -27,6 +27,10 @@ public class BuilderEventoLobby implements EventBuilder<TipoLogicaLobby>{
     public void setIdPublicador(int idPublicador) {
         this.evento.setIdPublicador(idPublicador);
     }
+    @Override
+    public void setIdDestinatario(int idPublicador) {
+        this.evento.setIdDestinatario(idPublicador);
+    }
 
     @Override
     public void setIdContexto(int idContexto) {

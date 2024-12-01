@@ -31,6 +31,7 @@ public interface EventBuilder<T> {
      * @param idPublicador el ID del componente que envía el evento.
      */
     public abstract void setIdPublicador(int idPublicador);
+    public abstract void setIdDestinatario(int idDestinatario);
 
     /**
      * Establece el identificador del contexto del evento.

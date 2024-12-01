@@ -18,7 +18,6 @@
         <module>../Domino64_EventBuilder</module>
         <module>../Domino64_EventBus</module>
         <module>../Domino64_EventoLogico</module>
-        <module>../Domino64_EventoPresentacion</module>
         <module>../Domino64_Servidor</module>
         <module>../ManejadorLobby</module>
         <module>../ManejadorPartida</module>

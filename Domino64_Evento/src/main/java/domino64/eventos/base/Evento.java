@@ -29,6 +29,8 @@ public interface Evento<T> extends Serializable{
      * @return un entero representando el id
      */
     public int getIdPublicador();
+    
+    public int getIdDestinatario();
     /**
      * obtiene la informacion del contexto del evento
      * @return El contexto representado por el tipo generico especificado

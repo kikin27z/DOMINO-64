@@ -22,5 +22,4 @@ public interface ObserverOpcionesMVC {
      * @param mensaje el mensaje de aviso que debe ser mostrado o actualizado.
      */
     void actualizarMensajeAviso(String mensaje);
-    
 }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package adapter;
 
 import entidades.Avatar;
@@ -26,9 +22,10 @@ import java.util.List;
 public class AdaptadorEntidad {
     
     public LobbyDTO adaptarEntidadLobby(Lobby lobby){
-        LobbyDTO dto = new LobbyDTO(lobby.getCodigoPartida());
+        LobbyDTO dto = new LobbyDTO();
         List<CuentaDTO> cuentas = adaptarCuentas(lobby.obtenerCuentas());
         dto.setCuentas(cuentas);
+        dto.setCodigo(lobby.getCodigoPartida());
         return dto;
     }
     
@@ -87,9 +84,13 @@ public class AdaptadorEntidad {
     public CuentaDTO adaptarEntidadCuenta(Cuenta cuenta){
         CuentaDTO dto = new CuentaDTO();
         
-        dto.setId(cuenta.getId());
         if(cuenta.getAvatar() != null){
             dto.setAvatar(adaptarAvatar(cuenta.getAvatar()));
+        }
+        if(cuenta.esAdmin()){
+            dto.setAdmin(true);
+        }else{
+            dto.setAdmin(false);
         }
         dto.setIdCadena(cuenta.getIdCadena());
         

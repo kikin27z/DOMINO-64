@@ -1,22 +1,14 @@
 package opciones_partida;
 
-import entidadesDTO.CuentaDTO;
-import entidadesDTO.LobbyDTO;
-import entidadesDTO.PartidaDTO;
 import entidadesDTO.UnirseDTO;
-import eventoss.EventoMVCJugador;
 import eventosOpcionesPartida.ObserverOpcionesPartida;
 import java.util.ArrayList;
 import java.util.List;
-import presentacion_utilities.NotificadorEvento;
 import eventosOpcionesPartida.ObservableOpcionesPartida;
 import eventosOpcionesPartida.ObserverOpcionesMVC;
-import eventosPantallas.ObservablePantallas;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import eventosOpcionesPartida.ObservableOpcionesMVC;
-import eventoss.TipoJugadorMVC;
-import presentacion_utilities.ControladorComunicacion;
 
 /**
  * Modelo para la gestión de opciones de partida, que implementa el patrón
@@ -28,7 +20,6 @@ import presentacion_utilities.ControladorComunicacion;
  */
 public class OpcionesPartidaModel implements ObservableOpcionesPartida, ObservableOpcionesMVC {
 
-    private final ObservablePantallas notificador;
     private final List<ObserverOpcionesPartida> observersLogica;
     private final List<ObserverOpcionesMVC> observersMVC;
     private String codigoPartida;
@@ -38,7 +29,6 @@ public class OpcionesPartidaModel implements ObservableOpcionesPartida, Observab
      * y una instancia de NotificadorEvento para gestionar notificaciones globales.
      */
     public OpcionesPartidaModel() {
-        notificador = NotificadorEvento.getInstance();
         observersLogica = new ArrayList<>();
         observersMVC = new ArrayList<>();
     }
@@ -65,13 +55,6 @@ public class OpcionesPartidaModel implements ObservableOpcionesPartida, Observab
                     Debe ser ###-### sin espacios""";
         }
         return aviso;
-    }
-
-    /**
-     * Notifica a todos los observadores registrados para mostrar la pantalla de inicio.
-     */
-    public void avisarMostrarInicio() {
-        notificador.avisarMostrarInicio();
     }
 
     /**
@@ -177,6 +160,13 @@ public class OpcionesPartidaModel implements ObservableOpcionesPartida, Observab
 //        ControladorComunicacion.enviarEventoALogica(evento);
         for (var observer : observersLogica) {
             observer.buscarPartida(unirse);
+        }
+    }
+
+    @Override
+    public void avisarIrInicio() {
+        for (var observer : observersLogica) {
+            observer.avisarIrInicio();
         }
     }
 }

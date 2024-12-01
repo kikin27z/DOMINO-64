@@ -1,5 +1,6 @@
 package partida;
 
+import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
@@ -394,9 +395,18 @@ public class PartidaView implements ObserverPartidaMVC {
     private int cuenta = 0;
 
 
+    @Override
+    public void actualizarJugadorAbandono(CuentaDTO cuenta) {
+        System.out.println("Esta cuenta se fue " + cuenta);
+    }
 
     @Override
-    public void actualizarTurno() {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void actualizarTurno(JugadaDTO jugada) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarJugadorSeRindio(CuentaDTO cuenta) {
+        System.out.println("Esta cuenta solicito rendirse");
     }
 }

@@ -1,5 +1,6 @@
 package partida;
 
+import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
@@ -11,7 +12,6 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.scene.canvas.Canvas;
-import presentacion_utilities.NotificadorEvento;
 import java.util.logging.Logger;
 import eventosPartida.ObservablePartida;
 import eventosPartida.ObservablePartidaMVC;
@@ -28,7 +28,6 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
     private static final Logger logger = Logger.getLogger(PartidaModel.class.getName());
     private JugadorDTO jugador;
     private Map<Canvas, FichaDTO> mapeoFichas;
-    private final NotificadorEvento notificador;
     private final List<ObserverPartida> logicaObservers;
     private final List<ObserverPartidaMVC> viewObservers;
     private FichaDTO mulaAlta = new FichaDTO(-1, -1);
@@ -39,7 +38,6 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
     private Canvas dibujoSeleccionado;
     
     public PartidaModel() {
-        notificador = NotificadorEvento.getInstance();
         mapeoFichas = new HashMap<>();
         this.esMiTurno = true;
         this.primeraJugadaHecha = true;
@@ -203,6 +201,16 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
 //            System.out.println("\nProxima jugada");
 //            System.out.println(jugada);
         }
+    }
+
+    @Override
+    public void actualizarJugadorAbandono(CuentaDTO cuenta) {
+        System.out.println("Esta cuenta abandono "+ cuenta);
+    }
+
+    @Override
+    public void actualizarJugadorSeRindio(CuentaDTO cuenta) {
+        System.out.println("Esta cuenta solicito rendirse" + cuenta);
     }
 
 }

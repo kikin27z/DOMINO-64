@@ -150,51 +150,51 @@ public class ManejadorPozo extends ObservadorPozo implements Runnable{
 
     @Override
     public void sacarFicha(Evento evento) {
-        EventoJugador eventoJugador = (EventoJugador)evento;
-        PartidaDTO partidaDTO = eventoJugador.getPartida();
-        Partida partida = adaptadorDTO.adaptarPartidaDTO(partidaDTO);
-        
-        EventoPozo eventoPozo;
-        
-        if(hayFichas(pozos.get(partida))){
-            Ficha ficha = jalarFicha(pozos.get(partida));
-            
-            eventoPozo = new EventoPozo(TipoLogicaPozo.FICHA_OBTENIDA);
-            eventoPozo.agregarFicha(adaptadorEntidad.adaptarEntidadFicha(ficha));
-            eventoPozo.setIdContexto(eventoJugador.getIdContexto());
-            eventoPozo.setIdPublicador(id);
-            
-        }else{
-            eventoPozo = new EventoPozo(TipoLogicaPozo.POZO_VACIO);
-            eventoPozo.setIdContexto(eventoJugador.getIdContexto());
-            eventoPozo.setIdPublicador(id);
-        }
-        
-        cliente.enviarEvento(eventoPozo);
+//        EventoJugador eventoJugador = (EventoJugador)evento;
+//        PartidaDTO partidaDTO = eventoJugador.getPartida();
+//        Partida partida = adaptadorDTO.adaptarPartidaDTO(partidaDTO);
+//        
+//        EventoPozo eventoPozo;
+//        
+//        if(hayFichas(pozos.get(partida))){
+//            Ficha ficha = jalarFicha(pozos.get(partida));
+//            
+//            eventoPozo = new EventoPozo(TipoLogicaPozo.FICHA_OBTENIDA);
+//            eventoPozo.agregarFicha(adaptadorEntidad.adaptarEntidadFicha(ficha));
+//            eventoPozo.setIdContexto(eventoJugador.getIdContexto());
+//            eventoPozo.setIdPublicador(id);
+//            
+//        }else{
+//            eventoPozo = new EventoPozo(TipoLogicaPozo.POZO_VACIO);
+//            eventoPozo.setIdContexto(eventoJugador.getIdContexto());
+//            eventoPozo.setIdPublicador(id);
+//        }
+//        
+//        cliente.enviarEvento(eventoPozo);
     }
 
     @Override
     public void prepararFichas(Evento evento) {
-        EventoLobby eventoLobby =(EventoLobby)evento;
-        LobbyDTO lobby = eventoLobby.obtenerLobby();
-        Partida partida = adaptadorDTO.adaptarPartidaDTO(lobby.getPartida());
-        Pozo pozo = new Pozo();
-        pozo.llenarPozo(crearFichas());
-        
-        int cantFichas = partida.getFichasPorJugador();
-        List<Jugador> jugadores = partida.getJugadores();
-        for (Jugador jugador : jugadores) {
-            jugador.setFichas(repartirFichas(cantFichas, pozo));
-        }
-        partida.setJugadores(jugadores);
-        pozos.put(partida, pozo);
-        
-        EventoPozo fichasRepartidas = new EventoPozo(TipoLogicaPozo.FICHAS_REPARTIDAS);
-//        fichasRepartidas.agregarInfo(adaptadorEntidad.adaptarEntidadPartida(partida));
-        fichasRepartidas.setIdContexto(eventoLobby.getIdContexto());
-        fichasRepartidas.setIdPublicador(id);
-        
-        cliente.enviarEvento(fichasRepartidas);
+//        EventoLobby eventoLobby =(EventoLobby)evento;
+//        LobbyDTO lobby = eventoLobby.obtenerLobby();
+//        Partida partida = adaptadorDTO.adaptarPartidaDTO(lobby.getPartida());
+//        Pozo pozo = new Pozo();
+//        pozo.llenarPozo(crearFichas());
+//        
+//        int cantFichas = partida.getFichasPorJugador();
+//        List<Jugador> jugadores = partida.getJugadores();
+//        for (Jugador jugador : jugadores) {
+//            jugador.setFichas(repartirFichas(cantFichas, pozo));
+//        }
+//        partida.setJugadores(jugadores);
+//        pozos.put(partida, pozo);
+//        
+//        EventoPozo fichasRepartidas = new EventoPozo(TipoLogicaPozo.FICHAS_REPARTIDAS);
+////        fichasRepartidas.agregarInfo(adaptadorEntidad.adaptarEntidadPartida(partida));
+//        fichasRepartidas.setIdContexto(eventoLobby.getIdContexto());
+//        fichasRepartidas.setIdPublicador(id);
+//        
+//        cliente.enviarEvento(fichasRepartidas);
     }
 
     @Override

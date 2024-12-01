@@ -1,6 +1,5 @@
 package com.domino64.manejador;
 
-
 /**
  *
  * @author karim
@@ -8,9 +7,8 @@ package com.domino64.manejador;
 public class Principal {
 
     public static void main(String[] args) {
-        ManejadorLobby manejador = new ManejadorLobby();
+        ControlLobby manejador = new ControlLobby();
         manejador.iniciaConexion();
-
     }
 
 }

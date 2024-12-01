@@ -47,5 +47,9 @@ public class BuilderEventoSuscripcion implements EventBuilder<TipoSuscripcion>{
     public void reiniciar() {
         evento = new EventoSuscripcion();
     }
+
+    @Override
+    public void setIdDestinatario(int idDestinatario) {
+    }
     
 }

@@ -61,4 +61,9 @@ public class EventoError implements Evento<String> {
     public void setIdPublicador(int id) {
         this.idPublicador = id;
     }
+
+    @Override
+    public int getIdDestinatario() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

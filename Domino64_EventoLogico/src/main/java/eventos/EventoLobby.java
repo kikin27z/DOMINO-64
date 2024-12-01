@@ -65,4 +65,18 @@ public class EventoLobby extends EventoLogico {
         this.tipo = tipo;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("EventoLobby{");
+        sb.append("lobby=").append(lobby);
+        sb.append(", tipo=").append(tipo);
+        sb.append(", idPublicador=").append(idPublicador);
+        sb.append(", idDestinatario=").append(idDestinatario);
+        sb.append(", cuenta=").append(publicador);
+        sb.append('}');
+        return sb.toString();
+    }
+
+    
 }

@@ -68,7 +68,7 @@ public class OpcionesPartidaControl {
      * @param e el evento de clic de ratón asociado al botón
      */
     private void mostrarInicio(MouseEvent e) {
-        modelo.avisarMostrarInicio();
+        modelo.avisarIrInicio();
     }
 
     /**

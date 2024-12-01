@@ -1,5 +1,6 @@
 package presentacion_utilities;
 
+import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
 
 /**
@@ -30,7 +31,7 @@ public interface INavegacion {
      * Método para cambiar la vista a la pantalla de lobby.
      * Este método debería gestionar la transición de la vista actual a la vista del lobby.
      */
-    public void cambiarLobby();
+    public void cambiarLobby(CuentaDTO cuenta);
 
     /**
      * Método para cambiar la vista a la pantalla de partida.

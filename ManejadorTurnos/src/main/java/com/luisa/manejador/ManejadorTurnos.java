@@ -163,17 +163,17 @@ public class ManejadorTurnos extends ObservadorTurno{
 
     @Override
     public void cambiarTurno(Evento evento) {
-        EventoJugador eventoJ = (EventoJugador)evento;
-        Partida partida = adaptadorDTO.adaptarPartidaDTO(eventoJ.getPartida());
-        Jugador jugEnTurno = cambiarTurno(partida);
-        CuentaDTO jugadorEnTurnoDTO = adaptador.adaptarEntidadCuenta(jugEnTurno.getCuenta());
-        
-        EventoTurno cambioTurno = new EventoTurno(TipoLogicaTurno.CAMBIO_TURNO);
-        cambioTurno.setIdContexto(eventoJ.getIdContexto());
-        cambioTurno.agregarCuenta(jugadorEnTurnoDTO);
-        cambioTurno.setIdPublicador(id);
-        
-        cliente.enviarEvento(cambioTurno);
+//        EventoJugador eventoJ = (EventoJugador)evento;
+//        Partida partida = adaptadorDTO.adaptarPartidaDTO(eventoJ.getPartida());
+//        Jugador jugEnTurno = cambiarTurno(partida);
+//        CuentaDTO jugadorEnTurnoDTO = adaptador.adaptarEntidadCuenta(jugEnTurno.getCuenta());
+//        
+//        EventoTurno cambioTurno = new EventoTurno(TipoLogicaTurno.CAMBIO_TURNO);
+//        cambioTurno.setIdContexto(eventoJ.getIdContexto());
+//        cambioTurno.agregarCuenta(jugadorEnTurnoDTO);
+//        cambioTurno.setIdPublicador(id);
+//        
+//        cliente.enviarEvento(cambioTurno);
     }
 
     @Override

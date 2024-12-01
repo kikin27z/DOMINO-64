@@ -3,6 +3,8 @@ package utilities;
 import builder.EventBuilder;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
+import entidadesDTO.ReglasDTO;
+import entidadesDTO.UnirseDTO;
 import eventos.EventoJugador;
 import tiposLogicos.TiposJugador;
 
@@ -29,11 +31,24 @@ public class BuilderEventoJugador implements EventBuilder<TiposJugador> {
     public void setPublicador(CuentaDTO cuenta) {
         evento.setCuenta(cuenta);
     }
+    public void agregarCuenta(CuentaDTO cuenta){
+        evento.setCuenta(cuenta);
+    }
+    
+    public void agregarUnirse(UnirseDTO unirse){
+        evento.setUnirse(unirse);
+    }
+    
+    public void agregarReglas(ReglasDTO reglas){
+        evento.setReglas(reglas);
+    }
 
     @Override
     public void setTipo(TiposJugador tipo) {
         evento.setTipo(tipo);
     }
+    
+    
 
     @Override
     public void setIdPublicador(int idPublicador) {
@@ -59,6 +74,11 @@ public class BuilderEventoJugador implements EventBuilder<TiposJugador> {
     @Override
     public void reiniciar() {
         evento = new EventoJugador();
+    }
+
+    @Override
+    public void setIdDestinatario(int idDestinatario) {
+        evento.setIdDestinatario(idDestinatario);
     }
 
 }

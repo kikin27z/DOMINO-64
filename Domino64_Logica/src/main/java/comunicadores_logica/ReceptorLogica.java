@@ -1,66 +1,48 @@
 package comunicadores_logica;
 
-import abstraccion.ICliente;
-import adapter.AdaptadorDTO;
-import adapter.AdaptadorEntidad;
 import domino64.eventos.base.Evento;
-import entidades.Cuenta;
-import entidadesDTO.AvatarDTO;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
-import eventos.EventoJugador;
 import eventos.EventoLobby;
-import eventos.EventoSuscripcion;
-import eventoss.EventoMVCJugador;
-import eventoss.TipoJugadorMVC;
 import implementacion.Client;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import manejadores.Control;
-import manejadores.MediadorManejadores;
-import tiposLogicos.TipoLogicaLobby;
-import tiposLogicos.TiposJugador;
-import utilities.BuilderEventoJugador;
+import manejadores.ManejadorCuenta;
+import manejadores.ManejadorDisplay;
+import presentacion_utilities.DistribuidorEventosModelo;
 import utilities.BuilderEventoSuscripcion;
-import utilities.DirectorJugador;
 import utilities.DirectorSuscripcion;
 
 /**
  *
  * @author karim
  */
-public class ReceptorLogica extends IReceptorEventosLogica {
+public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
 
     private int id;
-    private AtomicBoolean running;
     private static ExecutorService ejecutorEventos;
-    private ManejadorCuenta2 manejador;
-    
-    private DirectorJugador directorEventos;
     private DirectorSuscripcion directorSuscripciones;
-    private AdaptadorEntidad adapterEntidad;
-    private AdaptadorDTO adapterDTO;
-    private Cuenta cuenta;
-    private LobbyDTO lobbyDTO;
-    private Map<CuentaDTO, Boolean> jugadoresListos;
-    private List<CuentaDTO> jugadoresLobby;
+    private ManejadorDisplay display;
+    private DistribuidorEventosModelo distribuidor;
+    private AtomicBoolean running;
+    private ManejadorCuenta manejadorCuenta;
 
     public ReceptorLogica() {
         super();
-        cuenta = new Cuenta();
-        adapterEntidad = new AdaptadorEntidad();
-        adapterDTO = new AdaptadorDTO();
-        directorEventos = new DirectorJugador(new BuilderEventoJugador());
-        jugadoresLobby = new ArrayList<>();
-        jugadoresListos = new HashMap<>();
-        setConsumersMVC();
+        distribuidor = DistribuidorEventosModelo.getInstance();
         setConsumers();
+        ejecutorEventos = Executors.newSingleThreadExecutor();
+        running = new AtomicBoolean(true);
+    }
+
+    @Override
+    public void vincularDisplay() {
+        display = Control.obtenerManejadorDisplay();
     }
 
     public void vincularCliente(Client _cliente) {
@@ -68,12 +50,11 @@ public class ReceptorLogica extends IReceptorEventosLogica {
         cliente.establecerSuscripciones(eventos);
         _cliente.iniciar();
         id = _cliente.getClientId();
-//        director = new DirectorLobby(new BuilderEventoLobby(), id);
-//        ejecutorEventos.submit(this);
-
-    directorSuscripciones = new DirectorSuscripcion(new BuilderEventoSuscripcion(), id);
+        directorSuscripciones = new DirectorSuscripcion(new BuilderEventoSuscripcion(), id);
+        ejecutorEventos.submit(this);
     }
 
+    @Override
     public void iniciaConexion() {
         Client c = Client.iniciarComunicacion();
 
@@ -86,182 +67,149 @@ public class ReceptorLogica extends IReceptorEventosLogica {
 
     @Override
     public void recibirPartida(Evento evento) {
-        System.out.println("partida recibida");
-        Enum<?> tipo = evento.getTipo();
-        if (tipo.equals(TipoLogicaLobby.PARTIDA_ENCONTRADA)) {
-            EventoLobby eventoLobby = (EventoLobby) evento;
-            System.out.println("evento: "+eventoLobby);
-            
-            lobbyDTO = eventoLobby.obtenerLobby();
-            cuenta = adapterDTO.adaptarCuentaDTO(lobbyDTO.getCuentaActual());
-            
-            jugadoresLobby = lobbyDTO.getCuentas();
-            
-            jugadoresListos = lobbyDTO.getMapaJugadoresListos();
-            System.out.println("mapa en manejador C; " + jugadoresListos);
-            //establecerJugadoresListos();
-            
-            System.out.println("lobbyDTO: "+lobbyDTO);
-            MediadorManejadores.enviarADisplay(eventoLobby);
-            
-            removerSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA);
-            //lobbyDTO.asignarIdJugadorActual(cuenta.getIdCadena());
-//            manejadorDisplay.avisarMostrarLobby(lobbyDTO);
-        }
+//        System.out.println("partida recibida");
+//        Enum<?> tipo = evento.getTipo();
+//        if (tipo.equals(TipoLogicaLobby.PARTIDA_ENCONTRADA)) {
+//            EventoLobby eventoLobby = (EventoLobby) evento;
+//            System.out.println("evento: " + eventoLobby);
+//
+//            lobbyDTO = eventoLobby.obtenerLobby();
+//            manejador.asignarCuenta(lobbyDTO.getCuentaActual());
+//
+//            System.out.println("lobbyDTO: " + lobbyDTO);
+////            MediadorManejadores.enviarADisplay(eventoLobby);
+//
+//            removerSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA);
+//        }
     }
 
-    @Override
-    public void actualizarJugadoresListos(Evento evento) {
-        EventoLobby ev = esEventoDeEsteLobby(evento);
-        if(ev != null){
-            CuentaDTO jugadorEvento = ev.getPublicador();
-            
-            TipoLogicaLobby tipo = ev.getTipo();
-            
-            if (tipo.equals(TipoLogicaLobby.JUGADOR_SALIO)){
-                removerJugador(jugadorEvento);
-            }else if (tipo.equals(TipoLogicaLobby.JUGADOR_NUEVO)){
-                agregarJugador(jugadorEvento);
-            }
-            
-            MediadorManejadores.enviarADisplay(ev);
-        }
-    }
 
-    @Override
-    public void actualizarJugadores(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 
     @Override
     public void actualizarAvatares(Evento evento) {
-        EventoLobby ev = esEventoDeEsteLobby(evento);
-        if( ev != null){
-            CuentaDTO jugadorEvento = ev.getPublicador();
-            
-            for (CuentaDTO cuentaDTO : jugadoresLobby) {
-                if(cuentaDTO.equals(jugadorEvento)){
-                    cuentaDTO.setAvatar(jugadorEvento.getAvatar());
-                    MediadorManejadores.enviarADisplay(ev);
-                    break;
-                }
-            }
-        }
+        
+        System.out.println("Jugador actualizo su avatar");
+//        EventoLobby ev = esEventoDeEsteLobby(evento);
+//        if( ev != null){
+//            CuentaDTO jugadorEvento = ev.getPublicador();
+//            
+//            for (CuentaDTO cuentaDTO : jugadoresLobby) {
+//                if(cuentaDTO.equals(jugadorEvento)){
+//                    cuentaDTO.setAvatar(jugadorEvento.getAvatar());
+//                    MediadorManejadores.enviarADisplay(ev);
+//                    break;
+//                }
+//            }
+//        }
     }
-
-    @Override
-    public void actualizarUsernames(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
     @Override
     public void manejarError(Evento evento) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    private EventoLobby esEventoDeEsteLobby(Evento evento){
-        EventoLobby ev = (EventoLobby) evento;
-        LobbyDTO lDTO = ev.obtenerLobby();
-        if(lDTO.getCodigoPartida().equals(this.lobbyDTO.getCodigoPartida()))
-            return ev;
-        return null;
-    }
-    
-    
-    private void agregarJugador(CuentaDTO jugadorNuevo) {
-        jugadoresLobby.add(jugadorNuevo);
-        System.out.println("un jugador nuevo: " + jugadorNuevo.getUsername());
+    @Override
+    public int devolverIdCliente() {
+        return id;
     }
 
-    private void removerJugador(CuentaDTO exjugador) {
-        jugadoresLobby.remove(exjugador);
-        System.out.println("salio un jugador: " + exjugador.getUsername());
+    @Override
+    public void partidaCreada(Evento evento) {
+        EventoLobby eventoRecibido = (EventoLobby) evento;
+        if(evento.getIdDestinatario() != id){
+            return;
+        }
+        LobbyDTO lobby = eventoRecibido.obtenerLobby();
         
-    }
-    
-    
-    private void setConsumersMVC(){
-        Control.agregarConsumer(TipoJugadorMVC.CREAR_PARTIDA, this::crearPartida);
-        Control.agregarConsumer(TipoJugadorMVC.UNIRSE_PARTIDA, this::buscarPartida);
-        Control.agregarConsumer(TipoJugadorMVC.ABANDONAR_PARTIDA, this::abandonarPartida);
-        Control.agregarConsumer(TipoJugadorMVC.JUGADOR_LISTO, this::actualizarJugadorListo);
-        Control.agregarConsumer(TipoJugadorMVC.JUGADOR_NO_LISTO, this::actualizarJugadorListo);
-        Control.agregarConsumer(TipoJugadorMVC.CAMBIAR_AVATAR, this::actualizarAvatar);
-        Control.agregarConsumer(TipoJugadorMVC.CAMBIAR_CONFIG_PARTIDA, this::actualizarConfigPartida);
-    }
-    
-    private void actualizarConfigPartida(EventoMVCJugador evento){
-        LobbyDTO lobbyAct = evento.getLobby();
-        lobbyDTO.setCantidadFichas(lobbyAct.getCantidadFichas());
-        EventoJugador cambioConfig = directorEventos.crearEventoActualizarConfigPartida(lobbyDTO);
-        cliente.enviarEvento(cambioConfig);
+        System.out.println("cuentas--"+ lobby.getCuentas());
         
+        CuentaDTO aux = eventoRecibido.getPublicador();
+        manejadorCuenta.asignarCuenta(aux);
+        CuentaDTO cuentaDTO = manejadorCuenta.getCuenta();
+        display.mostrarLobby(cuentaDTO);
+        
+        distribuidor.inicializarLobby(lobby);
     }
-    
-    private void actualizarAvatar(EventoMVCJugador evento){
-        CuentaDTO cuentaDTO = evento.getPublicador();
-        if(validarCambioAvatar(cuentaDTO.getAvatar())){
-            cuenta.setAvatar(adapterDTO.adaptarAvatarDTO(cuentaDTO.getAvatar()));
-            EventoJugador cambioAv = directorEventos.crearEventoCambiarAvatar(lobbyDTO, cuentaDTO);
-            
-            MediadorManejadores.enviarADisplay(cambioAv);
-            
-            cliente.enviarEvento(cambioAv);
+
+    @Override
+    public void partidaEncontrada(Evento evento) {
+        EventoLobby eventoRecibido = (EventoLobby) evento;
+//        if(evento.getIdDestinatario() != id){
+//            return;
+//        }
+        
+        System.out.println("\n");
+        System.out.println("Evento a logica partida creada " + eventoRecibido);
+        LobbyDTO lobby = eventoRecibido.obtenerLobby();
+        CuentaDTO aux = eventoRecibido.getPublicador();
+        
+        if(eventoRecibido.getIdDestinatario() == id){
+            manejadorCuenta.asignarCuenta(aux);
+            CuentaDTO cuenta = manejadorCuenta.getCuenta();
+            display.mostrarLobby(cuenta);
+        }
+        distribuidor.inicializarLobby(lobby);
+    }
+
+    @Override
+    public void errorUnirse(Evento evento) {
+    }
+
+    @Override
+    public void run() {
+        while (running.get()) {
+            try {
+                Evento nextEvent = colaEventos.take();
+                Consumer<Evento> cons = consumers.get(nextEvent.getTipo());
+                if (cons != null) {
+                    cons.accept(nextEvent);
+                }
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                Logger.getLogger(ReceptorLogica.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
+                break;
+            }
+        }
+    }
+
+
+
+    @Override
+    public void vincularCuenta() {
+        manejadorCuenta = Control.obtenerManejadorCuenta();
+    }
+
+    @Override
+    public void adminAbandono(Evento evento) {
+        EventoLobby eventoLobby  = (EventoLobby) evento;
+        System.out.println(eventoLobby);
+        manejadorCuenta.borrarPerfil();
+        display.mostrarInicio();
+    }
+
+    @Override
+    public void cuentaAbandono(Evento evento) {
+        EventoLobby eventoLobby  = (EventoLobby) evento;
+        CuentaDTO cuentaAbandono = eventoLobby.getPublicador();
+        System.out.println(eventoLobby);
+        
+        if(eventoLobby.getIdDestinatario() == id){
+            manejadorCuenta.borrarPerfil();
+            display.mostrarInicio();
+        }else{
+            distribuidor.actualizarQuitarCuenta(cuentaAbandono);
         }
         
     }
-    
-    private boolean validarCambioAvatar(AvatarDTO avatarElegido){
-        for (CuentaDTO cuentaDTO : jugadoresLobby) {
-            if(cuentaDTO.getAvatar().equals(avatarElegido))
-                return false;
-        }
-        return true;
-    }
-    
-    private void crearPartida(EventoMVCJugador evento){
-        CuentaDTO cuentaDTO = adapterEntidad.adaptarEntidadCuenta(cuenta);
-        EventoJugador crear = directorEventos.crearEventoCrearPartida(cuentaDTO);
-        cliente.enviarEvento(crear);
-        
-        agregarSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA, this::recibirPartida);
+
+    @Override
+    public void cuentaLista(Evento evento) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    private void buscarPartida(EventoMVCJugador evento) {
-        LobbyDTO lobbyAux = evento.getLobby();
-        cliente.enviarEvento(directorEventos.crearEventoUnirsePartida(
-                        lobbyAux, adapterEntidad.adaptarEntidadCuenta(cuenta)));
-        
-        agregarSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA, this::recibirPartida);
-    }
-
-    private void abandonarPartida(EventoMVCJugador evento){
-        MediadorManejadores.enviarADisplay(new EventoJugador(TiposJugador.ABANDONAR_PARTIDA));
-        CuentaDTO cuentaDTO = adapterEntidad.adaptarEntidadCuenta(cuenta);
-        EventoJugador eventoJ = directorEventos.crearEventoAbandonarPartida(lobbyDTO, cuentaDTO);
-        cliente.enviarEvento(eventoJ);
+    @Override
+    public void cuentaNoLista(Evento evento) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
-    private void actualizarJugadorListo(EventoMVCJugador evento){
-        CuentaDTO cuentaDTO = adapterEntidad.adaptarEntidadCuenta(cuenta);
-        
-        boolean flag =evento.getTipo().equals(TipoJugadorMVC.JUGADOR_LISTO);
-        EventoJugador ev = directorEventos.crearEventoActualizarJugadorListo(lobbyDTO,cuentaDTO, flag);
-        
-        MediadorManejadores.enviarADisplay(ev);
-
-        cliente.enviarEvento(ev);
-    }
     
-    private void agregarSuscripcion(Enum<?> tipoEvento, Consumer<Evento> consumer){
-        EventoSuscripcion suscripcion = directorSuscripciones.crearEventoSuscribirse(tipoEvento);
-        cliente.agregarSuscripcion(suscripcion, this);
-        agregarEvento(tipoEvento, consumer);
-    }
-    
-    private void removerSuscripcion(Enum<?> tipoEvento){
-        EventoSuscripcion desuscripcion = directorSuscripciones.crearEventoDesuscribirse(tipoEvento);
-        cliente.removerSuscripcion(desuscripcion, this);
-        removerEvento(tipoEvento);
-    }
 }

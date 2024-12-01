@@ -18,24 +18,24 @@ public interface ObservableInicio {
      * 
      * @param observador el observador que desea recibir notificaciones.
      */
-    void agregarObserver(ObserverInicio observador);
+    public void agregarObserver(ObserverInicio observador);
 
     /**
      * Elimina un observador que ya no desea recibir notificaciones sobre los cambios en la vista de inicio.
      * 
      * @param observador el observador que desea ser eliminado.
      */
-    void quitarObserver(ObserverInicio observador);
+    public void quitarObserver(ObserverInicio observador);
 
     /**
      * Notifica a todos los observadores que el usuario ha elegido iniciar el modo de juego.
      * Este método debe ser invocado cuando el usuario decide comenzar una partida.
      */
-    void avisarModoJugar();
+    public void avisarModoJugar();
 
     /**
      * Notifica a todos los observadores que el usuario ha elegido mostrar los créditos.
      * Este método debe ser invocado cuando el usuario desea ver los créditos del juego.
      */
-    void avisarMostrarCreditos();
+    public void avisarMostrarCreditos();
 }

@@ -1,7 +1,7 @@
 package eventosLobby;
 
 import entidadesDTO.CuentaDTO;
-import entidadesDTO.LobbyDTO;
+import entidadesDTO.ReglasDTO;
 
 /**
  *
@@ -9,9 +9,9 @@ import entidadesDTO.LobbyDTO;
  */
 public interface ObserverLobby {
     public void avisarCambioAvatar(CuentaDTO cuentaActualizada);
-    public void avisarCambioConfig(LobbyDTO lobbyAct);
-    public void avisarJugadorListo();
-    public void avisarJugadorNoListo();
+    public void avisarCuentaLista();
+    public void avisarCuentaNoLista();
     public void avisarIniciarPartida();
-    public void avisarAbandonar(LobbyDTO lobby);
+    public void avisarAbandonar();
+     public void avisarActualizarReglas(ReglasDTO reglas);
 }

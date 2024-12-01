@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package eventos;
 
 import tiposLogicos.TipoSuscripcion;
@@ -52,6 +48,11 @@ public class EventoSuscripcion extends EventoSub<Enum<?>> {
     @Override
     public Enum<?> getInfo() {
         return evento;
+    }
+
+    @Override
+    public int getIdDestinatario() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

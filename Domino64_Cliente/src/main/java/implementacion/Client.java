@@ -25,7 +25,8 @@ import observer.Observer;
  *
  * @author luisa M
  */
-public class Client extends Observable<Evento> implements ICliente{
+public class Client extends Observable<Evento> implements ICliente {
+
     private static Client cliente;
     private String host;
     private final int port;
@@ -39,9 +40,8 @@ public class Client extends Observable<Evento> implements ICliente{
     private volatile boolean connected;
     private List<Enum<?>> suscripcionesEventos;
     private BlockingQueue<Evento> colaEventos;
-    
-    
-    private Client(){
+
+    private Client() {
         String ip = pedirIP();
         this.host = ip;
         this.port = 5000;
@@ -49,71 +49,58 @@ public class Client extends Observable<Evento> implements ICliente{
             Thread t = new Thread(r);
             return t;
         });
-        
+
         this.ejecutorEventos = Executors.newSingleThreadExecutor(r -> {
             Thread t = new Thread(r);
             return t;
         });
-        
+
         suscripcionesEventos = new ArrayList<>();
         colaEventos = new LinkedBlockingQueue();
     }
-    
-    public static synchronized Client iniciarComunicacion(){
-        if(cliente == null)
+
+    public static synchronized Client iniciarComunicacion() {
+        if (cliente == null) {
             cliente = new Client();
+        }
         return cliente;
     }
-    
-    public int getClientId(){
+
+    public int getClientId() {
         return clientId;
     }
-    
-    public void iniciar(){
+
+    public void iniciar() {
         running = true;
         conectarCliente();
-        
+
         new Thread(this::procesarColaEventos).start();
-        
+
         new Thread(this::listenForEvent).start();
     }
-    
-    private void conectarCliente(){
+
+    private void conectarCliente() {
         try {
             socket = new Socket(host, port);
-//            System.out.println("en el run");
-            
             output = new ObjectOutputStream(socket.getOutputStream());
-//            System.out.println("se inicio");
-            
             input = new ObjectInputStream(socket.getInputStream());
-            
+
             connected = true;
-            
+
             //recibir el id del cliente
             this.clientId = input.readInt();
-//            System.out.println("id cliente: "+clientId);
-            System.out.println("Se conecto al servidor id otorgado: "+ clientId);
+            System.out.println("Se conecto al servidor id otorgado: " + clientId);
             enviarSuscripciones();
-            
-        }catch (IOException ex){
-            System.out.println("Error al conectar cliente "+clientId);
+
+        } catch (IOException ex) {
+            System.out.println("Error al conectar cliente " + clientId);
             manejarDesconexion();
         }
     }
-    
-//    private void reconexionProgramada(){
-//        if(running && !connected){ 
-//            ejecutorReconexion.schedule(() -> {
-//                System.out.println("intentando reconectar...");
-//                conectarCliente();
-//            }, 5, TimeUnit.SECONDS);
-//        }
-//    }
-    
-    private void enviarSuscripciones(){
-        if(suscripcionesEventos != null && !suscripcionesEventos.isEmpty()){
-            if(connected){
+
+    private void enviarSuscripciones() {
+        if (suscripcionesEventos != null && !suscripcionesEventos.isEmpty()) {
+            if (connected) {
                 try {
                     synchronized (output) {
                         output.reset();
@@ -127,87 +114,86 @@ public class Client extends Observable<Evento> implements ICliente{
             }
         }
     }
-    
+
     /**
-     * envia los eventos al servidor.
-     * Va tomando los eventos que se vayan agregando a la cola
-     * y los envia segun vayan llegando
+     * envia los eventos al servidor. Va tomando los eventos que se vayan
+     * agregando a la cola y los envia segun vayan llegando
      */
-    private void procesarColaEventos(){
-        while(running){
-                try {
+    private void procesarColaEventos() {
+        while (running) {
+            try {
                 Evento e = colaEventos.take();
-                if(connected){
-                        try {
-                            synchronized (output) {
-                                output.reset();
-                                System.out.println("en el enviar evento; " + e);
-                                output.writeObject(e);//envia msj al servidor
-                                output.flush();
-                            }
-                        } catch (IOException ex) {
-                            System.out.println("error al enviar evento: " + ex.getMessage());
-                            manejarDesconexion();
+                if (connected) {
+                    try {
+                        synchronized (output) {
+                            output.reset();
+                            System.out.println("Envio evento; " + e);
+                            output.writeObject(e);//envia msj al servidor
+                            output.flush();
                         }
+                    } catch (IOException ex) {
+                        System.out.println("error al enviar evento: " + ex.getMessage());
+                        manejarDesconexion();
                     }
-                } catch (InterruptedException e) {
-                    System.out.println("error al tomar el evento de la cola de eventos: " + e.getMessage());
+                }
+            } catch (InterruptedException e) {
+                System.out.println("error al tomar el evento de la cola de eventos: " + e.getMessage());
                 Thread.currentThread().interrupt();
                 break;
             }
+        }
     }
-    }
-    
+
     @Override
     public void enviarEvento(Evento event) {
         colaEventos.offer(event);
     }
 
     @Override
-    public void establecerSuscripciones(List<Enum<?>> subs){
+    public void establecerSuscripciones(List<Enum<?>> subs) {
         for (Enum<?> sub : subs) {
             suscripcionesEventos.add(sub);
         }
     }
-    
+
     /**
-     * escucha eventos que le llegan del servidor
-     * y se los notifica al componente observador
+     * escucha eventos que le llegan del servidor y se los notifica al
+     * componente observador
      */
     private void listenForEvent() {
-        while(running){
-            if(connected && input != null){
+        while (running) {
+            if (connected && input != null) {
                 Evento evento;
-                    try {
-                    evento = (Evento)input.readObject();
-                    System.out.println("evento en lstn 4 ev: "+evento);
+                try {
+                    evento = (Evento) input.readObject();
+                    System.out.println("evento en lstn 4 ev: " + evento);
                     ejecutorEventos.submit(() -> {
                         manejarEvento(evento);
                     });
-                    } catch (IOException e) {
-                        manejarDesconexion();
-                }catch (ClassNotFoundException ex){
-                    System.err.println("Error al recibir un evento: "+ex.getMessage());
-                    }
-            }else {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
+                } catch (IOException e) {
+                    manejarDesconexion();
+                } catch (ClassNotFoundException ex) {
+                    System.err.println("Error al recibir un evento: " + ex.getMessage());
+                }
+            } else {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     break;
-                    }
                 }
             }
+        }
     }
-    
-    private void manejarEvento(Evento evento){
-                    System.out.println("mensaje recibido " + evento);
 
-                    notifyObservers(evento.getTipo(), evento);
-                    System.out.println("se notifico a observers");
-                }
-        
-    private void manejarDesconexion(){
+    private void manejarEvento(Evento evento) {
+        System.out.println("mensaje recibido " + evento);
+
+        notifyObservers(evento.getTipo(), evento);
+        System.out.println("se notifico a observers");
+    }
+
+    private void manejarDesconexion() {
         connected = false;
         running = false;
         System.out.println("en falso");
@@ -215,7 +201,7 @@ public class Client extends Observable<Evento> implements ICliente{
         notifyObservers(TipoError.ERROR_DE_SERVIDOR, error);
         System.out.println("se notifico el error");
         ejecutorEventos.shutdown();
-        
+
         try {
             if (!ejecutorEventos.awaitTermination(3, TimeUnit.SECONDS)) {
                 ejecutorEventos.shutdownNow();
@@ -224,39 +210,44 @@ public class Client extends Observable<Evento> implements ICliente{
             ejecutorEventos.shutdownNow();
             Thread.currentThread().interrupt();
         }
-        
+
         try {
-            if (socket != null)socket.close();
-            if(input != null)input.close();
-            if(output != null)output.close();
+            if (socket != null) {
+                socket.close();
+            }
+            if (input != null) {
+                input.close();
+            }
+            if (output != null) {
+                output.close();
+            }
             System.out.println("cliente desconectadooo");
-        } catch (IOException e) {}
-        
+        } catch (IOException e) {
+        }
+
         //reconexionProgramada();
     }
-    
 
     @Override
     public void agregarSuscripcion(Evento evento, Observer ob) {
-        suscripcionesEventos.add((Enum<?>)evento.getInfo());
-        addObserver((Enum<?>)evento.getInfo(), ob);
+        suscripcionesEventos.add((Enum<?>) evento.getInfo());
+        addObserver((Enum<?>) evento.getInfo(), ob);
         enviarEvento(evento);
     }
 
     @Override
     public void removerSuscripcion(Evento evento, Observer ob) {
-        suscripcionesEventos.remove((Enum<?>)evento.getInfo());
-        removeObserver((Enum<?>)evento.getInfo(), ob);
+        suscripcionesEventos.remove((Enum<?>) evento.getInfo());
+        removeObserver((Enum<?>) evento.getInfo(), ob);
         enviarEvento(evento);
     }
 
-    
-    private  String pedirIP() {
+    private String pedirIP() {
         Scanner lectura = new Scanner(System.in);
         System.out.print("Escribe la ip del servidor: ");
         String ip = lectura.nextLine();
-        
-        if(ip.isBlank()){
+
+        if (ip.isBlank()) {
             return "localhost";
         }
         return ip;
