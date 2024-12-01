@@ -16,6 +16,7 @@ import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
+import entidadesDTO.PartidaIniciadaDTO;
 import java.util.ArrayList;
 import java.util.List;
 

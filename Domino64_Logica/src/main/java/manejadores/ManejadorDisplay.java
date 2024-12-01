@@ -6,6 +6,7 @@ import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
 import eventos.EventoJugador;
 import eventos.EventoLobby;
+import eventos.EventoPartida;
 import eventoss.EventoMVCDisplay;
 import eventoss.EventoMVCJugador;
 import eventosPantallas.ObserverPantalla;
@@ -24,6 +25,7 @@ import presentacion_utilities.INavegacion;
 import presentacion_utilities.Navegacion;
 import presentacion_utilities.NotificadorEvento;
 import tiposLogicos.TipoLogicaLobby;
+import tiposLogicos.TipoLogicaPartida;
 import tiposLogicos.TiposJugador;
 
 /**
@@ -91,8 +93,21 @@ public final class ManejadorDisplay implements ObserverPantalla{
         consumers.putIfAbsent(TiposJugador.JUGADOR_LISTO, this::actualizarJugadorActualListo);
         consumers.putIfAbsent(TiposJugador.JUGADOR_NO_LISTO, this::actualizarJugadorActualListo);
         consumers.putIfAbsent(TiposJugador.CAMBIAR_AVATAR, this::actualizarAvatarJugadorActual);
+        consumers.putIfAbsent(TipoLogicaPartida.INICIO_PARTIDA, this::entrarAPartida);
+        consumers.putIfAbsent(TipoLogicaPartida.BUSCAR_PRIMERA_MULA, this::buscarMula);
         Control.agregarConsumer(TipoJugadorMVC.IR_OPCIONES_PARTIDA, this::updateDisplay);
         Control.agregarConsumer(TipoJugadorMVC.IR_INICIO, this::updateDisplay);
+    }
+    
+    private void entrarAPartida(Evento evento){
+        EventoPartida partidaIniciada = (EventoPartida)evento;
+        EventoMVCDisplay irPartida = new EventoMVCDisplay(TipoDisplayMVC.IR_PARTIDA);
+        irPartida.setJugador(partidaIniciada.getJugador());
+        fachada.cambiarPantalla(irPartida);
+    }
+    
+    private void buscarMula(Evento evento){
+        
     }
     
     private void actualizarAvatarJugadorActual(Evento evento){

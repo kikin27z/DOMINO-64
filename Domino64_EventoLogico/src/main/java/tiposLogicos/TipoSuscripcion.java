@@ -13,5 +13,8 @@ package tiposLogicos;
  */
 public enum TipoSuscripcion {
     SUSCRIBIR,
-    DESUSCRIBIR;
+    DESUSCRIBIR,
+    ESTABLECER_ID_CONTEXTO,
+    REMOVER_ID_CONTEXTO
+    ;
 }

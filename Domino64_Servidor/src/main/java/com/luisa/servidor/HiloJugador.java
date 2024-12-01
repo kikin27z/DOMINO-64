@@ -144,17 +144,19 @@ public class HiloJugador implements Runnable, Subscriber{
         }
     }
     
-    private void manejarEvento(Evento evento){
-                    Enum<?> tipo = evento.getTipo();
-        if(tipo.equals(TipoSuscripcion.SUSCRIBIR)){
-            suscribirEvento((Enum<?>)evento.getInfo());
-        }else if(tipo.equals(TipoSuscripcion.DESUSCRIBIR)){
-            removerSuscripcion((Enum<?>)evento.getInfo());
-        }else{
-                        publicador.publicarEvento(tipo, evento);
-                    }
-                }
-            
+    private void manejarEvento(Evento evento) {
+        Enum<?> tipo = evento.getTipo();
+        if (tipo instanceof TipoSuscripcion tipoSub){
+            switch (tipoSub) {
+                case SUSCRIBIR -> suscribirEvento((Enum<?>) evento.getInfo());
+                case DESUSCRIBIR -> removerSuscripcion((Enum<?>) evento.getInfo());
+                case ESTABLECER_ID_CONTEXTO -> setIdContexto(evento.getIdContexto());
+                case REMOVER_ID_CONTEXTO -> setIdContexto(0);
+            }
+        }else
+            publicador.publicarEvento(tipo, evento);
+    }
+
     @Override
     public void run() {
         try {
@@ -176,17 +178,6 @@ public class HiloJugador implements Runnable, Subscriber{
                     manejarEvento(ev);
                     System.out.println("ev: "+ev);
                 });
-                //manejarEvento(ev);
-//                obj = input.readObject();
-//                if(obj instanceof EventoJugador evJugador){
-//                    System.out.println("nombre: "+evJugador.getJugador());
-//                    evento = (EventoJugador)obj;
-//                    System.out.println("evento jugador: "+evento);
-//                }else{
-//                    evento = (EventoLogico) obj;
-//                }
-//                
-//                manejarEvento(evento);
             }
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
@@ -235,6 +226,7 @@ public class HiloJugador implements Runnable, Subscriber{
     @Override
     public void recibirEvento(Evento evento) {
         System.out.println("evento recibido: "+evento);
+        System.out.println("id contexto del evento recibido: "+evento.getIdContexto());
         if(evento.getIdContexto() == 0 || evento.getIdContexto() == this.idContexto){
             colaEventosBus.offer(evento);
             if (evento.getTipo().equals(TipoError.ERROR_DE_SERVIDOR)) {
@@ -244,5 +236,5 @@ public class HiloJugador implements Runnable, Subscriber{
             }
         }
     }
-
+    
 }

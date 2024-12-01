@@ -34,4 +34,16 @@ public class DirectorSuscripcion extends DirectorEventos<BuilderEventoSuscripcio
         return builder.construirEvento();
     }
     
+    public EventoSuscripcion crearEventoEstablecerIdContexto(int id){
+        builder.setIdPublicador(idPublicador);
+        builder.setIdContexto(id);
+        builder.setTipo(TipoSuscripcion.ESTABLECER_ID_CONTEXTO);
+        return builder.construirEvento();
+    }
+    
+    public EventoSuscripcion crearEventoRemoverIdContexto(){
+        builder.setIdPublicador(idPublicador);
+        builder.setTipo(TipoSuscripcion.REMOVER_ID_CONTEXTO);
+        return builder.construirEvento();
+    }
 }

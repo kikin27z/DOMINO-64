@@ -5,6 +5,7 @@
 package entidades;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -18,6 +19,8 @@ public class Partida implements Serializable{
     private int fichasPorJugador;
     private String codigoPartida;
 
+    public Partida(){jugadores = new ArrayList<>();}
+    
     public Partida(List<Jugador> jugadores, int fichasPorJugador) {
         this.jugadores = jugadores;
         this.fichasPorJugador = fichasPorJugador;

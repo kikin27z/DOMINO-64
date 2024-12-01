@@ -18,13 +18,18 @@ import eventos.EventoJugador;
 import eventos.EventoPozo;
 import eventos.EventoSuscripcion;
 import eventos.EventoTurno;
+import implementacion.Client;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import tiposLogicos.TipoLogicaPozo;
 import tiposLogicos.TipoLogicaTurno;
 import tiposLogicos.TipoSuscripcion;
@@ -33,7 +38,7 @@ import tiposLogicos.TipoSuscripcion;
  *
  * @author luisa M
  */
-public class ManejadorTurnos extends ObservadorTurno{
+public class ManejadorTurnos extends ObservadorTurno implements Runnable{
     private int id;
     private Map<Partida, List<Jugador>> jugadoresPartidas;
     private Map<Partida, Jugador> jugadoresEnTurno;
@@ -48,6 +53,33 @@ public class ManejadorTurnos extends ObservadorTurno{
         this.jugadoresPartidas = new ConcurrentHashMap<>();
         this.jugadoresEnTurno = new ConcurrentHashMap<>();
         this.idsContextos = new ConcurrentHashMap<>();
+        ejecutorEventos = Executors.newSingleThreadExecutor();
+        setConsumers();
+    }
+    
+    @Override
+    public void run(){
+        while (running.get()) {
+            try {
+                Evento nextEvent = colaEventos.take();
+                Consumer<Evento> cons = consumers.get(nextEvent.getTipo());
+                if (cons != null) {
+                    cons.accept(nextEvent);
+                }
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                Logger.getLogger(ManejadorTurnos.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
+                break;
+            }
+        }
+    }
+    
+    protected void vincularCliente(Client _cliente) {
+        this.cliente = _cliente;
+        cliente.establecerSuscripciones(eventos);
+        _cliente.iniciar();
+        id = _cliente.getClientId();
+        ejecutorEventos.submit(this);
     }
     
     private Jugador buscarPrimerTurno(List<Jugador> jugadores){
@@ -155,9 +187,6 @@ public class ManejadorTurnos extends ObservadorTurno{
         
         partidaDTO = adaptador.adaptarEntidadPartida(partida);
         
-        for (JugadorDTO jugadorDTO : partidaDTO.getJugadores()) {
-            turnosDesignados.agregarInfo(jugadorDTO.getCuenta());
-        }
         turnosDesignados.setPartida(partidaDTO);
         turnosDesignados.setIdContexto(eventoPozo.getIdContexto());
         turnosDesignados.setIdPublicador(id);

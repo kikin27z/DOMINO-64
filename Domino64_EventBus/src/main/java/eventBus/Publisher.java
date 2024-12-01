@@ -17,11 +17,9 @@ import domino64.eventos.base.Evento;
  * @author karim F
  */
 public class Publisher implements Publicador{
-    private final BusCore bus;
     private int idPublicador;
     
-    public Publisher(BusCore bus){
-        this.bus = bus;
+    public Publisher(){
     }
     
     public void setId(int id){
@@ -34,19 +32,19 @@ public class Publisher implements Publicador{
 
     @Override
     public void suscribir(Enum tipoEvento, Suscriptor suscriptor) {
-        bus.addSub((Subscriber)suscriptor, tipoEvento);
+        BusCore.getInstance().addSub((Subscriber)suscriptor, tipoEvento);
         System.out.println("se suscribio a evento: "+tipoEvento.toString());
     }
 
     @Override
     public void desuscribir(Enum tipoEvento, Suscriptor suscriptor) {
-        bus.removeSub((Subscriber)suscriptor, tipoEvento);
+        BusCore.getInstance().removeSub((Subscriber)suscriptor, tipoEvento);
     }
 
     @Override
     public void publicarEvento(Enum tipoEvento, Evento evento) {
         System.out.println("en publicar Evento");
-        bus.postEvent(tipoEvento, evento);
+        BusCore.getInstance().postEvent(tipoEvento, evento);
         System.out.println("se publico evento: "+evento.getInfo());
     }
 }

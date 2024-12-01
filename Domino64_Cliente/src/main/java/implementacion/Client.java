@@ -17,6 +17,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import observer.Observable;
 import observer.Observer;
 
@@ -37,7 +39,7 @@ public class Client extends Observable<Evento> implements ICliente{
     private volatile boolean running;
     private volatile boolean connected;
     private List<Enum<?>> suscripcionesEventos;
-    private BlockingQueue<Evento> colaEventos;
+    private static BlockingQueue<Evento> colaEventos;
     
     /**
      * para conexion en equipos diferentes (diferentes ip)
@@ -112,10 +114,8 @@ public class Client extends Observable<Evento> implements ICliente{
 //            
                 
             socket = new Socket(host, port);
-            System.out.println("en el run");
             
             output = new ObjectOutputStream(socket.getOutputStream());
-            System.out.println("se inicio");
             
             input = new ObjectInputStream(socket.getInputStream());
             
@@ -143,19 +143,20 @@ public class Client extends Observable<Evento> implements ICliente{
 //    }
     
     private void enviarSuscripciones(){
-        if(suscripcionesEventos != null && !suscripcionesEventos.isEmpty()){
-            if(connected){
-                try {
+        try {
+            //output = new ObjectOutputStream(socket.getOutputStream());
+            if(suscripcionesEventos != null && !suscripcionesEventos.isEmpty()){
+                if (connected) {
                     synchronized (output) {
-                        output.reset();
+                        //output.reset();
                         output.writeObject(suscripcionesEventos);
                         output.flush();
                     }
-                } catch (IOException e) {
-                    System.out.println("error al enviar suscripciones: " + e.getMessage());
-                    manejarDesconexion();
                 }
             }
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            manejarDesconexion();
         }
     }
     
@@ -172,7 +173,7 @@ public class Client extends Observable<Evento> implements ICliente{
                         try {
                             synchronized (output) {
                                 output.reset();
-                                System.out.println("en el enviar evento; " + e);
+                                System.out.println("en el enviar evento; " + e.getTipo());
                                 output.writeObject(e);//envia msj al servidor
                                 output.flush();
                             }
@@ -211,7 +212,7 @@ public class Client extends Observable<Evento> implements ICliente{
                 Evento evento;
                     try {
                     evento = (Evento)input.readObject();
-                    System.out.println("evento en lstn 4 ev: "+evento);
+                    
                     ejecutorEventos.submit(() -> {
                         manejarEvento(evento);
                     });
@@ -231,12 +232,12 @@ public class Client extends Observable<Evento> implements ICliente{
             }
     }
     
-    private void manejarEvento(Evento evento){
-                    System.out.println("mensaje recibido " + evento);
+    private void manejarEvento(Evento evento) {
+        System.out.println("mensaje recibido " + evento.getInfo());
 
-                    notifyObservers(evento.getTipo(), evento);
-                    System.out.println("se notifico a observers");
-                }
+        notifyObservers(evento.getTipo(), evento);
+        System.out.println("se notifico a observers");
+    }
         
     private void manejarDesconexion(){
         connected = false;

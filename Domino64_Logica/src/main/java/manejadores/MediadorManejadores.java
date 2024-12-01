@@ -17,6 +17,7 @@ import eventoss.TipoJugadorMVC;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import javafx.application.Platform;
+import logicaPartida.ManejadorJugador;
 import presentacion_utilities.ControladorComunicacion;
 import presentacion_utilities.INotificadorEvento;
 import presentacion_utilities.MediadorModelos;
@@ -31,6 +32,7 @@ public class MediadorManejadores {
     private static MediadorManejadores instance;
     private static ManejadorDisplay display;
     private static ManejadorCuenta cuenta;
+    private static ManejadorJugador jugador;
     //private final INotificadorEvento notificador;
     private final ExecutorService hiloPrincipal;
     private final MediadorModelos mediadorModelos;
@@ -41,6 +43,7 @@ public class MediadorManejadores {
     private MediadorManejadores() {
         cuenta = new ManejadorCuenta();
         display = new ManejadorDisplay();
+        jugador = new ManejadorJugador();
         //cuenta.setManejadorDisplay(display);
         
         mediadorModelos = MediadorModelos.getInstance();
@@ -66,6 +69,10 @@ public class MediadorManejadores {
     
     protected static ManejadorCuenta getManejadorCuenta(){
         return cuenta;
+    }
+    
+    protected static ManejadorJugador getManejadorJugador(){
+        return jugador;
     }
     
     protected static ManejadorDisplay getManejadorDisplay(){

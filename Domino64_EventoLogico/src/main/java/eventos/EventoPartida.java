@@ -8,9 +8,9 @@ import tiposLogicos.TipoLogicaPartida;
  *
  * @author luisa M
  */
-public class EventoPartida extends EventoLogico<PartidaDTO> {
+public class EventoPartida extends EventoLogico {
     private JugadorDTO jugador;
-    private PartidaDTO contexto;
+    private Object contexto;
     private TipoLogicaPartida tipo;
     
     public EventoPartida(){}
@@ -20,7 +20,7 @@ public class EventoPartida extends EventoLogico<PartidaDTO> {
     }
     
     @Override
-    public void agregarInfo(PartidaDTO partida) {
+    public void agregarInfo(Object partida) {
         contexto = partida;
     }
 
@@ -33,7 +33,7 @@ public class EventoPartida extends EventoLogico<PartidaDTO> {
     }
     
     @Override
-    public PartidaDTO getInfo() {
+    public Object getInfo() {
         return contexto;
     }
 

@@ -36,6 +36,10 @@ public class FachadaPresentacion {
         mediador.actualizarModeloLobby(evento);
     }
     
+    public void actualizarPartida(EventoMVCDisplay evento){
+        mediador.actualizarModeloLobby(evento);
+    }
+    
     public void cambiarPantalla(EventoMVCDisplay evento){
         switch(evento.getTipo()){
             case IR_INICIO-> {
@@ -49,6 +53,7 @@ public class FachadaPresentacion {
                 navegador.cambiarLobby();
             }
             case IR_PARTIDA -> {
+                actualizarLobby(evento);
                 navegador.cambiarPartida();
             }
         }

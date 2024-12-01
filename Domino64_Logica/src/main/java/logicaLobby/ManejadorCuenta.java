@@ -42,7 +42,7 @@ import utilities.DirectorSuscripcion;
 public class ManejadorCuenta extends ObservadorLobbyLocal {
 
     private ICliente cliente;
-    private DirectorJugador directorEventos;
+    private DirectorEventosLobby directorEventos;
     private DirectorSuscripcion directorSuscripciones;
     private AdaptadorEntidad adapterEntidad;
     private AdaptadorDTO adapterDTO;
@@ -57,7 +57,7 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
         cliente = Control.obtenerCliente();
         adapterEntidad = new AdaptadorEntidad();
         adapterDTO = new AdaptadorDTO();
-        directorEventos = new DirectorJugador(new BuilderEventoJugador());
+        directorEventos = new DirectorEventosLobby(new BuilderEventoJugador());
         jugadoresLobby = new ArrayList<>();
         jugadoresListos = new HashMap<>();
         setConsumersMVC();
@@ -136,6 +136,13 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
         cliente.enviarEvento(ev);
     }
     
+    private int generarIdContextoPartida(LobbyDTO partida){
+        String codigoPartida = partida.getCodigoPartida();
+        String digitos = codigoPartida.replaceFirst("-", "");
+        int idContextoPartida = Integer.parseInt(digitos);
+        return idContextoPartida;
+    }
+    
     @Override
     public void recibirPartida(Evento evento) {
         System.out.println("partida recibida");
@@ -150,7 +157,6 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
             jugadoresLobby = lobbyDTO.getCuentas();
             
             jugadoresListos = lobbyDTO.getMapaJugadoresListos();
-            System.out.println("mapa en manejador C; " + jugadoresListos);
             //establecerJugadoresListos();
             
             System.out.println("lobbyDTO: "+lobbyDTO);
@@ -189,7 +195,7 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
     
     public void init(Client cliente) {
         this.cliente = cliente;
-        directorEventos = new DirectorJugador(new BuilderEventoJugador());
+        directorEventos = new DirectorEventosLobby(new BuilderEventoJugador());
         cliente.establecerSuscripciones(eventos);
         setConsumers();
     }

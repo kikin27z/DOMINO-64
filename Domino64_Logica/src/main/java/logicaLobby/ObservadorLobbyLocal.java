@@ -38,8 +38,7 @@ public abstract class ObservadorLobbyLocal implements Observer<Evento>{
                     TipoLogicaLobby.JUGADOR_NUEVO,
                     TipoLogicaLobby.JUGADOR_SALIO,
                     TipoLogicaLobby.ACTUALIZAR_AVATARES,
-                    TipoLogicaLobby.ACTUALIZAR_USERNAME,
-                    TipoLogicaLobby.PARTIDA_ENCONTRADA
+                    TipoLogicaLobby.ACTUALIZAR_USERNAME
             ));
 
     public ObservadorLobbyLocal() {

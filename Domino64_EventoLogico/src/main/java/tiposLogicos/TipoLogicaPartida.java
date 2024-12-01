@@ -14,5 +14,7 @@ public enum TipoLogicaPartida {
     INICIO_PARTIDA,
     JUGADOR_GANO,
     JUGADOR_SALIO,
-    PETICION_RENDIRSE;
+    PETICION_RENDIRSE,
+    BUSCAR_PRIMERA_MULA
+    ;
 }

@@ -32,7 +32,7 @@ public class ClientHandler extends Publisher implements Subscriber{
     private EventoLogico evento;
     
     public ClientHandler(BusCore bus, Socket clientSocket){
-        super(bus);
+//        super(bus);
         this.clientSocket = clientSocket;
     }
     

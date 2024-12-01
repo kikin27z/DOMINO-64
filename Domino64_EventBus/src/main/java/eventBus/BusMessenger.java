@@ -39,7 +39,7 @@ public class BusMessenger {
      */
     public void notifyEvent(Enum<?> tipoEvento, Evento event){
         Set<Subscriber> subs = subscribers.get(tipoEvento);
-        System.out.println("evento en el bus messenger: "+event);
+        System.out.println("evento en el bus messenger: "+event.getTipo());
         subs.forEach(sub -> {
             if (sub.getSubscriberId() != event.getIdPublicador()) {
                 sub.recibirEvento(event);

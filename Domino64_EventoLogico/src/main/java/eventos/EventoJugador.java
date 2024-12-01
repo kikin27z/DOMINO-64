@@ -1,7 +1,6 @@
 package eventos;
 
 import entidadesDTO.CuentaDTO;
-import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
@@ -31,6 +30,7 @@ public class EventoJugador extends EventoLogico{
     }
     
     public EventoJugador(TiposJugador tipo){
+        this.jugador = new JugadorDTO();
         this.tipo = tipo;
     }
     

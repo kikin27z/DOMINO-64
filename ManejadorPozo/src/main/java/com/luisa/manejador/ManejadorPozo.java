@@ -8,7 +8,6 @@ import entidades.Ficha;
 import entidades.Jugador;
 import entidades.Partida;
 import entidades.Pozo;
-import entidadesDTO.CuentaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
@@ -58,6 +57,7 @@ public class ManejadorPozo extends ObservadorPozo implements Runnable{
         adaptadorEntidad = new AdaptadorEntidad();
         ejecutorEventos = Executors.newSingleThreadExecutor();
         running = new AtomicBoolean(true);
+        setConsumers();
     }
     
     @Override
@@ -71,7 +71,7 @@ public class ManejadorPozo extends ObservadorPozo implements Runnable{
                 }
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
-                Logger.getLogger(ObservadorPozo.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
+                Logger.getLogger(ManejadorPozo.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
                 break;
             }
         }
@@ -140,7 +140,7 @@ public class ManejadorPozo extends ObservadorPozo implements Runnable{
     @Override
     public void guardarFichas(Evento evento) {
         EventoPartida eventoPartida =(EventoPartida)evento;
-        PartidaDTO partidaDTO = eventoPartida.getInfo();
+        PartidaDTO partidaDTO = (PartidaDTO)eventoPartida.getInfo();
         Partida partida = adaptadorDTO.adaptarPartidaDTO(partidaDTO);
         JugadorDTO jugadorDTO = eventoPartida.getJugador();
         Jugador jugador = adaptadorDTO.adaptarJugadorDTO(jugadorDTO);

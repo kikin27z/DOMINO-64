@@ -8,18 +8,28 @@ import com.domino64.base.Publicador;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.TipoError;
 import eventBus.Subscriber;
+import eventos.EventoJugador;
+import eventos.EventoLobby;
+import eventos.EventoLogico;
+import eventos.EventoTurno;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import tiposLogicos.TipoLogicaLobby;
+import tiposLogicos.TipoLogicaTurno;
 import tiposLogicos.TipoSuscripcion;
+import tiposLogicos.TiposJugador;
 
 /**
  * Esta clase representa un hilo se encarga de manejar la comunicacion mediante 
@@ -45,11 +55,15 @@ public class HiloComponente  implements Runnable, Subscriber{
     private final int idContexto = 0;
     private Publicador publicador;
     private List<Enum<?>> suscripciones;
+    private AtomicBoolean running;
+    private static BlockingQueue<Evento> colaEventos;
     
     public HiloComponente(Publicador publicador, Socket socket, int id){
         this.publicador = publicador;
         this.id = id;
         this.socket = socket;
+        colaEventos = new LinkedBlockingQueue();
+        running = new AtomicBoolean(true);
         initStream();
     }
     
@@ -64,9 +78,11 @@ public class HiloComponente  implements Runnable, Subscriber{
                 input = new ObjectInputStream(socket.getInputStream());
             } catch (IOException ex) {
                 Logger.getLogger(HiloComponente.class.getName()).log(Level.SEVERE, null, ex);
+                Servidor.desconectarComponente(id);
             }
         }
     }
+    
     /**
      * metodo que se ejecuta cada vez que recibe un evento
      * por parte del cliente.
@@ -79,9 +95,12 @@ public class HiloComponente  implements Runnable, Subscriber{
      * @param evento Evento a manejar
      */
     private void manejarEvento(Evento evento) {
+        System.out.println("------");
+        System.out.println("mensaje recibido: "+evento.getInfo());
+        System.out.println("componente: "+id);
+        System.out.println("------");
         Enum<?> tipo = evento.getTipo();
         System.out.println("tipo: " + tipo);
-        System.out.println("en el manejarTipo en componente");
         if (tipo.equals(TipoSuscripcion.SUSCRIBIR)) {
             suscribirEvento(tipo);
         } else if (tipo.equals(TipoSuscripcion.DESUSCRIBIR)) {
@@ -107,9 +126,13 @@ public class HiloComponente  implements Runnable, Subscriber{
             //enviar el id asignado al cliente
             output.writeInt(id);
             output.flush();
+            //input = new ObjectInputStream(socket.getInputStream());
             
             recibirSuscripciones();
-            
+            Thread t = new Thread(this::sendEvent);
+            t.setName("hilo 2");
+            t.start();
+            System.out.println("¡???¡¡¡");
             Evento evento;
             while((evento = (Evento)input.readObject()) != null){
                 manejarEvento(evento);
@@ -119,7 +142,6 @@ public class HiloComponente  implements Runnable, Subscriber{
             removerSuscripciones();
             Servidor.desconectarComponente(id);
         }
-        
     }
     
     /**
@@ -181,17 +203,30 @@ public class HiloComponente  implements Runnable, Subscriber{
      * 
      * @param evento Evento recibido y que debe enviar al componente
      */
-    private void enviarEvento(Evento evento) {
-        try {
-            synchronized (output) {
-                output.writeObject(evento);
-                output.flush();
-            }
-        } catch (IOException e) {
-            Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, null, e);
-        }
+    private void agregarEventoACola(Evento evento) {
+        colaEventos.offer(evento);
     }
 
+    private void sendEvent(){
+        try {
+            output = new ObjectOutputStream(socket.getOutputStream());
+            while (running.get()) {
+                Evento evento = colaEventos.take();
+                synchronized (output) {
+                    System.out.println("evento recibido del bus en el HiloCom " + id + ": " + evento.getInfo());
+                    //output.reset();
+                    output.writeObject(evento);
+                    output.flush();
+                }
+            }
+        } catch (IOException | InterruptedException ex) {
+            Logger.getLogger(HiloComponente.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            running = new AtomicBoolean(false);
+        }
+        
+    }
+    
     @Override
     public int getIdContexto(){
         return idContexto;
@@ -212,7 +247,7 @@ public class HiloComponente  implements Runnable, Subscriber{
      */
     @Override
     public void recibirEvento(Evento evento) {
-        enviarEvento(evento);
+        agregarEventoACola(evento);
         if(evento.getTipo().equals(TipoError.ERROR_DE_SERVIDOR)){
             removerSuscripciones();
             Servidor.desconectarComponente(id);

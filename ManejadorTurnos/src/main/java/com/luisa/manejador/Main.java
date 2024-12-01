@@ -4,7 +4,6 @@
  */
 package com.luisa.manejador;
 
-import static com.luisa.manejador.ObservadorPartida.eventos;
 import implementacion.Client;
 import java.util.Scanner;
 
@@ -20,9 +19,9 @@ public class Main {
     public static void main(String[] args) {
         String ip = pedirIP();
         Client c = Client.getClient(ip, 5000);
-        ManejadorPartida manejador = new ManejadorPartida();
+        ManejadorTurnos manejador = new ManejadorTurnos();
 
-        for (Enum<?> suscripcion : eventos) {
+        for (Enum<?> suscripcion : ManejadorTurnos.eventos) {
             c.addObserver(suscripcion, manejador);
         }
 

@@ -74,6 +74,15 @@ public class MediadorModelos {
         
     }
     
+    protected void actualizarModeloPartida(EventoMVCDisplay evento){
+         Platform.runLater(() -> {
+            switch (evento.getTipo()) {
+                case IR_PARTIDA -> modeloPartida2.setPartida(evento.getPartida());
+            }
+        });
+     }
+        
+    
     protected static InicioModel getModeloInicio(){
         return modeloInicio2;
     }

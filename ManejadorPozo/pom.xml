@@ -35,6 +35,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
-        <exec.mainClass>com.luisa.manejador.ManejadorPozo</exec.mainClass>
+        <exec.mainClass>com.luisa.manejador.Main</exec.mainClass>
     </properties>
 </project>

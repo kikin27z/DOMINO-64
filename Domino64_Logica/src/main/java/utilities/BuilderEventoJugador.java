@@ -29,6 +29,10 @@ public class BuilderEventoJugador implements EventBuilder {
         evento.setLobby(lobby);
     }
 
+    public void setPartidaDTO(PartidaDTO partida){
+        evento.setPartida(partida);
+    }
+
     public void setPublicador(CuentaDTO cuenta) {
         evento.setCuenta(cuenta);
     }
