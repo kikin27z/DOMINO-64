@@ -24,7 +24,6 @@ public class Partida implements Serializable{
     public Partida(List<Jugador> jugadores, int fichasPorJugador) {
         this.jugadores = jugadores;
         this.fichasPorJugador = fichasPorJugador;
-        setCodigo();
     }
 
     public Partida(String codigoPartida) {
@@ -45,17 +44,6 @@ public class Partida implements Serializable{
                 return j;
         }
         return null;
-    }
-    
-    private void setCodigo(){
-        Random rnd = new Random();
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 6; i++) {
-            if(i==3)
-                builder.append('-');
-            builder.append(rnd.nextInt(10));
-        }
-        codigoPartida = builder.toString();
     }
     
     public List<Jugador> getJugadores() {

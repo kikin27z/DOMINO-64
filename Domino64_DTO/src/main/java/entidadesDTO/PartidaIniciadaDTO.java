@@ -4,6 +4,7 @@
  */
 package entidadesDTO;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +28,27 @@ public class PartidaIniciadaDTO {
         }
     }
     
+    public List<CuentaDTO> getTurnos(){
+        List<CuentaDTO> turnos = new ArrayList<>();
+        for (Map.Entry<String, JugadorDTO> entry : mapaJugadores.entrySet()) {
+            JugadorDTO jugador = entry.getValue();
+            turnos.add(jugador.getCuenta());
+        }
+        return turnos;
+    }
+    
     public JugadorDTO getJugador(String idCadena) {
         return mapaJugadores.get(idCadena);
     }
 
+    public CuentaDTO getPrimerTurno(){
+        CuentaDTO cuenta = null;
+        for (Map.Entry<String, JugadorDTO> entry : mapaJugadores.entrySet()) {
+            JugadorDTO jugador = entry.getValue();
+            cuenta = jugador.getCuenta();
+            break;
+        }
+        return cuenta;
+    }
+    
 }

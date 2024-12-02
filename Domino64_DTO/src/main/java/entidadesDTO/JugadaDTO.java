@@ -10,6 +10,7 @@ public class JugadaDTO implements Serializable {
     private int izquierda;
     private int derecha;
     private FichaDTO ficha;
+    private PosicionDTO posicion;
 
     public JugadaDTO() {
     }

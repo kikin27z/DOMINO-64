@@ -6,6 +6,7 @@ package entidadesDTO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,6 +51,19 @@ public class JugadorDTO implements Serializable {
     
     public void setCuenta(CuentaDTO cuenta){
         this.cuenta = cuenta;
+    }
+    
+    public FichaDTO getMulaMayor(){
+        List<Integer> valores = new ArrayList<>();
+        for (FichaDTO ficha : fichas) {
+            if(ficha.esMula())
+                valores.add(ficha.getDerecha()+ficha.getDerecha());
+        }
+        if(!valores.isEmpty()){
+            int index = Collections.max(valores);
+            return fichas.get(index);
+        }
+        return null;
     }
 
     @Override
