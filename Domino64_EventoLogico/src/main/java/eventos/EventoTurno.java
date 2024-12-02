@@ -10,11 +10,10 @@ import tiposLogicos.TipoLogicaTurno;
  *
  * @author luisa M
  */
-public class EventoTurno extends EventoLogico<CuentaDTO>{
+public class EventoTurno extends EventoLogico{
     private List<CuentaDTO> jugadores;
     private CuentaDTO jugador;
     private PartidaDTO partida;
-    private boolean flag;
     private TipoLogicaTurno tipo;
     
     public EventoTurno(){}
@@ -22,33 +21,16 @@ public class EventoTurno extends EventoLogico<CuentaDTO>{
     public EventoTurno(TipoLogicaTurno tipo){
         super();
         this.tipo = tipo;
-        if(tipo.equals(TipoLogicaTurno.TURNOS_DESIGNADOS)){
-            jugadores = new ArrayList<>();
-            flag = true;
-        }
     }
     
     /**
      * Agrega la cuenta referente para este evento de turno.
      * Normalmente cuando se envie un evento de este tipo,
      * el contexto que se va a agregar es el jugador que esta en turno.
-     * @param info Cuenta del contexto de este evento
+     * @param cuenta Cuenta del contexto de este evento
      */
-//    @Override
-//    public void agregarInfo(CuentaDTO info) {
-//        if(flag)
-//            jugadores.add(info);
-//        else{
-//            jugador = info;
-//        }
-//    }
-    
     public void agregarCuenta(CuentaDTO cuenta){
-        if(flag)
-            jugadores.add(cuenta);
-        else{
-            jugador = cuenta;
-        }
+        this.jugador = cuenta;
     }
 
     /**
@@ -56,8 +38,7 @@ public class EventoTurno extends EventoLogico<CuentaDTO>{
      * de este evento
      * @return La cuenta como parte del contexto
      */
-    @Override
-    public CuentaDTO getInfo() {
+    public CuentaDTO getCuenta() {
         return jugador;
     }
     /**
@@ -88,10 +69,5 @@ public class EventoTurno extends EventoLogico<CuentaDTO>{
     
     public void setTipo(TipoLogicaTurno tipo){
         this.tipo = tipo;
-        if (tipo.equals(TipoLogicaTurno.TURNOS_DESIGNADOS) ||
-                tipo.equals(TipoLogicaTurno.JUGADORES_SIN_MULAS)) {
-            jugadores = new ArrayList<>();
-            flag = true;
-        }
     }
 }

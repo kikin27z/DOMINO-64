@@ -86,13 +86,12 @@ public class ControlLobby extends IControlLobby implements Runnable {
     @Override
     public void crearPartida(Evento evento) {
         EventoJugador eventoRecibido = (EventoJugador) evento;
-        int idDestinatario = evento.getIdPublicador();
 
         manejador.iniciarLobby();
         CuentaDTO cuentaDTO = manejador.unirCuenta(eventoRecibido.getCuenta());
         LobbyDTO lobby = manejador.devolverLobby();
 
-        EventoLobby ev = director.crearEventoPartidaCreada(lobby, cuentaDTO, idDestinatario);
+        EventoLobby ev = director.crearEventoPartidaCreada(lobby, cuentaDTO);
         cliente.enviarEvento(ev);
 
     }
@@ -107,30 +106,26 @@ public class ControlLobby extends IControlLobby implements Runnable {
         System.out.println("Lo envio el jugador " + idDestinatario);
         if (mensaje == null) {
             unirJugador(cuentaDTO, idDestinatario);
+        }else{
+            notificarError(TipoError.ERROR_LOGICO, mensaje);
         }
-
+    }
+    
+    private void notificarError(TipoError tipo, String msj){
+        EventoError error = new EventoError(tipo, msj);
+        cliente.enviarEvento(error);
     }
 
     private void unirJugador(CuentaDTO cuentaDTO, int destinatario) {
         CuentaDTO aux = manejador.unirCuenta(cuentaDTO);
         LobbyDTO lobby = manejador.devolverLobby();
-        EventoLobby ev = director.crearEventoPartidaEncontrada(lobby, aux, destinatario);
-        cliente.enviarEvento(ev);
+        EventoLobby jugadorNuevo = director.crearEventoJugadorNuevo(lobby, aux, destinatario);
+        cliente.enviarEvento(jugadorNuevo);
+        
+        lobby.setCuentaActual(aux);
+        EventoLobby partidaEnc = director.crearEventoPartidaEncontrada(lobby, aux, destinatario);
+        cliente.enviarEvento(partidaEnc);
 
-    }
-
-    /**
-     * metodo para notificar errores
-     *
-     * @param tipo El tipo de error a notificar
-     * @param idJugador Id del suscriptor al que se va a notificar
-     */
-    private void notificarError(TipoError tipo, int idJugador, String msjError) {
-        System.out.println("no se pudo unir a la partida");
-        EventoError error = new EventoError(tipo, msjError);
-        error.setIdPublicador(idJugador);
-
-        cliente.enviarEvento(error);
     }
 
     @Override
@@ -184,7 +179,7 @@ public class ControlLobby extends IControlLobby implements Runnable {
     public void iniciaConexion() {
         Client c = Client.iniciarComunicacion();
 
-        for (Enum<?> suscripcion : eventos) {
+        for (Enum suscripcion : eventos) {
             c.addObserver(suscripcion, this);
         }
 
@@ -210,11 +205,16 @@ public class ControlLobby extends IControlLobby implements Runnable {
         EventoLobby eventoEnviar;
 
         System.out.println("Un plebeyo se alisto");
-        manejador.abandonoCuenta(cuentaLista);
-        eventoEnviar = director.crearEventoCuentaLista(cuentaLista, idDestinatario);
+        manejador.agregarJugadorListo(cuentaLista);
+        eventoEnviar = director.crearEventoActualizarJugadoresListos(manejador.devolverLobby(), cuentaLista, idDestinatario, true);
 
         cliente.enviarEvento(eventoEnviar);
 
+        if(manejador.todosListos()){
+            int idContexto = manejador.iniciarPartida();
+            EventoLobby iniciarPartida = director.crearEventoPrepararPartida(manejador.devolverLobby(), idContexto);
+            cliente.enviarEvento(iniciarPartida);
+        }
     }
 
     @Override
@@ -226,8 +226,9 @@ public class ControlLobby extends IControlLobby implements Runnable {
         EventoLobby eventoEnviar;
 
         System.out.println("Un plebeyo se se alisto");
-        manejador.abandonoCuenta(cuentaNoLista);
-        eventoEnviar = director.crearEventoCuentaNoLista(cuentaNoLista, idDestinatario);
+        manejador.removerJugadorListo(cuentaNoLista);
+        eventoEnviar = director.crearEventoActualizarJugadoresListos(manejador.devolverLobby(),
+                cuentaNoLista, idDestinatario, true);
 
         cliente.enviarEvento(eventoEnviar);
     }

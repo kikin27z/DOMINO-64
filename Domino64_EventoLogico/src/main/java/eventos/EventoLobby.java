@@ -52,11 +52,6 @@ public class EventoLobby extends EventoLogico {
 //    }
 
     @Override
-    public Object getInfo() {
-        return contexto;
-    }
-
-    @Override
     public TipoLogicaLobby getTipo() {
         return tipo;
     }

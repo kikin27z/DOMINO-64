@@ -21,6 +21,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import cliente_suscripciones.ObservableCliente;
 import cliente_suscripciones.ObserverCliente;
+import domino64.eventos.base.suscripcion.EventoSuscripcion;
+import domino64.eventos.base.suscripcion.TipoSuscripcion;
 
 /**
  *
@@ -38,7 +40,7 @@ public class Client2 extends ObservableCliente<Evento> implements ICliente2{
     private ObjectInputStream input;
     private volatile boolean running;
     private volatile boolean connected;
-    private List<Enum<?>> suscripcionesEventos;
+    private List<Enum> suscripcionesEventos;
     private BlockingQueue<Evento> colaEventos;
     
     
@@ -165,8 +167,8 @@ public class Client2 extends ObservableCliente<Evento> implements ICliente2{
     }
 
     @Override
-    public void establecerSuscripciones(List<Enum<?>> subs){
-        for (Enum<?> sub : subs) {
+    public void establecerSuscripciones(List<Enum> subs){
+        for (Enum sub : subs) {
             suscripcionesEventos.add(sub);
         }
     }
@@ -239,15 +241,17 @@ public class Client2 extends ObservableCliente<Evento> implements ICliente2{
 
     @Override
     public void agregarSuscripcion(Evento evento, ObserverCliente ob) {
-        suscripcionesEventos.add((Enum<?>)evento.getInfo());
-        addObserver((Enum<?>)evento.getInfo(), ob);
+        EventoSuscripcion suscripcion = (EventoSuscripcion)evento;
+        suscripcionesEventos.add(suscripcion.getEventoSuscripcion());
+        addObserver(suscripcion.getEventoSuscripcion(), ob);
         enviarEvento(evento);
     }
 
     @Override
     public void removerSuscripcion(Evento evento, ObserverCliente ob) {
-        suscripcionesEventos.remove((Enum<?>)evento.getInfo());
-        removeObserver((Enum<?>)evento.getInfo(), ob);
+        EventoSuscripcion suscripcion = (EventoSuscripcion)evento;
+        suscripcionesEventos.remove(suscripcion.getEventoSuscripcion());
+        removeObserver(suscripcion.getEventoSuscripcion(), ob);
         enviarEvento(evento);
     }
 

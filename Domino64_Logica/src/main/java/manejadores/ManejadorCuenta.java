@@ -34,7 +34,7 @@ public class ManejadorCuenta {
         
     }
 
-    public CuentaDTO getCuenta() {
+        public CuentaDTO getCuenta() {
         return adapterEntidad.adaptarEntidadCuenta(cuenta);
     }
     

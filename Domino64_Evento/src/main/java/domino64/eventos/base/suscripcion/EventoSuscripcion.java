@@ -1,15 +1,18 @@
-package eventos;
+package domino64.eventos.base.suscripcion;
 
-import tiposLogicos.TipoSuscripcion;
+import domino64.eventos.base.Evento;
+
 
 /**
  *
  * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author José Karim Franco Valencia - 00000245138 
  */
-public class EventoSuscripcion extends EventoSub<Enum<?>> {
-    private Enum<?> evento;
+public class EventoSuscripcion implements Evento<TipoSuscripcion> {
+    private Enum evento;
     private TipoSuscripcion tipo;
+    private int idContexto;
+    private int idPublicador;
     
     public EventoSuscripcion(){}
     
@@ -31,8 +34,7 @@ public class EventoSuscripcion extends EventoSub<Enum<?>> {
      * @param info Enum indicando el tipo de evento especifico
      * del cual se quiere suscribir o desuscribir
      */
-    @Override
-    public void agregarInfo(Enum<?> info) {
+    public void agregarEventoSuscripcion(Enum info) {
         evento = info;
     }
 
@@ -45,14 +47,32 @@ public class EventoSuscripcion extends EventoSub<Enum<?>> {
      * obtiene el tipo de evento al que se quiere suscribir o desuscribirse
      * @return El enum con el tipo de evento al cual se quiere suscribir o desuscribir
      */
-    @Override
-    public Enum<?> getInfo() {
+   // @Override
+    public Enum getEventoSuscripcion() {
         return evento;
     }
 
     @Override
     public int getIdDestinatario() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public int getIdPublicador() {
+        return idPublicador;
+    }
+
+    @Override
+    public int getIdContexto() {
+        return idContexto;
+    }
+
+    public void setIdContexto(int idContexto) {
+        this.idContexto = idContexto;
+    }
+
+    public void setIdPublicador(int idPublicador) {
+        this.idPublicador = idPublicador;
     }
     
 }

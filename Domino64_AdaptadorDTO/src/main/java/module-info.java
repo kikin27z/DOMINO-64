@@ -3,8 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/module-info.java to edit this template
  */
 
-module Evento {
-    exports domino64.eventos.base;
-    exports domino64.eventos.base.error;
-    exports domino64.eventos.base.suscripcion;
+module Domino64_AdaptadorDTO {
+    requires Domino64_DTO;
+    requires Domino64_Dominio;
+    exports adapter;
 }

@@ -4,6 +4,7 @@ import abstraccion.ICliente;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.EventoError;
 import domino64.eventos.base.error.TipoError;
+import domino64.eventos.base.suscripcion.EventoSuscripcion;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -38,7 +39,7 @@ public class Client extends Observable<Evento> implements ICliente {
     private ObjectInputStream input;
     private volatile boolean running;
     private volatile boolean connected;
-    private List<Enum<?>> suscripcionesEventos;
+    private List<Enum> suscripcionesEventos;
     private BlockingQueue<Evento> colaEventos;
 
     private Client() {
@@ -150,8 +151,8 @@ public class Client extends Observable<Evento> implements ICliente {
     }
 
     @Override
-    public void establecerSuscripciones(List<Enum<?>> subs) {
-        for (Enum<?> sub : subs) {
+    public void establecerSuscripciones(List<Enum> subs) {
+        for (Enum sub : subs) {
             suscripcionesEventos.add(sub);
         }
     }
@@ -230,15 +231,17 @@ public class Client extends Observable<Evento> implements ICliente {
 
     @Override
     public void agregarSuscripcion(Evento evento, Observer ob) {
-        suscripcionesEventos.add((Enum<?>) evento.getInfo());
-        addObserver((Enum<?>) evento.getInfo(), ob);
+        EventoSuscripcion suscripcion = (EventoSuscripcion) evento;
+        suscripcionesEventos.add(suscripcion.getEventoSuscripcion());
+        addObserver(suscripcion.getEventoSuscripcion(), ob);
         enviarEvento(evento);
     }
 
     @Override
     public void removerSuscripcion(Evento evento, Observer ob) {
-        suscripcionesEventos.remove((Enum<?>) evento.getInfo());
-        removeObserver((Enum<?>) evento.getInfo(), ob);
+        EventoSuscripcion suscripcion = (EventoSuscripcion)evento;
+        suscripcionesEventos.remove(suscripcion.getEventoSuscripcion());
+        removeObserver(suscripcion.getEventoSuscripcion(), ob);
         enviarEvento(evento);
     }
 

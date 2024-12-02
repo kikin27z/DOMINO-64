@@ -23,10 +23,8 @@ import utilities.DirectorSuscripcion;
  * @author karim
  */
 public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
-
     private int id;
     private static ExecutorService ejecutorEventos;
-    private DirectorSuscripcion directorSuscripciones;
     private ManejadorDisplay display;
     private DistribuidorEventosModelo distribuidor;
     private AtomicBoolean running;
@@ -35,7 +33,7 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     public ReceptorLogica() {
         super();
         distribuidor = DistribuidorEventosModelo.getInstance();
-        setConsumers();
+        //setConsumers();
         ejecutorEventos = Executors.newSingleThreadExecutor();
         running = new AtomicBoolean(true);
     }
@@ -46,19 +44,20 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     }
 
     public void vincularCliente(Client _cliente) {
-        this.cliente = _cliente;
         cliente.establecerSuscripciones(eventos);
+        this.cliente = _cliente;
         _cliente.iniciar();
         id = _cliente.getClientId();
-        directorSuscripciones = new DirectorSuscripcion(new BuilderEventoSuscripcion(), id);
+        directorSuscripcion = new DirectorSuscripcion(id);
         ejecutorEventos.submit(this);
+        setConsumers();
     }
 
     @Override
     public void iniciaConexion() {
         Client c = Client.iniciarComunicacion();
 
-        for (Enum<?> suscripcion : eventos) {
+        for (Enum suscripcion : eventos) {
             c.addObserver(suscripcion, this);
         }
 
@@ -68,7 +67,7 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     @Override
     public void recibirPartida(Evento evento) {
 //        System.out.println("partida recibida");
-//        Enum<?> tipo = evento.getTipo();
+//        Enum tipo = evento.getTipo();
 //        if (tipo.equals(TipoLogicaLobby.PARTIDA_ENCONTRADA)) {
 //            EventoLobby eventoLobby = (EventoLobby) evento;
 //            System.out.println("evento: " + eventoLobby);
@@ -115,11 +114,11 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     @Override
     public void partidaCreada(Evento evento) {
         EventoLobby eventoRecibido = (EventoLobby) evento;
-        if(evento.getIdDestinatario() != id){
-            return;
-        }
+//        if(evento.getIdDestinatario() != id){
+//            return;
+//        }
         LobbyDTO lobby = eventoRecibido.obtenerLobby();
-        
+        System.out.println("codigo partida:");
         System.out.println("cuentas--"+ lobby.getCuentas());
         
         CuentaDTO aux = eventoRecibido.getPublicador();
@@ -133,9 +132,6 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     @Override
     public void partidaEncontrada(Evento evento) {
         EventoLobby eventoRecibido = (EventoLobby) evento;
-//        if(evento.getIdDestinatario() != id){
-//            return;
-//        }
         
         System.out.println("\n");
         System.out.println("Evento a logica partida creada " + eventoRecibido);
@@ -203,13 +199,17 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
 
     @Override
     public void cuentaLista(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
     }
 
     @Override
     public void cuentaNoLista(Evento evento) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
+    @Override
+    public void cuentaEntro(Evento evento) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
 }

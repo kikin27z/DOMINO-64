@@ -1,11 +1,14 @@
 package manejadores;
 
 import comunicadores_logica.IReceptorEventosLogica;
+import domino64.eventos.base.suscripcion.EventoSuscripcion;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.ReglasDTO;
 import entidadesDTO.UnirseDTO;
 import eventos.EventoJugador;
+import tiposLogicos.TipoLogicaLobby;
 import utilities.DirectorJugador;
+import utilities.DirectorSuscripcion;
 
 /**
  * @author karim
@@ -25,6 +28,7 @@ public class ManejadorNotificador {
         CuentaDTO cuentaDTO = manejadorCuenta.getCuenta();
         EventoJugador crear = directorEventos.crearEventoCrearPartida(cuentaDTO);
         receptor.enviarEvento(crear);
+        receptor.agregarSuscripcion(TipoLogicaLobby.PARTIDA_CREADA, receptor::partidaCreada);
     }
     
     
@@ -33,7 +37,7 @@ public class ManejadorNotificador {
         unirse.setCuenta(cuentaDTO);
         EventoJugador crear = directorEventos.crearEventoUnirsePartida(unirse);
         receptor.enviarEvento(crear);
-         
+        receptor.agregarSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA, receptor::recibirPartida);
     }
 
     public void abandonarPartida() {

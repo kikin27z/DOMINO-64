@@ -11,7 +11,7 @@ public class InicializarCliente {
         Client c = Client.iniciarComunicacion();
         IControlTablero manejador = new ControlTablero();
 
-        for (Enum<?> suscripcion : eventos) {
+        for (Enum suscripcion : eventos) {
             c.addObserver(suscripcion, manejador);
         }
         

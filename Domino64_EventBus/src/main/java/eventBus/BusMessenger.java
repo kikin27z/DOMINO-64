@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
  * @author karim F
  */
 public class BusMessenger {
-    private Map<Enum<?>,Set<Subscriber>> subscribers;
+    private Map<Enum,Set<Subscriber>> subscribers;
     
     public BusMessenger(){
         this.subscribers = new ConcurrentHashMap<>();
@@ -37,7 +37,7 @@ public class BusMessenger {
      * @param tipoEvento el tipo de evento a notificar.
      * @param event Evento a notificar a los suscriptores del mismo
      */
-    public void notifyEvent(Enum<?> tipoEvento, Evento event){
+    public void notifyEvent(Enum tipoEvento, Evento event){
         Set<Subscriber> subs = subscribers.get(tipoEvento);
         System.out.println("evento en el bus messenger: "+event);
         subs.forEach(sub -> {
@@ -80,7 +80,7 @@ public class BusMessenger {
      * @param eventType Tipo de evento a verificar si esta registrado
      * @return true si existe un mapeo con el tipo de evento del parametro
      */
-    public boolean hasEventType(Enum<?> eventType){
+    public boolean hasEventType(Enum eventType){
         return subscribers.containsKey(eventType);
     }
     
@@ -89,7 +89,7 @@ public class BusMessenger {
      * @param sub Suscriptor a agregar
      * @param tipoEvento tipo de evento al cual se le va a agregar el suscriptor
      */
-    public void addSubscriber(Subscriber sub, Enum<?> tipoEvento){
+    public void addSubscriber(Subscriber sub, Enum tipoEvento){
         Set<Subscriber> subs= subscribers.getOrDefault(tipoEvento, new ConcurrentSkipListSet<>());
         subs.add(sub);
         subscribers.put(tipoEvento, subs);
@@ -100,7 +100,7 @@ public class BusMessenger {
      * @param sub El suscriptor a eliminar
      * @param tipoEvento Tipo de evento del cual se quiere eliminar el suscriptor
      */
-    public void removeSubscriber(Subscriber sub, Enum<?> tipoEvento){
+    public void removeSubscriber(Subscriber sub, Enum tipoEvento){
         subscribers.computeIfPresent(tipoEvento, (tipo,subs) -> {
             if(subs.contains(sub))
                 subs.remove(sub);

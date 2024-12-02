@@ -24,8 +24,8 @@ import observer.Observer;
  */
 public abstract class ObservadorPozo implements Observer<Evento> {
     protected static BlockingQueue<Evento> colaEventos;
-    protected Map<Enum<?>, Consumer<Evento>> consumers;
-    protected static final List<Enum<?>> eventos = new ArrayList<>(
+    protected Map<Enum, Consumer<Evento>> consumers;
+    protected static final List<Enum> eventos = new ArrayList<>(
             List.of(
                     TipoError.ERROR_DE_SERVIDOR,
                     TipoLogicaLobby.PREPARAR_PARTIDA,
@@ -50,7 +50,7 @@ public abstract class ObservadorPozo implements Observer<Evento> {
         consumers.putIfAbsent(TipoLogicaPartida.JUGADOR_SALIO, this::guardarFichas);
     }
 
-    public void agregarEvento(Enum<?> evento, Consumer<Evento> consumer) {
+    public void agregarEvento(Enum evento, Consumer<Evento> consumer) {
         eventos.add(evento);
         consumers.putIfAbsent(evento, consumer);
     }

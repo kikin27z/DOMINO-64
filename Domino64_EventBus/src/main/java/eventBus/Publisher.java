@@ -47,6 +47,5 @@ public class Publisher implements Publicador{
     public void publicarEvento(Enum tipoEvento, Evento evento) {
         System.out.println("en publicar Evento");
         bus.postEvent(tipoEvento, evento);
-        System.out.println("se publico evento: "+evento.getInfo());
     }
 }

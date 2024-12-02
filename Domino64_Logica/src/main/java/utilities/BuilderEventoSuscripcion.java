@@ -1,9 +1,7 @@
 package utilities;
 
 import builder.EventBuilder;
-import eventos.EventoSuscripcion;
-import tiposLogicos.TipoSuscripcion;
-
+import domino64.eventos.base.suscripcion.*;
 /**
  *
  * @author Luisa Fernanda Morales Espinoza - 00000233450
@@ -31,9 +29,8 @@ public class BuilderEventoSuscripcion implements EventBuilder<TipoSuscripcion>{
         evento.setIdContexto(idContexto);
     }
 
-//    @Override
-    public void setContexto(Enum<?> info) {
-        evento.agregarInfo(info);
+    public void setEventoSuscripcion(Enum info) {
+        evento.agregarEventoSuscripcion(info);
     }
 
     @Override

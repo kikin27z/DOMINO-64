@@ -88,10 +88,6 @@ public class EventoJugador extends EventoLogico{
         return tipo;
     }
 
-    @Override
-    public Object getInfo() {
-        return null;
-    }
 
     @Override
     public String toString() {

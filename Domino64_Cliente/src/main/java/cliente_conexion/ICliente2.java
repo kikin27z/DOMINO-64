@@ -10,9 +10,9 @@ import cliente_suscripciones.ObserverCliente;
  */
 public interface ICliente2 {
     public void enviarEvento(Evento evento);
-    public void establecerSuscripciones(List<Enum<?>> suscripciones);
+    public void establecerSuscripciones(List<Enum> suscripciones);
     public void agregarSuscripcion(Evento evento, ObserverCliente ob);
     public void removerSuscripcion(Evento evento, ObserverCliente ob);
-    //public void enviarTiposEventos(List<Enum<?>> tiposEvento);
-    //public void agregarTipoEvento(Enum<?> tipo);
+    //public void enviarTiposEventos(List<Enum> tiposEvento);
+    //public void agregarTipoEvento(Enum tipo);
 }

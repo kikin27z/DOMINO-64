@@ -6,5 +6,5 @@ module ManejadorPartida {
     requires EventoLogico;
     requires Domino64_DTO;
     requires java.logging;
-    requires Domino64.AdaptadorDTO;
+    requires Domino64_AdaptadorDTO;
 }

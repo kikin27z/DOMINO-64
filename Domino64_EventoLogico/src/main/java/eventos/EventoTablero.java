@@ -11,7 +11,7 @@ import tiposLogicos.TipoLogicaTablero;
  *
  * @author luisa M
  */
-public class EventoTablero extends EventoLogico<FichaDTO>{
+public class EventoTablero extends EventoLogico{
     private FichaDTO ficha;
     private TipoLogicaTablero tipo;
     
@@ -27,11 +27,14 @@ public class EventoTablero extends EventoLogico<FichaDTO>{
 //        ficha = info;
 //    }
 
-    @Override
-    public FichaDTO getInfo() {
+    public FichaDTO getFicha() {
         return ficha;
     }
 
+    public void setFicha(FichaDTO ficha){
+        this.ficha = ficha;
+    }
+    
     @Override
     public TipoLogicaTablero getTipo() {
         return tipo;

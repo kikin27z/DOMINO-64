@@ -15,7 +15,7 @@ import domino64.eventos.base.Evento;
  * @author luisa M
  * @author karim F
  */
-public class EventoError implements Evento<String> {
+public class EventoError implements Evento<TipoError> {
     private TipoError tipo;
     private String mensaje;
     private int idPublicador;
@@ -53,8 +53,7 @@ public class EventoError implements Evento<String> {
         return idPublicador;
     }
 
-    @Override
-    public String getInfo() {
+    public String getMensaje() {
         return mensaje;
     }
 
