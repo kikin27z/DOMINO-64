@@ -1,39 +1,28 @@
 package logicaLobby;
 
+import domino64.eventos.base.suscripcion.*;
 import abstraccion.ICliente;
 import adapter.AdaptadorDTO;
 import adapter.AdaptadorEntidad;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.EventoError;
 import entidades.Cuenta;
-import entidades.Lobby;
 import entidadesDTO.AvatarDTO;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
-import entidadesDTO.UnirseDTO;
 import eventos.EventoJugador;
 import eventos.EventoLobby;
-import eventos.EventoSuscripcion;
-import eventoss.EventoMVCDisplay;
 import eventoss.EventoMVCJugador;
-import eventoss.TipoDisplayMVC;
 import eventoss.TipoJugadorMVC;
-import implementacion.Client;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import listener.ControlEventos;
-import manejadores.Control;
-import manejadores.ManejadorDisplay;
-import manejadores.MediadorManejadores;
-import presentacion_utilities.NotificadorEvento;
 import tiposLogicos.TipoLogicaLobby;
-import tiposLogicos.TiposJugador;
 import utilities.BuilderEventoJugador;
 import utilities.BuilderEventoSuscripcion;
-import utilities.DirectorJugador;
 import utilities.DirectorSuscripcion;
 
 /**
@@ -87,9 +76,8 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
             avataresLibres.remove(c.getAvatar());
         }
         
-        int indexAvatarElegido = ControlEventos.mensajesSeleccionAvatar(avataresLibres);
+        AvatarDTO avatarElegido = ControlEventos.mensajesSeleccionAvatar(avataresLibres);
         
-        AvatarDTO avatarElegido = avataresLibres.get(indexAvatarElegido);
         cuenta.setAvatar(adapterDTO.adaptarAvatarDTO(avatarElegido));
         
         CuentaDTO cuentaDTO = adapterEntidad.adaptarEntidadCuenta(cuenta);
@@ -98,7 +86,6 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
         
         System.out.println("-------------------");
         System.out.println("Ahora tu avatar es " + cuentaDTO.getAvatar().getAnimal());
-        System.out.println("-------------------");
 
         cliente.enviarEvento(cambioAv);
         
@@ -147,7 +134,6 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
     public void abandonarLobby(EventoMVCJugador evento){
         System.out.println("-------------------");
         System.out.println("Saliste del lobby");
-        System.out.println("-------------------");
         //MediadorManejadores.enviarADisplay(new EventoJugador(TiposJugador.ABANDONAR_PARTIDA));
         CuentaDTO cuentaDTO = adapterEntidad.adaptarEntidadCuenta(cuenta);
         EventoJugador eventoJ = directorEventos.crearEventoAbandonarPartida(lobbyDTO, cuentaDTO);
@@ -167,7 +153,6 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
             msj = "Ahora no estas listo";
         System.out.println("-------------------");
         System.out.println(msj);
-        System.out.println("-------------------");
 
         cliente.enviarEvento(ev);
         
@@ -201,8 +186,6 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
             removerSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA);
             agregarIdContexto(generarIdContextoPartida(lobbyDTO));
             
-            //lobbyDTO.asignarIdJugadorActual(cuenta.getIdCadena());
-//            manejadorDisplay.avisarMostrarLobby(lobbyDTO);
         }
     }
 
@@ -267,15 +250,9 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
                 jugadoresListos.compute(jugadorEvento, (j,b) -> b = false);
                 msj.append(" no esta listo");
             }
-            
             System.out.println("-------------------");
             System.out.println(msj.toString());
-            System.out.println("-------------------");
-            
         }
-        
-        
-        
         //MediadorManejadores.enviarADisplay(ev);
     }
 
@@ -297,7 +274,6 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
             
             System.out.println("-------------------");
             System.out.println("Jugador " + jugadorEvento.getUsername()+ msj+"la partida");
-            System.out.println("-------------------");
             
            // MediadorManejadores.enviarADisplay(ev);
         }
@@ -322,8 +298,7 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
                 if(cuentaDTO.equals(jugadorEvento)){
                     System.out.println("-------------------");
                     System.out.println("Jugador " + cuentaDTO.getUsername()+
-                            " ahora tiene el avatar de "+cuentaDTO.getAvatar().getAnimal());
-                    System.out.println("-------------------");
+                            " ahora tiene el avatar de "+jugadorEvento.getAvatar().getAnimal());
                     cuentaDTO.setAvatar(jugadorEvento.getAvatar());
                     
                     
@@ -343,8 +318,7 @@ public class ManejadorCuenta extends ObservadorLobbyLocal {
     public void manejarError(Evento evento) {
         EventoError error =(EventoError)evento;
         System.out.println("-------------------");
-        System.out.println("Ocurrio un error: "+error.getInfo());
-        System.out.println("-------------------");
+        System.out.println("Ocurrio un error: "+error.getMensaje());
     }
 
 //    public void setManejadorDisplay(ManejadorDisplay manejadorDisplay) {

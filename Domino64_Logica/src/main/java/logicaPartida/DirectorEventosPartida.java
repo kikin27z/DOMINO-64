@@ -37,7 +37,7 @@ public class DirectorEventosPartida extends DirectorEventos<BuilderEventoJugador
     }
     
     public EventoJugador crearEventoColocarFicha(JugadaRealizadaDTO jugada){
-        builder.setContexto(jugada);
+        builder.setJugada(jugada);
         builder.setIdContexto(idContextoPartida);
         builder.setIdPublicador(publicador.getId());
         builder.setPublicador(publicador);

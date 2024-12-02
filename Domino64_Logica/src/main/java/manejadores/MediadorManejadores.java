@@ -80,6 +80,7 @@ public class MediadorManejadores {
     
     private void setConsumersManejadorJugador() {
         ControlEventos.agregarConsumerLogica(TipoJugadorMVC.COLOCAR_FICHA,jugador::colocarFicha);
+        ControlEventos.agregarConsumerLogica(TipoJugadorMVC.JALAR_FICHA,jugador::jalarFicha);
         ControlEventos.agregarConsumerLogica(TipoJugadorMVC.ABANDONAR_PARTIDA, jugador::abandonarPartida);
         ControlEventos.agregarConsumerLogica(TipoJugadorMVC.PASAR_TURNO, jugador::pasarTurno);
         ControlEventos.agregarConsumerLogica(TipoJugadorMVC.PETICION_RENDIRSE, jugador::peticionRendirse);

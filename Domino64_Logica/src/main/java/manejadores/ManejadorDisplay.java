@@ -2,8 +2,10 @@ package manejadores;
 
 import domino64.eventos.base.Evento;
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.JugadorDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
+import entidadesDTO.PartidaIniciadaDTO;
 import eventos.EventoJugador;
 import eventos.EventoLobby;
 import eventos.EventoPartida;
@@ -12,6 +14,7 @@ import eventoss.EventoMVCJugador;
 import eventosPantallas.ObserverPantalla;
 import eventoss.TipoDisplayMVC;
 import eventoss.TipoJugadorMVC;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
@@ -42,6 +45,7 @@ public final class ManejadorDisplay implements ObserverPantalla{
     private static final BlockingQueue<Evento> colaEventosAPresentacion = new LinkedBlockingQueue<>();
     private static final Map<Enum, Consumer<Evento>> consumers = new ConcurrentHashMap<>();
     private Scanner scan = new Scanner(System.in);
+    private CuentaDTO cuentaActual;
     
     public ManejadorDisplay() {
         fachada = FachadaPresentacion.getInstance();
@@ -104,10 +108,19 @@ public final class ManejadorDisplay implements ObserverPantalla{
     
     public void entrarAPartida(Evento evento){
         EventoPartida partidaIniciada = (EventoPartida)evento;
+        PartidaIniciadaDTO dto = partidaIniciada.getPartida();
+        
+        ControlEventos.mensajeMostrarTurnos(dto.getTurnos());
+        ControlEventos.mensajesEnPartida();
+        if(partidaIniciada.getJugador() != null){
+            ControlEventos.mensajesEnTurno(true);
+        }
+        
         EventoMVCDisplay irPartida = new EventoMVCDisplay(TipoDisplayMVC.IR_PARTIDA);
         irPartida.setJugador(partidaIniciada.getJugador());
         fachada.cambiarPantalla(irPartida);
     }
+    
     
     public void buscarMula(Evento evento){
         
@@ -178,7 +191,7 @@ public final class ManejadorDisplay implements ObserverPantalla{
         System.out.println("\nevento: " + eventoLobby);
 
         LobbyDTO lobbyDTO = eventoLobby.obtenerLobby();
-        
+        cuentaActual = lobbyDTO.getCuentaActual();
         ControlEventos.mensajesLobby(false);
         
 //        EventoLobby ev = (EventoLobby)evento;

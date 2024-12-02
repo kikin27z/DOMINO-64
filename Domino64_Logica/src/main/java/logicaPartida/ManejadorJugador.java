@@ -6,15 +6,17 @@ import adapter.AdaptadorEntidad;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.EventoError;
 import domino64.eventos.base.error.TipoError;
+import entidades.Cuenta;
 import entidades.Jugador;
 import entidades.Partida;
+import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaIniciadaDTO;
 import eventos.EventoPartida;
 import eventoss.EventoMVCJugador;
 import implementacion.Client;
-import manejadores.MediadorManejadores;
-import utilities.BuilderEventoJugador;
+import java.util.List;
+import listener.ControlEventos;
 import utilities.BuilderEventoSuscripcion;
 import utilities.DirectorSuscripcion;
 
@@ -28,6 +30,7 @@ public class ManejadorJugador extends ObservadorPartidaLocal{
     private DirectorSuscripcion directorSuscripciones;
     private ICliente cliente;
     private Jugador jugador;
+    private Cuenta cuenta;
     private Partida partida;
     private AdaptadorDTO adaptadorDTO;
     private AdaptadorEntidad adaptadorEntidad;
@@ -40,6 +43,7 @@ public class ManejadorJugador extends ObservadorPartidaLocal{
     
     public void setJugador(JugadorDTO jugador){
         this.jugador = adaptadorDTO.adaptarJugadorDTO(jugador);
+        this.cuenta = this.jugador.getCuenta();
     }
     
     public void init(Client cliente) {
@@ -63,7 +67,7 @@ public class ManejadorJugador extends ObservadorPartidaLocal{
         else
             tipo="logico";
         System.out.println("-------------------");
-        System.out.println("Error de tipo "+tipo+":" + error.getInfo());
+        System.out.println("Error de tipo "+tipo+":" + error.getMensaje());
         System.out.println("-------------------");
     }
 
@@ -74,19 +78,18 @@ public class ManejadorJugador extends ObservadorPartidaLocal{
     @Override
     public void entrarPartida(Evento evento) {
         EventoPartida inicioPartida = (EventoPartida)evento;
-        PartidaIniciadaDTO partidaDTO = (PartidaIniciadaDTO)inicioPartida.getInfo();
-        partida = new Partida();
-        JugadorDTO jugadorDTO = partidaDTO.getJugador(jugador.getCuenta().getIdCadena());
-        jugador = adaptadorDTO.adaptarJugadorDTO(jugadorDTO);
-        partida.agregarJugador(jugador);
+        PartidaIniciadaDTO partidaDTO = inicioPartida.getPartida();
+        
+        JugadorDTO jugadorDTO = partidaDTO.getJugador(cuenta.getIdCadena());
+        jugador.setFichas(adaptadorDTO.adaptarFichaDTO(jugadorDTO.getFichas()));
         
         inicioPartida.setJugador(jugadorDTO);
         
         System.out.println("-------------------");
         System.out.println("Inicio la partida\nTus fichas son:");
         System.out.println(jugadorDTO.getFichas());
-        System.out.println("-------------------");
         
+        ControlEventos.enviarEventoAPresentacion(inicioPartida);
         //MediadorManejadores.enviarADisplay(inicioPartida);
     }
 
@@ -112,7 +115,8 @@ public class ManejadorJugador extends ObservadorPartidaLocal{
     
     
     public void colocarFicha(EventoMVCJugador evento){
-        
+        List<FichaDTO> fichas = adaptadorEntidad.adaptarEntidadesFicha(jugador.getFichas());
+        FichaDTO fichaSeleccionada = ControlEventos.mensajeColocarFicha(fichas);
     }
     
     public void abandonarPartida(EventoMVCJugador evento){

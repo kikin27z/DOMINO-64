@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import observer.Observer;
-import tiposLogicos.TipoLogicaLobby;
 import tiposLogicos.TipoLogicaPartida;
+import tiposLogicos.TipoLogicaTurno;
 
 /**
  *
@@ -29,7 +29,8 @@ public abstract class ObservadorPartidaLocal implements Observer<Evento>{
                     TipoLogicaPartida.BUSCAR_PRIMERA_MULA,
                     TipoLogicaPartida.JUGADOR_GANO,
                     TipoLogicaPartida.PETICION_RENDIRSE,
-                    TipoLogicaPartida.JUGADOR_SALIO
+                    TipoLogicaPartida.JUGADOR_SALIO,
+                    TipoLogicaTurno.CAMBIO_TURNO
             ));
 
     public ObservadorPartidaLocal() {
@@ -68,6 +69,7 @@ public abstract class ObservadorPartidaLocal implements Observer<Evento>{
         consumers.putIfAbsent(TipoLogicaPartida.JUGADOR_SALIO, this::removerJugador);
         consumers.putIfAbsent(TipoLogicaPartida.PETICION_RENDIRSE, this::procesarPeticion);
         consumers.putIfAbsent(TipoLogicaPartida.TERMINO_PARTIDA, this::salirPartida);
+        consumers.putIfAbsent(TipoLogicaTurno.CAMBIO_TURNO, this::evaluarCambioTurno);
     }
     
     public abstract void manejarError(Evento evento);
@@ -77,5 +79,6 @@ public abstract class ObservadorPartidaLocal implements Observer<Evento>{
     public abstract void removerJugador(Evento evento);
     public abstract void procesarPeticion(Evento evento);
     public abstract void salirPartida(Evento evento);
+    public abstract void evaluarCambioTurno(Evento evento);
     
 }

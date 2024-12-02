@@ -3,6 +3,7 @@ package listener;
 import domino64.eventos.base.Evento;
 import entidadesDTO.AvatarDTO;
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.FichaDTO;
 import entidadesDTO.LobbyDTO;
 import eventoss.EventoMVCJugador;
 import eventoss.TipoJugadorMVC;
@@ -11,9 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -101,7 +104,7 @@ public class ControlEventos {
         return opcion;
     }
     
-    public static int mensajesSeleccionAvatar(List<AvatarDTO> avataresLibres){
+    public static AvatarDTO mensajesSeleccionAvatar(List<AvatarDTO> avataresLibres){
         List<String> nombresAvatares = new ArrayList<>();
         int opcion;
         do{
@@ -116,7 +119,7 @@ public class ControlEventos {
             opcion = scan.nextInt();
         }while(opcion==0 || opcion>nombresAvatares.size());
         
-        return opcion;
+        return avataresLibres.get(opcion-1);
     }
     
     public static void imprimirAvatares(List<String> nombresAvatares){
@@ -131,6 +134,84 @@ public class ControlEventos {
         }
     }
     
+    public static void mensajeMostrarTurnos(List<CuentaDTO> jugadores){
+        System.out.println("------------------------");
+        System.out.println("Los turnos se designaron de la siguiente manera");
+        for (int i = 0; i < jugadores.size(); i++) {
+            CuentaDTO jugador = jugadores.get(i);
+            System.out.println((i+1)+" - "+jugador.getUsername());
+        }
+    }
+    
+    public static FichaDTO mensajeColocarFicha(List<FichaDTO> fichas){
+        int opcion;
+        boolean flag= false;
+        StringBuilder msj = new StringBuilder("Selecciona el numero indicando la ficha que quieres colocar");
+        msj.append('\n').append("Las fichas que puedes colocar son:");
+        for (int i = 0; i < fichas.size(); i++) {
+            FichaDTO ficha = fichas.get(i);
+            msj.append('(').append(i + 1).append(')');
+            msj.append(ficha.getIzquierda()).append('|').append(ficha.getDerecha());
+            msj.append("  ");
+        }
+        msj.append('\n');
+        do {
+            System.out.println("------------------------");
+            System.out.println(msj.toString());
+            opcion = scan.nextInt();
+            scan.nextLine();
+            if(opcion > fichas.size() || opcion == 0){
+                flag = true;
+                System.out.println("Ingresaste un numero invalido");
+            }
+        } while (flag);
+        return fichas.get(opcion-1);
+    }
+    
+    public static void mensajesEnPartida(){
+        int opcion;
+        boolean flag = false;
+        do{
+            System.out.println("------------------------");
+            System.out.println("Presiona 1 para abandonar la partida");
+            opcion = scan.nextInt();
+            scan.nextLine();
+            if (opcion > 3 || opcion == 0) {
+                flag = true;
+                System.out.println("Ingresaste un numero invalido");
+            } 
+        }while(flag);
+        
+        EventoMVCJugador evento = new EventoMVCJugador();
+        switch (opcion) {
+            case 1 -> evento.setTipo(TipoJugadorMVC.ABANDONAR_PARTIDA);
+            case 2 -> evento.setTipo(TipoJugadorMVC.COLOCAR_FICHA);
+            case 3 -> evento.setTipo(TipoJugadorMVC.JALAR_FICHA);
+        }
+        enviarEventoALogica(evento);
+    }
+    
+    public static void mensajesEnTurno(boolean tieneFichasValidas) {
+        String msj;
+        if (tieneFichasValidas) {
+            msj = "2 para colocar";
+        } else {
+            msj = "3 para jalar";
+        }
+        System.out.println("Presiona " + msj+" una ficha");
+    }
+    
+    public static void mensajesBuscarMula(CuentaDTO cuenta, boolean primerJugador){
+        System.out.println("------------------------");
+        System.out.println("Ningun jugador tiene mulas.");
+        System.out.println("""
+                           El jugador que jale la primera ficha
+                            que sea mula tendra el primer turno""");
+        if(primerJugador)
+            System.out.println("El jugador "+cuenta.getUsername()+" jala ficha primero");
+        else 
+            System.out.println("Te toca jalar la primera ficha");
+    }
     
     public static void procesarEventosAPresentacion() {
         executor.submit(() -> {
