@@ -4,15 +4,15 @@
  */
 package eventos;
 
-import entidadesDTO.FichaDTO;
+import entidadesDTO.JugadaRealizadaDTO;
 import tiposLogicos.TipoLogicaTablero;
 
 /**
  *
  * @author luisa M
  */
-public class EventoTablero extends EventoLogico<FichaDTO>{
-    private FichaDTO ficha;
+public class EventoTablero extends EventoLogico{
+    private JugadaRealizadaDTO jugada;
     private TipoLogicaTablero tipo;
     
     public EventoTablero(){}
@@ -22,15 +22,14 @@ public class EventoTablero extends EventoLogico<FichaDTO>{
         this.tipo = tipo;
     }
 
-    @Override
-    public void agregarInfo(FichaDTO info) {
-        ficha = info;
+    public JugadaRealizadaDTO getJugada() {
+        return jugada;
     }
 
-    @Override
-    public FichaDTO getInfo() {
-        return ficha;
+    public void setJugada(JugadaRealizadaDTO jugada) {
+        this.jugada = jugada;
     }
+
 
     @Override
     public TipoLogicaTablero getTipo() {

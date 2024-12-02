@@ -7,29 +7,18 @@ package com.luisa.servidor;
 import com.domino64.base.Publicador;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.TipoError;
+import domino64.eventos.base.suscripcion.TipoSuscripcion;
 import eventBus.Subscriber;
-import eventos.EventoJugador;
-import eventos.EventoLobby;
-import eventos.EventoLogico;
-import eventos.EventoTurno;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import tiposLogicos.TipoLogicaLobby;
-import tiposLogicos.TipoLogicaTurno;
-import tiposLogicos.TipoSuscripcion;
-import tiposLogicos.TiposJugador;
 
 /**
  * Esta clase representa un hilo se encarga de manejar la comunicacion mediante 
@@ -97,7 +86,6 @@ public class HiloComponente  implements Runnable, Subscriber{
      */
     private void manejarEvento(Evento evento) {
         System.out.println("------");
-        System.out.println("mensaje recibido: "+evento.getInfo());
         System.out.println("componente: "+id);
         System.out.println("------");
         Enum tipo = evento.getTipo();
@@ -212,7 +200,6 @@ public class HiloComponente  implements Runnable, Subscriber{
             while (running.get()) {
                 Evento evento = colaEventos.take();
                 synchronized (output) {
-                    System.out.println("evento recibido del bus en el HiloCom " + id + ": " + evento.getInfo());
                     output.reset();
                     output.writeObject(evento);
                     output.flush();

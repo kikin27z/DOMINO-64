@@ -31,14 +31,14 @@ public class DirectorLobby extends DirectorEventos<BuilderEventoLobby> {
     
     public EventoLobby crearEventoJugadorNuevo(LobbyDTO lobby, CuentaDTO jugador){
         builder.setIdPublicador(jugador.getId());
-        builder.agregarLobby(lobby);
+        builder.setLobby(lobby);
         builder.setPublicador(jugador);
         builder.setTipo(TipoLogicaLobby.JUGADOR_NUEVO);
         return builder.construirEvento();
     }
     
     public EventoLobby crearEventoJugadorSalio(LobbyDTO lobby, CuentaDTO jugador){
-        builder.agregarLobby(lobby);
+        builder.setLobby(lobby);
         builder.setIdPublicador(jugador.getId());
         builder.setPublicador(jugador);
         builder.setTipo(TipoLogicaLobby.JUGADOR_SALIO);
@@ -47,7 +47,7 @@ public class DirectorLobby extends DirectorEventos<BuilderEventoLobby> {
     
     public EventoLobby crearEventoActualizarJugadoresListos(LobbyDTO lobby,CuentaDTO jugador, boolean listo){
         builder.setIdPublicador(jugador.getId());
-        builder.agregarLobby(lobby);
+        builder.setLobby(lobby);
         builder.setPublicador(jugador);
         if(listo)
             builder.setTipo(TipoLogicaLobby.JUGADOR_LISTO);
@@ -58,7 +58,7 @@ public class DirectorLobby extends DirectorEventos<BuilderEventoLobby> {
     
     public EventoLobby crearEventoActualizarAvatares(LobbyDTO lobby,CuentaDTO cuentaActualizada){
         builder.setIdPublicador(cuentaActualizada.getId());
-        builder.agregarLobby(lobby);
+        builder.setLobby(lobby);
         builder.setPublicador(cuentaActualizada);
         builder.setTipo(TipoLogicaLobby.ACTUALIZAR_AVATARES);
         return builder.construirEvento();
@@ -66,7 +66,7 @@ public class DirectorLobby extends DirectorEventos<BuilderEventoLobby> {
     
     public EventoLobby crearEventoActualizarUsername(CuentaDTO cuentaActualizada){
         builder.setIdPublicador(cuentaActualizada.getId());
-        builder.setContexto(cuentaActualizada);
+        builder.setPublicador(cuentaActualizada);
         builder.setTipo(TipoLogicaLobby.ACTUALIZAR_USERNAME);
         return builder.construirEvento();
     }
@@ -74,7 +74,7 @@ public class DirectorLobby extends DirectorEventos<BuilderEventoLobby> {
     public EventoLobby crearEventoPartidaEncontrada(LobbyDTO partidaEncontrada, CuentaDTO jugador){
         builder.setIdPublicador(idPublicador);
         builder.setPublicador(jugador);
-        builder.agregarLobby(partidaEncontrada);
+        builder.setLobby(partidaEncontrada);
         builder.setTipo(TipoLogicaLobby.PARTIDA_ENCONTRADA);
         return builder.construirEvento();
     }
@@ -82,7 +82,7 @@ public class DirectorLobby extends DirectorEventos<BuilderEventoLobby> {
     public EventoLobby crearEventoPrepararPartida(LobbyDTO partida, int idContexto){
         builder.setIdPublicador(idPublicador);
         builder.setIdContexto(idContexto);
-        builder.agregarLobby(partida);
+        builder.setLobby(partida);
         builder.setTipo(TipoLogicaLobby.PREPARAR_PARTIDA);
         return builder.construirEvento();
     }

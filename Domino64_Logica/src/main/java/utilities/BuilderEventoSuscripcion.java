@@ -1,14 +1,14 @@
 package utilities;
 
 import builder.EventBuilder;
-import eventos.EventoSuscripcion;
-import tiposLogicos.TipoSuscripcion;
+import domino64.eventos.base.suscripcion.EventoSuscripcion;
+import domino64.eventos.base.suscripcion.TipoSuscripcion;
 
 /**
  *
  * @author luisa M
  */
-public class BuilderEventoSuscripcion implements EventBuilder<Enum<?>>{
+public class BuilderEventoSuscripcion implements EventBuilder<TipoSuscripcion>{
     private EventoSuscripcion evento;
     
     public BuilderEventoSuscripcion(){
@@ -16,8 +16,8 @@ public class BuilderEventoSuscripcion implements EventBuilder<Enum<?>>{
     }
     
     @Override
-    public void setTipo(Enum<?> tipo) {
-        evento.setTipo((TipoSuscripcion)tipo);
+    public void setTipo(TipoSuscripcion tipo) {
+        evento.setTipo(tipo);
     }
 
     @Override
@@ -30,11 +30,10 @@ public class BuilderEventoSuscripcion implements EventBuilder<Enum<?>>{
         evento.setIdContexto(idContexto);
     }
 
-    @Override
-    public void setContexto(Enum<?> info) {
-        evento.agregarInfo(info);
+    public void setEventoSuscripcion(Enum tipoEvento){
+        evento.setEventoSuscripcion(tipoEvento);
     }
-
+    
     @Override
     public EventoSuscripcion construirEvento() {
         EventoSuscripcion resultado = evento;

@@ -4,6 +4,7 @@ package eventos;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
+import java.util.List;
 import tiposLogicos.TipoLogicaLobby;
 
 /**
@@ -20,8 +21,8 @@ import tiposLogicos.TipoLogicaLobby;
 public class EventoLobby extends EventoLogico {
     private LobbyDTO lobby;
     private TipoLogicaLobby tipo;
-    private Object contexto;
     private CuentaDTO publicador;
+    private List<CuentaDTO> jugadores;
     
     public EventoLobby(){}
     
@@ -46,14 +47,12 @@ public class EventoLobby extends EventoLogico {
         return publicador;
     }
     
-    @Override
-    public void agregarInfo(Object info) {
-        contexto = info;
+    public void setJugadores(List<CuentaDTO> jugadores){
+        this.jugadores = jugadores;
     }
-
-    @Override
-    public Object getInfo() {
-        return contexto;
+    
+    public List<CuentaDTO> getJugadores() {
+        return jugadores;
     }
 
     @Override

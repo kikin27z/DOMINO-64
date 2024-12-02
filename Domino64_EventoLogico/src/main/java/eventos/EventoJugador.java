@@ -1,6 +1,8 @@
 package eventos;
 
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.JugadaDTO;
+import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
@@ -20,10 +22,10 @@ import tiposLogicos.TiposJugador;
  * @author karim F
  */
 public class EventoJugador extends EventoLogico{
-    private Object context;
     private TiposJugador tipo;
     private LobbyDTO lobby;
     private JugadorDTO jugador;
+    private JugadaRealizadaDTO jugada;
     
     public EventoJugador(){
         this.jugador = new JugadorDTO();
@@ -32,6 +34,14 @@ public class EventoJugador extends EventoLogico{
     public EventoJugador(TiposJugador tipo){
         this.jugador = new JugadorDTO();
         this.tipo = tipo;
+    }
+
+    public JugadaRealizadaDTO getJugada() {
+        return jugada;
+    }
+
+    public void setJugada(JugadaRealizadaDTO jugada) {
+        this.jugada = jugada;
     }
     
     public void setTipo(TiposJugador tipo){
@@ -71,25 +81,14 @@ public class EventoJugador extends EventoLogico{
     }
     
     @Override
-    public void agregarInfo(Object contexto) {
-        this.context = contexto;
-    }
-
-    @Override
     public TiposJugador getTipo() {
         return tipo;
-    }
-
-    @Override
-    public Object getInfo() {
-        return context;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString());
-        sb.append("{contexto= ").append(context);
         sb.append(", jugador= ").append(jugador.getCuenta().getUsername());
         sb.append(", tipo= ").append(tipo.toString());
         sb.append('}');

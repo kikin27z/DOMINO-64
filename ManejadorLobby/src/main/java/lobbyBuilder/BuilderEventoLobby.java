@@ -7,13 +7,14 @@ import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
 import eventos.EventoLobby;
+import java.util.List;
 import tiposLogicos.TipoLogicaLobby;
 
 /**
  *
  * @author luisa M
  */
-public class BuilderEventoLobby implements EventBuilder<CuentaDTO>{
+public class BuilderEventoLobby implements EventBuilder{
     private EventoLobby evento;
     
     public BuilderEventoLobby(){
@@ -21,7 +22,7 @@ public class BuilderEventoLobby implements EventBuilder<CuentaDTO>{
     }
     
     @Override
-    public void setTipo(Enum<?> tipo) {
+    public void setTipo(Enum tipo) {
         this.evento.setTipo((TipoLogicaLobby)tipo);
     }
 
@@ -35,12 +36,11 @@ public class BuilderEventoLobby implements EventBuilder<CuentaDTO>{
         this.evento.setIdContexto(idContexto);
     }
 
-    @Override
-    public void setContexto(CuentaDTO info) {
-        this.evento.agregarInfo(info);
+    public void setContexto(List<CuentaDTO> jugadores) {
+        this.evento.setJugadores(jugadores);
     }
 
-    public void agregarLobby(LobbyDTO lobby){
+    public void setLobby(LobbyDTO lobby){
         this.evento.agregarLobby(lobby);
     }
     

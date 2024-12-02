@@ -33,7 +33,6 @@ public class Publisher implements Publicador{
     @Override
     public void suscribir(Enum tipoEvento, Suscriptor suscriptor) {
         BusCore.getInstance().addSub((Subscriber)suscriptor, tipoEvento);
-        System.out.println("se suscribio a evento: "+tipoEvento.toString());
     }
 
     @Override
@@ -43,8 +42,6 @@ public class Publisher implements Publicador{
 
     @Override
     public void publicarEvento(Enum tipoEvento, Evento evento) {
-        System.out.println("en publicar Evento");
         BusCore.getInstance().postEvent(tipoEvento, evento);
-        System.out.println("se publico evento: "+evento.getInfo());
     }
 }

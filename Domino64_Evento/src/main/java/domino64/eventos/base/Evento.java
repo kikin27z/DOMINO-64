@@ -16,7 +16,7 @@ import java.io.Serializable;
  * @param <T> Tipo de informacion que va a manejar este evento. Puede ser tanto una entidad
  * como un dto
  */
-public interface Evento<T> extends Serializable{
+public interface Evento extends Serializable{
     /**
      * Tipo de evento especifico que es.
      * Todo evento debe tener un enum que define los
@@ -29,12 +29,6 @@ public interface Evento<T> extends Serializable{
      * @return un entero representando el id
      */
     public int getIdPublicador();
-    /**
-     * obtiene la informacion del contexto del evento
-     * @return El contexto representado por el tipo generico especificado
-     * en la clase de evento concreta
-     */
-    public T getInfo();
     /**
      * Obtiene el id del contexto del evento.
      * Los eventos deben tener un identificador del

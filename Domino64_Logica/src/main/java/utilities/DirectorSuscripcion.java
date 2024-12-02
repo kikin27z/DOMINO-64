@@ -5,8 +5,7 @@
 package utilities;
 
 import builder.DirectorEventos;
-import eventos.EventoSuscripcion;
-import tiposLogicos.TipoSuscripcion;
+import domino64.eventos.base.suscripcion.*;
 
 /**
  *
@@ -20,16 +19,16 @@ public class DirectorSuscripcion extends DirectorEventos<BuilderEventoSuscripcio
         this.idPublicador = idPublicador;
     }
     
-    public EventoSuscripcion crearEventoSuscribirse(Enum<?> tipoEvento){
+    public EventoSuscripcion crearEventoSuscribirse(Enum tipoEvento){
         builder.setIdPublicador(idPublicador);
-        builder.setContexto(tipoEvento);
+        builder.setEventoSuscripcion(tipoEvento);
         builder.setTipo(TipoSuscripcion.SUSCRIBIR);
         return builder.construirEvento();
     }
     
-    public EventoSuscripcion crearEventoDesuscribirse(Enum<?> tipoEvento){
+    public EventoSuscripcion crearEventoDesuscribirse(Enum tipoEvento){
         builder.setIdPublicador(idPublicador);
-        builder.setContexto(tipoEvento);
+        builder.setEventoSuscripcion(tipoEvento);
         builder.setTipo(TipoSuscripcion.DESUSCRIBIR);
         return builder.construirEvento();
     }

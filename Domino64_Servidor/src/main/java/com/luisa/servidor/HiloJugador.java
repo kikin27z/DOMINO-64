@@ -7,6 +7,8 @@ package com.luisa.servidor;
 import com.domino64.base.Publicador;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.TipoError;
+import domino64.eventos.base.suscripcion.EventoSuscripcion;
+import domino64.eventos.base.suscripcion.TipoSuscripcion;
 import eventBus.Subscriber;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,7 +21,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import tiposLogicos.TipoSuscripcion;
 
 /**
  *
@@ -147,9 +148,10 @@ public class HiloJugador implements Runnable, Subscriber{
     private void manejarEvento(Evento evento) {
         Enum tipo = evento.getTipo();
         if (tipo instanceof TipoSuscripcion tipoSub){
+            EventoSuscripcion suscripcion = (EventoSuscripcion)evento;
             switch (tipoSub) {
-                case SUSCRIBIR -> suscribirEvento((Enum) evento.getInfo());
-                case DESUSCRIBIR -> removerSuscripcion((Enum) evento.getInfo());
+                case SUSCRIBIR -> suscribirEvento(suscripcion.getEventoSuscripcion());
+                case DESUSCRIBIR -> removerSuscripcion(suscripcion.getEventoSuscripcion());
                 case ESTABLECER_ID_CONTEXTO -> setIdContexto(evento.getIdContexto());
                 case REMOVER_ID_CONTEXTO -> setIdContexto(0);
             }

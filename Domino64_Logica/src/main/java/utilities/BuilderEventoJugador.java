@@ -1,10 +1,10 @@
 package utilities;
 
 import builder.EventBuilder;
-import entidades.Cuenta;
-import entidades.Ficha;
 import entidadesDTO.PartidaDTO;
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.FichaDTO;
+import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.LobbyDTO;
 import eventos.EventoJugador;
 import tiposLogicos.TiposJugador;
@@ -17,7 +17,7 @@ import tiposLogicos.TiposJugador;
  * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author José Karim Franco Valencia - 00000245138
  */
-public class BuilderEventoJugador implements EventBuilder {
+public class BuilderEventoJugador implements EventBuilder<TiposJugador> {
 
     private EventoJugador evento;
 
@@ -32,14 +32,18 @@ public class BuilderEventoJugador implements EventBuilder {
     public void setPartidaDTO(PartidaDTO partida){
         evento.setPartida(partida);
     }
-
+    
+    public void setJugada(JugadaRealizadaDTO jugada){
+        evento.setJugada(jugada);
+    }
+    
     public void setPublicador(CuentaDTO cuenta) {
         evento.setCuenta(cuenta);
     }
 
     @Override
-    public void setTipo(Enum tipo) {
-        evento.setTipo((TiposJugador) tipo);
+    public void setTipo(TiposJugador tipo) {
+        evento.setTipo(tipo);
     }
 
     @Override
@@ -51,10 +55,6 @@ public class BuilderEventoJugador implements EventBuilder {
         evento.setIdContexto(idContexto);
     }
 
-    @Override
-    public void setContexto(Object info) {
-        evento.agregarInfo(info);
-    }
 
     @Override
     public EventoJugador construirEvento() {

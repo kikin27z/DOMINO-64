@@ -1,15 +1,18 @@
 package eventos;
 
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaDTO;
+import java.util.List;
 import tiposLogicos.TipoLogicaTurno;
 
 /**
  *
  * @author luisa M
  */
-public class EventoTurno extends EventoLogico<CuentaDTO>{
-    private CuentaDTO jugador;
+public class EventoTurno extends EventoLogico{
+    private JugadorDTO jugador;
+    private List<JugadorDTO> jugadores;
     private PartidaDTO partida;
     private TipoLogicaTurno tipo;
     
@@ -24,29 +27,27 @@ public class EventoTurno extends EventoLogico<CuentaDTO>{
      * Agrega la cuenta referente para este evento de turno.
      * Normalmente cuando se envie un evento de este tipo,
      * el contexto que se va a agregar es el jugador que esta en turno.
-     * @param info Cuenta del contexto de este evento
+     * @param jugador Jugador del contexto de este evento
      */
-    @Override
-    public void agregarInfo(CuentaDTO info) {
-        jugador = info;
+    public void agregarJugador(JugadorDTO jugador) {
+        this.jugador = jugador;
+    }
+
+    public void agregarJugadores(List<JugadorDTO> jugadores) {
+        this.jugadores = jugadores;
     }
 
     /**
      * Obtiene la informacion de la cuenta del contexto
      * de este evento
-     * @return La cuenta como parte del contexto
+     * @return El jugador como parte del contexto
      */
-    @Override
-    public CuentaDTO getInfo() {
+    public JugadorDTO getJugador() {
         return jugador;
     }
     
-    public void setPartida(PartidaDTO partida){
-        this.partida = partida;
-    }
-    
-    public PartidaDTO getPartida(){
-        return partida;
+    public List<JugadorDTO> getJugadores() {
+        return jugadores;
     }
     
     @Override

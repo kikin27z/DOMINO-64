@@ -1,7 +1,8 @@
 package eventos;
 
 import entidadesDTO.JugadorDTO;
-import entidadesDTO.PartidaDTO;
+import entidadesDTO.PartidaIniciadaDTO;
+import java.util.List;
 import tiposLogicos.TipoLogicaPartida;
 
 /**
@@ -10,7 +11,8 @@ import tiposLogicos.TipoLogicaPartida;
  */
 public class EventoPartida extends EventoLogico {
     private JugadorDTO jugador;
-    private Object contexto;
+    private PartidaIniciadaDTO partida;
+    private List<JugadorDTO> jugadores;
     private TipoLogicaPartida tipo;
     
     public EventoPartida(){}
@@ -18,10 +20,13 @@ public class EventoPartida extends EventoLogico {
     public EventoPartida(TipoLogicaPartida tipo){
         this.tipo = tipo;
     }
+
+    public void setJugadores(List<JugadorDTO> jugadores){
+        this.jugadores = jugadores;
+    }
     
-    @Override
-    public void agregarInfo(Object partida) {
-        contexto = partida;
+    public List<JugadorDTO> getJugadores(){
+        return jugadores;
     }
 
     public void setJugador(JugadorDTO jugador){
@@ -31,10 +36,13 @@ public class EventoPartida extends EventoLogico {
     public JugadorDTO getJugador(){
         return jugador;
     }
-    
-    @Override
-    public Object getInfo() {
-        return contexto;
+
+    public PartidaIniciadaDTO getPartida() {
+        return partida;
+    }
+
+    public void setPartida(PartidaIniciadaDTO partida) {
+        this.partida = partida;
     }
 
     @Override

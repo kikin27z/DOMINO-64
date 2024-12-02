@@ -4,6 +4,7 @@ import abstraccion.ICliente;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.EventoError;
 import domino64.eventos.base.error.TipoError;
+import domino64.eventos.base.suscripcion.EventoSuscripcion;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -13,7 +14,6 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -229,19 +229,14 @@ public class Client extends Observable<Evento> implements ICliente{
     }
     
     private void manejarEvento(Evento evento) {
-        System.out.println("mensaje recibido " + evento.getInfo());
-
         notifyObservers(evento.getTipo(), evento);
-        System.out.println("se notifico a observers");
     }
         
     private void manejarDesconexion(){
         connected = false;
         running = false;
-        System.out.println("en falso");
         Evento error = new EventoError(TipoError.ERROR_DE_SERVIDOR, "se desconecto el cliente");
         notifyObservers(TipoError.ERROR_DE_SERVIDOR, error);
-        System.out.println("se notifico el error");
         ejecutorEventos.shutdown();
         
         try {
@@ -266,16 +261,18 @@ public class Client extends Observable<Evento> implements ICliente{
 
     @Override
     public void agregarSuscripcion(Evento evento, Observer ob) {
-        suscripcionesEventos.add((Enum)evento.getInfo());
-        addObserver((Enum)evento.getInfo(), ob);
-        enviarEvento(evento);
+        EventoSuscripcion suscripcion = (EventoSuscripcion)evento;
+        suscripcionesEventos.add(suscripcion.getEventoSuscripcion());
+        addObserver(suscripcion.getEventoSuscripcion(), ob);
+        enviarEvento(suscripcion);
     }
 
     @Override
     public void removerSuscripcion(Evento evento, Observer ob) {
-        suscripcionesEventos.remove((Enum)evento.getInfo());
-        removeObserver((Enum)evento.getInfo(), ob);
-        enviarEvento(evento);
+        EventoSuscripcion desuscripcion = (EventoSuscripcion)evento;
+        suscripcionesEventos.remove(desuscripcion.getEventoSuscripcion());
+        removeObserver(desuscripcion.getEventoSuscripcion(), ob);
+        enviarEvento(desuscripcion);
     }
 
 }

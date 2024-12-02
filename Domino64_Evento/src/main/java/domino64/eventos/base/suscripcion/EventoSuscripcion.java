@@ -2,16 +2,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package eventos;
+package domino64.eventos.base.suscripcion;
 
-import tiposLogicos.TipoSuscripcion;
+import domino64.eventos.base.Evento;
+
 
 /**
  *
  * @author luisa M
  */
-public class EventoSuscripcion extends EventoLogico<Enum<?>> {
-    private Enum<?> evento;
+public class EventoSuscripcion implements Evento{
+    private int idPublicador;
+    private int idContexto;
+    private Enum evento;
     private TipoSuscripcion tipo;
     
     public EventoSuscripcion(){}
@@ -31,12 +34,11 @@ public class EventoSuscripcion extends EventoLogico<Enum<?>> {
     
     /**
      * establece el tipo de evento al que se quiere suscribir o desuscribir.
-     * @param info Enum indicando el tipo de evento especifico
+     * @param tipoEvento Enum indicando el tipo de evento especifico
      * del cual se quiere suscribir o desuscribir
      */
-    @Override
-    public void agregarInfo(Enum<?> info) {
-        evento = info;
+    public void agregarEvento(Enum tipoEvento) {
+        evento = tipoEvento;
     }
 
     @Override
@@ -48,9 +50,36 @@ public class EventoSuscripcion extends EventoLogico<Enum<?>> {
      * obtiene el tipo de evento al que se quiere suscribir o desuscribirse
      * @return El enum con el tipo de evento al cual se quiere suscribir o desuscribir
      */
-    @Override
-    public Enum<?> getInfo() {
+    public Enum getEventoSuscripcion() {
         return evento;
+    }
+
+    public void setIdPublicador(int idPublicador) {
+        this.idPublicador = idPublicador;
+    }
+
+    public void setIdContexto(int idContexto) {
+        this.idContexto = idContexto;
+    }
+
+    /**
+     * establece el tipo de evento al que se quiere suscribir
+     * o desuscribir.
+     * @param evento El enum con el tipo de evento al cual se quiere
+     * suscribir o desuscribir
+     */
+    public void setEventoSuscripcion(Enum evento) {
+        this.evento = evento;
+    }
+
+    @Override
+    public int getIdPublicador() {
+        return idPublicador;
+    }
+
+    @Override
+    public int getIdContexto() {
+        return idContexto;
     }
     
 }

@@ -24,12 +24,13 @@ import tiposLogicos.TiposJugador;
  */
 public abstract class ObservadorTurno implements Observer<Evento> {
     protected static BlockingQueue<Evento> colaEventos;
-    protected Map<Enum<?>, Consumer<Evento>> consumers;
-    protected static final List<Enum<?>> eventos = new ArrayList<>(
+    protected Map<Enum, Consumer<Evento>> consumers;
+    protected static final List<Enum> eventos = new ArrayList<>(
             List.of(
                     TipoError.ERROR_DE_SERVIDOR,
                     TipoLogicaPozo.FICHAS_REPARTIDAS,
                     TiposJugador.PASAR_TURNO,
+                    TiposJugador.COLOCAR_FICHA,
                     TipoLogicaPartida.JUGADOR_SALIO
             ));
 
@@ -51,12 +52,12 @@ public abstract class ObservadorTurno implements Observer<Evento> {
         consumers.putIfAbsent(TipoLogicaPartida.JUGADOR_SALIO, this::reacomodarTurnos);
     }
 
-    public void agregarEvento(Enum<?> evento, Consumer<Evento> consumer) {
+    public void agregarEvento(Enum evento, Consumer<Evento> consumer) {
         eventos.add(evento);
         consumers.putIfAbsent(evento, consumer);
     }
     
-    public void removerEvento(Enum<?> evento) {
+    public void removerEvento(Enum evento) {
         eventos.remove(evento);
         consumers.remove(evento);
     }
