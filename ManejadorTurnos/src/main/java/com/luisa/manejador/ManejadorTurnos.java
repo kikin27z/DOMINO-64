@@ -5,6 +5,7 @@ import adapter.AdaptadorDTO;
 import adapter.AdaptadorEntidad;
 import entidades.Jugador;
 import domino64.eventos.base.Evento;
+import domino64.eventos.base.suscripcion.EventoSuscripcion;
 import entidades.Ficha;
 import entidades.Partida;
 import entidadesDTO.CuentaDTO;
@@ -12,7 +13,6 @@ import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaDTO;
 import eventos.EventoJugador;
 import eventos.EventoPozo;
-import eventos.EventoSuscripcion;
 import eventos.EventoTurno;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -92,7 +92,7 @@ public class ManejadorTurnos extends ObservadorTurno{
     
     private void verificarFichaObtenida(Evento evento){
         EventoPozo eventoPozo = (EventoPozo)evento;
-        Ficha ficha = (Ficha)eventoPozo.getInfo();
+//        Ficha ficha = (Ficha)eventoPozo.getInfo();
         
         Partida partida = idsContextos.get(eventoPozo.getIdContexto());
         

@@ -122,7 +122,7 @@ public class HiloComponente  implements Runnable, Subscriber{
                 manejarEvento(evento);
             }
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
+            Logger.getLogger(HiloComponente.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
             removerSuscripciones();
             Servidor.desconectarComponente(id);
         }
