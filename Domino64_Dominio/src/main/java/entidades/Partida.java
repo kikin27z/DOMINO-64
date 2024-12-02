@@ -21,7 +21,7 @@ public class Partida implements Serializable{
     public Partida(List<Jugador> jugadores, int fichasPorJugador) {
         this.jugadores = jugadores;
         this.fichasPorJugador = fichasPorJugador;
-        setCodigo();
+        //setCodigo();
     }
 
     public Partida(String codigoPartida) {

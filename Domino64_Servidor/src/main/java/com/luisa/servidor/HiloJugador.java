@@ -227,14 +227,12 @@ public class HiloJugador implements Runnable, Subscriber{
      */
     @Override
     public void recibirEvento(Evento evento) {
-        System.out.println("evento recibido: "+evento);
-        if(evento.getIdContexto() == 0 || evento.getIdContexto() == this.idContexto){
-            colaEventosBus.offer(evento);
-            if (evento.getTipo().equals(TipoError.ERROR_DE_SERVIDOR)) {
-                running = false;
-                removerSuscripciones();
-                Servidor.desconectarJugador(id);
-            }
+        System.out.println("evento recibido: " + evento);
+        colaEventosBus.offer(evento);
+        if (evento.getTipo().equals(TipoError.ERROR_DE_SERVIDOR)) {
+            running = false;
+            removerSuscripciones();
+            Servidor.desconectarJugador(id);
         }
     }
 

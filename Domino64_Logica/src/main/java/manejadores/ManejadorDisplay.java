@@ -1,6 +1,7 @@
 package manejadores;
 
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.LobbyDTO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import presentacion_utilities.DistribuidorEventosModelo;
@@ -36,8 +37,8 @@ public final class ManejadorDisplay {
         navegacion.cambiarOpcionesPartida();
     }
 
-    public void mostrarLobby(CuentaDTO cuenta){
-        navegacion.cambiarLobby(cuenta);
+    public void mostrarLobby(CuentaDTO cuenta, LobbyDTO lobby){
+        navegacion.cambiarLobby(cuenta, lobby);
     }
     
 //    private void setConsumers(){

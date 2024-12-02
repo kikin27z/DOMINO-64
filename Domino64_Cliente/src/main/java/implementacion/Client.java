@@ -87,11 +87,11 @@ public class Client extends Observable<Evento> implements ICliente {
             input = new ObjectInputStream(socket.getInputStream());
 
             connected = true;
+            enviarSuscripciones();
 
             //recibir el id del cliente
             this.clientId = input.readInt();
             System.out.println("Se conecto al servidor id otorgado: " + clientId);
-            enviarSuscripciones();
 
         } catch (IOException ex) {
             System.out.println("Error al conectar cliente " + clientId);
@@ -100,19 +100,19 @@ public class Client extends Observable<Evento> implements ICliente {
     }
 
     private void enviarSuscripciones() {
-        if (suscripcionesEventos != null && !suscripcionesEventos.isEmpty()) {
-            if (connected) {
-                try {
+        try {
+            if (suscripcionesEventos != null && !suscripcionesEventos.isEmpty()) {
+                if (connected) {
                     synchronized (output) {
-                        output.reset();
+                        //output.reset();
                         output.writeObject(suscripcionesEventos);
                         output.flush();
                     }
-                } catch (IOException e) {
-                    System.out.println("error al enviar suscripciones: " + e.getMessage());
-                    manejarDesconexion();
                 }
             }
+        } catch (IOException e) {
+            System.out.println("error al enviar suscripciones: " + e.getMessage());
+            manejarDesconexion();
         }
     }
 

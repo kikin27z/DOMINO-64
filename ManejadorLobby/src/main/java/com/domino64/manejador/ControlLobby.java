@@ -34,9 +34,9 @@ public class ControlLobby extends IControlLobby implements Runnable {
 
     public ControlLobby() {
         this.manejador = new ManejadorLobby();
-        setConsumers();
         ejecutorEventos = Executors.newSingleThreadExecutor();
         running = new AtomicBoolean(true);
+        setConsumers();
     }
 
     @Override
@@ -85,6 +85,7 @@ public class ControlLobby extends IControlLobby implements Runnable {
 
     @Override
     public void crearPartida(Evento evento) {
+        System.out.println("en crear partida");
         EventoJugador eventoRecibido = (EventoJugador) evento;
 
         manejador.iniciarLobby();
@@ -92,7 +93,7 @@ public class ControlLobby extends IControlLobby implements Runnable {
         LobbyDTO lobby = manejador.devolverLobby();
 
         EventoLobby ev = director.crearEventoPartidaCreada(lobby, cuentaDTO);
-        cliente.enviarEvento(ev);
+        enviarEvento(ev);
 
     }
 

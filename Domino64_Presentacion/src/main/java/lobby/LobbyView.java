@@ -34,6 +34,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import observer.Observable;
 
 /**
  * La clase LobbyView gestiona la interfaz gráfica (GUI) de la pantalla de lobby
@@ -48,7 +49,7 @@ import javafx.stage.Stage;
  * @author Paul Alejandro Vázquez Cervantes - 00000241400
  * @author José Karim Franco Valencia - 00000245138
  */
-public class LobbyView implements ObserverLobbyMVC {
+public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLobbyMVC {
 
     private final LobbyModel modelo;
     private Stage fondo;
@@ -759,15 +760,17 @@ public class LobbyView implements ObserverLobbyMVC {
         jugadoresContainer.getChildren().add(index, panelAct);
     }
 
+    
+    
     @Override
     public void actualizarNuevoJugador(CuentaDTO cuenta) {
         AnchorPane nuevoPanel = ponerJugadorOtro(cuenta);
         cambiarAvatar(cuenta.getAvatar(), true);
         actualizarEncabezado(modelo.ACTUALIZACION_CANTIDAD_JUGADORES, true);
         btnIniciar.setDisable(false);
-//        EventoMVCLobby evento = new EventoMVCLobby(TipoLobbyMVC.AGREGAR_PANEL_JUGADOR);
-//        evento.agregarContexto(nuevoPanel);
-//        notifyObservers(evento.getTipo(), evento);
+        EventoLobbyMVC evento = new EventoLobbyMVC(TipoLobbyMVC.NUEVO_PANEL_JUGADOR);
+        evento.setNodo(nuevoPanel);
+        notifyObservers(evento.getTipo(), evento);
     }
 
     @Override

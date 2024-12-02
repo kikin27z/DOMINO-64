@@ -15,6 +15,7 @@ import manejadores.Control;
 import manejadores.ManejadorCuenta;
 import manejadores.ManejadorDisplay;
 import presentacion_utilities.DistribuidorEventosModelo;
+import tiposLogicos.TipoLogicaLobby;
 import utilities.BuilderEventoSuscripcion;
 import utilities.DirectorSuscripcion;
 
@@ -44,8 +45,8 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     }
 
     public void vincularCliente(Client _cliente) {
-        cliente.establecerSuscripciones(eventos);
         this.cliente = _cliente;
+        cliente.establecerSuscripciones(eventos);
         _cliente.iniciar();
         id = _cliente.getClientId();
         directorSuscripcion = new DirectorSuscripcion(id);
@@ -118,15 +119,17 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
 //            return;
 //        }
         LobbyDTO lobby = eventoRecibido.obtenerLobby();
-        System.out.println("codigo partida:");
+        System.out.println("\ncodigo partida: "+lobby.getCodigo()+"\n");
         System.out.println("cuentas--"+ lobby.getCuentas());
         
+        removerSuscripcion(TipoLogicaLobby.PARTIDA_CREADA);
         CuentaDTO aux = eventoRecibido.getPublicador();
         manejadorCuenta.asignarCuenta(aux);
         CuentaDTO cuentaDTO = manejadorCuenta.getCuenta();
-        display.mostrarLobby(cuentaDTO);
+        lobby.setCuentaActual(cuentaDTO);
+        display.mostrarLobby(cuentaDTO, lobby);
         
-        distribuidor.inicializarLobby(lobby);
+//        distribuidor.inicializarLobby(lobby);
     }
 
     @Override
@@ -137,13 +140,14 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
         System.out.println("Evento a logica partida creada " + eventoRecibido);
         LobbyDTO lobby = eventoRecibido.obtenerLobby();
         CuentaDTO aux = eventoRecibido.getPublicador();
+        //ya no va a recibir los eventos de partida encontrada
+        removerSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA);
         
-        if(eventoRecibido.getIdDestinatario() == id){
-            manejadorCuenta.asignarCuenta(aux);
-            CuentaDTO cuenta = manejadorCuenta.getCuenta();
-            display.mostrarLobby(cuenta);
-        }
-        distribuidor.inicializarLobby(lobby);
+        manejadorCuenta.asignarCuenta(aux);
+        CuentaDTO cuenta = manejadorCuenta.getCuenta();
+        lobby.setCuentaActual(cuenta);
+        display.mostrarLobby(cuenta, lobby);
+//        distribuidor.inicializarLobby(lobby);
     }
 
     @Override
@@ -199,17 +203,26 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
 
     @Override
     public void cuentaLista(Evento evento) {
+        EventoLobby evLobby = (EventoLobby)evento;
         
+        CuentaDTO cuentaNueva = evLobby.getPublicador();
+        distribuidor.actualizarCuentaLista(cuentaNueva);
     }
 
     @Override
     public void cuentaNoLista(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoLobby evLobby = (EventoLobby)evento;
+        
+        CuentaDTO cuentaNueva = evLobby.getPublicador();
+        distribuidor.actualizarCuentaNoLista(cuentaNueva);
     }
 
     @Override
     public void cuentaEntro(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoLobby evLobby = (EventoLobby)evento;
+        
+        CuentaDTO cuentaNueva = evLobby.getPublicador();
+        distribuidor.actualizarNuevoJugador(cuentaNueva);
     }
     
 }

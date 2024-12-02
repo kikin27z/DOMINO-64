@@ -35,7 +35,6 @@ import java.util.logging.Logger;
 public class Servidor {
 
     //private static BusCore bus;
-    private static Publicador publicador;
     private final int port;
     private ServerSocket servidor;
     private int jugadorId = 0;
@@ -47,7 +46,6 @@ public class Servidor {
 
     public Servidor(int port, BusCore core) {
         this.port = port;
-        publicador = new Publisher(core);
         clientesJugadores = new ConcurrentHashMap<>();
         clientesComponentes = new ConcurrentHashMap<>();
         threadPoolComponentes = Executors.newFixedThreadPool(5);
@@ -128,6 +126,8 @@ public class Servidor {
             while (clientesComponentes.isEmpty()) {
                 socket = servidor.accept();
                 componenteId++;
+                Publisher publicador = new Publisher();
+                publicador.setId(componenteId);
                 HiloComponente componente = new HiloComponente(publicador, socket, componenteId);
                 threadPoolComponentes.execute(componente);
                 clientesComponentes.putIfAbsent(componenteId, componente);
@@ -152,6 +152,8 @@ public class Servidor {
             while (clientesJugadores.size() < 10) {
                 socket = servidor.accept();
                 jugadorId++;
+                Publisher publicador = new Publisher();
+                publicador.setId(jugadorId);
                 HiloJugador jugador = new HiloJugador(publicador, socket, jugadorId);
                 clientesJugadores.putIfAbsent(jugadorId, jugador);
                 threadPoolJugadores.execute(jugador);

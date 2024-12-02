@@ -4,6 +4,7 @@ import creditos.CreditosControl;
 import creditos.CreditosModel;
 import creditos.CreditosView;
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.LobbyDTO;
 import inicio.InicioControl;
 import inicio.InicioModel;
 import inicio.InicioView;
@@ -89,10 +90,10 @@ public class Navegacion implements INavegacion {
     }
 
     @Override
-    public void cambiarLobby(CuentaDTO cuenta) {
+    public void cambiarLobby(CuentaDTO cuenta, LobbyDTO lobby) {
         Platform.runLater(() -> {
             try {
-                LobbyModel modelo = new LobbyModel(cuenta);
+                LobbyModel modelo = new LobbyModel(cuenta, lobby);
                 mediador.vincularModeloLobby(modelo);
                 distribuidor.setLobbyMVC(modelo);
                 LobbyView view = new LobbyView(modelo); // Instancia la vista de la partida

@@ -20,6 +20,7 @@ public class LobbyDTO implements Serializable{
 
     public LobbyDTO() {
         cuentas = new ArrayList<>();
+        partida = new PartidaDTO();
     }
     
     public LobbyDTO(String codigoPartida) {

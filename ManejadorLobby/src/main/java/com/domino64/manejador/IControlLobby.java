@@ -46,7 +46,7 @@ public abstract class IControlLobby implements Observer<Evento> {
         return eventos;
     }
     
-     public void enviarEvento(Evento evento) {
+    public void enviarEvento(Evento evento) {
         cliente.enviarEvento(evento);
     }
     protected void setConsumers(){

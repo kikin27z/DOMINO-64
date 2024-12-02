@@ -15,7 +15,7 @@ import domino64.eventos.base.Evento;
  * especifico de evento
  */
 public interface Publicador<T extends Evento>{
-    public void suscribir(Enum<?> tipoEvento, Suscriptor suscriptor);
-    public void desuscribir(Enum<?> tipoEvento, Suscriptor suscriptor);
-    public void publicarEvento(Enum<?> tipoEvento, T evento);
+    public void suscribir(Enum tipoEvento, Suscriptor suscriptor);
+    public void desuscribir(Enum tipoEvento, Suscriptor suscriptor);
+    public void publicarEvento(Enum tipoEvento, T evento);
 }

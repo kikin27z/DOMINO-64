@@ -1,6 +1,8 @@
 package lobby;
 
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import observer.Observer;
 
 /**
  * Controlador para la pantalla del lobby del juego. Se encarga de manejar la
@@ -10,7 +12,7 @@ import javafx.scene.input.MouseEvent;
  * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author José Karim Franco Valencia - 00000245138
  */
-public class LobbyControl {
+public class LobbyControl implements Observer<EventoLobbyMVC>{
 
     private LobbyView view;  // Referencia a la vista (LobbyView)
     private LobbyModel modelo;  // Referencia al modelo (LobbyModel)
@@ -127,6 +129,17 @@ public class LobbyControl {
             modelo.avisarCuentaNoLista();
         } else {
             modelo.avisarCuentaLista();
+        }
+    }
+
+    @Override
+    public void update(EventoLobbyMVC observable) {
+        if(observable.getTipo().equals(TipoLobbyMVC.NUEVO_PANEL_JUGADOR)){
+            AnchorPane pane = (AnchorPane)observable.getElemento();
+            modelo.agregarPanelJugador(pane.getId(),pane);
+        }else if(observable.getTipo().equals(TipoLobbyMVC.QUITAR_PANEL_JUGADOR)){
+            AnchorPane pane = (AnchorPane)observable.getElemento();
+            modelo.removerPanelJugador(pane.getId());
         }
     }
 }
