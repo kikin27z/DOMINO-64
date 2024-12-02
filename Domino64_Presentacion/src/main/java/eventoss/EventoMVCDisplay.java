@@ -33,7 +33,6 @@ public class EventoMVCDisplay extends EventoMVC {
         this.tipo = tipo;
     }
     
-    @Override
     public void agregarContexto(Object contexto) {
         dtoContexto = contexto;
     }
@@ -47,7 +46,6 @@ public class EventoMVCDisplay extends EventoMVC {
         return tipo;
     }
     
-    @Override
     public Object getInfo() {
         return dtoContexto;
     }

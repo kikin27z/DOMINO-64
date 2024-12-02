@@ -18,7 +18,7 @@ import entidadesDTO.CuentaDTO;
  * @author karim F
  * @param <T> Tipo de DTO especifico que va a manejar el evento
  */
-public abstract class EventoMVC<T> implements Evento{
+public abstract class EventoMVC implements Evento{
     private CuentaDTO publicador;
     private int idContexto ;
     
@@ -46,8 +46,6 @@ public abstract class EventoMVC<T> implements Evento{
     }
     
    @Override
-    public abstract Enum<?> getTipo();
-    
-    public abstract void agregarContexto(T contexto);
+    public abstract Enum getTipo();
     
 }

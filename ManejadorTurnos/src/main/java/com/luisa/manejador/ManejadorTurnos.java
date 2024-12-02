@@ -31,7 +31,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import tiposLogicos.TipoLogicaPozo;
 import tiposLogicos.TipoLogicaTurno;
 
 /**

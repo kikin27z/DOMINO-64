@@ -4,7 +4,7 @@
  */
 package eventoss;
 
-import entidadesDTO.JugadorDTO;
+import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
 
@@ -12,9 +12,9 @@ import entidadesDTO.PartidaDTO;
  *
  * @author luisa M
  */
-public class EventoMVCJugador extends EventoMVC<JugadorDTO> {
+public class EventoMVCJugador extends EventoMVC {
     private TipoJugadorMVC tipo;
-    private JugadorDTO contexto;
+    private JugadaRealizadaDTO jugada;
     private PartidaDTO partida;
     private LobbyDTO lobby;
     
@@ -44,19 +44,17 @@ public class EventoMVCJugador extends EventoMVC<JugadorDTO> {
         return partida;
     }
     
-    @Override
-    public void agregarContexto(JugadorDTO contexto) {
-        this.contexto = contexto;
+    public void setJugada(JugadaRealizadaDTO jugada) {
+        this.jugada = jugada;
     }
 
+    public JugadaRealizadaDTO getJugada(){
+        return jugada;
+    }
+    
     @Override
     public TipoJugadorMVC getTipo() {
         return tipo;
-    }
-
-    @Override
-    public JugadorDTO getInfo() {
-        return contexto;
     }
     
 }

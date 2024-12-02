@@ -10,6 +10,6 @@ package tiposLogicos;
  * @author luisa M
  */
 public enum TipoLogicaTablero{
-    OBTENER_EXTREMOS,
-    JALAR_FICHA;
+    FICHA_COLOCADA
+    ;
 }

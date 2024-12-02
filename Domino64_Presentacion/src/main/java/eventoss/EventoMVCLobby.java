@@ -26,7 +26,6 @@ public class EventoMVCLobby extends EventoMVC {
         return cuentaActualizada;
     }
     
-    @Override
     public void agregarContexto(Object contexto) {
         this.contexto = contexto;
     }
@@ -36,7 +35,6 @@ public class EventoMVCLobby extends EventoMVC {
         return tipo;
     }
 
-    @Override
     public Object getInfo() {
         return contexto;
     }

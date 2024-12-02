@@ -11,7 +11,7 @@ import entidadesDTO.JugadorDTO;
  *
  * @author luisa M
  */
-public class EventoMVCPartida extends EventoMVC<FichaDTO> {
+public class EventoMVCPartida extends EventoMVC {
     private TipoPartidaMVC tipo;
     private FichaDTO contexto;
 
@@ -19,7 +19,6 @@ public class EventoMVCPartida extends EventoMVC<FichaDTO> {
         this.tipo = tipo;
     }
 
-    @Override
     public void agregarContexto(FichaDTO contexto) {
         this.contexto = contexto;
     }

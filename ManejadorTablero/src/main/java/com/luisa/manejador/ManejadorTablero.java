@@ -1,19 +1,66 @@
 package com.luisa.manejador;
 
+import abstraccion.ICliente;
+import adapter.AdaptadorDTO;
+import adapter.AdaptadorEntidad;
+import domino64.eventos.base.Evento;
+import domino64.eventos.base.error.EventoError;
 import entidades.Ficha;
 import entidades.Tablero;
+import entidadesDTO.JugadaRealizadaDTO;
+import entidadesDTO.PosicionDTO;
+import eventos.EventoJugador;
+import eventos.EventoTablero;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import tiposLogicos.TipoLogicaTablero;
 
 /**
  *
  * @author luisa M
  */
-public class ManejadorTablero {
-
+public class ManejadorTablero extends ObservadorTablero implements Runnable{
+    private ICliente cliente;
+    private static ExecutorService ejecutorEventos;
+    private AtomicBoolean running;
+    private static int id;
+    private AdaptadorEntidad adaptador;
+    private AdaptadorDTO adaptadorDTO;
     private Tablero tablero;
     private int extremoIzq, extremoDer;
     
     public ManejadorTablero(){
         this.tablero = new Tablero();
+        adaptador = new AdaptadorEntidad();
+        adaptadorDTO = new AdaptadorDTO();
+        ejecutorEventos = Executors.newFixedThreadPool(2);
+        running = new AtomicBoolean(true);
+        setConsumers();
+    }
+    
+    protected void setIdManejador(int idManejador) {
+        id = idManejador;
+    }
+    
+    @Override
+    public void run() {
+        while (running.get()) {
+            try {
+                Evento nextEvent = colaEventos.take();
+                Consumer<Evento> cons = consumers.get(nextEvent.getTipo());
+                if (cons != null) {
+                    cons.accept(nextEvent);
+                }
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                Logger.getLogger(ManejadorTablero.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
+                break;
+            }
+        }
     }
     
     /**
@@ -21,7 +68,7 @@ public class ManejadorTablero {
      * @param ficha ficha a colocar
      * @param extremo extremo en el que se va a colocar la ficha
      */
-    public void colocarFicha(Ficha ficha, int extremo){
+    private void colocarFicha(Ficha ficha, int extremo){
         tablero.agregarFicha(ficha, extremo);
         actualizarExtremo(ficha, extremo);
     }
@@ -84,5 +131,41 @@ public class ManejadorTablero {
      */
     private boolean jugablePorIzquierda(Ficha ficha){
         return extremoIzq == ficha.getDerecha() || extremoIzq == ficha.getIzquierda();
+    }
+
+    @Override
+    protected void manejarError(Evento evento) {
+        EventoError error =(EventoError)evento;
+        System.out.println("Ocurrio un error: "+error.getMensaje());
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    protected void colocarFicha(Evento evento) {
+        EventoJugador evJugador = (EventoJugador)evento;
+        JugadaRealizadaDTO jugada = evJugador.getJugada();
+        Ficha fichaColocada = adaptadorDTO.adaptarFichaDTO(jugada.getFicha());
+        
+        int extremo;
+        //si es la primera ficha a colocar
+        if(tablero.estaVacio()){
+            extremo = tablero.DERECHA;
+        }else{
+            PosicionDTO posicion = jugada.getPosicion();
+            extremo = obtenerExtremo(posicion);
+        }
+
+        colocarFicha(fichaColocada, extremo);
+        
+        EventoTablero eventoTablero = new EventoTablero(TipoLogicaTablero.FICHA_COLOCADA);
+        eventoTablero.setIdPublicador(id);
+        eventoTablero.setIdContexto(evJugador.getIdContexto());
+        eventoTablero.setJugada(jugada);
+    }
+    
+    private int obtenerExtremo(PosicionDTO posicion){
+        if(posicion == PosicionDTO.DERECHA)
+            return tablero.DERECHA;
+        return tablero.IZQUIERDA;
     }
 }

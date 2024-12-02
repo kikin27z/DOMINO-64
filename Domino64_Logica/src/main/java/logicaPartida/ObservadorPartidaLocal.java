@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import observer.Observer;
 import tiposLogicos.TipoLogicaPartida;
+import tiposLogicos.TipoLogicaTablero;
 import tiposLogicos.TipoLogicaTurno;
 
 /**
@@ -30,7 +31,8 @@ public abstract class ObservadorPartidaLocal implements Observer<Evento>{
                     TipoLogicaPartida.JUGADOR_GANO,
                     TipoLogicaPartida.PETICION_RENDIRSE,
                     TipoLogicaPartida.JUGADOR_SALIO,
-                    TipoLogicaTurno.CAMBIO_TURNO
+                    TipoLogicaTurno.CAMBIO_TURNO,
+                    TipoLogicaTablero.FICHA_COLOCADA
             ));
 
     public ObservadorPartidaLocal() {
@@ -70,6 +72,8 @@ public abstract class ObservadorPartidaLocal implements Observer<Evento>{
         consumers.putIfAbsent(TipoLogicaPartida.PETICION_RENDIRSE, this::procesarPeticion);
         consumers.putIfAbsent(TipoLogicaPartida.TERMINO_PARTIDA, this::salirPartida);
         consumers.putIfAbsent(TipoLogicaTurno.CAMBIO_TURNO, this::evaluarCambioTurno);
+        consumers.putIfAbsent(TipoLogicaTablero.FICHA_COLOCADA, this::actualizarTablero);
+        
     }
     
     public abstract void manejarError(Evento evento);
@@ -80,5 +84,6 @@ public abstract class ObservadorPartidaLocal implements Observer<Evento>{
     public abstract void procesarPeticion(Evento evento);
     public abstract void salirPartida(Evento evento);
     public abstract void evaluarCambioTurno(Evento evento);
+    public abstract void actualizarTablero(Evento evento);
     
 }

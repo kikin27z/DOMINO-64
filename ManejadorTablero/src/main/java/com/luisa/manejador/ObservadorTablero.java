@@ -14,28 +14,22 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Consumer;
 import observer.Observer;
-import tiposLogicos.TipoLogicaPartida;
-import tiposLogicos.TipoLogicaPozo;
-import tiposLogicos.TipoLogicaTablero;
 import tiposLogicos.TiposJugador;
 
 /**
  *
  * @author luisa M
  */
-public abstract class ObservadorTurno implements Observer<Evento> {
+public abstract class ObservadorTablero implements Observer<Evento> {
     protected static BlockingQueue<Evento> colaEventos;
     protected Map<Enum, Consumer<Evento>> consumers;
     protected static final List<Enum> eventos = new ArrayList<>(
             List.of(
                     TipoError.ERROR_DE_SERVIDOR,
-                    TipoLogicaPozo.FICHAS_REPARTIDAS,
-                    TiposJugador.PASAR_TURNO,
-                    TipoLogicaTablero.FICHA_COLOCADA,
-                    TipoLogicaPartida.JUGADOR_SALIO
+                    TiposJugador.COLOCAR_FICHA
             ));
-
-    protected ObservadorTurno() {
+    
+    protected ObservadorTablero() {
         consumers = new ConcurrentHashMap<>();
         colaEventos = new LinkedBlockingDeque();
     }
@@ -47,25 +41,14 @@ public abstract class ObservadorTurno implements Observer<Evento> {
 
     protected void setConsumers() {
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
-        consumers.putIfAbsent(TipoLogicaPozo.FICHAS_REPARTIDAS, this::designarTurnos);
-        consumers.putIfAbsent(TiposJugador.PASAR_TURNO, this::cambiarTurno);
-        consumers.putIfAbsent(TipoLogicaTablero.FICHA_COLOCADA, this::cambiarTurno);
-        consumers.putIfAbsent(TipoLogicaPartida.JUGADOR_SALIO, this::reacomodarTurnos);
+        consumers.putIfAbsent(TiposJugador.COLOCAR_FICHA, this::colocarFicha);
     }
 
-    public void agregarEvento(Enum evento, Consumer<Evento> consumer) {
+    protected void agregarEvento(Enum evento, Consumer<Evento> consumer) {
         eventos.add(evento);
         consumers.putIfAbsent(evento, consumer);
     }
     
-    public void removerEvento(Enum evento) {
-        eventos.remove(evento);
-        consumers.remove(evento);
-    }
-    
-    public abstract void manejarError(Evento evento);
-    public abstract void designarTurnos(Evento evento);
-    public abstract void cambiarTurno(Evento evento);
-    public abstract void reacomodarTurnos(Evento evento);
-    
+    protected abstract void manejarError(Evento evento);
+    protected abstract void colocarFicha(Evento evento);
 }

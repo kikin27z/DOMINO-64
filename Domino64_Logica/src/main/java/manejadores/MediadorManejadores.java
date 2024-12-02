@@ -25,6 +25,9 @@ import presentacion_utilities.MediadorModelos;
 import presentacion_utilities.NotificadorEvento;
 import tiposLogicos.TipoLogicaLobby;
 import tiposLogicos.TipoLogicaPartida;
+import tiposLogicos.TipoLogicaPozo;
+import tiposLogicos.TipoLogicaTablero;
+import tiposLogicos.TipoLogicaTurno;
 import tiposLogicos.TiposJugador;
 
 /**
@@ -99,6 +102,10 @@ public class MediadorManejadores {
         ControlEventos.agregarConsumerPresentacion(TiposJugador.CAMBIAR_AVATAR, display::actualizarAvatarJugadorActual);
         ControlEventos.agregarConsumerPresentacion(TipoLogicaPartida.INICIO_PARTIDA, display::entrarAPartida);
         ControlEventos.agregarConsumerPresentacion(TipoLogicaPartida.BUSCAR_PRIMERA_MULA, display::buscarMula);
+        ControlEventos.agregarConsumerPresentacion(TiposJugador.COLOCAR_FICHA, display::actualizarTablero);
+        ControlEventos.agregarConsumerPresentacion(TipoLogicaTablero.FICHA_COLOCADA, display::actualizarTablero);
+        ControlEventos.agregarConsumerPresentacion(TipoLogicaPozo.FICHA_OBTENIDA, display::fichaObtenida);
+        ControlEventos.agregarConsumerPresentacion(TipoLogicaTurno.CAMBIO_TURNO, display::cambioTurno);
         ControlEventos.agregarConsumerLogica(TipoJugadorMVC.IR_OPCIONES_PARTIDA, display::updateDisplay);
         ControlEventos.agregarConsumerLogica(TipoJugadorMVC.IR_INICIO, display::updateDisplay);
     }
@@ -122,9 +129,9 @@ public class MediadorManejadores {
         return display;
     }
     
-    public static void enviarADisplay(Evento evento){
-        display.recibirEventoLogico(evento);
-    }
+//    public static void enviarADisplay(Evento evento){
+//        display.recibirEventoLogico(evento);
+//    }
     
     public static void enviarACuenta(Evento evento){
         //cuenta.recibirEventoPresentacion(evento);

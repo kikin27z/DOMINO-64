@@ -27,15 +27,12 @@ public class DirectorEventosPartida extends DirectorEventos<BuilderEventoJugador
     private int idContextoPartida;
     private CuentaDTO publicador;
     
-    public DirectorEventosPartida(BuilderEventoJugador builder, CuentaDTO publicador) {
+    public DirectorEventosPartida(BuilderEventoJugador builder, CuentaDTO publicador, int idContexto) {
         super(builder);
         this.publicador = publicador;
+        this.idContextoPartida = idContexto;
     }
 
-    protected void setIdPartida(int id){
-        this.idContextoPartida = id;
-    }
-    
     public EventoJugador crearEventoColocarFicha(JugadaRealizadaDTO jugada){
         builder.setJugada(jugada);
         builder.setIdContexto(idContextoPartida);
