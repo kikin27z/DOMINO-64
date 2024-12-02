@@ -9,6 +9,8 @@ import adapter.AdaptadorDTO;
 import adapter.AdaptadorEntidad;
 import entidades.Jugador;
 import domino64.eventos.base.Evento;
+import domino64.eventos.base.suscripcion.TipoSuscripcion;
+import domino64.eventos.base.suscripcion.EventoSuscripcion;
 import entidades.Ficha;
 import entidades.Partida;
 import entidadesDTO.CuentaDTO;
@@ -16,7 +18,6 @@ import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaDTO;
 import eventos.EventoJugador;
 import eventos.EventoPozo;
-import eventos.EventoSuscripcion;
 import eventos.EventoTurno;
 import implementacion.Client;
 import java.util.ArrayList;
@@ -32,7 +33,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import tiposLogicos.TipoLogicaPozo;
 import tiposLogicos.TipoLogicaTurno;
-import tiposLogicos.TipoSuscripcion;
 
 /**
  *
@@ -40,9 +40,8 @@ import tiposLogicos.TipoSuscripcion;
  */
 public class ManejadorTurnos extends ObservadorTurno implements Runnable{
     private int id;
-    private Map<Partida, List<Jugador>> jugadoresPartidas;
-    private Map<Partida, Jugador> jugadoresEnTurno;
-    private Map<Integer, Partida> idsContextos;
+    private Map<Integer, Jugador> jugadoresEnTurno;
+    private Map<Integer, List<Jugador>> jugPartidas;
     private ICliente cliente;
     private AtomicBoolean running;
     private AdaptadorEntidad adaptador;
@@ -50,9 +49,8 @@ public class ManejadorTurnos extends ObservadorTurno implements Runnable{
     private static ExecutorService ejecutorEventos;
     
     public ManejadorTurnos(){
-        this.jugadoresPartidas = new ConcurrentHashMap<>();
         this.jugadoresEnTurno = new ConcurrentHashMap<>();
-        this.idsContextos = new ConcurrentHashMap<>();
+        this.jugPartidas = new ConcurrentHashMap<>();
         ejecutorEventos = Executors.newSingleThreadExecutor();
         setConsumers();
     }
@@ -111,9 +109,17 @@ public class ManejadorTurnos extends ObservadorTurno implements Runnable{
         return copiaJugadores;
     }
     
-    private Jugador cambiarTurno(Partida partida){        
-        jugadoresEnTurno.compute(partida, (p,j) -> {
-            List<Jugador> jugadores = jugadoresPartidas.get(p);
+    /**
+     * metodo para cambiar el turno en una partida especifica.
+     * se usa el codigo de la partida para obtener los jugadores 
+     * que estan dentro de la partida con el codigo del parametro
+     * @param codigoPartida Codigo de la partida en la cual se hara el
+     * cambio de turno
+     * @return el jugador con el turno actual
+     */
+    private Jugador cambiarTurno(int codigoPartida){        
+        jugadoresEnTurno.compute(codigoPartida, (codigo,j) -> {
+            List<Jugador> jugadores = jugPartidas.get(codigo);
             int index = jugadores.indexOf(j);
 
             if (index == jugadores.size() - 1) {
@@ -123,35 +129,19 @@ public class ManejadorTurnos extends ObservadorTurno implements Runnable{
             return j;
         });
         
-        return jugadoresEnTurno.get(partida);
+        return jugadoresEnTurno.get(codigoPartida);
     }
     
     private void verificarFichaObtenida(Evento evento){
-        EventoPozo eventoPozo = (EventoPozo)evento;
-        Ficha ficha = (Ficha)eventoPozo.getInfo();
         
-        Partida partida = idsContextos.get(eventoPozo.getIdContexto());
-        
-        if(ficha.esMula()){
-            EventoSuscripcion desuscripcion = new EventoSuscripcion(TipoSuscripcion.DESUSCRIBIR);
-            desuscripcion.setIdPublicador(id);
-            desuscripcion.agregarInfo(TipoLogicaPozo.FICHA_OBTENIDA);
-            cliente.agregarSuscripcion(desuscripcion, this);
-            removerEvento(desuscripcion.getInfo());
-            
-            
-            
-        }else{
-            
-        }
     }
     
     private void buscarPrimeraMula(int idContexto, Jugador primerJugador){
-        jugadoresEnTurno.put(idsContextos.get(idContexto), primerJugador);
-        CuentaDTO cuentaDTO = adaptador.adaptarEntidadCuenta(primerJugador.getCuenta());
+        jugadoresEnTurno.put(idContexto, primerJugador);
+        JugadorDTO jugadorDTO = adaptador.adaptarEntidadJugador(primerJugador);
         
         EventoTurno buscarMula = new EventoTurno(TipoLogicaTurno.JUGADORES_SIN_MULAS);
-        buscarMula.agregarInfo(cuentaDTO);
+        buscarMula.agregarJugador(jugadorDTO);
         buscarMula.setIdContexto(idContexto);
         buscarMula.setIdPublicador(id);
         
@@ -160,18 +150,17 @@ public class ManejadorTurnos extends ObservadorTurno implements Runnable{
     
     @Override
     public void manejarError(Evento evento) {
+        
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void designarTurnos(Evento evento) {
         EventoPozo eventoPozo = (EventoPozo)evento;
-        PartidaDTO partidaDTO = (PartidaDTO)eventoPozo.getInfo();
-        Partida partida = adaptadorDTO.adaptarPartidaDTO(partidaDTO);
+        List<JugadorDTO> jugadoresDTO = eventoPozo.getJugadoresConFichas();
+        List<Jugador> jugadores = adaptadorDTO.adaptarJugadoresDTO(jugadoresDTO);
         
-        idsContextos.put(eventoPozo.getIdContexto(),partida);
-        
-        List<Jugador> jugadores = partida.getJugadores();
+        jugPartidas.put(eventoPozo.getIdContexto(),jugadores);
         
         Jugador primerJugador = buscarPrimerTurno(jugadores);
         EventoTurno turnosDesignados = new EventoTurno();
@@ -179,15 +168,11 @@ public class ManejadorTurnos extends ObservadorTurno implements Runnable{
         if(primerJugador != null){
             jugadores = designarOtrosTurnos(jugadores, primerJugador);
             turnosDesignados.setTipo(TipoLogicaTurno.TURNOS_DESIGNADOS);
-            partida.setJugadores(jugadores);
         }else{
             turnosDesignados.setTipo(TipoLogicaTurno.JUGADORES_SIN_MULAS);
         }
-        jugadoresPartidas.put(partida, jugadores);
         
-        partidaDTO = adaptador.adaptarEntidadPartida(partida);
-        
-        turnosDesignados.setPartida(partidaDTO);
+        turnosDesignados.agregarJugadores(adaptador.adaptarJugadores(jugadores));
         turnosDesignados.setIdContexto(eventoPozo.getIdContexto());
         turnosDesignados.setIdPublicador(id);
         
@@ -197,13 +182,12 @@ public class ManejadorTurnos extends ObservadorTurno implements Runnable{
     @Override
     public void cambiarTurno(Evento evento) {
         EventoJugador eventoJ = (EventoJugador)evento;
-        Partida partida = adaptadorDTO.adaptarPartidaDTO(eventoJ.getPartida());
-        Jugador jugEnTurno = cambiarTurno(partida);
-        CuentaDTO jugadorEnTurnoDTO = adaptador.adaptarEntidadCuenta(jugEnTurno.getCuenta());
+        int codigoPartida = eventoJ.getIdContexto();
+        Jugador jugEnTurno = cambiarTurno(codigoPartida);
         
         EventoTurno cambioTurno = new EventoTurno(TipoLogicaTurno.CAMBIO_TURNO);
         cambioTurno.setIdContexto(eventoJ.getIdContexto());
-        cambioTurno.agregarInfo(jugadorEnTurnoDTO);
+        cambioTurno.agregarJugador(adaptador.adaptarEntidadJugador(jugEnTurno));
         cambioTurno.setIdPublicador(id);
         
         cliente.enviarEvento(cambioTurno);

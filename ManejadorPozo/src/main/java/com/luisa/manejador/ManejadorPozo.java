@@ -4,10 +4,13 @@ import abstraccion.ICliente;
 import adapter.AdaptadorDTO;
 import adapter.AdaptadorEntidad;
 import domino64.eventos.base.Evento;
+import domino64.eventos.base.error.EventoError;
+import entidades.Cuenta;
 import entidades.Ficha;
 import entidades.Jugador;
 import entidades.Partida;
 import entidades.Pozo;
+import entidadesDTO.CuentaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaDTO;
@@ -39,7 +42,7 @@ public class ManejadorPozo extends ObservadorPozo implements Runnable{
     private int id;
     private ExecutorService ejecutorEventos;
     private ICliente cliente;
-    private Map<Partida, Pozo> pozos;
+    private Map<Integer, Pozo> pozos;
     private AtomicBoolean running;
     private final int[][] valoresFichas = {
         {0, 0}, {0, 1}, {0, 2}, {0, 3}, {0, 4}, {0, 5}, {0, 6},
@@ -140,33 +143,29 @@ public class ManejadorPozo extends ObservadorPozo implements Runnable{
     @Override
     public void guardarFichas(Evento evento) {
         EventoPartida eventoPartida =(EventoPartida)evento;
-        PartidaDTO partidaDTO = (PartidaDTO)eventoPartida.getInfo();
-        Partida partida = adaptadorDTO.adaptarPartidaDTO(partidaDTO);
         JugadorDTO jugadorDTO = eventoPartida.getJugador();
         Jugador jugador = adaptadorDTO.adaptarJugadorDTO(jugadorDTO);
         
-        pozos.get(partida).devolverFichas(jugador.getFichas());
+        pozos.get(eventoPartida.getIdContexto()).devolverFichas(jugador.getFichas());
     }
 
     @Override
     public void sacarFicha(Evento evento) {
         EventoJugador eventoJugador = (EventoJugador)evento;
-        PartidaDTO partidaDTO = eventoJugador.getPartida();
-        Partida partida = adaptadorDTO.adaptarPartidaDTO(partidaDTO);
-        
+        int codigoPartida = eventoJugador.getIdContexto();
         EventoPozo eventoPozo;
         
-        if(hayFichas(pozos.get(partida))){
-            Ficha ficha = jalarFicha(pozos.get(partida));
+        if(hayFichas(pozos.get(codigoPartida))){
+            Ficha ficha = jalarFicha(pozos.get(codigoPartida));
             
             eventoPozo = new EventoPozo(TipoLogicaPozo.FICHA_OBTENIDA);
-            eventoPozo.agregarInfo(adaptadorEntidad.adaptarEntidadFicha(ficha));
-            eventoPozo.setIdContexto(eventoJugador.getIdContexto());
+            eventoPozo.setFicha(adaptadorEntidad.adaptarEntidadFicha(ficha));
+            eventoPozo.setIdContexto(codigoPartida);
             eventoPozo.setIdPublicador(id);
             
         }else{
             eventoPozo = new EventoPozo(TipoLogicaPozo.POZO_VACIO);
-            eventoPozo.setIdContexto(eventoJugador.getIdContexto());
+            eventoPozo.setIdContexto(codigoPartida);
             eventoPozo.setIdPublicador(id);
         }
         
@@ -177,28 +176,41 @@ public class ManejadorPozo extends ObservadorPozo implements Runnable{
     public void prepararFichas(Evento evento) {
         EventoLobby eventoLobby =(EventoLobby)evento;
         LobbyDTO lobby = eventoLobby.obtenerLobby();
-        Partida partida = adaptadorDTO.adaptarPartidaDTO(lobby.getPartida());
-        Pozo pozo = new Pozo();
-        pozo.llenarPozo(crearFichas());
         
-        int cantFichas = partida.getFichasPorJugador();
-        List<Jugador> jugadores = partida.getJugadores();
-        for (Jugador jugador : jugadores) {
-            jugador.setFichas(repartirFichas(cantFichas, pozo));
-        }
-        partida.setJugadores(jugadores);
-        pozos.put(partida, pozo);
+        List<Jugador> jugadoresConFichas = darFichasJugadores(lobby.getCuentas(), lobby.getCantidadFichas(), eventoLobby.getIdContexto());
         
         EventoPozo fichasRepartidas = new EventoPozo(TipoLogicaPozo.FICHAS_REPARTIDAS);
-        fichasRepartidas.agregarInfo(adaptadorEntidad.adaptarEntidadPartida(partida));
+        fichasRepartidas.setJugadoresConFichas(adaptadorEntidad.adaptarJugadores(jugadoresConFichas));
         fichasRepartidas.setIdContexto(eventoLobby.getIdContexto());
         fichasRepartidas.setIdPublicador(id);
         
         cliente.enviarEvento(fichasRepartidas);
     }
 
+    private List<Jugador> darFichasJugadores(List<CuentaDTO> cuentasDTO, int cantidadFichas, int codigoPartida){
+        List<Cuenta> cuentas = adaptadorDTO.adaptarCuentasDTO(cuentasDTO);
+        
+        List<Jugador> jugadores = new ArrayList<>();
+        for (Cuenta cuenta : cuentas) {
+            jugadores.add(new Jugador(cuenta));
+        }
+
+        Pozo pozo = new Pozo();
+        pozo.llenarPozo(crearFichas());
+
+        for (Jugador jugador : jugadores) {
+            jugador.setFichas(repartirFichas(cantidadFichas, pozo));
+        }
+        
+        pozos.put(codigoPartida, pozo);
+        
+        return jugadores;
+    }
+    
     @Override
     public void manejarError(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoError error = (EventoError)evento;
+        System.out.println("-----------------");
+        System.out.println("Ocurrio un error: "+error.getMensaje());
     }
 }

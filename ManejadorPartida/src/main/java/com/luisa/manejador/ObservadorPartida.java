@@ -51,8 +51,7 @@ public abstract class ObservadorPartida implements Observer<Evento> {
         consumers.putIfAbsent(TiposJugador.ABANDONAR_PARTIDA, this::removerJugador);
         consumers.putIfAbsent(TiposJugador.PETICION_RENDIRSE, this::recibirPeticion);
         consumers.putIfAbsent(TipoLogicaLobby.PREPARAR_PARTIDA, this::recibirPartida);
-        consumers.putIfAbsent(TipoLogicaPozo.FICHAS_REPARTIDAS, this::recibirJugadores);
-        consumers.putIfAbsent(TipoLogicaTurno.TURNOS_DESIGNADOS, this::asignarTurnos);
+        consumers.putIfAbsent(TipoLogicaTurno.TURNOS_DESIGNADOS, this::iniciarPartida);
         consumers.putIfAbsent(TipoLogicaTurno.JUGADORES_SIN_MULAS, this::iniciarBusquedaPrimeraMula);
     }
 
@@ -64,9 +63,8 @@ public abstract class ObservadorPartida implements Observer<Evento> {
     protected abstract void removerJugador(Evento evento);
     protected abstract void recibirPeticion(Evento evento);
     protected abstract void recibirPartida(Evento evento);
-    protected abstract void recibirJugadores(Evento evento);
+    protected abstract void iniciarPartida(Evento evento);
     protected abstract void iniciarBusquedaPrimeraMula(Evento evento);
-    protected abstract void asignarTurnos(Evento evento);
     protected abstract void manejarError(Evento evento);
     
 }

@@ -96,53 +96,6 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
         }
     }
 
-    private void sendEvent() {
-        Scanner s = new Scanner(System.in);
-        boolean flag = true;
-        while (flag) {
-            System.out.println("--------------------");
-            System.out.println("Ingresa el tipo de evento a enviar:");
-            System.out.println("1-Abandonar Partida");
-            System.out.println("2-Preparar Partida");
-            System.out.println("3-Peticion rendirse");
-            System.out.println("O ingresa 0 si quieres desconectarte");
-            int tipoEvento = s.nextInt();
-
-            s.nextLine();
-            System.out.println("ingresa la info a agregar al mensaje:");
-            String msj = s.nextLine();
-
-            EventoLogico evento = new EventoJugador();
-            switch (tipoEvento) {
-                case 0 -> {
-                    evento = new EventoTurno();
-                    ((EventoTurno) evento).setTipo(TipoLogicaTurno.JUGADORES_SIN_MULAS);
-                    flag = false;
-                }
-                case 1 -> {
-                    ((EventoJugador) evento).setTipo(TiposJugador.ABANDONAR_PARTIDA);
-                }
-                case 2 -> {
-                    evento = new EventoLobby();
-                    ((EventoLobby) evento).setTipo(TipoLogicaLobby.PREPARAR_PARTIDA);
-                }
-                case 3 -> {
-                    ((EventoJugador) evento).setTipo(TiposJugador.PETICION_RENDIRSE);
-                }
-            }
-            evento.agregarInfo(msj);
-            evento.setIdPublicador(getIdManejador());
-            
-            System.out.println("Evento creado: " + evento.getTipo());
-            System.out.println("Mensaje evento: " + evento.getInfo());
-            cliente.enviarEvento(evento);
-            System.out.println("enviado :)");
-            System.out.println("--------------------");
-        }
-
-    }
-
-    
     protected int getIdManejador() {
         return id;
     }
@@ -207,7 +160,6 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
         EventoJugador eventoJ = (EventoJugador)evento;
         
         System.out.println("ME LLEGO EL EVENTO DE CREAR PARTIDA!!!");
-        System.out.println("info: " + eventoJ.getInfo());
         Lobby nuevaPartida = new Lobby();
         CuentaDTO cuentaDTO = eventoJ.getCuenta();
         Cuenta creadorPartida = adaptadorDTO.adaptarCuentaDTO(cuentaDTO);
@@ -300,7 +252,6 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
         EventoJugador eventoJ = (EventoJugador) evento;
         
         System.out.println("ME LLEGO EL EVENTO DE UNIRSE PARTIDA!!!");
-        System.out.println("info: "+eventoJ.getInfo());
         CuentaDTO jugadorDTO = eventoJ.getCuenta();
         
         Cuenta jugador = adaptadorDTO.adaptarCuentaDTO(jugadorDTO);
@@ -374,7 +325,7 @@ public class ManejadorLobby extends ObservadorLobby implements Runnable {
             System.out.println("ME LLEGO EL EVENTO DE JUGADOR LISTO!!!");
         else{ 
             System.out.println("ME LLEGO EL EVENTO DE JUGADOR NO LISTO!!!");
-            System.out.println("info: " + evJ.getInfo());}
+        }
         LobbyDTO lobbyDTO = evJ.getLobby();
         Lobby lobby = adaptadorDTO.adaptarLobbyDTO(lobbyDTO);
         
