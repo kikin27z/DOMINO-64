@@ -189,6 +189,7 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
     @Override
     public void avisarCuentaLista() {
         this.cuentaLista = true;
+        jugadoresListos.add(cuentaActual);
         for (ObserverLobby observerLobby : observersLogica) {
             observerLobby.avisarCuentaLista();
         }
@@ -200,6 +201,7 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
     @Override
     public void avisarCuentaNoLista() {
         this.cuentaLista = false;
+        jugadoresListos.remove(cuentaActual);
         for (ObserverLobby observerLobby : observersLogica) {
             observerLobby.avisarCuentaNoLista();
         }

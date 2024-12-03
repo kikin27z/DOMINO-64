@@ -807,19 +807,24 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
     @Override
     public void actualizarCuentaLista(CuentaDTO cuenta) {
         ImageView icono = pintarIconoListo();
+        if (cuenta.equals(modelo.getCuentaActual())) {
+            btnIniciar.setText("No estoy listo");
+        }
         actualizarEncabezado(modelo.ACTUALIZACION_JUGADORES_LISTOS, true);
         AnchorPane pane = modelo.obtenerPanelJugador(cuenta.getIdCadena());
         pane.getChildren().add(icono);
-        btnIniciar.setText("No listo");
 
     }
 
     @Override
     public void actualizarCuentaNoLista(CuentaDTO cuenta) {
+        if(cuenta.equals(modelo.getCuentaActual())){
+            btnIniciar.setText("Estoy listo");
+        }
         actualizarEncabezado(modelo.ACTUALIZACION_JUGADORES_LISTOS, false);
         AnchorPane pane = modelo.obtenerPanelJugador(cuenta.getIdCadena());
         pane.getChildren().removeIf(node -> node.getId().equals("iconoListo"));
-        btnIniciar.setText("Estoy listo");
+        
     }
 
     //--------------------Getters-------------------------
@@ -925,7 +930,7 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
         }
 
         String oldTxt = lblJugadoresListos.getText();
-        String newTxt = oldTxt.replace(numJugadoresAnt, numNuevo);
+        String newTxt = oldTxt.replaceFirst(String.valueOf(numJugadoresAnt), String.valueOf(numNuevo));
 
         lblJugadoresListos.setText(newTxt);
         //lblEncabezado.setText(modelo.getEncabezadoLobby());//---------------------------Falta terminar----------
