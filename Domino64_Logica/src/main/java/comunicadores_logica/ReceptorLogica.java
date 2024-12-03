@@ -15,6 +15,7 @@ import manejadores.Control;
 import manejadores.ManejadorCuenta;
 import manejadores.ManejadorDisplay;
 import presentacion_utilities.DistribuidorEventosModelo;
+import tiposLogicos.TipoLogicaLobby;
 import utilities.BuilderEventoSuscripcion;
 import utilities.DirectorSuscripcion;
 
@@ -23,10 +24,8 @@ import utilities.DirectorSuscripcion;
  * @author karim
  */
 public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
-
     private int id;
     private static ExecutorService ejecutorEventos;
-    private DirectorSuscripcion directorSuscripciones;
     private ManejadorDisplay display;
     private DistribuidorEventosModelo distribuidor;
     private AtomicBoolean running;
@@ -35,7 +34,7 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     public ReceptorLogica() {
         super();
         distribuidor = DistribuidorEventosModelo.getInstance();
-        setConsumers();
+        //setConsumers();
         ejecutorEventos = Executors.newSingleThreadExecutor();
         running = new AtomicBoolean(true);
     }
@@ -50,15 +49,16 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
         cliente.establecerSuscripciones(eventos);
         _cliente.iniciar();
         id = _cliente.getClientId();
-        directorSuscripciones = new DirectorSuscripcion(new BuilderEventoSuscripcion(), id);
+        directorSuscripcion = new DirectorSuscripcion(id);
         ejecutorEventos.submit(this);
+        setConsumers();
     }
 
     @Override
     public void iniciaConexion() {
         Client c = Client.iniciarComunicacion();
 
-        for (Enum<?> suscripcion : eventos) {
+        for (Enum suscripcion : eventos) {
             c.addObserver(suscripcion, this);
         }
 
@@ -68,7 +68,7 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     @Override
     public void recibirPartida(Evento evento) {
 //        System.out.println("partida recibida");
-//        Enum<?> tipo = evento.getTipo();
+//        Enum tipo = evento.getTipo();
 //        if (tipo.equals(TipoLogicaLobby.PARTIDA_ENCONTRADA)) {
 //            EventoLobby eventoLobby = (EventoLobby) evento;
 //            System.out.println("evento: " + eventoLobby);
@@ -115,39 +115,39 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     @Override
     public void partidaCreada(Evento evento) {
         EventoLobby eventoRecibido = (EventoLobby) evento;
-        if(evento.getIdDestinatario() != id){
-            return;
-        }
+//        if(evento.getIdDestinatario() != id){
+//            return;
+//        }
         LobbyDTO lobby = eventoRecibido.obtenerLobby();
-        
+        System.out.println("\ncodigo partida: "+lobby.getCodigo()+"\n");
         System.out.println("cuentas--"+ lobby.getCuentas());
         
+        removerSuscripcion(TipoLogicaLobby.PARTIDA_CREADA);
         CuentaDTO aux = eventoRecibido.getPublicador();
         manejadorCuenta.asignarCuenta(aux);
         CuentaDTO cuentaDTO = manejadorCuenta.getCuenta();
-        display.mostrarLobby(cuentaDTO);
+        lobby.setCuentaActual(cuentaDTO);
+        display.mostrarLobby(cuentaDTO, lobby);
         
-        distribuidor.inicializarLobby(lobby);
+//        distribuidor.inicializarLobby(lobby);
     }
 
     @Override
     public void partidaEncontrada(Evento evento) {
         EventoLobby eventoRecibido = (EventoLobby) evento;
-//        if(evento.getIdDestinatario() != id){
-//            return;
-//        }
         
         System.out.println("\n");
         System.out.println("Evento a logica partida creada " + eventoRecibido);
         LobbyDTO lobby = eventoRecibido.obtenerLobby();
         CuentaDTO aux = eventoRecibido.getPublicador();
+        //ya no va a recibir los eventos de partida encontrada
+        removerSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA);
         
-        if(eventoRecibido.getIdDestinatario() == id){
-            manejadorCuenta.asignarCuenta(aux);
-            CuentaDTO cuenta = manejadorCuenta.getCuenta();
-            display.mostrarLobby(cuenta);
-        }
-        distribuidor.inicializarLobby(lobby);
+        manejadorCuenta.asignarCuenta(aux);
+        CuentaDTO cuenta = manejadorCuenta.getCuenta();
+        lobby.setCuentaActual(cuenta);
+        display.mostrarLobby(cuenta, lobby);
+//        distribuidor.inicializarLobby(lobby);
     }
 
     @Override
@@ -203,13 +203,26 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
 
     @Override
     public void cuentaLista(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoLobby evLobby = (EventoLobby)evento;
+        
+        CuentaDTO cuentaNueva = evLobby.getPublicador();
+        distribuidor.actualizarCuentaLista(cuentaNueva);
     }
 
     @Override
     public void cuentaNoLista(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoLobby evLobby = (EventoLobby)evento;
+        
+        CuentaDTO cuentaNueva = evLobby.getPublicador();
+        distribuidor.actualizarCuentaNoLista(cuentaNueva);
     }
-    
+
+    @Override
+    public void cuentaEntro(Evento evento) {
+        EventoLobby evLobby = (EventoLobby)evento;
+        
+        CuentaDTO cuentaNueva = evLobby.getPublicador();
+        distribuidor.actualizarNuevoJugador(cuentaNueva);
+    }
     
 }

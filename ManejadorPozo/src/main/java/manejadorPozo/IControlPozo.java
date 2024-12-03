@@ -11,19 +11,19 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Consumer;
 import observer.Observer;
-import tiposLogicos.TipoLogicaLobby;
 import tiposLogicos.TipoLogicaPartida;
 import tiposLogicos.TiposJugador;
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public abstract class IControlPozo implements Observer<Evento> {
     protected ICliente cliente;
     protected static BlockingQueue<Evento> colaEventos;
-    protected Map<Enum<?>, Consumer<Evento>> consumers;
-    protected static final List<Enum<?>> eventos = new ArrayList<>(
+    protected Map<Enum, Consumer<Evento>> consumers;
+    protected static final List<Enum> eventos = new ArrayList<>(
             List.of(
                     TipoError.ERROR_DE_SERVIDOR,
                     TiposJugador.JALAR_FICHA,
@@ -41,7 +41,7 @@ public abstract class IControlPozo implements Observer<Evento> {
         colaEventos.offer(observable); 
    }
     
-    public List<Enum<?>> getEventos() {
+    public List<Enum> getEventos() {
         return eventos;
     }
     
@@ -55,12 +55,12 @@ public abstract class IControlPozo implements Observer<Evento> {
         consumers.putIfAbsent(TipoLogicaPartida.REPARTIR_FICHAS, this::repartirFichas);
     }
     
-    public void agregarEvento(Enum<?> evento, Consumer<Evento> consumer){
+    public void agregarEvento(Enum evento, Consumer<Evento> consumer){
         eventos.add(evento);
         consumers.putIfAbsent(evento, consumer);
     }
   
-    public List<Enum<?>> obtenerEventosSuscrito() {
+    public List<Enum> obtenerEventosSuscrito() {
         return eventos;
     }
     

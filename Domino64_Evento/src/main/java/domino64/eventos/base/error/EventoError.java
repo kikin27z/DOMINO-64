@@ -1,50 +1,46 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package domino64.eventos.base.error;
 
 import domino64.eventos.base.Evento;
 
 /**
- * Clase que representa los eventos de error que
- * se den. 
- * Se puede ver como un reemplazo de las excepciones,
- * pero tienen el objetivo de enviar los mensajes de error
- * por la red
- * @author luisa M
- * @author karim F
+ * Clase que representa los eventos de error que se den. Se puede ver como un
+ * reemplazo de las excepciones, pero tienen el objetivo de enviar los mensajes
+ * de error por la red
+ *
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
-public class EventoError implements Evento<String> {
+public class EventoError implements Evento<TipoError> {
+
     private TipoError tipo;
     private String mensaje;
     private int idPublicador;
     private int idContexto;
-    
-    public EventoError(TipoError tipo, String mensaje){
+
+    public EventoError(TipoError tipo, String mensaje) {
         this.tipo = tipo;
         this.mensaje = mensaje;
     }
-    
-    public void setTipo(TipoError tipo){
+
+    public void setTipo(TipoError tipo) {
         this.tipo = tipo;
     }
-    
-    public void setMensajeError(String msj){
+
+    public void setMensajeError(String msj) {
         this.mensaje = msj;
     }
-    
-    public void setIdContexto(int id){
+
+    public void setIdContexto(int id) {
         this.idContexto = id;
     }
-    
+
     @Override
-    public TipoError getTipo(){
+    public TipoError getTipo() {
         return tipo;
     }
-    
+
     @Override
-    public int getIdContexto(){
+    public int getIdContexto() {
         return idContexto;
     }
 
@@ -53,8 +49,7 @@ public class EventoError implements Evento<String> {
         return idPublicador;
     }
 
-    @Override
-    public String getInfo() {
+    public String getMensaje() {
         return mensaje;
     }
 

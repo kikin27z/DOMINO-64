@@ -13,7 +13,7 @@ import domino64.eventos.base.Evento;
  * @author José Karim Franco Valencia - 00000245138
  * @param <T> Tipo de entidad que va a tener como contexto este evento
  */
-public abstract class EventoLogico<T> implements Evento{
+public abstract class EventoLogico implements Evento{
     protected int idPublicador;
     protected int idDestinatario;
     protected int idContexto;
@@ -29,6 +29,7 @@ public abstract class EventoLogico<T> implements Evento{
      * Por ejemplo, un evento puede tener como informacion 
      * una lista de jugadores, o una lista de fichas,
      * y no un solo objeto de dicha entidad.
+     * @param id
      */
 //    public abstract void agregarInfo(T info);
 

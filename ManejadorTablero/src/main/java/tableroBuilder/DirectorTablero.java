@@ -1,4 +1,4 @@
-package tablero_builder;
+package tableroBuilder;
 
 import builder.DirectorEventos;
 import entidadesDTO.CuentaDTO;

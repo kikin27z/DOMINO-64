@@ -4,6 +4,7 @@ import abstraccion.ICliente;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.EventoError;
 import domino64.eventos.base.error.TipoError;
+import domino64.eventos.base.suscripcion.EventoSuscripcion;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -14,7 +15,6 @@ import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -22,25 +22,34 @@ import observer.Observable;
 import observer.Observer;
 
 /**
+ * Clase Client que maneja la conexión con el servidor, la gestión de eventos y
+ * las suscripciones a eventos. Esta clase implementa la interfaz ICliente y usa
+ * el patrón Observer para notificar a los observadores sobre los eventos
+ * recibidos desde el servidor.
  *
- * @author luisa M
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class Client extends Observable<Evento> implements ICliente {
 
-    private static Client cliente;
-    private String host;
-    private final int port;
-    private int clientId;
-    private final ScheduledExecutorService ejecutorReconexion;
-    private final ExecutorService ejecutorEventos;
-    private Socket socket;
-    private ObjectOutputStream output;
-    private ObjectInputStream input;
-    private volatile boolean running;
-    private volatile boolean connected;
-    private List<Enum<?>> suscripcionesEventos;
-    private BlockingQueue<Evento> colaEventos;
+    private static Client cliente; // Instancia única del cliente
+    private String host; // IP del servidor
+    private final int port; // Puerto del servidor
+    private int clientId; // ID del cliente asignado por el servidor
+    private final ScheduledExecutorService ejecutorReconexion; // Executor para tareas programadas, como reconexión
+    private final ExecutorService ejecutorEventos; // Executor para procesar eventos entrantes
+    private Socket socket; // Socket de conexión con el servidor
+    private ObjectOutputStream output; // Flujo de salida para enviar eventos al servidor
+    private ObjectInputStream input; // Flujo de entrada para recibir eventos desde el servidor
+    private volatile boolean running; // Estado del cliente, indica si está en ejecución
+    private volatile boolean connected; // Estado de la conexión con el servidor
+    private List<Enum> suscripcionesEventos; // Lista de eventos a los que está suscrito el cliente
+    private BlockingQueue<Evento> colaEventos; // Cola para almacenar los eventos pendientes de ser enviados
 
+    /**
+     * Constructor privado para inicializar el cliente con los valores
+     * predeterminados.
+     */
     private Client() {
         String ip = pedirIP();
         this.host = ip;
@@ -59,6 +68,12 @@ public class Client extends Observable<Evento> implements ICliente {
         colaEventos = new LinkedBlockingQueue();
     }
 
+    /**
+     * Método estático para iniciar la comunicación con el servidor. Garantiza
+     * que solo haya una instancia del cliente.
+     *
+     * @return La instancia del cliente.
+     */
     public static synchronized Client iniciarComunicacion() {
         if (cliente == null) {
             cliente = new Client();
@@ -66,10 +81,18 @@ public class Client extends Observable<Evento> implements ICliente {
         return cliente;
     }
 
+    /**
+     * Obtiene el ID del cliente.
+     *
+     * @return El ID del cliente.
+     */
     public int getClientId() {
         return clientId;
     }
 
+    /**
+     * Inicia el proceso de conexión y la gestión de eventos.
+     */
     public void iniciar() {
         running = true;
         conectarCliente();
@@ -79,6 +102,10 @@ public class Client extends Observable<Evento> implements ICliente {
         new Thread(this::listenForEvent).start();
     }
 
+    /**
+     * Conecta el cliente al servidor. Inicializa los flujos de entrada y
+     * salida.
+     */
     private void conectarCliente() {
         try {
             socket = new Socket(host, port);
@@ -86,11 +113,11 @@ public class Client extends Observable<Evento> implements ICliente {
             input = new ObjectInputStream(socket.getInputStream());
 
             connected = true;
+            enviarSuscripciones();
 
             //recibir el id del cliente
             this.clientId = input.readInt();
             System.out.println("Se conecto al servidor id otorgado: " + clientId);
-            enviarSuscripciones();
 
         } catch (IOException ex) {
             System.out.println("Error al conectar cliente " + clientId);
@@ -98,25 +125,28 @@ public class Client extends Observable<Evento> implements ICliente {
         }
     }
 
+    /**
+     * Envía las suscripciones de eventos al servidor.
+     */
     private void enviarSuscripciones() {
-        if (suscripcionesEventos != null && !suscripcionesEventos.isEmpty()) {
-            if (connected) {
-                try {
+        try {
+            if (suscripcionesEventos != null && !suscripcionesEventos.isEmpty()) {
+                if (connected) {
                     synchronized (output) {
-                        output.reset();
+                        //output.reset();
                         output.writeObject(suscripcionesEventos);
                         output.flush();
                     }
-                } catch (IOException e) {
-                    System.out.println("error al enviar suscripciones: " + e.getMessage());
-                    manejarDesconexion();
                 }
             }
+        } catch (IOException e) {
+            System.out.println("error al enviar suscripciones: " + e.getMessage());
+            manejarDesconexion();
         }
     }
 
     /**
-     * envia los eventos al servidor. Va tomando los eventos que se vayan
+     * Envia los eventos al servidor. Va tomando los eventos que se vayan
      * agregando a la cola y los envia segun vayan llegando
      */
     private void procesarColaEventos() {
@@ -150,15 +180,14 @@ public class Client extends Observable<Evento> implements ICliente {
     }
 
     @Override
-    public void establecerSuscripciones(List<Enum<?>> subs) {
-        for (Enum<?> sub : subs) {
+    public void establecerSuscripciones(List<Enum> subs) {
+        for (Enum sub : subs) {
             suscripcionesEventos.add(sub);
         }
     }
 
-    /**
-     * escucha eventos que le llegan del servidor y se los notifica al
-     * componente observador
+   /**
+     * Escucha los eventos que llegan del servidor y los notifica a los observadores.
      */
     private void listenForEvent() {
         while (running) {
@@ -186,6 +215,11 @@ public class Client extends Observable<Evento> implements ICliente {
         }
     }
 
+    /**
+     * Maneja el evento recibido y lo notifica a los observadores.
+     * 
+     * @param evento El evento recibido del servidor.
+     */
     private void manejarEvento(Evento evento) {
         System.out.println("mensaje recibido " + evento);
 
@@ -193,6 +227,9 @@ public class Client extends Observable<Evento> implements ICliente {
         System.out.println("se notifico a observers");
     }
 
+    /**
+     * Maneja la desconexión del cliente, cerrando los recursos y notificando el error.
+     */
     private void manejarDesconexion() {
         connected = false;
         running = false;
@@ -230,18 +267,25 @@ public class Client extends Observable<Evento> implements ICliente {
 
     @Override
     public void agregarSuscripcion(Evento evento, Observer ob) {
-        suscripcionesEventos.add((Enum<?>) evento.getInfo());
-        addObserver((Enum<?>) evento.getInfo(), ob);
+        EventoSuscripcion suscripcion = (EventoSuscripcion) evento;
+        suscripcionesEventos.add(suscripcion.getEventoSuscripcion());
+        addObserver(suscripcion.getEventoSuscripcion(), ob);
         enviarEvento(evento);
     }
 
     @Override
     public void removerSuscripcion(Evento evento, Observer ob) {
-        suscripcionesEventos.remove((Enum<?>) evento.getInfo());
-        removeObserver((Enum<?>) evento.getInfo(), ob);
+        EventoSuscripcion suscripcion = (EventoSuscripcion) evento;
+        suscripcionesEventos.remove(suscripcion.getEventoSuscripcion());
+        removeObserver(suscripcion.getEventoSuscripcion(), ob);
         enviarEvento(evento);
     }
 
+    /**
+     * Método para pedir la dirección IP del servidor.
+     * 
+     * @return La dirección IP proporcionada por el usuario.
+     */
     private String pedirIP() {
         Scanner lectura = new Scanner(System.in);
         System.out.print("Escribe la ip del servidor: ");

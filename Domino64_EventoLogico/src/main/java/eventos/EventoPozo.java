@@ -45,7 +45,7 @@ public class EventoPozo extends EventoLogico{
     public List<FichaDTO> getFichas(){
         return fichas;
     }
-
+    
     @Override
     public TipoLogicaPozo getTipo() {
         return tipo;
@@ -55,8 +55,4 @@ public class EventoPozo extends EventoLogico{
         this.tipo = tipo;
     }
 
-    @Override
-    public Object getInfo() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

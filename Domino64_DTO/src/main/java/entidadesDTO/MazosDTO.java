@@ -1,5 +1,6 @@
 package entidadesDTO;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author José Karim Franco Valencia - 00000245138
  */
-public class MazosDTO {
+public class MazosDTO implements Serializable{
     private List<List<FichaDTO>> mazos;
     private List<CuentaDTO> cuentas;
 

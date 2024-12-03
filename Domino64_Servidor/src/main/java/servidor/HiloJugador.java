@@ -2,11 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.luisa.servidor;
+package servidor;
 
-import com.domino64.base.Publicador;
+import publicadorSuscriptor.Publicador;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.TipoError;
+import domino64.eventos.base.suscripcion.*;
 import eventBus.Subscriber;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,7 +20,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import tiposLogicos.TipoSuscripcion;
 
 /**
  *
@@ -32,7 +32,7 @@ public class HiloJugador implements Runnable, Subscriber{
     private final Publicador publicador;
     private ObjectOutputStream output;
     private ObjectInputStream input;
-    private List<Enum<?>> suscripciones;
+    private List<Enum> suscripciones;
     private volatile boolean running;
     private ExecutorService ejecutorEventos;
     private BlockingQueue<Evento> colaEventosBus;
@@ -105,10 +105,10 @@ public class HiloJugador implements Runnable, Subscriber{
      */
     private void recibirSuscripciones() throws IOException, ClassNotFoundException{
         suscripciones = null;
-        suscripciones = (List<Enum<?>>) input.readObject();
+        suscripciones = (List<Enum>) input.readObject();
 
         if (suscripciones != null) {
-            for (Enum<?> suscripcion : suscripciones) {
+            for (Enum suscripcion : suscripciones) {
                 suscribirEvento(suscripcion);
             }
         }
@@ -120,7 +120,7 @@ public class HiloJugador implements Runnable, Subscriber{
      * 
      * @param tipoEvento Tipo de evento al cual se va a suscribir
      */
-    private void suscribirEvento(Enum<?> tipoEvento){
+    private void suscribirEvento(Enum tipoEvento){
        publicador.suscribir(tipoEvento,this);
     }
     
@@ -130,7 +130,7 @@ public class HiloJugador implements Runnable, Subscriber{
      * 
      * @param tipoEvento Tipo de evento al cual se va a desuscribir
      */
-    private void removerSuscripcion(Enum<?> tipoEvento){
+    private void removerSuscripcion(Enum tipoEvento){
         publicador.desuscribir(tipoEvento,this);
     }
 
@@ -139,22 +139,26 @@ public class HiloJugador implements Runnable, Subscriber{
      * eventos en el bus
      */
     private void removerSuscripciones(){
-        for (Enum<?> suscripcion : suscripciones) {
+        for (Enum suscripcion : suscripciones) {
             removerSuscripcion(suscripcion);
         }
     }
     
-    private void manejarEvento(Evento evento){
-                    Enum<?> tipo = evento.getTipo();
-        if(tipo.equals(TipoSuscripcion.SUSCRIBIR)){
-            suscribirEvento((Enum<?>)evento.getInfo());
-        }else if(tipo.equals(TipoSuscripcion.DESUSCRIBIR)){
-            removerSuscripcion((Enum<?>)evento.getInfo());
-        }else{
-                        publicador.publicarEvento(tipo, evento);
-                    }
-                }
-            
+    private void manejarEvento(Evento evento) {
+        Enum tipo = evento.getTipo();
+        if(tipo instanceof TipoSuscripcion tipoSub){
+            EventoSuscripcion suscripcion = (EventoSuscripcion)evento;
+            switch(tipoSub){
+                case SUSCRIBIR-> suscribirEvento(suscripcion.getEventoSuscripcion());
+                case DESUSCRIBIR->removerSuscripcion(suscripcion.getEventoSuscripcion());
+                case ESTABLECER_ID_CONTEXTO->setIdContexto(evento.getIdContexto());
+                case REMOVER_ID_CONTEXTO->setIdContexto(0);
+            }
+        }else {
+            publicador.publicarEvento(tipo, evento);
+        }
+    }
+
     @Override
     public void run() {
         try {
@@ -176,17 +180,6 @@ public class HiloJugador implements Runnable, Subscriber{
                     manejarEvento(ev);
                     System.out.println("ev: "+ev);
                 });
-                //manejarEvento(ev);
-//                obj = input.readObject();
-//                if(obj instanceof EventoJugador evJugador){
-//                    System.out.println("nombre: "+evJugador.getJugador());
-//                    evento = (EventoJugador)obj;
-//                    System.out.println("evento jugador: "+evento);
-//                }else{
-//                    evento = (EventoLogico) obj;
-//                }
-//                
-//                manejarEvento(evento);
             }
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
@@ -234,14 +227,12 @@ public class HiloJugador implements Runnable, Subscriber{
      */
     @Override
     public void recibirEvento(Evento evento) {
-        System.out.println("evento recibido: "+evento);
-        if(evento.getIdContexto() == 0 || evento.getIdContexto() == this.idContexto){
-            colaEventosBus.offer(evento);
-            if (evento.getTipo().equals(TipoError.ERROR_DE_SERVIDOR)) {
-                running = false;
-                removerSuscripciones();
-                Servidor.desconectarJugador(id);
-            }
+        System.out.println("evento recibido: " + evento);
+        colaEventosBus.offer(evento);
+        if (evento.getTipo().equals(TipoError.ERROR_DE_SERVIDOR)) {
+            running = false;
+            removerSuscripciones();
+            Servidor.desconectarJugador(id);
         }
     }
 

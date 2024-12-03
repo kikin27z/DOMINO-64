@@ -4,7 +4,8 @@ import manejadores.Control;
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class Domino64 {
     public static void main(String[] args) {

@@ -2,17 +2,19 @@ package manejadorTablero;
 
 import abstraccion.ICliente;
 import domino64.eventos.base.Evento;
+import domino64.eventos.base.error.EventoError;
 import entidadesDTO.JugadaRealizadaDTO;
 import eventos.EventoJugadorFicha;
 import implementacion.Client;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import tablero_builder.BuilderEventoTablero;
-import tablero_builder.DirectorTablero;
+import tableroBuilder.BuilderEventoTablero;
+import tableroBuilder.DirectorTablero;
 
 /**
  *
@@ -43,7 +45,19 @@ public class ControlTablero extends IControlTablero implements Runnable {
 
     @Override
     public void manejarError(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoError error = (EventoError) evento;
+        System.out.println("Ocurrio un error: " + error.getMensaje());
+        running.set(false);
+        ejecutorEventos.shutdown();
+
+        try {
+            if (!ejecutorEventos.awaitTermination(5, TimeUnit.SECONDS)) {
+                ejecutorEventos.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            ejecutorEventos.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
     @Override

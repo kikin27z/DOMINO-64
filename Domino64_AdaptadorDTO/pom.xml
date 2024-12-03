@@ -5,22 +5,22 @@
     <artifactId>Domino64_AdaptadorDTO</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <dependencies>
-        <dependency>
-            <groupId>com.mycompany</groupId>
-            <artifactId>Domino64_DTO</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>Arquitectura_Software</groupId>
-            <artifactId>Domino64_Dominio</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
         <exec.mainClass>adapter.AdaptadorDTO</exec.mainClass>
     </properties>
     <name>Domino64_AdaptadorDTO</name>
+    <dependencies>
+        <dependency>
+            <groupId>Arquitectura_Software</groupId>
+            <artifactId>Domino64_Dominio</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mycompany</groupId>
+            <artifactId>Domino64_DTO</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>

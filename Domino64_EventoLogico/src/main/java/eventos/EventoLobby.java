@@ -3,6 +3,7 @@ package eventos;
 
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
+import entidadesDTO.ReglasDTO;
 import tiposLogicos.TipoLogicaLobby;
 
 /**
@@ -22,12 +23,21 @@ public class EventoLobby extends EventoLogico {
     private TipoLogicaLobby tipo;
     private Object contexto;
     private CuentaDTO publicador;
+    private ReglasDTO reglas;
     
     public EventoLobby(){}
     
     public EventoLobby(TipoLogicaLobby tipo) {
         super();
         this.tipo = tipo;
+    }
+
+    public ReglasDTO getReglas() {
+        return reglas;
+    }
+
+    public void setReglas(ReglasDTO reglas) {
+        this.reglas = reglas;
     }
     
     public void agregarLobby(LobbyDTO lobby){
@@ -50,11 +60,6 @@ public class EventoLobby extends EventoLogico {
 //    public void agregarInfo(Object info) {
 //        contexto = info;
 //    }
-
-    @Override
-    public Object getInfo() {
-        return contexto;
-    }
 
     @Override
     public TipoLogicaLobby getTipo() {

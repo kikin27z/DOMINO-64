@@ -1,4 +1,4 @@
-package com.domino64.manejador;
+package manejador;
 
 import abstraccion.ICliente;
 import domino64.eventos.base.Evento;
@@ -15,13 +15,14 @@ import observer.Observer;
 
 /**
  *
- * @author luisa M
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public abstract class IControlLobby implements Observer<Evento> {
     protected ICliente cliente;
     protected static BlockingQueue<Evento> colaEventos;
-    protected Map<Enum<?>, Consumer<Evento>> consumers;
-    protected static final List<Enum<?>> eventos = new ArrayList<>(
+    protected Map<Enum, Consumer<Evento>> consumers;
+    protected static final List<Enum> eventos = new ArrayList<>(
             List.of(
                     TipoError.ERROR_DE_SERVIDOR,
                     TiposJugador.ABANDONAR_PARTIDA,
@@ -42,11 +43,11 @@ public abstract class IControlLobby implements Observer<Evento> {
         colaEventos.offer(observable); 
    }
     
-    public List<Enum<?>> getEventos() {
+    public List<Enum> getEventos() {
         return eventos;
     }
     
-     public void enviarEvento(Evento evento) {
+    public void enviarEvento(Evento evento) {
         cliente.enviarEvento(evento);
     }
     protected void setConsumers(){
@@ -60,12 +61,12 @@ public abstract class IControlLobby implements Observer<Evento> {
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
     }
     
-    public void agregarEvento(Enum<?> evento, Consumer<Evento> consumer){
+    public void agregarEvento(Enum evento, Consumer<Evento> consumer){
         eventos.add(evento);
         consumers.putIfAbsent(evento, consumer);
     }
   
-    public List<Enum<?>> obtenerEventosSuscrito() {
+    public List<Enum> obtenerEventosSuscrito() {
         return eventos;
     }
     

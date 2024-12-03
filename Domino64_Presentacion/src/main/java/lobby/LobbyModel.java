@@ -41,13 +41,17 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
     protected final int ACTUALIZACION_JUGADORES_LISTOS = 0;
     protected final int REMOVER = 0;
     protected final int AGREGAR = 0;
+    private boolean jugadorActualListo;
+    private ReglasDTO reglas;
 
     /**
      * Constructor del modelo del lobby. Inicializa los datos y carga la
      * configuración inicial.
      */
-    public LobbyModel(CuentaDTO cuenta) {
+    public LobbyModel(CuentaDTO cuenta, LobbyDTO lobby) {
         cuentaActual = cuenta;
+        lobbyDTO = lobby;
+        cuentasJugadoresOnline = lobbyDTO.getCuentas();
         cuentaLista = false;
         System.out.println("Tu cuenta inicializada es" + cuentaActual);
         cargarDatos();  // Carga los datos iniciales
@@ -66,7 +70,10 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
         avatares = new ArrayList<>(List.of(AvatarDTO.AVE, AvatarDTO.GATO, AvatarDTO.JAGUAR, AvatarDTO.KIWI, AvatarDTO.MARIPOSA,
                 AvatarDTO.PANDA, AvatarDTO.SERPIENTE, AvatarDTO.TORTUGA, AvatarDTO.VENADO));
         panelesJugadores = new HashMap<>();
-        cuentasJugadoresOnline = new ArrayList<>();
+        for (CuentaDTO cuentaDTO : cuentasJugadoresOnline) {
+            panelesJugadores.put(cuentaDTO.getIdCadena(), null);
+        }
+        //cuentasJugadoresOnline = new ArrayList<>();
     }
 
     //---------------------Eventos Modelo a vista--------------------------------
@@ -94,15 +101,20 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
     public void actualizarNuevoJugador(CuentaDTO cuenta) {
         this.cuentasJugadoresOnline.add(cuenta);
         this.panelesJugadores.put(cuenta.getIdCadena(), null);
-////        observerMVC.actualizarNuevoJugador(cuenta);
+        for (ObserverLobbyMVC ob : observersMVC) {
+            ob.actualizarNuevoJugador(cuenta);
+        }
+       
     }
 
     @Override
     public void actualizarQuitarCuenta(CuentaDTO cuenta) {
         System.out.println("Quitar esta cuenta " + cuenta);
-//        this.cuentasJugadoresOnline.removeIf(c -> c.getId() == cuenta.getId());
-//        this.panelesJugadores.remove(cuenta.getIdCadena());
-//        observerMVC.actualizarQuitarCuenta(cuenta);
+        this.cuentasJugadoresOnline.removeIf(c -> c.getIdCadena().equals(cuenta.getIdCadena()));
+        this.panelesJugadores.remove(cuenta.getIdCadena());
+        for (ObserverLobbyMVC ob : observersMVC) {
+            ob.actualizarQuitarCuenta(cuenta);
+        }
     }
 
     @Override
@@ -117,21 +129,27 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
     @Override
     public void actualizarCuentaLista(CuentaDTO cuenta) {
         System.out.println("Cuenta esta lista" + cuenta);
-//        if(cuenta.getId() == cuentaActual.getId()){
-//            jugadorActualListo = true;
-//        }
-//        jugadoresListos.add(cuenta);
-//        observerMVC.actualizarCuentaLista(cuenta);
+        if(cuenta.getIdCadena().equals(cuentaActual.getIdCadena())){
+            jugadorActualListo = true;
+        }
+        jugadoresListos.add(cuenta);
+        for (ObserverLobbyMVC ob : observersMVC) {
+            ob.actualizarCuentaLista(cuenta);
+        }
+        //observerMVC.actualizarCuentaLista(cuenta);
     }
 
     @Override
     public void actualizarCuentaNoLista(CuentaDTO cuenta) {
-                System.out.println("Cuenta no esta lista" + cuenta);
+        System.out.println("Cuenta no esta lista" + cuenta);
 
-//        if(cuenta.getId() == cuentaActual.getId()){
-//            jugadorActualListo = false;
-//        }
-//        jugadoresListos.remove(cuenta);
+        if(cuenta.getIdCadena().equals(cuentaActual.getIdCadena())){
+            jugadorActualListo = false;
+        }
+        jugadoresListos.remove(cuenta);
+        for (ObserverLobbyMVC ob : observersMVC) {
+            ob.actualizarCuentaNoLista(cuenta);
+        }
 //        observerMVC.actualizarCuentaNoLista(cuenta);
     }
 
@@ -142,7 +160,10 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
 
     @Override
     public void avisarActualizarReglas(ReglasDTO reglas) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.reglas = reglas;
+        for (ObserverLobby observerLobby : observersLogica) {
+            observerLobby.avisarActualizarReglas(reglas);
+        }
     }
 
     //---------------------Eventos Modelo a lógica--------------------------------
@@ -164,15 +185,23 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
 
     @Override
     public void avisarCuentaLista() {
+        this.cuentaLista = true;
         for (ObserverLobby observerLobby : observersLogica) {
             observerLobby.avisarCuentaLista();
+        }
+        for (ObserverLobbyMVC ob : observersMVC) {
+            ob.actualizarCuentaLista(cuentaActual);
         }
     }
 
     @Override
     public void avisarCuentaNoLista() {
+        this.cuentaLista = false;
         for (ObserverLobby observerLobby : observersLogica) {
             observerLobby.avisarCuentaNoLista();
+        }
+        for (ObserverLobbyMVC ob : observersMVC) {
+            ob.actualizarCuentaNoLista(cuentaActual);
         }
     }
 
@@ -199,6 +228,10 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
         return mensaje;
     }
 
+    public void setAvatar(AvatarDTO avatar){
+        this.cuentaActual.setAvatar(avatar);
+    }
+    
     /**
      * Establece un nuevo mensaje y notifica a los observadores.
      *
@@ -264,7 +297,7 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
      * @param id el ID del jugador
      */
     public void removerPanelJugador(String id) {
-        //panelesJugadores.remove(id);
+        panelesJugadores.remove(id);
     }
 
     /**
@@ -299,6 +332,10 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
         return null;
     }
 
+    protected void setReglasDTO(ReglasDTO reglas){
+        this.reglas = reglas;
+    }
+    
     /**
      * Obtiene la lista de avatares disponibles.
      *
@@ -309,6 +346,7 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
     }
 
     public List<CuentaDTO> getCuentas() {
+//        return lobbyDTO.getCuentas();
         return cuentasJugadoresOnline;
     }
 
@@ -349,7 +387,7 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
 //    protected int getCantidadFichas() {
 //        return lobbyDTO.getCantidadFichas();
 //    }
-//
+////
 //    protected void setCantidadFichas(int cantidadFichas) {
 //        lobbyDTO.setCantidadFichas(cantidadFichas);
 //        for (ObserverLobby observerLobby : observersLogica) {

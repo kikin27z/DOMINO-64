@@ -1,14 +1,18 @@
 package manejadores;
 
 import comunicadores_logica.IReceptorEventosLogica;
+import domino64.eventos.base.suscripcion.EventoSuscripcion;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.ReglasDTO;
 import entidadesDTO.UnirseDTO;
 import eventos.EventoJugador;
+import tiposLogicos.TipoLogicaLobby;
 import utilities.DirectorJugador;
+import utilities.DirectorSuscripcion;
 
 /**
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class ManejadorNotificador {
     private final ManejadorCuenta manejadorCuenta;
@@ -25,6 +29,7 @@ public class ManejadorNotificador {
         CuentaDTO cuentaDTO = manejadorCuenta.getCuenta();
         EventoJugador crear = directorEventos.crearEventoCrearPartida(cuentaDTO);
         receptor.enviarEvento(crear);
+        receptor.agregarSuscripcion(TipoLogicaLobby.PARTIDA_CREADA, receptor::partidaCreada);
     }
     
     
@@ -33,7 +38,7 @@ public class ManejadorNotificador {
         unirse.setCuenta(cuentaDTO);
         EventoJugador crear = directorEventos.crearEventoUnirsePartida(unirse);
         receptor.enviarEvento(crear);
-         
+        receptor.agregarSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA, receptor::partidaEncontrada);
     }
 
     public void abandonarPartida() {
@@ -56,5 +61,10 @@ public class ManejadorNotificador {
     public void cambiarReglas(ReglasDTO reglas){
         EventoJugador cambiarReglas = directorEventos.crearEventoActualizarConfigPartida(reglas);
         receptor.enviarEvento(cambiarReglas);
+    }
+    
+    public void cambiarAvatar(CuentaDTO cuentaActualizada){
+        EventoJugador cambiarAvatar = directorEventos.crearEventoCambiarAvatar(cuentaActualizada);
+        receptor.enviarEvento(cambiarAvatar);
     }
 }

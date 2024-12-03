@@ -7,6 +7,7 @@ package tiposLogicos;
  */
 public enum TipoLogicaLobby {
     CUENTA_ABANDONO,
+    CUENTA_ENTRO,
     ABANDONO_ADMIN,
     AVATAR_ACTUALIZADO,
     CUENTA_LISTO,

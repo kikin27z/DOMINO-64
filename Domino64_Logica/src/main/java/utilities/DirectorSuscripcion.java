@@ -5,9 +5,7 @@
 package utilities;
 
 import builder.DirectorEventos;
-import eventos.EventoSuscripcion;
-import tiposLogicos.TipoSuscripcion;
-
+import domino64.eventos.base.suscripcion.*;
 /**
  *
  * @author luisa M
@@ -15,23 +13,38 @@ import tiposLogicos.TipoSuscripcion;
 public class DirectorSuscripcion extends DirectorEventos<BuilderEventoSuscripcion> {
     private final int idPublicador;
     
-    public DirectorSuscripcion(BuilderEventoSuscripcion builder, int idPublicador) {
-        super(builder);
+    public DirectorSuscripcion( int idPublicador) {
+        super(new BuilderEventoSuscripcion());
         this.idPublicador = idPublicador;
     }
     
-    public EventoSuscripcion crearEventoSuscribirse(Enum<?> tipoEvento){
+    public EventoSuscripcion crearEventoSuscribirse(Enum tipoEvento){
         builder.setIdPublicador(idPublicador);
-        builder.setContexto(tipoEvento);
+        builder.setEventoSuscripcion(tipoEvento);
         builder.setTipo(TipoSuscripcion.SUSCRIBIR);
         return builder.construirEvento();
     }
     
-    public EventoSuscripcion crearEventoDesuscribirse(Enum<?> tipoEvento){
+    public EventoSuscripcion crearEventoDesuscribirse(Enum tipoEvento){
         builder.setIdPublicador(idPublicador);
-        builder.setContexto(tipoEvento);
+        builder.setEventoSuscripcion(tipoEvento);
         builder.setTipo(TipoSuscripcion.DESUSCRIBIR);
         return builder.construirEvento();
     }
+    
+    
+    public EventoSuscripcion crearEventoEstablecerIdContexto(int id){
+        builder.setIdContexto(id);
+        builder.setIdPublicador(idPublicador);
+        builder.setTipo(TipoSuscripcion.ESTABLECER_ID_CONTEXTO);
+        return builder.construirEvento();
+    }
+    
+    public EventoSuscripcion crearEventoRemoverIdContexto(){
+        builder.setIdPublicador(idPublicador);
+        builder.setTipo(TipoSuscripcion.REMOVER_ID_CONTEXTO);
+        return builder.construirEvento();
+    }
+    
     
 }

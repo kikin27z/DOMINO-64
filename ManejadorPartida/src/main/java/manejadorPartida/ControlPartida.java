@@ -1,6 +1,9 @@
 package manejadorPartida;
 
 import domino64.eventos.base.Evento;
+import entidadesDTO.ReglasDTO;
+import eventos.EventoLobby;
+import eventos.EventoPartida;
 import implementacion.Client;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -60,7 +63,7 @@ public class ControlPartida extends IControlPartida implements Runnable {
     public void iniciaConexion() {
         Client c = Client.iniciarComunicacion();
 
-        for (Enum<?> suscripcion : eventos) {
+        for (Enum suscripcion : eventos) {
             c.addObserver(suscripcion, this);
         }
 
@@ -79,7 +82,13 @@ public class ControlPartida extends IControlPartida implements Runnable {
 
     @Override
     public void prepararPartida(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoLobby er = (EventoLobby) evento;
+        System.out.println("Evento recibido " + er);
+        ReglasDTO reglas = er.getReglas();
+        manejador.crearPartida(reglas.getCuentas());
+        EventoPartida eventoEnviar = director.crearEventoRepartirFichas(reglas);
+        cliente.enviarEvento(eventoEnviar);
+        
     }
 
 }

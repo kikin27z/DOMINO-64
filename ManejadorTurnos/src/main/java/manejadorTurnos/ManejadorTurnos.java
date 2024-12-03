@@ -8,7 +8,6 @@ import entidades.Jugador;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.MazosDTO;
-import entidadesDTO.ReglasDTO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,7 +17,8 @@ import java.util.Map;
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class ManejadorTurnos {
     private LinkedList<String> orden = new LinkedList<>();

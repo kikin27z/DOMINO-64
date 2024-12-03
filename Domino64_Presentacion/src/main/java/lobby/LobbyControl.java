@@ -1,6 +1,12 @@
 package lobby;
 
+import entidadesDTO.AvatarDTO;
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.ReglasDTO;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import observer.Observer;
 
 /**
  * Controlador para la pantalla del lobby del juego. Se encarga de manejar la
@@ -10,7 +16,7 @@ import javafx.scene.input.MouseEvent;
  * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author José Karim Franco Valencia - 00000245138
  */
-public class LobbyControl {
+public class LobbyControl implements Observer<EventoLobbyMVC>{
 
     private LobbyView view;  // Referencia a la vista (LobbyView)
     private LobbyModel modelo;  // Referencia al modelo (LobbyModel)
@@ -25,9 +31,12 @@ public class LobbyControl {
     public LobbyControl(LobbyView view, LobbyModel modelo) {
         this.view = view;
         this.modelo = modelo;
-        cargarEventos();  // Carga todos los eventos de la interfaz
-//        view.agregarObserver(this);
+        this.view.addObserver(TipoLobbyMVC.NUEVO_PANEL_JUGADOR,this);
+        this.view.addObserver(TipoLobbyMVC.QUITAR_PANEL_JUGADOR,this);
+        this.view.addObserver(TipoLobbyMVC.CAMBIAR_AVATAR,this);
+        view.cargarAvatares();
         view.crearJugadores();
+        cargarEventos();  // Carga todos los eventos de la interfaz
     }
 
     /**
@@ -36,7 +45,9 @@ public class LobbyControl {
      * específico.
      */
     private void cargarEventos() {
-        view.mostrarConfiguracion(this::abrirConfiguracion);  // Evento para abrir la configuración
+        if(modelo.getCuentaActual().esAdmin()){
+            view.mostrarConfiguracion(this::abrirConfiguracion);
+        }  // Evento para abrir la configuración
         view.mostrarAvatares(this::abrirAvatares);  // Evento para abrir la selección de avatares
         view.abandonarPartida(this::abandonarPartida);  // Evento para abandonar la partida
         view.iniciarPartida(this::actualizarJugadorListo);  // Evento para iniciar la partida
@@ -55,7 +66,8 @@ public class LobbyControl {
      */
     private void guardarConfiguracionPartida(MouseEvent e) {
         System.out.println("button del mouse event: " + e.getButton().toString());
-//        modelo.setCantidadFichas(view.getChoiceBoxSelected());
+        ReglasDTO reglas = new ReglasDTO(view.getChoiceBoxSelected());
+        modelo.avisarActualizarReglas(reglas);
         view.cerrarVentanaConfiguracion();
         //modelo.setCantidadFichas(0);
     }
@@ -127,6 +139,27 @@ public class LobbyControl {
             modelo.avisarCuentaNoLista();
         } else {
             modelo.avisarCuentaLista();
+        }
+    }
+
+    @Override
+    public void update(EventoLobbyMVC observable) {
+        switch (observable.getTipo()) {
+            case NUEVO_PANEL_JUGADOR ->                 {
+                    AnchorPane pane = (AnchorPane)observable.getElemento();
+                    modelo.agregarPanelJugador(pane.getId(),pane);
+                }
+            case QUITAR_PANEL_JUGADOR ->                 {
+                    AnchorPane pane = (AnchorPane)observable.getElemento();
+                    modelo.removerPanelJugador(pane.getId());
+                }
+            case CAMBIAR_AVATAR -> {
+                ImageView imgV = (ImageView)observable.getElemento();
+                String idImg = imgV.getId();
+                AvatarDTO avatar = modelo.getAvatarPorAnimal(idImg);
+                modelo.setAvatar(avatar);
+                modelo.avisarCambioAvatar(modelo.getCuentaActual());
+            }
         }
     }
 }

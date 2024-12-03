@@ -8,7 +8,7 @@ import tiposLogicos.TipoLogicaTurno;
  *
  * @author luisa M
  */
-public class EventoTurno extends EventoLogico<CuentaDTO>{
+public class EventoTurno extends EventoLogico{
     private TipoLogicaTurno tipo;
     private TurnosDTO turnos;
     private CuentaDTO cuenta;
@@ -27,11 +27,6 @@ public class EventoTurno extends EventoLogico<CuentaDTO>{
     
     public void setTipo(TipoLogicaTurno tipo){
         this.tipo = tipo;
-    }
-
-    @Override
-    public Object getInfo() {
-        return null;
     }
 
     public void setTurnos(TurnosDTO turnos) {

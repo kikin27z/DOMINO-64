@@ -23,8 +23,8 @@ import tiposLogicos.TiposJugador;
 public abstract class IControlTurnos implements Observer<Evento> {
     protected ICliente cliente;
     protected static BlockingQueue<Evento> colaEventos;
-    protected Map<Enum<?>, Consumer<Evento>> consumers;
-    protected static final List<Enum<?>> eventos = new ArrayList<>(
+    protected Map<Enum, Consumer<Evento>> consumers;
+    protected static final List<Enum> eventos = new ArrayList<>(
             List.of(
                     TipoError.ERROR_DE_SERVIDOR,
                     TipoLogicaPozo.REPARTIR_FICHAS,
@@ -41,7 +41,7 @@ public abstract class IControlTurnos implements Observer<Evento> {
         colaEventos.offer(observable); 
    }
     
-    public List<Enum<?>> getEventos() {
+    public List<Enum> getEventos() {
         return eventos;
     }
     
@@ -54,12 +54,12 @@ public abstract class IControlTurnos implements Observer<Evento> {
         consumers.putIfAbsent(TipoJugadorFicha.COLOCAR_FICHA, this::cambiarTurno);
     }
     
-    public void agregarEvento(Enum<?> evento, Consumer<Evento> consumer){
+    public void agregarEvento(Enum evento, Consumer<Evento> consumer){
         eventos.add(evento);
         consumers.putIfAbsent(evento, consumer);
     }
   
-    public List<Enum<?>> obtenerEventosSuscrito() {
+    public List<Enum> obtenerEventosSuscrito() {
         return eventos;
     }
     
