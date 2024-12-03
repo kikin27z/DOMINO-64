@@ -1,6 +1,5 @@
 package lobby;
 
-import entidadesDTO.AvatarDTO;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.ReglasDTO;
 import javafx.scene.image.ImageView;
@@ -156,9 +155,9 @@ public class LobbyControl implements Observer<EventoLobbyMVC>{
             case CAMBIAR_AVATAR -> {
                 ImageView imgV = (ImageView)observable.getElemento();
                 String idImg = imgV.getId();
-                AvatarDTO avatar = modelo.getAvatarPorAnimal(idImg);
-                modelo.setAvatar(avatar);
-                modelo.avisarCambioAvatar(modelo.getCuentaActual());
+//                AvatarDTO avatar = modelo.getAvatarPorAnimal(idImg);
+//                modelo.setAvatar(avatar);
+//                modelo.avisarCambioAvatar(modelo.getCuentaActual());
             }
         }
     }
