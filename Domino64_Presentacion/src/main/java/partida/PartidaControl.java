@@ -1,19 +1,14 @@
 package partida;
 
 import manejadorTablero.ManejadorTablero;
-import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.PosibleJugadaDTO;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
-import presentacion_dibujo.BuilderFichaMazo;
 import presentacion_dibujo.DibujoJugada;
 
 /**

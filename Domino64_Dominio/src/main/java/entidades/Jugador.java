@@ -1,26 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidades;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 /**
  *
  * @author luisa M
  */
-public class Jugador implements Serializable{
+public class Jugador {
     private List<Ficha> fichas;
     private Cuenta cuenta;
-    private boolean enTurno;
 
     public Jugador(Cuenta cuenta) {
         this.cuenta = cuenta;
+    }
+
+    public Jugador() {
     }
 
     public List<Ficha> getFichas() {
@@ -39,59 +33,47 @@ public class Jugador implements Serializable{
         this.cuenta = cuenta;
     }
 
-    public boolean isEnTurno() {
-        return enTurno;
-    }
-
-    public void setEnTurno(boolean enTurno) {
-        this.enTurno = enTurno;
-    }
-
-    public void agregarFicha(Ficha ficha){
+    public void agregarFicha(Ficha ficha) {
         this.fichas.add(ficha);
     }
-    
-    public void removerFicha(Ficha ficha){
-        this.fichas.remove(ficha);
-    }
-    
-    public Ficha obtenerMayorMula(){
-        List<Ficha> mulas = obtenerMulas();
-        if(!mulas.isEmpty()){
-            return Collections.max(mulas);
+
+    public Ficha removerFicha(Ficha ficha) {
+        Ficha fichaRemovida = null;
+        for (Ficha f : fichas) {
+            if(f.esLaMisma(ficha)){
+                fichaRemovida = f;
+                fichas.remove(f);
+                break;
+            }
         }
-        return null;
+        return fichaRemovida;
     }
-    
-    private List<Ficha> obtenerMulas(){
-        List<Ficha> mulas = new ArrayList<>();
+
+    public Ficha obtenerMayorMula() {
+        Ficha mayorMula = null;
+        int maxValor = -1;
+
         for (Ficha ficha : fichas) {
-            if(ficha.esMula())
-                mulas.add(ficha);
+            if (ficha.esMula() && ficha.getIzquierda() > maxValor) {
+                mayorMula = ficha;
+                maxValor = ficha.getIzquierda();
+            }
         }
-        return mulas;
+
+        return mayorMula;
+    }
+    
+    public String obtenerIdJugador(){
+        return this.cuenta.getIdCadena();
     }
 
     @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 83 * hash + Objects.hashCode(this.cuenta);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Jugador other = (Jugador) obj;
-        return Objects.equals(this.cuenta, other.cuenta);
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Jugador{");
+        sb.append("fichas=").append(fichas);
+        sb.append('}');
+        return sb.toString();
     }
     
     
