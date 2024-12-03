@@ -69,7 +69,7 @@ public final class Cuenta implements Serializable{
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.idCadena);
+        hash = 53 * hash + Objects.hashCode(this.idCadena);
         return hash;
     }
 
@@ -87,5 +87,6 @@ public final class Cuenta implements Serializable{
         final Cuenta other = (Cuenta) obj;
         return Objects.equals(this.idCadena, other.idCadena);
     }
+
     
 }

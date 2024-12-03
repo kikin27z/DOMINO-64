@@ -57,5 +57,8 @@ public class ControlEventosLobby extends ControlEventos implements ObserverLobby
     }
     @Override
     public void avisarCambioAvatar(CuentaDTO cuentaActualizada) {
+        hiloPrincipal.execute(() -> {
+            //manejadorNotificador.cambiarReglas(reglas);
+        });
     }
 }

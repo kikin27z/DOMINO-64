@@ -61,4 +61,9 @@ public class ManejadorNotificador {
         EventoJugador cambiarReglas = directorEventos.crearEventoActualizarConfigPartida(reglas);
         receptor.enviarEvento(cambiarReglas);
     }
+    
+    public void cambiarAvatar(CuentaDTO cuentaActualizada){
+        EventoJugador cambiarAvatar = directorEventos.crearEventoCambiarAvatar(cuentaActualizada);
+        receptor.enviarEvento(cambiarAvatar);
+    }
 }

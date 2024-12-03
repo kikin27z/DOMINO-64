@@ -1,5 +1,9 @@
 package lobby;
 
+import entidadesDTO.AvatarDTO;
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.ReglasDTO;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import observer.Observer;
@@ -27,10 +31,12 @@ public class LobbyControl implements Observer<EventoLobbyMVC>{
     public LobbyControl(LobbyView view, LobbyModel modelo) {
         this.view = view;
         this.modelo = modelo;
-        cargarEventos();  // Carga todos los eventos de la interfaz
         this.view.addObserver(TipoLobbyMVC.NUEVO_PANEL_JUGADOR,this);
         this.view.addObserver(TipoLobbyMVC.QUITAR_PANEL_JUGADOR,this);
+        this.view.addObserver(TipoLobbyMVC.CAMBIAR_AVATAR,this);
+        view.cargarAvatares();
         view.crearJugadores();
+        cargarEventos();  // Carga todos los eventos de la interfaz
     }
 
     /**
@@ -60,7 +66,8 @@ public class LobbyControl implements Observer<EventoLobbyMVC>{
      */
     private void guardarConfiguracionPartida(MouseEvent e) {
         System.out.println("button del mouse event: " + e.getButton().toString());
-//        modelo.setCantidadFichas(view.getChoiceBoxSelected());
+        ReglasDTO reglas = new ReglasDTO(view.getChoiceBoxSelected());
+        modelo.avisarActualizarReglas(reglas);
         view.cerrarVentanaConfiguracion();
         //modelo.setCantidadFichas(0);
     }
@@ -137,12 +144,22 @@ public class LobbyControl implements Observer<EventoLobbyMVC>{
 
     @Override
     public void update(EventoLobbyMVC observable) {
-        if(observable.getTipo().equals(TipoLobbyMVC.NUEVO_PANEL_JUGADOR)){
-            AnchorPane pane = (AnchorPane)observable.getElemento();
-            modelo.agregarPanelJugador(pane.getId(),pane);
-        }else if(observable.getTipo().equals(TipoLobbyMVC.QUITAR_PANEL_JUGADOR)){
-            AnchorPane pane = (AnchorPane)observable.getElemento();
-            modelo.removerPanelJugador(pane.getId());
+        switch (observable.getTipo()) {
+            case NUEVO_PANEL_JUGADOR ->                 {
+                    AnchorPane pane = (AnchorPane)observable.getElemento();
+                    modelo.agregarPanelJugador(pane.getId(),pane);
+                }
+            case QUITAR_PANEL_JUGADOR ->                 {
+                    AnchorPane pane = (AnchorPane)observable.getElemento();
+                    modelo.removerPanelJugador(pane.getId());
+                }
+            case CAMBIAR_AVATAR -> {
+                ImageView imgV = (ImageView)observable.getElemento();
+                String idImg = imgV.getId();
+                AvatarDTO avatar = modelo.getAvatarPorAnimal(idImg);
+                modelo.setAvatar(avatar);
+                modelo.avisarCambioAvatar(modelo.getCuentaActual());
+            }
         }
     }
 }

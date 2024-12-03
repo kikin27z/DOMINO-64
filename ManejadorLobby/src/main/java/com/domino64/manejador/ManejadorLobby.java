@@ -21,12 +21,15 @@ public class ManejadorLobby {
     private final AdaptadorEntidad adaptador;
     private final AdaptadorDTO adaptadorDTO;
     private Lobby lobby;
-    private int jugadoresListos;
     private Partida partida;
     
     public ManejadorLobby() {
         adaptador = new AdaptadorEntidad();
         adaptadorDTO = new AdaptadorDTO();
+    }
+    
+    public boolean validarCambioAvatar(CuentaDTO cuenta){
+        return true;
     }
     
     public CuentaDTO unirCuenta(CuentaDTO cuentaDTO){

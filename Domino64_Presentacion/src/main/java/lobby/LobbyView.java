@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -409,17 +410,17 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
         btnCerrarAvatares.setTextFill(Color.WHITE);
     }
 
-//    public ImageView cambiarFiltroAvatar(ImageView imgView){
-//        return setEffect(imgView);
-////        Node node = fondoAvatares.getChildren().getFirst();
-////        String animalAvatar = cuenta.getAvatar().getAnimal();
-////        if (node != null && node instanceof GridPane gridP) {
-////            FilteredList<Node> listAv = gridP.getChildren().filtered(avatar -> avatar.getId().equals(animalAvatar));
-////            ImageView avatar = (ImageView) listAv.getFirst();
-////            setEffect(avatar);
-////        }
-//        
-//    }
+    public ImageView cambiarFiltroAvatar(CuentaDTO cuenta, ImageView imgView){
+        Node node = fondoAvatares.getChildren().getFirst();
+        String animalAvatar = cuenta.getAvatar().getAnimal();
+        if (node != null && node instanceof GridPane gridP) {
+            FilteredList<Node> listAv = gridP.getChildren().filtered(avatar -> avatar.getId().equals(animalAvatar));
+            ImageView avatar = (ImageView) listAv.getFirst();
+            return setEffect(avatar);
+        }
+        return null;
+        
+    }
     protected void removeEffect(ImageView view) {
         if (view.getEffect() != null) {
             view.setEffect(null);
@@ -461,7 +462,7 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
         // Crear y añadir ImageViews al GridPane
         for (int i = 0; i < avatars.length; i++) {
             ImageView imageView = crearIconoAvatar(avatars[i]);
-            imageView.setOnMouseClicked(seleccionarAvatar(avatars[i]));
+            imageView.setOnMouseClicked(seleccionarAvatar(avatars[i], imageView));
             avatares.add(imageView);
             // Añadir evento de click
             final String avatarName = avatars[i];
@@ -516,7 +517,7 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
                 break;
             }
         }
-
+        imageView.setOnMouseClicked(seleccionarAvatar(avatarName, imageView));
         // Añadir cursor de mano
         imageView.setCursor(Cursor.HAND);
 
@@ -701,11 +702,16 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
         btnCancelarCambios.setOnMouseClicked(e);
     }
 
-    private EventHandler<MouseEvent> seleccionarAvatar(String nombreAvatar) {
+    private EventHandler<MouseEvent> seleccionarAvatar(String nombreAvatar, ImageView avatar) {
         EventHandler<MouseEvent> handler = (MouseEvent t) -> {
-//            EventoMVCLobby evento = new EventoMVCLobby(TipoLobbyMVC.CAMBIAR_AVATAR);
-//            evento.agregarContexto(nombreAvatar);
-//            notifyObservers(evento.getTipo(), evento);
+            System.out.println("se selecciono el avatar: "+nombreAvatar);
+            System.out.println("efecto : "+avatar.getEffect());
+            if(avatar.getEffect() == null || nombreAvatar.equals("panda")){
+                EventoLobbyMVC evento = new EventoLobbyMVC(TipoLobbyMVC.CAMBIAR_AVATAR);
+                evento.setNodo(avatar);
+                notifyObservers(evento.getTipo(), evento);
+            }
+            
         };
         return handler;
     }

@@ -69,7 +69,7 @@ public class CuentaDTO implements Serializable{
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 17 * hash + Objects.hashCode(this.idCadena);
+        hash = 13 * hash + Objects.hashCode(this.idCadena);
         return hash;
     }
 
@@ -87,7 +87,7 @@ public class CuentaDTO implements Serializable{
         final CuentaDTO other = (CuentaDTO) obj;
         return Objects.equals(this.idCadena, other.idCadena);
     }
-    
-    
+
+
    
 }

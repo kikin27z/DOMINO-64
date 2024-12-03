@@ -10,5 +10,6 @@ package lobby;
  */
 public enum TipoLobbyMVC {
     NUEVO_PANEL_JUGADOR,
-    QUITAR_PANEL_JUGADOR;
+    QUITAR_PANEL_JUGADOR,
+    CAMBIAR_AVATAR;
 }

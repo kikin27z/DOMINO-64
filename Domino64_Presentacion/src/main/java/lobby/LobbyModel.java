@@ -42,6 +42,7 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
     protected final int REMOVER = 0;
     protected final int AGREGAR = 0;
     private boolean jugadorActualListo;
+    private ReglasDTO reglas;
 
     /**
      * Constructor del modelo del lobby. Inicializa los datos y carga la
@@ -159,7 +160,10 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
 
     @Override
     public void avisarActualizarReglas(ReglasDTO reglas) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.reglas = reglas;
+        for (ObserverLobby observerLobby : observersLogica) {
+            observerLobby.avisarActualizarReglas(reglas);
+        }
     }
 
     //---------------------Eventos Modelo a lógica--------------------------------
@@ -224,6 +228,10 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
         return mensaje;
     }
 
+    public void setAvatar(AvatarDTO avatar){
+        this.cuentaActual.setAvatar(avatar);
+    }
+    
     /**
      * Establece un nuevo mensaje y notifica a los observadores.
      *
@@ -324,6 +332,10 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
         return null;
     }
 
+    protected void setReglasDTO(ReglasDTO reglas){
+        this.reglas = reglas;
+    }
+    
     /**
      * Obtiene la lista de avatares disponibles.
      *
@@ -375,7 +387,7 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
 //    protected int getCantidadFichas() {
 //        return lobbyDTO.getCantidadFichas();
 //    }
-//
+////
 //    protected void setCantidadFichas(int cantidadFichas) {
 //        lobbyDTO.setCantidadFichas(cantidadFichas);
 //        for (ObserverLobby observerLobby : observersLogica) {

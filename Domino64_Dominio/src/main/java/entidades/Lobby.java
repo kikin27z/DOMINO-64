@@ -94,12 +94,13 @@ public class Lobby {
     }
 
     private boolean avatarUsado(List<Avatar> avatares, Avatar avatar) {
-        for (var a : avatares) {
-            if (a.getId() == avatar.getId()) {
-                return true;
-            }
-        }
-        return false;
+        return avatares.contains(avatar);
+//        for (Avatar a : avatares) {
+//            if (a.equals(avatar)) {
+//                return true;
+//            }
+//        }
+//        return false;
     }
 
     public void cambiarAvatar(Cuenta cuenta, Avatar avatar) {

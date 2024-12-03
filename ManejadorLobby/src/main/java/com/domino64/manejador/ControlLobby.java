@@ -131,8 +131,10 @@ public class ControlLobby extends IControlLobby implements Runnable {
 
     @Override
     public void cambiarAvatar(Evento evento) {
-//        EventoJugador evJ = (EventoJugador) evento;
-//        CuentaDTO jActualizado = evJ.getCuenta();
+        EventoJugador evJ = (EventoJugador) evento;
+        CuentaDTO jActualizado = evJ.getCuenta();
+        
+        
 //        LobbyDTO lobbyDTO = evJ.getLobby();
 //        Lobby lobby = new Lobby(lobbyDTO.getCodigoPartida());
 //        
