@@ -229,7 +229,7 @@ public class ControlLobby extends IControlLobby implements Runnable {
         System.out.println("Un plebeyo se se alisto");
         manejador.removerJugadorListo(cuentaNoLista);
         eventoEnviar = director.crearEventoActualizarJugadoresListos(manejador.devolverLobby(),
-                cuentaNoLista, idDestinatario, true);
+                cuentaNoLista, idDestinatario, false);
 
         cliente.enviarEvento(eventoEnviar);
     }
