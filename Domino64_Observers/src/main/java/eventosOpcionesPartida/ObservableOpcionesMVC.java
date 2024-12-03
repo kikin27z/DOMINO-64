@@ -1,6 +1,5 @@
 package eventosOpcionesPartida;
 
-import entidadesDTO.PartidaDTO;
 
 /**
  * Interfaz que define los métodos que deben implementar los objetos observables relacionados con las opciones del MVC (Modelo-Vista-Controlador).

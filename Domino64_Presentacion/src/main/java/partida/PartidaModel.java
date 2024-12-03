@@ -198,8 +198,6 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
             designarMulaAlta();
         } else {
             jugadaActual = jugada;
-//            System.out.println("\nProxima jugada");
-//            System.out.println(jugada);
         }
     }
 
