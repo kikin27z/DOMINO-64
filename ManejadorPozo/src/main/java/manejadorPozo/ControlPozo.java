@@ -10,6 +10,7 @@ import eventos.EventoJugadorFicha;
 import eventos.EventoLobby;
 import eventos.EventoPartida;
 import eventos.EventoPozo;
+import eventos.EventoTurno;
 import implementacion.Client;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -106,6 +107,12 @@ public class ControlPozo extends IControlPozo implements Runnable {
         FichaDTO ficha = manejador.jalarPozo();
         EventoPozo eventoEnviar = director.crearEventoFichaJalada(ficha);
         cliente.enviarEvento(eventoEnviar);
+    }
+
+    @Override
+    public void finJuego(Evento evento) {
+        EventoTurno finJuego = (EventoTurno)evento;
+        
     }
 
 }

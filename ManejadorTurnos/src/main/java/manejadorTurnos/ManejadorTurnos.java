@@ -25,12 +25,30 @@ public class ManejadorTurnos {
     private final AdaptadorEntidad adaptador;
     private final AdaptadorDTO adaptadorDTO;
     private Cuenta ultimoQueRealizoJugada;
+    private int turnosPasados;
 
     public ManejadorTurnos() {
         adaptador = new AdaptadorEntidad();
         adaptadorDTO = new AdaptadorDTO();
     }
 
+    public boolean agregarJugadorPaso(){
+        turnosPasados++;
+        return todosPasaron();
+    }
+    
+    public boolean todosPasaron(){
+        return orden.size() == turnosPasados;
+    }
+    
+    public void reinciarJugadoresPaso(){
+        turnosPasados = 0;
+    }
+    
+    public void setUltimoQueRealizoJugada(Cuenta ultimoQueRealizoJugada) {
+        this.ultimoQueRealizoJugada = ultimoQueRealizoJugada;
+    }
+    
     public CuentaDTO rotarSiguienteTurno() {
         String turnoActual = orden.getFirst();
         

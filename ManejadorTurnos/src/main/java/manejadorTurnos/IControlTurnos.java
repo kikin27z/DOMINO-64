@@ -28,7 +28,8 @@ public abstract class IControlTurnos implements Observer<Evento> {
             List.of(
                     TipoError.ERROR_DE_SERVIDOR,
                     TipoLogicaPozo.REPARTIR_FICHAS,
-                    TipoJugadorFicha.COLOCAR_FICHA
+                    TipoJugadorFicha.COLOCAR_FICHA,
+                    TiposJugador.ABANDONAR_PARTIDA
             ));
     
     protected IControlTurnos(){
@@ -45,13 +46,14 @@ public abstract class IControlTurnos implements Observer<Evento> {
         return eventos;
     }
     
-     public void enviarEvento(Evento evento) {
+    public void enviarEvento(Evento evento) {
         cliente.enviarEvento(evento);
     }
     protected void setConsumers(){
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
         consumers.putIfAbsent(TipoLogicaPozo.REPARTIR_FICHAS, this::asignarOrden);
         consumers.putIfAbsent(TipoJugadorFicha.COLOCAR_FICHA, this::cambiarTurno);
+        consumers.putIfAbsent(TiposJugador.ABANDONAR_PARTIDA, this::removerJugador);
     }
     
     public void agregarEvento(Enum evento, Consumer<Evento> consumer){
@@ -66,6 +68,7 @@ public abstract class IControlTurnos implements Observer<Evento> {
     public abstract void manejarError(Evento evento);
     public abstract void asignarOrden(Evento evento);
     public abstract void cambiarTurno(Evento evento);
+    public abstract void removerJugador(Evento evento);
     
     
 }

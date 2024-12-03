@@ -32,8 +32,9 @@ public class DirectorTurnos extends DirectorEventos<BuilderEventoTurnos> {
         return builder.construirEvento();
     }
     
-    public EventoTurno crearEventoFinJuego(){
+    public EventoTurno crearEventoFinJuego(TurnosDTO turnos){
         builder.setIdPublicador(idPublicador);
+        builder.setTurnos(turnos);
         builder.setTipo(TipoLogicaTurno.FIN_JUEGO);
         return builder.construirEvento();
     }

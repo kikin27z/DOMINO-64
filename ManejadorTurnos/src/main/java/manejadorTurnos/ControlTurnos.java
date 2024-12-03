@@ -1,8 +1,12 @@
 package manejadorTurnos;
 
 import domino64.eventos.base.Evento;
+import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.MazosDTO;
+import eventos.EventoJugador;
+import eventos.EventoJugadorFicha;
 import eventos.EventoPozo;
+import eventos.EventoTurno;
 import implementacion.Client;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,6 +14,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import tiposLogicos.TipoLogicaTurno;
+import tiposLogicos.TiposJugador;
 import turnosBuilder.BuilderEventoTurnos;
 import turnosBuilder.DirectorTurnos;
 
@@ -90,6 +96,25 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
 
     @Override
     public void cambiarTurno(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoJugadorFicha fichaColocada = (EventoJugadorFicha)evento;
+        JugadaRealizadaDTO jugada = fichaColocada.getJugada();
+        if(jugada == null){
+            if(manejador.agregarJugadorPaso()){
+                
+            }
+        }
+        manejador.rotarSiguienteTurno();
     }
+
+    @Override
+    public void removerJugador(Evento evento) {
+        EventoJugador jugadorSalio= (EventoJugador)evento;
+        
+        manejador.quitarJugador(jugadorSalio.getCuenta());
+        if(manejador.todosPasaron()){
+            EventoTurno fin = director.crearEventoFinJuego();
+            enviarEvento(fin);
+        }
+    }
+
 }
