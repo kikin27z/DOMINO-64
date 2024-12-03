@@ -188,6 +188,7 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
         }
             
         cargarBtnModal();
+        cargarCodigoPartida(modelo.getLobbyDTO());
     }
 
     private void cargarCodigoPartida(LobbyDTO lobby) {
@@ -677,7 +678,8 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
     }
 
     public void mostrarConfiguracion(EventHandler<MouseEvent> e) {
-        btnAjustes.setOnMouseClicked(e);
+        if(modelo.getCuentaActual().esAdmin())
+            btnAjustes.setOnMouseClicked(e);
     }
 
     public void confirmarCambiosPartida(EventHandler<MouseEvent> e) {

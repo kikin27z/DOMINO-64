@@ -69,7 +69,7 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
         avatares = new ArrayList<>(List.of(AvatarDTO.AVE, AvatarDTO.GATO, AvatarDTO.JAGUAR, AvatarDTO.KIWI, AvatarDTO.MARIPOSA,
                 AvatarDTO.PANDA, AvatarDTO.SERPIENTE, AvatarDTO.TORTUGA, AvatarDTO.VENADO));
         panelesJugadores = new HashMap<>();
-        cuentasJugadoresOnline = new ArrayList<>();
+        //cuentasJugadoresOnline = new ArrayList<>();
     }
 
     //---------------------Eventos Modelo a vista--------------------------------

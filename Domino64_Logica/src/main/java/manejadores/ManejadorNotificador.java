@@ -37,7 +37,7 @@ public class ManejadorNotificador {
         unirse.setCuenta(cuentaDTO);
         EventoJugador crear = directorEventos.crearEventoUnirsePartida(unirse);
         receptor.enviarEvento(crear);
-        receptor.agregarSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA, receptor::recibirPartida);
+        receptor.agregarSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA, receptor::partidaEncontrada);
     }
 
     public void abandonarPartida() {
