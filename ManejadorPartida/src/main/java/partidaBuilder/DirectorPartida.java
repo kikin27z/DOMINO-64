@@ -1,6 +1,9 @@
 package partidaBuilder;
 
 import builder.DirectorEventos;
+import entidadesDTO.ReglasDTO;
+import eventos.EventoPartida;
+import tiposLogicos.TipoLogicaPartida;
 
 /**
  *
@@ -15,5 +18,12 @@ public class DirectorPartida extends DirectorEventos<BuilderEventoPartida> {
         this.idPublicador = idPublicador;
     }
     
+    
+    public EventoPartida crearEventoRepartirFichas(ReglasDTO reglas){
+        builder.setIdPublicador(idPublicador);
+        builder.setReglas(reglas);
+        builder.setTipo(TipoLogicaPartida.REPARTIR_FICHAS);
+        return builder.construirEvento();
+    }
     
 }

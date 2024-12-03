@@ -25,7 +25,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
-        <exec.mainClass>com.luisa.servidor.Servidor</exec.mainClass>
+        <exec.mainClass>servidor.Servidor</exec.mainClass>
         </properties>
     <name>Domino64_Servidor</name>
 </project>

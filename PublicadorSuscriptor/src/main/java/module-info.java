@@ -5,5 +5,5 @@
 
 module PublicadorSuscriptor {
     requires Evento;
-    exports com.domino64.base;
+    exports publicadorSuscriptor;
 }

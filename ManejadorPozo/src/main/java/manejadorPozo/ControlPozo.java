@@ -23,7 +23,8 @@ import pozoBuilder.DirectorPozo;
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class ControlPozo extends IControlPozo implements Runnable {
 
@@ -84,6 +85,7 @@ public class ControlPozo extends IControlPozo implements Runnable {
     @Override
     public void repartirFichas(Evento evento) {
         EventoPartida eventoRecibido = (EventoPartida) evento;
+        System.out.println("Evento recibido " + eventoRecibido);
         ReglasDTO reglas = eventoRecibido.getReglas();
         MazosDTO mazos = manejador.repartirFichas(reglas);
         EventoPozo eventoEnviar = director.crearEventoDesignarTurnos(mazos);

@@ -1,5 +1,6 @@
 package entidadesDTO;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -8,7 +9,7 @@ import java.util.Map;
  * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author José Karim Franco Valencia - 00000245138
  */
-public class TurnosDTO {
+public class TurnosDTO implements Serializable{
     private Map<String, JugadorDTO> mazos;
     private LinkedList<String> orden;
 

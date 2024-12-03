@@ -13,8 +13,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import tablero_builder.BuilderEventoTablero;
-import tablero_builder.DirectorTablero;
+import tableroBuilder.BuilderEventoTablero;
+import tableroBuilder.DirectorTablero;
 
 /**
  *

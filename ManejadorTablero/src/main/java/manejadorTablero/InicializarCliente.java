@@ -18,15 +18,15 @@ public class InicializarCliente {
         // }
         //
         // manejador.vincularCliente(c);
-        LinkedList<String> turnos = new LinkedList<>();
-        turnos.add("Turno 1");
-        turnos.add("Turno 2");
-        turnos.add("Turno 3");
-
-        // Recorrer en un ciclo
-        for (int i = 0; i < 10; i++) {
-            String turnoActual = turnos.get(i % turnos.size());
-            System.out.println(turnoActual);
-        }
+//        LinkedList<String> turnos = new LinkedList<>();
+//        turnos.add("Turno 1");
+//        turnos.add("Turno 2");
+//        turnos.add("Turno 3");
+//
+//        // Recorrer en un ciclo
+//        for (int i = 0; i < 10; i++) {
+//            String turnoActual = turnos.get(i % turnos.size());
+//            System.out.println(turnoActual);
+//        }
     }
 }

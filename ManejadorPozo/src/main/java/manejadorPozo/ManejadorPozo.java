@@ -15,7 +15,8 @@ import java.util.List;
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class ManejadorPozo {
     private final Deque<Ficha> pozo;

@@ -3,12 +3,14 @@ package lobbyBuilder;
 import builder.DirectorEventos;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
+import entidadesDTO.ReglasDTO;
 import eventos.EventoLobby;
 import tiposLogicos.TipoLogicaLobby;
 
 /**
  *
- * @author luisa M
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class DirectorLobby extends DirectorEventos<BuilderEventoLobby> {
     private int idPublicador;
@@ -22,12 +24,12 @@ public class DirectorLobby extends DirectorEventos<BuilderEventoLobby> {
         this.idPublicador = idPublicador;
     }
 
-    public EventoLobby crearEventoPrepararPartida(LobbyDTO partida, int idContexto) {
+    public EventoLobby crearEventoPrepararPartida(ReglasDTO reglas) {
         builder.setIdPublicador(idPublicador);
-        builder.setIdContexto(idContexto);
-        builder.agregarLobby(partida);
+        builder.setReglas(reglas);
         builder.setTipo(TipoLogicaLobby.PREPARAR_PARTIDA);
-        return builder.construirEvento();
+        EventoLobby e = builder.construirEvento();
+        return e;
     }
     
     public EventoLobby crearEventoCuentaAbandono(CuentaDTO cuenta, int idDestinatario){

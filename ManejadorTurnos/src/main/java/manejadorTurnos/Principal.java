@@ -1,6 +1,5 @@
 package manejadorTurnos;
 
-import entidades.Ficha;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.MazosDTO;
 import entidadesDTO.ReglasDTO;
@@ -10,14 +9,15 @@ import manejadorPozo.ManejadorPozo;
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class Principal {
 
     public static void main(String[] args) {
-//        ControlTurnos manejador = new ControlTurnos();
-//        manejador.iniciaConexion();
-        simulacionAsignarTurnos();
+        ControlTurnos manejador = new ControlTurnos();
+        manejador.iniciaConexion();
+//        simulacionAsignarTurnos();
 
 //        manejador.imprimirJuego();
 //    
@@ -54,23 +54,23 @@ public class Principal {
         simularRotarTurno(mTurnos);
     }
 
-    private static void simularRotarTurno(ManejadorTurnos mTurnos) {
+    private static void simularRotarTurno(ManejadorTurnos manejador) {
         CuentaDTO cuenta3 = new CuentaDTO();
         cuenta3.setIdCadena("Paul");
-        mTurnos.rotarSiguienteTurno();
-        mTurnos.rotarSiguienteTurno();
-        mTurnos.rotarSiguienteTurno();
-        mTurnos.rotarSiguienteTurno();
-        mTurnos.rotarSiguienteTurno();
-        mTurnos.rotarSiguienteTurno();
+        manejador.rotarSiguienteTurno();
+        manejador.rotarSiguienteTurno();
+        manejador.rotarSiguienteTurno();
+        manejador.rotarSiguienteTurno();
+        manejador.rotarSiguienteTurno();
+        manejador.rotarSiguienteTurno();
 
         System.out.println("\nSe quita cuenta\n");
-        mTurnos.quitarJugador(cuenta3);
-        mTurnos.rotarSiguienteTurno();
-        mTurnos.rotarSiguienteTurno();
-        mTurnos.rotarSiguienteTurno();
-        mTurnos.rotarSiguienteTurno();
-        mTurnos.rotarSiguienteTurno();
-        mTurnos.rotarSiguienteTurno();
+        manejador.quitarJugador(cuenta3);
+        manejador.rotarSiguienteTurno();
+        manejador.rotarSiguienteTurno();
+        manejador.rotarSiguienteTurno();
+        manejador.rotarSiguienteTurno();
+        manejador.rotarSiguienteTurno();
+        manejador.rotarSiguienteTurno();
     }
 }

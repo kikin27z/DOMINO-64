@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package observer;
 
 import domino64.eventos.base.*;
@@ -12,8 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
- * @author luisa M
- * @param <T>
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class Observable<T extends Evento> {
     private final Map<Enum, List<Observer>> observers;

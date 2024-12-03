@@ -78,6 +78,13 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
         EventoPozo eventoRecibido = (EventoPozo) evento;
         MazosDTO mazos = eventoRecibido.getMazos();
         
+        manejador.determinarOrden(mazos);
+        manejador.rotarSiguienteTurno();
+        manejador.rotarSiguienteTurno();
+        manejador.rotarSiguienteTurno();
+        manejador.rotarSiguienteTurno();
+        manejador.rotarSiguienteTurno();
+        manejador.rotarSiguienteTurno();
         
     }
 

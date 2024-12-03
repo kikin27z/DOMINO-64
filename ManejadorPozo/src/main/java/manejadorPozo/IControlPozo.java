@@ -11,13 +11,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Consumer;
 import observer.Observer;
-import tiposLogicos.TipoLogicaLobby;
 import tiposLogicos.TipoLogicaPartida;
 import tiposLogicos.TiposJugador;
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public abstract class IControlPozo implements Observer<Evento> {
     protected ICliente cliente;
