@@ -65,23 +65,6 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
         this.vincularCliente(c);
     }
 
-    @Override
-    public void recibirPartida(Evento evento) {
-//        System.out.println("partida recibida");
-//        Enum tipo = evento.getTipo();
-//        if (tipo.equals(TipoLogicaLobby.PARTIDA_ENCONTRADA)) {
-//            EventoLobby eventoLobby = (EventoLobby) evento;
-//            System.out.println("evento: " + eventoLobby);
-//
-//            lobbyDTO = eventoLobby.obtenerLobby();
-//            manejador.asignarCuenta(lobbyDTO.getCuentaActual());
-//
-//            System.out.println("lobbyDTO: " + lobbyDTO);
-////            MediadorManejadores.enviarADisplay(eventoLobby);
-//
-//            removerSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA);
-//        }
-    }
 
 
 
@@ -89,6 +72,9 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     public void actualizarAvatares(Evento evento) {
         
         System.out.println("Jugador actualizo su avatar");
+        EventoLobby eventoL = (EventoLobby)evento;
+        CuentaDTO cuenta = eventoL.getPublicador();
+        distribuidor.actualizarAvatarCuenta(cuenta);
 //        EventoLobby ev = esEventoDeEsteLobby(evento);
 //        if( ev != null){
 //            CuentaDTO jugadorEvento = ev.getPublicador();

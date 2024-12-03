@@ -36,7 +36,7 @@ public final class ManejadorDisplay {
     public void mostrarOpcionesPartida(){
         navegacion.cambiarOpcionesPartida();
     }
-
+    
     public void mostrarLobby(CuentaDTO cuenta, LobbyDTO lobby){
         navegacion.cambiarLobby(cuenta, lobby);
     }

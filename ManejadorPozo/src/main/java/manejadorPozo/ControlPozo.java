@@ -52,7 +52,7 @@ public class ControlPozo extends IControlPozo implements Runnable {
     public void iniciaConexion() {
         Client c = Client.iniciarComunicacion();
 
-        for (Enum<?> suscripcion : eventos) {
+        for (Enum suscripcion : eventos) {
             c.addObserver(suscripcion, this);
         }
 

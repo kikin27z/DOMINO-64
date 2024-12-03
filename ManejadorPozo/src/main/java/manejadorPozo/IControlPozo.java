@@ -41,7 +41,7 @@ public abstract class IControlPozo implements Observer<Evento> {
         colaEventos.offer(observable); 
    }
     
-    public List<Enum<?>> getEventos() {
+    public List<Enum> getEventos() {
         return eventos;
     }
     
@@ -55,12 +55,12 @@ public abstract class IControlPozo implements Observer<Evento> {
         consumers.putIfAbsent(TipoLogicaPartida.REPARTIR_FICHAS, this::repartirFichas);
     }
     
-    public void agregarEvento(Enum<?> evento, Consumer<Evento> consumer){
+    public void agregarEvento(Enum evento, Consumer<Evento> consumer){
         eventos.add(evento);
         consumers.putIfAbsent(evento, consumer);
     }
   
-    public List<Enum<?>> obtenerEventosSuscrito() {
+    public List<Enum> obtenerEventosSuscrito() {
         return eventos;
     }
     

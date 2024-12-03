@@ -109,7 +109,6 @@ public abstract class IReceptorEventosLogica implements Observer<Evento> {
 
     public abstract void vincularDisplay();
     public abstract void iniciaConexion();
-    public abstract void recibirPartida(Evento evento);
 
     public abstract void adminAbandono(Evento evento);
     public abstract void cuentaAbandono(Evento evento);
