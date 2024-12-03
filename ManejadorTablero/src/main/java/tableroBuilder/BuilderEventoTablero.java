@@ -1,4 +1,4 @@
-package tablero_builder;
+package tableroBuilder;
 
 import builder.EventBuilder;
 import domino64.eventos.base.Evento;

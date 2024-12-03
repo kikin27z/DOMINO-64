@@ -3,6 +3,7 @@ package lobbyBuilder;
 import builder.EventBuilder;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
+import entidadesDTO.ReglasDTO;
 import eventos.EventoLobby;
 import tiposLogicos.TipoLogicaLobby;
 
@@ -47,6 +48,10 @@ public class BuilderEventoLobby implements EventBuilder<TipoLogicaLobby>{
     
     public void setPublicador(CuentaDTO publicador){
         this.evento.setPublicador(publicador);
+    }
+    
+    public void setReglas(ReglasDTO reglas){
+        evento.setReglas(reglas);
     }
     
     @Override

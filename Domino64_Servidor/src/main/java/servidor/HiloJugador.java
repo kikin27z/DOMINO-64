@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.luisa.servidor;
+package servidor;
 
-import com.domino64.base.Publicador;
+import publicadorSuscriptor.Publicador;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.TipoError;
 import domino64.eventos.base.suscripcion.*;

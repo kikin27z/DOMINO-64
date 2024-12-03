@@ -1,12 +1,12 @@
 package manejador;
 
-import abstraccion.ICliente;
 import implementacion.Client;
 import domino64.eventos.base.Evento;
 import domino64.eventos.base.error.EventoError;
 import domino64.eventos.base.error.TipoError;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
+import entidadesDTO.ReglasDTO;
 import entidadesDTO.UnirseDTO;
 import eventos.EventoJugador;
 import eventos.EventoLobby;
@@ -22,7 +22,8 @@ import lobbyBuilder.DirectorLobby;
 
 /**
  *
- * @author luisa M
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class ControlLobby extends IControlLobby implements Runnable {
 
@@ -214,8 +215,8 @@ public class ControlLobby extends IControlLobby implements Runnable {
         cliente.enviarEvento(eventoEnviar);
 
         if(manejador.todosListos()){
-            int idContexto = manejador.iniciarPartida();
-            EventoLobby iniciarPartida = director.crearEventoPrepararPartida(manejador.devolverLobby(), idContexto);
+            ReglasDTO reglas = manejador.iniciarPartida();
+            EventoLobby iniciarPartida = director.crearEventoPrepararPartida(reglas);
             cliente.enviarEvento(iniciarPartida);
         }
     }

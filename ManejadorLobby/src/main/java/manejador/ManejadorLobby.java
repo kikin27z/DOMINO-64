@@ -8,23 +8,26 @@ import entidades.Lobby;
 import entidades.Partida;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
+import entidadesDTO.ReglasDTO;
 import entidadesDTO.UnirseDTO;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class ManejadorLobby {
     private final AdaptadorEntidad adaptador;
     private final AdaptadorDTO adaptadorDTO;
     private Lobby lobby;
-    private Partida partida;
+    private int cantiFichas;
     
     public ManejadorLobby() {
         adaptador = new AdaptadorEntidad();
         adaptadorDTO = new AdaptadorDTO();
+        this.cantiFichas = 7;
     }
     
     public boolean validarCambioAvatar(CuentaDTO cuenta){
@@ -40,7 +43,6 @@ public class ManejadorLobby {
     }
     public void iniciarLobby(){
         this.lobby =  new Lobby();
-        this.partida = new Partida();
     }
 
     public LobbyDTO devolverLobby(){
@@ -93,15 +95,13 @@ public class ManejadorLobby {
         return lobby.todosListos();
     }
     
-    public int iniciarPartida(){
-        List<Cuenta> cuentas = lobby.obtenerCuentas();
-        List<Jugador> jugadores = new ArrayList<>();
-        for (Cuenta cuenta : cuentas) {
-            jugadores.add(new Jugador(cuenta));
-        }
-        partida.setJugadores(jugadores);
-        int idContexto = generarIdContextoPartida();
-        return idContexto;
+    public ReglasDTO iniciarPartida(){
+        ReglasDTO reglas = new ReglasDTO();
+        List<CuentaDTO> cuentas = adaptador.adaptarCuentas(lobby.obtenerCuentas());
+        reglas.setCuentas(cuentas);
+        reglas.setCantidadFichas(this.cantiFichas);
+        
+        return reglas;
     }
     
     public int generarIdContextoPartida() {

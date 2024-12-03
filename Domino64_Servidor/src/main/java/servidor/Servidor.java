@@ -1,6 +1,6 @@
-package com.luisa.servidor;
+package servidor;
 
-import com.domino64.base.Publicador;
+import publicadorSuscriptor.Publicador;
 import eventBus.BusCore;
 import eventBus.Publisher;
 import java.io.IOException;
@@ -123,7 +123,7 @@ public class Servidor {
     private void recibirComponentes() {
         Socket socket;
         try {
-            while (clientesComponentes.isEmpty()) {
+            while (clientesComponentes.size() <4) {
                 socket = servidor.accept();
                 componenteId++;
                 Publisher publicador = new Publisher();

@@ -9,7 +9,8 @@ import tiposLogicos.TipoLogicaPozo;
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class DirectorPozo extends DirectorEventos<BuilderEventoPozo> {
     private int idPublicador;
