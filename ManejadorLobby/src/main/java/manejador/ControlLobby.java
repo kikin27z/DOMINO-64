@@ -1,4 +1,4 @@
-package com.domino64.manejador;
+package manejador;
 
 import abstraccion.ICliente;
 import implementacion.Client;
