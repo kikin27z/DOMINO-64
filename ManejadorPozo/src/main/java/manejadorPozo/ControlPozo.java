@@ -1,0 +1,109 @@
+package manejadorPozo;
+
+import domino64.eventos.base.Evento;
+import entidadesDTO.FichaDTO;
+import entidadesDTO.JugadorDTO;
+import entidadesDTO.MazosDTO;
+import entidadesDTO.ReglasDTO;
+import eventos.EventoJugador;
+import eventos.EventoJugadorFicha;
+import eventos.EventoLobby;
+import eventos.EventoPartida;
+import eventos.EventoPozo;
+import implementacion.Client;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import pozoBuilder.BuilderEventoPozo;
+import pozoBuilder.DirectorPozo;
+
+/**
+ *
+ * @author karim
+ */
+public class ControlPozo extends IControlPozo implements Runnable {
+
+    private DirectorPozo director;
+    private int id;
+    private final AtomicBoolean running;
+    private ExecutorService ejecutorEventos;
+    private final ManejadorPozo manejador;
+
+    public ControlPozo() {
+        this.manejador = new ManejadorPozo();
+        setConsumers();
+        ejecutorEventos = Executors.newSingleThreadExecutor();
+        running = new AtomicBoolean(true);
+    }
+
+    public void vincularCliente(Client _cliente) {
+        this.cliente = _cliente;
+        cliente.establecerSuscripciones(eventos);
+        _cliente.iniciar();
+        id = _cliente.getClientId();
+        director = new DirectorPozo(new BuilderEventoPozo(), id);
+        ejecutorEventos.submit(this);
+    }
+
+    public void iniciaConexion() {
+        Client c = Client.iniciarComunicacion();
+
+        for (Enum<?> suscripcion : eventos) {
+            c.addObserver(suscripcion, this);
+        }
+
+        this.vincularCliente(c);
+    }
+
+    @Override
+    public void run() {
+        while (running.get()) {
+            try {
+                Evento nextEvent = colaEventos.take();
+                Consumer<Evento> cons = consumers.get(nextEvent.getTipo());
+                if (cons != null) {
+                    cons.accept(nextEvent);
+                }
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                Logger.getLogger(ControlPozo.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void manejarError(Evento evento) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void repartirFichas(Evento evento) {
+        EventoPartida eventoRecibido = (EventoPartida) evento;
+        ReglasDTO reglas = eventoRecibido.getReglas();
+        MazosDTO mazos = manejador.repartirFichas(reglas);
+        EventoPozo eventoEnviar = director.crearEventoDesignarTurnos(mazos);
+        cliente.enviarEvento(eventoEnviar); 
+    }
+
+    @Override
+    public void jugadorAbandono(Evento evento) {
+        EventoPartida eventoRecibido = (EventoPartida) evento;
+        JugadorDTO jugador = eventoRecibido.getJugador();
+        List<FichaDTO> fichas = jugador.getFichas();
+        manejador.guardarFichasPozo(fichas);
+        
+    }
+
+    @Override
+    public void jalarFicha(Evento evento) {
+        FichaDTO ficha = manejador.jalarPozo();
+        EventoPozo eventoEnviar = director.crearEventoFichaJalada(ficha);
+        cliente.enviarEvento(eventoEnviar);
+    }
+
+}

@@ -1,6 +1,7 @@
 package eventos;
 
 import entidadesDTO.FichaDTO;
+import entidadesDTO.MazosDTO;
 import java.util.List;
 import tiposLogicos.TipoLogicaPozo;
 /**
@@ -8,10 +9,10 @@ import tiposLogicos.TipoLogicaPozo;
  * @author luisa M
  */
 public class EventoPozo extends EventoLogico{
-//    private Object contexto;
     private List<FichaDTO> fichas;
     private FichaDTO ficha;
     private TipoLogicaPozo tipo;
+    private MazosDTO mazos;
     
     public EventoPozo(){}
     
@@ -19,22 +20,28 @@ public class EventoPozo extends EventoLogico{
         super();
         this.tipo = tipo;
     }
-    
-    public void agregarFicha(FichaDTO ficha){
+
+    public MazosDTO getMazos() {
+        return mazos;
+    }
+
+    public void setMazos(MazosDTO mazos) {
+        this.mazos = mazos;
+    }
+
+    public FichaDTO getFicha() {
+        return ficha;
+    }
+
+    public void setFicha(FichaDTO ficha) {
         this.ficha = ficha;
     }
-    
-//    @Override
-//    public void agregarInfo(Object info) {
-//        this.contexto = info;
-//    }
 
-//    @Override
-//    public Object getInfo() {
-//        return contexto;
-//    }
     
-    
+    public void setFichas(List<FichaDTO> fichas) {
+        this.fichas = fichas;
+    }
+
     public List<FichaDTO> getFichas(){
         return fichas;
     }

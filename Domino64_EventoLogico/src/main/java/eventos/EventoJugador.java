@@ -1,11 +1,8 @@
 package eventos;
 
 import entidadesDTO.CuentaDTO;
-import entidadesDTO.FichaDTO;
-import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.LobbyDTO;
-import entidadesDTO.PartidaDTO;
 import entidadesDTO.ReglasDTO;
 import entidadesDTO.UnirseDTO;
 import tiposLogicos.TiposJugador;

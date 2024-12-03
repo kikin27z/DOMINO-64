@@ -12,11 +12,6 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.mycompany</groupId>
-            <artifactId>Observer</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>com.evento.logico</groupId>
             <artifactId>Domino64_EventoLogico</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -31,10 +26,15 @@
             <artifactId>Domino64_Cliente</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.domino64</groupId>
+            <artifactId>Domino64_EventBuilder</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
-        <exec.mainClass>com.luisa.manejador.ManejadorPozo</exec.mainClass>
+        <exec.mainClass>manejadorPozo.PrincipalPozo</exec.mainClass>
     </properties>
 </project>

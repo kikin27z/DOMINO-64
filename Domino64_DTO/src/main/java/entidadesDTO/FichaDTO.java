@@ -53,8 +53,15 @@ public class FichaDTO implements Serializable {
 
     @Override
     public String toString() {
-        return "FichaDTO{" + "izquierda=" + izquierda + ", derecha=" + derecha + '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("FichaDTO[");
+        sb.append(izquierda);
+        sb.append("-").append(derecha);
+        sb.append(']');
+        return sb.toString();
     }
+
+
 
 
 

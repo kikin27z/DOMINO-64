@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidadesDTO;
 
 import java.io.Serializable;
@@ -9,21 +5,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Clase que representa a un jugador en el juego. Cada jugador está asociado a
+ * una cuenta y tiene un conjunto de fichas. Puede seleccionar una ficha
+ * específica de su conjunto para jugar.
  *
  * @author luisa M
  */
 public class JugadorDTO implements Serializable {
+
     private CuentaDTO cuenta;
     private List<FichaDTO> fichas;
     private FichaDTO fichaSeleccionada;
 
-    public JugadorDTO(CuentaDTO cuenta){
+    public JugadorDTO(CuentaDTO cuenta) {
         this.cuenta = cuenta;
     }
-    public JugadorDTO(){
+
+    public JugadorDTO() {
         fichas = new ArrayList<>();
     }
-    
+
     public List<FichaDTO> getFichas() {
         return fichas;
     }
@@ -39,16 +40,16 @@ public class JugadorDTO implements Serializable {
     public void setFichaSeleccionada(FichaDTO fichaSeleccionada) {
         this.fichaSeleccionada = fichaSeleccionada;
     }
-    
-    public void removerFicha(FichaDTO ficha){
+
+    public void removerFicha(FichaDTO ficha) {
         this.fichas.remove(ficha);
     }
-    
-    public CuentaDTO getCuenta(){
+
+    public CuentaDTO getCuenta() {
         return cuenta;
     }
-    
-    public void setCuenta(CuentaDTO cuenta){
+
+    public void setCuenta(CuentaDTO cuenta) {
         this.cuenta = cuenta;
     }
 

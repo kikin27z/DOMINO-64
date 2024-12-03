@@ -1,17 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
- */
 package tiposLogicos;
 
 /**
  * Enumeradores para los tipos de eventos
  * especificos de los turnos
- * @author luisa M
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public enum TipoLogicaTurno {
-    CAMBIO_TURNO,
     TURNOS_DESIGNADOS,
-    JUGADORES_SIN_MULAS,
+    FIN_JUEGO,
     PASAR_TURNO;
 }
