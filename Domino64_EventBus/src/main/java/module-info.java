@@ -11,5 +11,5 @@ module BusExample {
     exports eventBus;
     exports exceptions;
     
-    uses domino64.eventos.base.Evento;
+    uses eventoBase.Evento;
 }

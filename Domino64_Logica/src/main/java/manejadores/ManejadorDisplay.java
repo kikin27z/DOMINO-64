@@ -2,6 +2,7 @@ package manejadores;
 
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
+import entidadesDTO.ResultadosDTO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import presentacion_utilities.DistribuidorEventosModelo;
@@ -40,5 +41,16 @@ public final class ManejadorDisplay {
 
     public void mostrarLobby(CuentaDTO cuenta, LobbyDTO lobby){
         navegacion.cambiarLobby(cuenta, lobby);
+    }
+    public void mostrarPartida(CuentaDTO cuenta){
+        navegacion.cambiarPartida(cuenta);
+    }
+    
+    public void mostrarCreditos(){
+        navegacion.cambiarCreditos();
+    }
+    
+    public void mostrarFinJuego(){
+        navegacion.cambiarFinJuego();
     }
 }

@@ -1,18 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package eventosPartida;
 
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaDTO;
+import entidadesDTO.TurnosDTO;
 import java.util.List;
 
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public interface  ObservablePartidaMVC {
     public void agregarObserver(ObserverPartidaMVC observador);
@@ -22,4 +20,5 @@ public interface  ObservablePartidaMVC {
     public void actualizarDarFichas(List<FichaDTO> fichas);
     public void actualizarDarFicha(FichaDTO ficha);
     public void actualizarTurno(JugadaDTO jugada);
+    public void inicializarPartida(TurnosDTO turnos);
 }

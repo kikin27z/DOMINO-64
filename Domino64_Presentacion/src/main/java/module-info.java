@@ -9,7 +9,7 @@ module utilities {
     requires java.logging;
     requires ManejadorTablero;
 
-    uses domino64.eventos.base.Evento;
+    uses eventoBase.Evento;
     // Exporta y abre el paquete 'utilities' para que otros módulos puedan acceder y cargar FXML
     exports presentacion_utilities;
     opens presentacion_utilities to javafx.fxml;

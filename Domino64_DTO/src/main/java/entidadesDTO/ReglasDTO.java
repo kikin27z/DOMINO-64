@@ -12,11 +12,7 @@ import java.util.List;
  * @author José Karim Franco Valencia - 00000245138
  */
 public class ReglasDTO implements Serializable {
-    
-    // Atributo que almacena la cantidad de fichas en el juego
     private int cantidadFichas;
-    
-    // Atributo que almacena una lista de cuentas de jugadores
     private List<CuentaDTO> cuentas;
 
     /**

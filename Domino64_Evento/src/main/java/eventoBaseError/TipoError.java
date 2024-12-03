@@ -1,4 +1,4 @@
-package domino64.eventos.base.error;
+package eventoBaseError;
 
 /**
  *

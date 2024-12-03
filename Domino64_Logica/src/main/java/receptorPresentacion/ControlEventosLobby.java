@@ -40,7 +40,7 @@ public class ControlEventosLobby extends ControlEventos implements ObserverLobby
     @Override
     public void avisarAbandonar() {
         hiloPrincipal.execute(() -> {
-            manejadorNotificador.abandonarPartida();
+            manejadorNotificador.abandonarLobby();
         });
     }
 

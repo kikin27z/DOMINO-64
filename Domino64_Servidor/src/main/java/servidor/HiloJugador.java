@@ -1,13 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package servidor;
 
+import eventoBaseSuscripcion.TipoSuscripcion;
+import eventoBaseSuscripcion.EventoSuscripcion;
 import publicadorSuscriptor.Publicador;
-import domino64.eventos.base.Evento;
-import domino64.eventos.base.error.TipoError;
-import domino64.eventos.base.suscripcion.*;
+import eventoBase.Evento;
+import eventoBaseError.TipoError;
 import eventBus.Subscriber;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -23,20 +20,22 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author luisa M
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
-public class HiloJugador implements Runnable, Subscriber{
-    private final int id;
-    private int idContexto;
-    private Socket socket;
-    private final Publicador publicador;
+public class HiloJugador implements Runnable, Subscriber {
+
     private ObjectOutputStream output;
     private ObjectInputStream input;
     private List<Enum> suscripciones;
+    private int idContexto;
+    private final int id;
     private volatile boolean running;
-    private ExecutorService ejecutorEventos;
-    private BlockingQueue<Evento> colaEventosBus;
-    
+    private final Publicador publicador;
+    private final Socket socket;
+    private final ExecutorService ejecutorEventos;
+    private final BlockingQueue<Evento> colaEventosBus;
+
     public HiloJugador(Publicador publicador, Socket socket, int id) {
         this.publicador = publicador;
         this.id = id;
@@ -46,16 +45,16 @@ public class HiloJugador implements Runnable, Subscriber{
         initStream();
     }
 
-    protected Socket getSocket(){
+    protected Socket getSocket() {
         return socket;
     }
-    
-    private void initStream(){
-        if(socket!=null){
+
+    private void initStream() {
+        if (socket != null) {
             try {
                 output = new ObjectOutputStream(socket.getOutputStream());
                 input = new ObjectInputStream(socket.getInputStream());
-                
+
             } catch (IOException ex) {
                 running = false;
                 Logger.getLogger(HiloJugador.class.getName()).log(Level.SEVERE, null, ex);
@@ -63,15 +62,15 @@ public class HiloJugador implements Runnable, Subscriber{
             }
         }
     }
-    
+
     /**
-     * Metodo usado para enviarle al cliente (al jugador) los eventos 
-     * recibidos del bus.
-     * 
+     * Metodo usado para enviarle al cliente (al jugador) los eventos recibidos
+     * del bus.
+     *
      */
-    private void enviarEvento(){
+    private void enviarEvento() {
         new Thread(() -> {
-            while(running){
+            while (running) {
                 try {
                     Evento ev = colaEventosBus.take();
                     synchronized (output) {
@@ -89,21 +88,21 @@ public class HiloJugador implements Runnable, Subscriber{
                 }
             }
         }).start();
-        
+
     }
-    
+
     /**
-     * Este metodo recibe la lista de suscripciones del jugador.
-     * Son todos los tipos de eventos que le interesa recibir al jugador,
-     * por lo tanto, al obtener la lista, esta clase se suscribe a dichos eventos
-     * para recibir los eventos del bus y despues enviarselos al jugador 
-     * mediante el socket.
-     * 
-     * @throws IOException En caso de que ocurra un error al leer las suscripciones recibidas
+     * Este metodo recibe la lista de suscripciones del jugador. Son todos los
+     * tipos de eventos que le interesa recibir al jugador, por lo tanto, al
+     * obtener la lista, esta clase se suscribe a dichos eventos para recibir
+     * los eventos del bus y despues enviarselos al jugador mediante el socket.
+     *
+     * @throws IOException En caso de que ocurra un error al leer las
+     * suscripciones recibidas
      * @throws ClassNotFoundException En caso de que el objeto recibido no sea
      * una lista de enum y genere un error de casteo
      */
-    private void recibirSuscripciones() throws IOException, ClassNotFoundException{
+    private void recibirSuscripciones() throws IOException, ClassNotFoundException {
         suscripciones = null;
         suscripciones = (List<Enum>) input.readObject();
 
@@ -113,48 +112,49 @@ public class HiloJugador implements Runnable, Subscriber{
             }
         }
     }
-    
+
     /**
-     * suscribe esta clase al evento especificado en 
-     * el parametro
-     * 
+     * suscribe esta clase al evento especificado en el parametro
+     *
      * @param tipoEvento Tipo de evento al cual se va a suscribir
      */
-    private void suscribirEvento(Enum tipoEvento){
-       publicador.suscribir(tipoEvento,this);
-    }
-    
-    /**
-     * desuscribe esta clase del evento especificado en 
-     * el parametro
-     * 
-     * @param tipoEvento Tipo de evento al cual se va a desuscribir
-     */
-    private void removerSuscripcion(Enum tipoEvento){
-        publicador.desuscribir(tipoEvento,this);
+    private void suscribirEvento(Enum tipoEvento) {
+        publicador.suscribir(tipoEvento, this);
     }
 
     /**
-     * remueve las suscripciones de esta clase de todos los 
-     * eventos en el bus
+     * desuscribe esta clase del evento especificado en el parametro
+     *
+     * @param tipoEvento Tipo de evento al cual se va a desuscribir
      */
-    private void removerSuscripciones(){
+    private void removerSuscripcion(Enum tipoEvento) {
+        publicador.desuscribir(tipoEvento, this);
+    }
+
+    /**
+     * remueve las suscripciones de esta clase de todos los eventos en el bus
+     */
+    private void removerSuscripciones() {
         for (Enum suscripcion : suscripciones) {
             removerSuscripcion(suscripcion);
         }
     }
-    
+
     private void manejarEvento(Evento evento) {
         Enum tipo = evento.getTipo();
-        if(tipo instanceof TipoSuscripcion tipoSub){
-            EventoSuscripcion suscripcion = (EventoSuscripcion)evento;
-            switch(tipoSub){
-                case SUSCRIBIR-> suscribirEvento(suscripcion.getEventoSuscripcion());
-                case DESUSCRIBIR->removerSuscripcion(suscripcion.getEventoSuscripcion());
-                case ESTABLECER_ID_CONTEXTO->setIdContexto(evento.getIdContexto());
-                case REMOVER_ID_CONTEXTO->setIdContexto(0);
+        if (tipo instanceof TipoSuscripcion tipoSub) {
+            EventoSuscripcion suscripcion = (EventoSuscripcion) evento;
+            switch (tipoSub) {
+                case SUSCRIBIR ->
+                    suscribirEvento(suscripcion.getEventoSuscripcion());
+                case DESUSCRIBIR ->
+                    removerSuscripcion(suscripcion.getEventoSuscripcion());
+                case ESTABLECER_ID_CONTEXTO ->
+                    setIdContexto(evento.getIdContexto());
+                case REMOVER_ID_CONTEXTO ->
+                    setIdContexto(0);
             }
-        }else {
+        } else {
             publicador.publicarEvento(tipo, evento);
         }
     }
@@ -168,17 +168,17 @@ public class HiloJugador implements Runnable, Subscriber{
                 output.writeInt(id);
                 output.flush();
             }
-            
+
             recibirSuscripciones();
-            
+
             enviarEvento();
-            
-            while(running){ 
+
+            while (running) {
                 Object obj = input.readObject();
-                Evento ev = (Evento)obj;
-                ejecutorEventos.submit(()-> {
+                Evento ev = (Evento) obj;
+                ejecutorEventos.submit(() -> {
                     manejarEvento(ev);
-                    System.out.println("ev: "+ev);
+                    System.out.println("ev: " + ev);
                 });
             }
         } catch (IOException | ClassNotFoundException ex) {
@@ -188,7 +188,7 @@ public class HiloJugador implements Runnable, Subscriber{
             Servidor.desconectarJugador(id);
         }
     }
-    
+
     public void setIdContexto(int id) {
         this.idContexto = id;
     }
@@ -197,19 +197,22 @@ public class HiloJugador implements Runnable, Subscriber{
     public int getIdContexto() {
         return idContexto;
     }
+
     @Override
     public int getSubscriberId() {
         return id;
     }
 
     /**
-     * Metodo para comparar este suscriptor con otro.
-     * El criterio de comparacion son los id de cada suscriptor.
-     * 
-     * @param other El suscriptor con el cual se va a comparar esta clase suscriptora
-     * @return 0 si este suscriptor tiene el mismo id que el suscriptor del parametro,
-     * -1 si el id de este suscriptor es menor que el id del suscriptor del parametro,
-     * y 1 si el id de este suscriptor es mayor que el id del suscriptor del parametro
+     * Metodo para comparar este suscriptor con otro. El criterio de comparacion
+     * son los id de cada suscriptor.
+     *
+     * @param other El suscriptor con el cual se va a comparar esta clase
+     * suscriptora
+     * @return 0 si este suscriptor tiene el mismo id que el suscriptor del
+     * parametro, -1 si el id de este suscriptor es menor que el id del
+     * suscriptor del parametro, y 1 si el id de este suscriptor es mayor que el
+     * id del suscriptor del parametro
      */
     @Override
     public int compareTo(Subscriber other) {
@@ -217,12 +220,11 @@ public class HiloJugador implements Runnable, Subscriber{
     }
 
     /**
-     * metodo para recibir los eventos que lleguen del bus.
-     * Una vez que recibe el evento, se agrega a la cola de 
-     * eventos que provienen del bus
-     * En caso de que el evento sea uno de tipo error de servidor, se
-     * va a cerrar la conexion con el servidor
-     * 
+     * metodo para recibir los eventos que lleguen del bus. Una vez que recibe
+     * el evento, se agrega a la cola de eventos que provienen del bus En caso
+     * de que el evento sea uno de tipo error de servidor, se va a cerrar la
+     * conexion con el servidor
+     *
      * @param evento Evento recibido del bus
      */
     @Override

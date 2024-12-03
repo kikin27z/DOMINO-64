@@ -1,6 +1,6 @@
 package comunicadores_logica;
 
-import domino64.eventos.base.Evento;
+import eventoBase.Evento;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
 import eventos.EventoLobby;
@@ -21,7 +21,8 @@ import utilities.DirectorSuscripcion;
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     private int id;
@@ -192,12 +193,12 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
         CuentaDTO cuentaAbandono = eventoLobby.getPublicador();
         System.out.println(eventoLobby);
         
-        if(eventoLobby.getIdDestinatario() == id){
-            manejadorCuenta.borrarPerfil();
-            display.mostrarInicio();
-        }else{
-            distribuidor.actualizarQuitarCuenta(cuentaAbandono);
-        }
+//        if(eventoLobby.getIdDestinatario() == id){
+//            manejadorCuenta.borrarPerfil();
+//            display.mostrarInicio();
+//        }else{
+//            distribuidor.actualizarQuitarCuenta(cuentaAbandono);
+//        }
         
     }
 

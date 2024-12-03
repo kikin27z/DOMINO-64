@@ -36,15 +36,10 @@
             <artifactId>Domino64_EventBuilder</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>ManejadorPozo</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
-        <exec.mainClass>manejadorTurnos.Principal</exec.mainClass>
+        <exec.mainClass>main.MainTurnos</exec.mainClass>
     </properties>
 </project>

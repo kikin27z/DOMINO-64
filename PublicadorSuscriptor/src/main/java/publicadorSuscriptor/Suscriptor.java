@@ -1,6 +1,6 @@
 package publicadorSuscriptor;
 
-import domino64.eventos.base.Evento;
+import eventoBase.Evento;
 
 /**
  * Interfaz para representar a los suscriptores de cualquier tipo de evento.

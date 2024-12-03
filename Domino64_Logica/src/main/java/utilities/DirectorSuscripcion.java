@@ -4,8 +4,9 @@
  */
 package utilities;
 
+import eventoBaseSuscripcion.EventoSuscripcion;
+import eventoBaseSuscripcion.TipoSuscripcion;
 import builder.DirectorEventos;
-import domino64.eventos.base.suscripcion.*;
 /**
  *
  * @author luisa M

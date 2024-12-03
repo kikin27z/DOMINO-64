@@ -1,5 +1,6 @@
 package eventos;
 
+import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
 import tiposLogicos.TipoJugadorFicha;
@@ -12,6 +13,7 @@ public class EventoJugadorFicha extends EventoLogico {
     private TipoJugadorFicha tipo;
     private JugadaRealizadaDTO jugada;
     private FichaDTO ficha;
+    private CuentaDTO cuenta;
 
     public EventoJugadorFicha() {
     }
@@ -19,6 +21,19 @@ public class EventoJugadorFicha extends EventoLogico {
     public EventoJugadorFicha(TipoJugadorFicha tipo) {
         this.tipo = tipo;
     }
+
+    public void setTipo(TipoJugadorFicha tipo) {
+        this.tipo = tipo;
+    }
+
+    public CuentaDTO getCuenta() {
+        return cuenta;
+    }
+
+    public void setCuenta(CuentaDTO cuenta) {
+        this.cuenta = cuenta;
+    }
+    
     
     @Override
     public TipoJugadorFicha getTipo() {

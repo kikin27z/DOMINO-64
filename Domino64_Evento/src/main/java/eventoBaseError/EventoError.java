@@ -1,6 +1,6 @@
-package domino64.eventos.base.error;
+package eventoBaseError;
 
-import domino64.eventos.base.Evento;
+import eventoBase.Evento;
 
 /**
  * Clase que representa los eventos de error que se den. Se puede ver como un
@@ -55,10 +55,5 @@ public class EventoError implements Evento<TipoError> {
 
     public void setIdPublicador(int id) {
         this.idPublicador = id;
-    }
-
-    @Override
-    public int getIdDestinatario() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

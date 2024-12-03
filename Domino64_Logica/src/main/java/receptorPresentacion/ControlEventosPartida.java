@@ -4,26 +4,49 @@ import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
 import eventosPartida.ObserverPartida;
 import java.util.concurrent.ExecutorService;
+import manejadores.Control;
 import manejadores.ManejadorDisplay;
+import manejadores.ManejadorNotificador;
 
 /**
  *
  * @author karim
  */
 public class ControlEventosPartida extends ControlEventos implements ObserverPartida{
+    private final ManejadorNotificador manejadorNotificador;
 
     public ControlEventosPartida(ExecutorService hiloPrincipal, ManejadorDisplay display) {
         super(hiloPrincipal, display);
+                this.manejadorNotificador = Control.obtenerNotificador();
+
     }
 
     @Override
     public void avisarJugadaRealizada(JugadaRealizadaDTO jugadaDTO) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        hiloPrincipal.execute(() -> {
+            manejadorNotificador.enviarJugadaRealizada(jugadaDTO);
+        });
     }
 
     @Override
-    public void avisarFichaSeleccionada(FichaDTO contexto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void avisarJalarFichaPozo() {
+        hiloPrincipal.execute(() -> {
+            manejadorNotificador.jalarFichaPozo();
+        });
     }
-    
+
+    @Override
+    public void avisarAbandonarPartida() {
+        hiloPrincipal.execute(() -> {
+            manejadorNotificador.abandonarPartida();
+        });
+    }
+
+    @Override
+    public void avisarPeticionRendirse() {
+        hiloPrincipal.execute(() -> {
+            manejadorNotificador.peticionRendirse();
+        });
+    }
+
 }

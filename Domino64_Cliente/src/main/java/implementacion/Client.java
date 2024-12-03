@@ -1,10 +1,10 @@
 package implementacion;
 
 import abstraccion.ICliente;
-import domino64.eventos.base.Evento;
-import domino64.eventos.base.error.EventoError;
-import domino64.eventos.base.error.TipoError;
-import domino64.eventos.base.suscripcion.EventoSuscripcion;
+import eventoBase.Evento;
+import eventoBaseError.EventoError;
+import eventoBaseError.TipoError;
+import eventoBaseSuscripcion.EventoSuscripcion;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

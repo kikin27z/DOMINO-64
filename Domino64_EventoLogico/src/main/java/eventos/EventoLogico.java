@@ -1,6 +1,6 @@
 package eventos;
 
-import domino64.eventos.base.Evento;
+import eventoBase.Evento;
 
 /**
  * Clase que define todos los eventos logicos.
@@ -52,10 +52,7 @@ public abstract class EventoLogico implements Evento{
     public int getIdPublicador(){
         return idPublicador;
     }
-    @Override
-    public int getIdDestinatario(){
-        return idDestinatario;
-    }
+
 
     public EventoLogico(int idPublicador, int idDestinatario, int idContexto) {
         this.idPublicador = idPublicador;

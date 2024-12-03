@@ -7,7 +7,9 @@ import entidades.Ficha;
 import entidades.Jugador;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
+import entidadesDTO.JugadorDTO;
 import entidadesDTO.MazosDTO;
+import entidadesDTO.TurnosDTO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,6 +23,7 @@ import java.util.Map;
  * @author José Karim Franco Valencia - 00000245138
  */
 public class ManejadorTurnos {
+
     private LinkedList<String> orden = new LinkedList<>();
     private final AdaptadorEntidad adaptador;
     private final AdaptadorDTO adaptadorDTO;
@@ -33,10 +36,10 @@ public class ManejadorTurnos {
 
     public CuentaDTO rotarSiguienteTurno() {
         String turnoActual = orden.getFirst();
-        
+
         String aux = orden.removeFirst();
         orden.addLast(aux);
-        
+
         CuentaDTO cuenta = new CuentaDTO();
         cuenta.setIdCadena(turnoActual);
         System.out.println("Le toca a " + cuenta.getIdCadena());
@@ -88,16 +91,32 @@ public class ManejadorTurnos {
         return or;
     }
 
-    public void determinarOrden(MazosDTO mazos) {
+    private TurnosDTO crearTurnoDTO(Map<String, Jugador> mazosJugadores, LinkedList<String> orden) {
+        TurnosDTO turnos = new TurnosDTO();
+        Map<String, JugadorDTO> mazosTurno = new HashMap<>();
+        for (Map.Entry<String, Jugador> entry : mazosJugadores.entrySet()) {
+            mazosTurno.put(entry.getKey(), adaptador.adaptarEntidadJugador(entry.getValue()));
+        }
+        turnos.setMazos(mazosTurno);
+
+        turnos.setOrden(orden);
+        return turnos;
+    }
+
+    public TurnosDTO determinarOrden(MazosDTO mazos) {
         List<Cuenta> cuentas = adaptadorDTO.adaptarCuentasDTO(mazos.getCuentas());
- 
+
         List<List<Ficha>> fichas = devolverMazos(mazos.getMazos());
 
-        Map<String, Jugador> j = entregarFichaJugadores(cuentas, fichas);
-        String primerJugador = determinarPrimerJugador(j);
-        orden = crearTurnos(primerJugador , j);
+        Map<String, Jugador> mapeoMazos = entregarFichaJugadores(cuentas, fichas);
+        String primerJugador = determinarPrimerJugador(mapeoMazos);
+        orden = crearTurnos(primerJugador, mapeoMazos);
+        TurnosDTO turnos = crearTurnoDTO(mapeoMazos, orden);
+
         imprimirTurnos(orden);
-        System.out.println(j);
+        System.out.println(mapeoMazos);
+        
+        return turnos;
     }
 
     private void imprimirTurnos(LinkedList<String> orden) {
@@ -114,13 +133,13 @@ public class ManejadorTurnos {
             }
         }
     }
-    
-    private List<List<Ficha>> devolverMazos(List<List<FichaDTO>> mazosDTO){
+
+    private List<List<Ficha>> devolverMazos(List<List<FichaDTO>> mazosDTO) {
         List<List<Ficha>> mazos = new ArrayList<>();
         for (List<FichaDTO> mazo : mazosDTO) {
             List<Ficha> fichas = adaptadorDTO.adaptarFichaDTO(mazo);
             mazos.add(fichas);
-            
+
         }
         return mazos;
     }

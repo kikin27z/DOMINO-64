@@ -1,6 +1,6 @@
-package domino64.eventos.base.suscripcion;
+package eventoBaseSuscripcion;
 
-import domino64.eventos.base.Evento;
+import eventoBase.Evento;
 
 /**
  *
@@ -57,10 +57,6 @@ public class EventoSuscripcion implements Evento<TipoSuscripcion> {
         return evento;
     }
 
-    @Override
-    public int getIdDestinatario() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 
     @Override
     public int getIdPublicador() {

@@ -30,7 +30,8 @@ import java.util.logging.Logger;
  * se usa un CachedThreadPool para crear hilos segun se vayan conectando los
  * jugadores.
  *
- * @author luisa M
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class Servidor {
 
@@ -74,7 +75,7 @@ public class Servidor {
             HiloJugador jugador = clientesJugadores.get(idCliente);
             Socket socket = jugador.getSocket();
             try {
-                if(!socket.isClosed()){
+                if (!socket.isClosed()) {
                     socket.getInputStream().close();
                     socket.getOutputStream().close();
                     socket.close();
@@ -100,7 +101,7 @@ public class Servidor {
             HiloComponente componente = clientesComponentes.get(idCliente);
             Socket socket = componente.getSocket();
             try {
-                if(!socket.isClosed()){
+                if (!socket.isClosed()) {
                     socket.getInputStream().close();
                     socket.getOutputStream().close();
                     socket.close();
@@ -123,7 +124,7 @@ public class Servidor {
     private void recibirComponentes() {
         Socket socket;
         try {
-            while (clientesComponentes.size() <4) {
+            while (clientesComponentes.size() < 5) {
                 socket = servidor.accept();
                 componenteId++;
                 Publisher publicador = new Publisher();
@@ -213,7 +214,7 @@ public class Servidor {
         s.initServer();
     }
 
-    private void imprimirIP(){
+    private void imprimirIP() {
         try {
             System.out.println("Servidor iniciado en puerto: " + port);
             System.out.println("IPs disponibles:");

@@ -1,9 +1,9 @@
-package manejador;
+package manejadorLobby;
 
 import implementacion.Client;
-import domino64.eventos.base.Evento;
-import domino64.eventos.base.error.EventoError;
-import domino64.eventos.base.error.TipoError;
+import eventoBase.Evento;
+import eventoBaseError.EventoError;
+import eventoBaseError.TipoError;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.ReglasDTO;
@@ -27,11 +27,11 @@ import lobbyBuilder.DirectorLobby;
  */
 public class ControlLobby extends IControlLobby implements Runnable {
 
-    private static DirectorLobby director;
-    private static int id;
+    private int id;
+    private DirectorLobby director;
     private final AtomicBoolean running;
-    private static ExecutorService ejecutorEventos;
     private final ManejadorLobby manejador;
+    private final ExecutorService ejecutorEventos;
 
     public ControlLobby() {
         this.manejador = new ManejadorLobby();
@@ -171,7 +171,7 @@ public class ControlLobby extends IControlLobby implements Runnable {
         }
     }
 
-    public void vincularCliente(Client _cliente) {
+    private void vincularCliente(Client _cliente) {
         this.cliente = _cliente;
         cliente.establecerSuscripciones(eventos);
         _cliente.iniciar();
@@ -180,6 +180,7 @@ public class ControlLobby extends IControlLobby implements Runnable {
         ejecutorEventos.submit(this);
     }
 
+    @Override
     public void iniciaConexion() {
         Client c = Client.iniciarComunicacion();
 
