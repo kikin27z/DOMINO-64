@@ -2,26 +2,32 @@ package manejadores;
 
 import comunicadores_logica.IReceptorEventosLogica;
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.ReglasDTO;
 import entidadesDTO.UnirseDTO;
 import eventos.EventoJugador;
+import eventos.EventoJugadorFicha;
 import tiposLogicos.TipoLogicaLobby;
 import tiposLogicos.TipoLogicaPartida;
 import utilities.DirectorJugador;
+import utilities.DirectorJugadorFicha;
 
 /**
  * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author José Karim Franco Valencia - 00000245138
  */
 public class ManejadorNotificador {
+
     private final ManejadorCuenta manejadorCuenta;
     private final DirectorJugador directorEventos;
+    private final DirectorJugadorFicha directorEventosFicha;
     private final IReceptorEventosLogica receptor;
 
     public ManejadorNotificador() {
         manejadorCuenta = Control.obtenerManejadorCuenta();
         receptor = Control.obtenerReceptor();
         directorEventos = new DirectorJugador(receptor.devolverIdCliente());
+        directorEventosFicha = new DirectorJugadorFicha(receptor.devolverIdCliente());
     }
 
     public void crearPartida() {
@@ -30,20 +36,13 @@ public class ManejadorNotificador {
         receptor.enviarEvento(crear);
         receptor.agregarSuscripcion(TipoLogicaLobby.PARTIDA_CREADA, receptor::partidaCreada);
     }
-    
-    
-    public void unirsePartida(UnirseDTO unirse){
+
+    public void unirsePartida(UnirseDTO unirse) {
         CuentaDTO cuentaDTO = manejadorCuenta.getCuenta();
         unirse.setCuenta(cuentaDTO);
         EventoJugador crear = directorEventos.crearEventoUnirsePartida(unirse);
         receptor.enviarEvento(crear);
         receptor.agregarSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA, receptor::partidaEncontrada);
-    }
-
-    public void abandonarPartida() {
-        CuentaDTO cuenta = manejadorCuenta.getCuenta();
-        EventoJugador abandonar = directorEventos.crearEventoAbandonarPartida(cuenta);
-        receptor.enviarEvento(abandonar);
     }
 
     public void abandonarLobby() {
@@ -58,19 +57,42 @@ public class ManejadorNotificador {
         EventoJugador listo = directorEventos.crearEventoCuentaLista(cuenta);
         receptor.enviarEvento(listo);
     }
-    public void cuentaNoLista(){
+
+    public void cuentaNoLista() {
         CuentaDTO cuenta = manejadorCuenta.getCuenta();
         EventoJugador noListo = directorEventos.crearEventoCuentaNoLista(cuenta);
         receptor.enviarEvento(noListo);
     }
-    
-    public void cambiarReglas(ReglasDTO reglas){
+
+    public void cambiarReglas(ReglasDTO reglas) {
         EventoJugador cambiarReglas = directorEventos.crearEventoActualizarConfigPartida(reglas);
         receptor.enviarEvento(cambiarReglas);
     }
-    
-    public void cambiarAvatar(CuentaDTO cuentaActualizada){
+
+    public void cambiarAvatar(CuentaDTO cuentaActualizada) {
         EventoJugador cambiarAvatar = directorEventos.crearEventoCambiarAvatar(cuentaActualizada);
         receptor.enviarEvento(cambiarAvatar);
+    }
+
+    //----------------------------------Eventos Partida----------------------------------
+    public void enviarJugadaRealizada(JugadaRealizadaDTO jugada) {
+        EventoJugadorFicha evento = directorEventosFicha.crearEventoJugadaRealizada(jugada);
+        receptor.enviarEvento(evento);
+    }
+
+    public void jalarFichaPozo() {
+        CuentaDTO cuenta = manejadorCuenta.getCuenta();
+        EventoJugadorFicha evento = directorEventosFicha.crearEventoJalarPozo(cuenta);
+        receptor.enviarEvento(evento);
+    }
+
+    public void abandonarPartida() {
+        CuentaDTO cuenta = manejadorCuenta.getCuenta();
+        EventoJugador abandonar = directorEventos.crearEventoAbandonarPartida(cuenta);
+        receptor.enviarEvento(abandonar);
+    }
+
+    public void peticionRendirse() {
+
     }
 }

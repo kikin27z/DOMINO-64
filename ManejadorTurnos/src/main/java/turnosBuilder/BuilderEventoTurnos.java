@@ -1,7 +1,7 @@
 package turnosBuilder;
 
 import builder.EventBuilder;
-import domino64.eventos.base.Evento;
+import eventoBase.Evento;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.TurnosDTO;
 import eventos.EventoTurno;

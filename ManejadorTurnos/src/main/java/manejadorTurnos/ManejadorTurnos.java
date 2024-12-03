@@ -23,6 +23,7 @@ import java.util.Map;
  * @author José Karim Franco Valencia - 00000245138
  */
 public class ManejadorTurnos {
+
     private LinkedList<String> orden = new LinkedList<>();
     private final AdaptadorEntidad adaptador;
     private final AdaptadorDTO adaptadorDTO;
@@ -53,10 +54,10 @@ public class ManejadorTurnos {
     
     public CuentaDTO rotarSiguienteTurno() {
         String turnoActual = orden.getFirst();
-        
+
         String aux = orden.removeFirst();
         orden.addLast(aux);
-        
+
         CuentaDTO cuenta = new CuentaDTO();
         cuenta.setIdCadena(turnoActual);
         System.out.println("Le toca a " + cuenta.getIdCadena());
@@ -152,13 +153,13 @@ public class ManejadorTurnos {
         }
         return orden;
     }
-    
-    private List<List<Ficha>> devolverMazos(List<List<FichaDTO>> mazosDTO){
+
+    private List<List<Ficha>> devolverMazos(List<List<FichaDTO>> mazosDTO) {
         List<List<Ficha>> mazos = new ArrayList<>();
         for (List<FichaDTO> mazo : mazosDTO) {
             List<Ficha> fichas = adaptadorDTO.adaptarFichaDTO(mazo);
             mazos.add(fichas);
-            
+
         }
         return mazos;
     }

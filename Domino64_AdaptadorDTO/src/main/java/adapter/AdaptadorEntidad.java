@@ -106,7 +106,7 @@ public class AdaptadorEntidad {
         }
         
         return dto;
-    } 
+    }
     
     /**
      * Convierte una entidad Cuenta a su correspondiente DTO.

@@ -4,7 +4,7 @@
  */
 package lobby;
 
-import domino64.eventos.base.Evento;
+import eventoBase.Evento;
 import javafx.scene.Node;
 
 
@@ -42,10 +42,6 @@ public class EventoLobbyMVC implements Evento<TipoLobbyMVC>{
         return 0;
     }
 
-    @Override
-    public int getIdDestinatario() {        
-        return 0;
-    }
 
     @Override
     public int getIdContexto() {

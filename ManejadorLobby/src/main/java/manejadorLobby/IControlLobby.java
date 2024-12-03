@@ -1,8 +1,8 @@
-package manejador;
+package manejadorLobby;
 
 import abstraccion.ICliente;
-import domino64.eventos.base.Evento;
-import domino64.eventos.base.error.TipoError;
+import eventoBase.Evento;
+import eventoBaseError.TipoError;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +20,9 @@ import observer.Observer;
  */
 public abstract class IControlLobby implements Observer<Evento> {
     protected ICliente cliente;
-    protected static BlockingQueue<Evento> colaEventos;
+    protected BlockingQueue<Evento> colaEventos;
     protected Map<Enum, Consumer<Evento>> consumers;
-    protected static final List<Enum> eventos = new ArrayList<>(
+    protected final List<Enum> eventos = new ArrayList<>(
             List.of(
                     TipoError.ERROR_DE_SERVIDOR,
                     TiposJugador.ABANDONAR_LOBBY,
@@ -71,6 +71,7 @@ public abstract class IControlLobby implements Observer<Evento> {
         return eventos;
     }
     
+    public abstract void iniciaConexion();
     public abstract int devolverIdCliente();
     public abstract void abandonoCuenta(Evento evento);
     public abstract void unirsePartida(Evento evento);

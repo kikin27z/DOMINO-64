@@ -1,4 +1,4 @@
-package manejador;
+package manejadorLobby;
 
 import adapter.AdaptadorDTO;
 import adapter.AdaptadorEntidad;

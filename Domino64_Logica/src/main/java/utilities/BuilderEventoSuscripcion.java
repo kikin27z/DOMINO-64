@@ -1,7 +1,8 @@
 package utilities;
 
+import eventoBaseSuscripcion.EventoSuscripcion;
+import eventoBaseSuscripcion.TipoSuscripcion;
 import builder.EventBuilder;
-import domino64.eventos.base.suscripcion.*;
 /**
  *
  * @author Luisa Fernanda Morales Espinoza - 00000233450

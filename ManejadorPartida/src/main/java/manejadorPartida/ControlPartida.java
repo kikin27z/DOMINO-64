@@ -1,13 +1,14 @@
 package manejadorPartida;
 
-import domino64.eventos.base.Evento;
-import domino64.eventos.base.error.EventoError;
+//import domino64.eventos.base.Evento;
+//import domino64.eventos.base.error.EventoError;
 import entidadesDTO.PartidaIniciadaDTO;
-import entidadesDTO.ReglasDTO;
 import entidadesDTO.TurnosDTO;
+import eventos.EventoTurno;
+import eventoBase.Evento;
+import entidadesDTO.ReglasDTO;
 import eventos.EventoLobby;
 import eventos.EventoPartida;
-import eventos.EventoTurno;
 import implementacion.Client;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,12 +25,11 @@ import partidaBuilder.DirectorPartida;
  * @author José Karim Franco Valencia - 00000245138
  */
 public class ControlPartida extends IControlPartida implements Runnable {
-
-    private DirectorPartida director;
     private int id;
+    private DirectorPartida director;
     private final AtomicBoolean running;
-    private ExecutorService ejecutorEventos;
     private final ManejadorPartida manejador;
+    private final ExecutorService ejecutorEventos;
 
     public ControlPartida() {
         this.manejador = new ManejadorPartida();
@@ -55,7 +55,7 @@ public class ControlPartida extends IControlPartida implements Runnable {
         }
     }
 
-    public void vincularCliente(Client _cliente) {
+    private void vincularCliente(Client _cliente) {
         this.cliente = _cliente;
         cliente.establecerSuscripciones(eventos);
         _cliente.iniciar();
@@ -64,6 +64,7 @@ public class ControlPartida extends IControlPartida implements Runnable {
         ejecutorEventos.submit(this);
     }
 
+    @Override
     public void iniciaConexion() {
         Client c = Client.iniciarComunicacion();
 

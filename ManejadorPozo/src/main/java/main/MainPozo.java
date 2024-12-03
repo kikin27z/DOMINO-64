@@ -1,4 +1,4 @@
-package manejadorPozo;
+package main;
 
 import entidades.Ficha;
 import entidadesDTO.CuentaDTO;
@@ -7,17 +7,19 @@ import entidadesDTO.ReglasDTO;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import manejadorPozo.ControlPozo;
+import manejadorPozo.IControlPozo;
 
 /**
  *
  * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author José Karim Franco Valencia - 00000245138
  */
-public class PrincipalPozo {
+public class MainPozo {
 
     public static void main(String[] args) {
-        ControlPozo manejador = new ControlPozo();
-        manejador.iniciaConexion();
+        IControlPozo pozo = new ControlPozo();
+        pozo.iniciaConexion();
 //        ManejadorPozo mp = new ManejadorPozo();
 //
 //        List<CuentaDTO> cuentas = new ArrayList<>();

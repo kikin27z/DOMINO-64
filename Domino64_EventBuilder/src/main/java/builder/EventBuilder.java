@@ -1,6 +1,6 @@
 package builder;
 
-import domino64.eventos.base.Evento;
+import eventoBase.Evento;
 
 /**
  * Interfaz para construir eventos personalizados en el sistema.

@@ -1,9 +1,9 @@
 package comunicadores_logica;
 
 import abstraccion.ICliente;
-import domino64.eventos.base.Evento;
-import domino64.eventos.base.error.TipoError;
-import domino64.eventos.base.suscripcion.EventoSuscripcion;
+import eventoBase.Evento;
+import eventoBaseError.TipoError;
+import eventoBaseSuscripcion.EventoSuscripcion;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

@@ -7,6 +7,7 @@ import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.PosibleJugadaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaIniciadaDTO;
+import entidadesDTO.TurnosDTO;
 import eventosPartida.ObserverPartida;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +40,10 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
     private FichaDTO fichaSeleccionada;
     private Canvas dibujoSeleccionado;
     private PartidaIniciadaDTO partida;
+    private CuentaDTO cuentaActual;
     
-    public PartidaModel() {
+    public PartidaModel(CuentaDTO cuenta) {
+        cuentaActual = cuenta;
         mapeoFichas = new HashMap<>();
         this.esMiTurno = true;
         this.primeraJugadaHecha = true;
@@ -60,19 +63,8 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
         this.logicaObservers.remove(observador);
     }
 
-    @Override
-    public void avisarJugadaRealizada(JugadaRealizadaDTO jugadaDTO) {
-        for (var observer : logicaObservers) {
-            observer.avisarJugadaRealizada(jugadaDTO);
-        }
-    }
 
-    @Override
-    public void avisarFichaSeleccionada(FichaDTO ficha) {
-        for (var observer : logicaObservers) {
-            observer.avisarFichaSeleccionada(ficha);
-        }
-    }
+
 
     //--------------Métodos notificadores de logica-------------------
     public JugadaRealizadaDTO crearJugadaRealizada(DibujoJugada dibujo){
@@ -232,6 +224,32 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
     @Override
     public void actualizarJugadorSeRindio(CuentaDTO cuenta) {
         System.out.println("Esta cuenta solicito rendirse" + cuenta);
+    }
+
+    @Override
+    public void inicializarPartida(TurnosDTO turnos) {
+        Map<String,JugadorDTO> mapeoJugadores = turnos.getMazos();
+        JugadorDTO jugador = mapeoJugadores.get(cuentaActual.getIdCadena());
+        List<FichaDTO> fichas = jugador.getFichas();
+        System.out.println("Las ficha de la cuenta "+ cuentaActual);
+        System.out.println("Son " + fichas);
+        actualizarDarFichas(fichas);
+        
+    }
+
+    @Override
+    public void avisarJalarFichaPozo() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void avisarAbandonarPartida() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void avisarPeticionRendirse() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

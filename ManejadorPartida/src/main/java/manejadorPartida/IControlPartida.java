@@ -1,8 +1,8 @@
 package manejadorPartida;
 
 import abstraccion.ICliente;
-import domino64.eventos.base.Evento;
-import domino64.eventos.base.error.TipoError;
+import eventoBase.Evento;
+import eventoBaseError.TipoError;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +21,9 @@ import tiposLogicos.TipoLogicaTurno;
  */
 public abstract class IControlPartida implements Observer<Evento> {
     protected ICliente cliente;
-    protected static BlockingQueue<Evento> colaEventos;
+    protected BlockingQueue<Evento> colaEventos;
     protected Map<Enum, Consumer<Evento>> consumers;
-    protected static final List<Enum> eventos = new ArrayList<>(
+    protected final List<Enum> eventos = new ArrayList<>(
             List.of(
                     TipoLogicaTurno.FIN_JUEGO,
                     TipoError.ERROR_DE_SERVIDOR,
@@ -60,7 +60,7 @@ public abstract class IControlPartida implements Observer<Evento> {
     public List<Enum> obtenerEventosSuscrito() {
         return eventos;
     }
-    
+    public abstract void iniciaConexion();
     public abstract void manejarError(Evento evento);
     public abstract void finJuegoSinMovimientos(Evento evento);
     public abstract void prepararPartida(Evento evento);

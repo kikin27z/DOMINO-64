@@ -1,7 +1,8 @@
 package eventBus;
 
-import domino64.eventos.base.error.*;
-import domino64.eventos.base.*;
+import eventoBaseError.TipoError;
+import eventoBaseError.EventoError;
+import eventoBase.Evento;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

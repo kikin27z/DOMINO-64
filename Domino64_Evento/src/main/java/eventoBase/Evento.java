@@ -1,4 +1,4 @@
-package domino64.eventos.base;
+package eventoBase;
 
 import java.io.Serializable;
 
@@ -34,7 +34,6 @@ public interface Evento<T extends Enum> extends Serializable {
      */
     public int getIdPublicador();
 
-    public int getIdDestinatario();
 
     /**
      * Obtiene el id del contexto del evento. Los eventos deben tener un

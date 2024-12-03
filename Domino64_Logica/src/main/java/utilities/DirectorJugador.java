@@ -57,6 +57,12 @@ public class DirectorJugador extends DirectorEventos<BuilderEventoJugador> {
         return builder.construirEvento();
     }
 
+    public EventoJugador crearEventoAbandonarLobby(CuentaDTO publicador) {
+        builder.setIdPublicador(idPublicador);
+        builder.setPublicador(publicador);
+        builder.setTipo(TiposJugador.ABANDONAR_LOBBY);
+        return builder.construirEvento();
+    }
     public EventoJugador crearEventoAbandonarPartida(CuentaDTO publicador) {
         builder.setIdPublicador(idPublicador);
         builder.setPublicador(publicador);

@@ -1,8 +1,8 @@
 package manejadorTurnos;
 
 import abstraccion.ICliente;
-import domino64.eventos.base.Evento;
-import domino64.eventos.base.error.TipoError;
+import eventoBase.Evento;
+import eventoBaseError.TipoError;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +13,6 @@ import java.util.function.Consumer;
 import observer.Observer;
 import tiposLogicos.TipoJugadorFicha;
 import tiposLogicos.TipoLogicaPozo;
-import tiposLogicos.TiposJugador;
 
 /**
  *
@@ -28,7 +27,7 @@ public abstract class IControlTurnos implements Observer<Evento> {
             List.of(
                     TipoError.ERROR_DE_SERVIDOR,
                     TipoLogicaPozo.REPARTIR_FICHAS,
-                    TipoJugadorFicha.COLOCAR_FICHA,
+                    TipoJugadorFicha.JUGADA_REALIZADA,
                     TiposJugador.ABANDONAR_PARTIDA
             ));
     
@@ -52,7 +51,7 @@ public abstract class IControlTurnos implements Observer<Evento> {
     protected void setConsumers(){
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
         consumers.putIfAbsent(TipoLogicaPozo.REPARTIR_FICHAS, this::asignarOrden);
-        consumers.putIfAbsent(TipoJugadorFicha.COLOCAR_FICHA, this::cambiarTurno);
+        consumers.putIfAbsent(TipoJugadorFicha.JUGADA_REALIZADA, this::cambiarTurno);
         consumers.putIfAbsent(TiposJugador.ABANDONAR_PARTIDA, this::removerJugador);
     }
     
@@ -64,7 +63,7 @@ public abstract class IControlTurnos implements Observer<Evento> {
     public List<Enum> obtenerEventosSuscrito() {
         return eventos;
     }
-    
+    public abstract void iniciaConexion();
     public abstract void manejarError(Evento evento);
     public abstract void asignarOrden(Evento evento);
     public abstract void cambiarTurno(Evento evento);

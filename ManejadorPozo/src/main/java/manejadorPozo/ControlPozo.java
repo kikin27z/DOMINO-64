@@ -1,6 +1,6 @@
 package manejadorPozo;
 
-import domino64.eventos.base.Evento;
+import eventoBase.Evento;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.MazosDTO;
@@ -29,10 +29,10 @@ import pozoBuilder.DirectorPozo;
  */
 public class ControlPozo extends IControlPozo implements Runnable {
 
-    private DirectorPozo director;
     private int id;
+    private DirectorPozo director;
     private final AtomicBoolean running;
-    private ExecutorService ejecutorEventos;
+    private final ExecutorService ejecutorEventos;
     private final ManejadorPozo manejador;
 
     public ControlPozo() {
@@ -42,7 +42,7 @@ public class ControlPozo extends IControlPozo implements Runnable {
         running = new AtomicBoolean(true);
     }
 
-    public void vincularCliente(Client _cliente) {
+    private void vincularCliente(Client _cliente) {
         this.cliente = _cliente;
         cliente.establecerSuscripciones(eventos);
         _cliente.iniciar();
@@ -51,6 +51,7 @@ public class ControlPozo extends IControlPozo implements Runnable {
         ejecutorEventos.submit(this);
     }
 
+    @Override
     public void iniciaConexion() {
         Client c = Client.iniciarComunicacion();
 

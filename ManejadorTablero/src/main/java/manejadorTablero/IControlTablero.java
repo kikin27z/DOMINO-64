@@ -1,8 +1,8 @@
 package manejadorTablero;
 
-import domino64.eventos.base.Evento;
-import domino64.eventos.base.error.TipoError;
-import implementacion.Client;
+import abstraccion.ICliente;
+import eventoBase.Evento;
+import eventoBaseError.TipoError;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +10,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Consumer;
-import tiposLogicos.TiposJugador;
 import observer.Observer;
 import tiposLogicos.TipoJugadorFicha;
 
@@ -20,12 +19,13 @@ import tiposLogicos.TipoJugadorFicha;
  * @author José Karim Franco Valencia - 00000245138
  */
 public abstract class IControlTablero implements Observer<Evento> {
-    protected static BlockingQueue<Evento> colaEventos;
+    protected ICliente cliente;
+    protected BlockingQueue<Evento> colaEventos;
     protected Map<Enum, Consumer<Evento>> consumers;
-    protected static final List<Enum> eventos = new ArrayList<>(
+    protected final List<Enum> eventos = new ArrayList<>(
             List.of(
                     TipoError.ERROR_DE_SERVIDOR,
-                    TipoJugadorFicha.COLOCAR_FICHA
+                    TipoJugadorFicha.JUGADA_REALIZADA
             ));
     
     protected IControlTablero(){
@@ -40,7 +40,7 @@ public abstract class IControlTablero implements Observer<Evento> {
     
     //
     protected void setConsumers(){
-        consumers.putIfAbsent(TipoJugadorFicha.COLOCAR_FICHA, this::colocarFicha);
+        consumers.putIfAbsent(TipoJugadorFicha.JUGADA_REALIZADA, this::colocarFicha);
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
     }
     
@@ -49,7 +49,7 @@ public abstract class IControlTablero implements Observer<Evento> {
         consumers.putIfAbsent(evento, consumer);
     }
     
+    public abstract void iniciaConexion();
     public abstract void colocarFicha(Evento evento);
     public abstract void manejarError(Evento evento);
-    public abstract void vincularCliente(Client _cliente);
 }

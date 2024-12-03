@@ -6,6 +6,10 @@ import creditos.CreditosView;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaIniciadaDTO;
+import entidadesDTO.ResultadosDTO;
+import finjuego.FinJuegoControl;
+import finjuego.FinJuegoModel;
+import finjuego.FinJuegoView;
 import inicio.InicioControl;
 import inicio.InicioModel;
 import inicio.InicioView;
@@ -124,6 +128,20 @@ public class Navegacion implements INavegacion {
         }
     }
 
+    public void cambiarPartida(CuentaDTO cuenta) {
+        Platform.runLater(() -> {
+            PartidaModel modeloPartida = new PartidaModel(cuenta);
+            try {
+                mediador.vincularModeloPartida(modeloPartida);
+                PartidaView partida = new PartidaView(modeloPartida); // Instancia la vista de la partida
+                partida.iniciarEscena(fondo); // Inicia la escena de la partida
+                PartidaControl partidaControl = new PartidaControl(partida, modeloPartida);
+            } catch (IOException ex) {
+                ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
+            }
+        });
+    }
+
     @Override
     public void cambiarOpcionesPartida() {
         Platform.runLater(() -> {
@@ -152,6 +170,21 @@ public class Navegacion implements INavegacion {
                 CreditosView view = new CreditosView(modeloCreditos); // Instancia la vista de la partida
                 view.iniciarEscena(fondo); // Inicia la escena de la partida
                 CreditosControl control = new CreditosControl(view, modeloCreditos);
+            } catch (IOException ex) {
+                ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
+            }
+        });
+    }
+
+    @Override
+    public void cambiarFinJuego() {
+        Platform.runLater(() -> {
+            FinJuegoModel modeloFin = new FinJuegoModel();
+            try {
+                mediador.vincularModeloFin(modeloFin);
+                FinJuegoView view = new FinJuegoView(modeloFin); // Instancia la vista de la partida
+                view.iniciarEscena(fondo); // Inicia la escena de la partida
+                FinJuegoControl control = new FinJuegoControl(view, modeloFin);
             } catch (IOException ex) {
                 ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
             }

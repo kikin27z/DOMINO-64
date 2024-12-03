@@ -3,6 +3,7 @@ package presentacion_utilities;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaIniciadaDTO;
+import entidadesDTO.ResultadosDTO;
 
 /**
  * Interfaz que define los métodos para la navegación entre diferentes vistas
@@ -42,6 +43,9 @@ public interface INavegacion {
      * @param partidaDTO
      */
     public void cambiarPartida(PartidaIniciadaDTO partidaDTO);
+     * @param cuenta
+     */
+    public void cambiarPartida(CuentaDTO cuenta);
     
     /**
      * Método para cambiar la vista a la pantalla de opciones de partida.
@@ -50,4 +54,5 @@ public interface INavegacion {
     public void cambiarOpcionesPartida();
     
     public void cambiarCreditos();
+    public void cambiarFinJuego();
 }

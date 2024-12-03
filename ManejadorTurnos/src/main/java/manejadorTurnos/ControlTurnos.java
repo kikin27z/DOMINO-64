@@ -1,12 +1,8 @@
 package manejadorTurnos;
 
-import domino64.eventos.base.Evento;
-import domino64.eventos.base.error.EventoError;
-import entidadesDTO.JugadaRealizadaDTO;
+import eventoBase.Evento;
 import entidadesDTO.MazosDTO;
 import entidadesDTO.TurnosDTO;
-import eventos.EventoJugador;
-import eventos.EventoJugadorFicha;
 import eventos.EventoPozo;
 import eventos.EventoTurno;
 import implementacion.Client;
@@ -27,13 +23,14 @@ import turnosBuilder.DirectorTurnos;
  * @author José Karim Franco Valencia - 00000245138
  */
 public class ControlTurnos extends IControlTurnos implements Runnable{
-    private static DirectorTurnos director;
-    private static int id;
+    private int id;
+    private DirectorTurnos director;
     private final AtomicBoolean running;
-    private static ExecutorService ejecutorEventos;
     private final ManejadorTurnos manejador;
     private TurnosDTO turnos;
     
+    private final ExecutorService ejecutorEventos;
+
     public ControlTurnos() {
         this.manejador = new ManejadorTurnos();
         setConsumers();
@@ -58,7 +55,7 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
         }
     }
     
-    public void vincularCliente(Client _cliente) {
+    private void vincularCliente(Client _cliente) {
         this.cliente = _cliente;
         cliente.establecerSuscripciones(eventos);
         _cliente.iniciar();
@@ -67,6 +64,7 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
         ejecutorEventos.submit(this);
     }
 
+    @Override
     public void iniciaConexion() {
         Client c = Client.iniciarComunicacion();
 
