@@ -119,9 +119,8 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
 
     @Override
     public void actualizarAvatarCuenta(CuentaDTO cuenta) {
-        if (cuenta.equals(cuentaActual)) {
-            cuentaActual.setAvatar(cuenta.getAvatar());
-            cuenta.setIdCadena(cuentaActual.getIdCadena());
+        for (ObserverLobbyMVC ob : observersMVC) {
+            ob.actualizarAvatarCuenta(cuenta);
         }
 //        observerMVC.actualizarAvatarCuenta(cuenta);
     }
@@ -181,6 +180,10 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
         for (ObserverLobby observerLobby : observersLogica) {
             observerLobby.avisarCambioAvatar(cuentaActualizada);
         }
+        for (ObserverLobbyMVC ob : observersMVC) {
+            ob.actualizarAvatarCuenta(cuentaActualizada);
+        }
+        
     }
 
     @Override

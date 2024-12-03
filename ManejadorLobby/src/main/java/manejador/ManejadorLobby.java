@@ -2,6 +2,7 @@ package manejador;
 
 import adapter.AdaptadorDTO;
 import adapter.AdaptadorEntidad;
+import entidades.Avatar;
 import entidades.Cuenta;
 import entidades.Jugador;
 import entidades.Lobby;
@@ -27,8 +28,9 @@ public class ManejadorLobby {
         adaptadorDTO = new AdaptadorDTO();
     }
     
-    public boolean validarCambioAvatar(CuentaDTO cuenta){
-        return true;
+    public void actualizarCambioAvatar(CuentaDTO cuentaDTO){
+        Cuenta cuenta= adaptadorDTO.adaptarCuentaDTO(cuentaDTO);
+        lobby.cambiarAvatar(cuenta, cuenta.getAvatar());
     }
     
     public CuentaDTO unirCuenta(CuentaDTO cuentaDTO){

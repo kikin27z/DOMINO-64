@@ -85,12 +85,20 @@ public class DirectorLobby extends DirectorEventos<BuilderEventoLobby> {
         builder.setTipo(TipoLogicaLobby.PARTIDA_CREADA);
         return builder.construirEvento();
     }
+    
     public EventoLobby crearEventoPartidaEncontrada(LobbyDTO partidaEncontrada, CuentaDTO cuenta, int idDestinatario){
         builder.setIdPublicador(idPublicador);
         builder.setPublicador(cuenta);
         builder.agregarLobby(partidaEncontrada);
         //builder.setIdDestinatario(idDestinatario);
         builder.setTipo(TipoLogicaLobby.PARTIDA_ENCONTRADA);
+        return builder.construirEvento();
+    }
+    
+    public EventoLobby crearEventoActualizarAvatar(CuentaDTO cuenta, int idDestinatario){
+        builder.setIdPublicador(idDestinatario);
+        builder.setPublicador(cuenta);
+        builder.setTipo(TipoLogicaLobby.AVATAR_ACTUALIZADO);
         return builder.construirEvento();
     }
     

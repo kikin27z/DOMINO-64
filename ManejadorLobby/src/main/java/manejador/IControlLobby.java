@@ -29,7 +29,8 @@ public abstract class IControlLobby implements Observer<Evento> {
                     TiposJugador.CREAR_PARTIDA,
                     TiposJugador.UNIRSE_PARTIDA,
                     TiposJugador.CUENTA_LISTA,
-                    TiposJugador.CUENTA_NO_LISTA
+                    TiposJugador.CUENTA_NO_LISTA,
+                    TiposJugador.CAMBIAR_CONFIG_PARTIDA
             ));
     
     protected IControlLobby(){
@@ -53,10 +54,10 @@ public abstract class IControlLobby implements Observer<Evento> {
         consumers.putIfAbsent(TiposJugador.ABANDONAR_PARTIDA, this::abandonoCuenta);
         consumers.putIfAbsent(TiposJugador.UNIRSE_PARTIDA, this::unirsePartida);
         consumers.putIfAbsent(TiposJugador.CREAR_PARTIDA, this::crearPartida);
-        consumers.putIfAbsent(TiposJugador.CAMBIAR_AVATAR, this::mostrarAvatares);
-        consumers.putIfAbsent(TiposJugador.AVATAR_ESCOGIDO, this::cambiarAvatar);
+        consumers.putIfAbsent(TiposJugador.CAMBIAR_AVATAR, this::cambiarAvatar);
         consumers.putIfAbsent(TiposJugador.CUENTA_LISTA, this::cuentaLista);
         consumers.putIfAbsent(TiposJugador.CUENTA_NO_LISTA, this::cuentaNoLista);
+        consumers.putIfAbsent(TiposJugador.CAMBIAR_CONFIG_PARTIDA, this::cambiarReglas);
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
     }
     
@@ -74,7 +75,7 @@ public abstract class IControlLobby implements Observer<Evento> {
     public abstract void unirsePartida(Evento evento);
     public abstract void crearPartida(Evento evento);
     public abstract void cambiarAvatar(Evento evento);
-    public abstract void mostrarAvatares(Evento evento);
+    public abstract void cambiarReglas(Evento evento);
     public abstract void manejarError(Evento evento);
     
     public abstract void cuentaLista(Evento evento);

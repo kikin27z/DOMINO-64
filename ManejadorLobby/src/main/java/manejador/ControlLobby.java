@@ -133,26 +133,10 @@ public class ControlLobby extends IControlLobby implements Runnable {
     public void cambiarAvatar(Evento evento) {
         EventoJugador evJ = (EventoJugador) evento;
         CuentaDTO jActualizado = evJ.getCuenta();
+        manejador.actualizarCambioAvatar(jActualizado);
         
-        
-//        LobbyDTO lobbyDTO = evJ.getLobby();
-//        Lobby lobby = new Lobby(lobbyDTO.getCodigoPartida());
-//        
-//        if(jugadoresPartidas.containsKey(lobby)){
-//            jugadoresPartidas.compute(lobby, (l,j)->{
-//                for (Cuenta cuenta : j) {
-//                    if(cuenta.getId() == jActualizado.getId()){
-//                        cuenta.setAvatar(adaptadorDTO.adaptarAvatarDTO(jActualizado.getAvatar()));
-//                        break;
-//                    }
-//                }
-//                return j;
-//            });
-//            
-//            EventoLobby evLobby = director.crearEventoActualizarAvatares(lobbyDTO,jActualizado);
-//            cliente.enviarEvento(evLobby);
-//
-//        }
+        EventoLobby evLobby = director.crearEventoActualizarAvatar(jActualizado, evJ.getIdPublicador());
+        enviarEvento(evLobby);
     }
 
     @Override
@@ -195,11 +179,6 @@ public class ControlLobby extends IControlLobby implements Runnable {
     }
 
     @Override
-    public void mostrarAvatares(Evento evento) {
-
-    }
-
-    @Override
     public void cuentaLista(Evento evento) {
         EventoJugador eventoRecibido = (EventoJugador) evento;
         int idDestinatario = evento.getIdPublicador();
@@ -234,6 +213,11 @@ public class ControlLobby extends IControlLobby implements Runnable {
                 cuentaNoLista, idDestinatario, false);
 
         cliente.enviarEvento(eventoEnviar);
+    }
+
+    @Override
+    public void cambiarReglas(Evento evento) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }
