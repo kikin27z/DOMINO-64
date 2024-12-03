@@ -94,7 +94,12 @@ public class AdaptadorEntidad {
      * @return un objeto de tipo JugadorDTO.
      */
     public JugadorDTO adaptarEntidadJugador(Jugador jugador){
-        JugadorDTO dto = new JugadorDTO(adaptarEntidadCuenta(jugador.getCuenta()));
+        JugadorDTO dto;
+        if(jugador.getCuenta() != null){
+            dto = new JugadorDTO(adaptarEntidadCuenta(jugador.getCuenta()));
+        }else{
+            dto = new JugadorDTO();
+        }
         
         if(jugador.getFichas() != null){
             dto.setFichas(adaptarEntidadesFicha(jugador.getFichas()));

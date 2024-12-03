@@ -40,8 +40,10 @@ public class ControlEventosLobby extends ControlEventos implements ObserverLobby
     @Override
     public void avisarAbandonar() {
         hiloPrincipal.execute(() -> {
-            manejadorNotificador.abandonarPartida();
+            manejadorNotificador.abandonarLobby();
         });
+//        display.mostrarOpcionesPartida();
+        
     }
 
     @Override
@@ -51,10 +53,12 @@ public class ControlEventosLobby extends ControlEventos implements ObserverLobby
         });
     }
 
-    @Override
-    public void avisarIniciarPartida() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+//    @Override
+//    public void avisarIniciarPartida() {
+//        
+//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+//    }
+    
     @Override
     public void avisarCambioAvatar(CuentaDTO cuentaActualizada) {
         hiloPrincipal.execute(() -> {

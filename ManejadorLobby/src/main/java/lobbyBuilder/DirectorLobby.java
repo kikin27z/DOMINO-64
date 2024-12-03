@@ -33,8 +33,9 @@ public class DirectorLobby extends DirectorEventos<BuilderEventoLobby> {
     }
     
     public EventoLobby crearEventoCuentaAbandono(CuentaDTO cuenta, int idDestinatario){
-        builder.setIdPublicador(idDestinatario);
+        builder.setIdPublicador(idPublicador);
         builder.setPublicador(cuenta);
+        builder.setIdDestinatario(idDestinatario);
         builder.setTipo(TipoLogicaLobby.CUENTA_ABANDONO);
         return builder.construirEvento();
     }

@@ -1,9 +1,13 @@
 package manejadorPartida;
 
 import domino64.eventos.base.Evento;
+import domino64.eventos.base.error.EventoError;
+import entidadesDTO.PartidaIniciadaDTO;
 import entidadesDTO.ReglasDTO;
+import entidadesDTO.TurnosDTO;
 import eventos.EventoLobby;
 import eventos.EventoPartida;
+import eventos.EventoTurno;
 import implementacion.Client;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -72,12 +76,15 @@ public class ControlPartida extends IControlPartida implements Runnable {
 
     @Override
     public void manejarError(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoError error = (EventoError)evento;
+        System.out.println("Hubo un error: "+error.getMensaje());
     }
 
     @Override
     public void finJuegoSinMovimientos(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        System.out.println("Los jugadres se quedaron sin movimientos");
+        System.out.println("Fin del juego jejejeje");
+       // EventoPartida fin = director.crearEventoInicioPartida();
     }
 
     @Override
@@ -89,6 +96,17 @@ public class ControlPartida extends IControlPartida implements Runnable {
         EventoPartida eventoEnviar = director.crearEventoRepartirFichas(reglas);
         cliente.enviarEvento(eventoEnviar);
         
+    }
+
+    @Override
+    public void iniciarPartida(Evento evento) {
+        EventoTurno turnosDesignados = (EventoTurno)evento;
+        
+        TurnosDTO turnos = turnosDesignados.getTurnos();
+        PartidaIniciadaDTO partida = manejador.iniciarPartida(turnos);
+        
+        EventoPartida inicioPartida = director.crearEventoInicioPartida(partida);
+        cliente.enviarEvento(inicioPartida);
     }
 
 }

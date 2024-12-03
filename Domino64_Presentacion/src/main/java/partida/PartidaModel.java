@@ -6,6 +6,7 @@ import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.PosibleJugadaDTO;
 import entidadesDTO.JugadorDTO;
+import entidadesDTO.PartidaIniciadaDTO;
 import eventosPartida.ObserverPartida;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
 
     private static final Logger logger = Logger.getLogger(PartidaModel.class.getName());
     private JugadorDTO jugador;
+    private List<CuentaDTO> jugadores;
     private Map<Canvas, FichaDTO> mapeoFichas;
     private final List<ObserverPartida> logicaObservers;
     private final List<ObserverPartidaMVC> viewObservers;
@@ -36,6 +38,7 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
     private JugadaDTO jugadaActual;
     private FichaDTO fichaSeleccionada;
     private Canvas dibujoSeleccionado;
+    private PartidaIniciadaDTO partida;
     
     public PartidaModel() {
         mapeoFichas = new HashMap<>();
@@ -43,6 +46,7 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
         this.primeraJugadaHecha = true;
         logicaObservers = new ArrayList<>();
         viewObservers = new ArrayList<>();
+        jugadores = new ArrayList<>();
     }
     // ------------------------------Notificadores a Vista-----------------------------------------------------
 
@@ -83,6 +87,25 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
     
     public boolean esLaMulaAlta(FichaDTO ficha) {
         return mulaAlta.esLaMismaFicha(ficha);
+    }
+    
+    public void setPartida(PartidaIniciadaDTO partida){
+        this.partida = partida;
+        this.jugador = partida.getJugadorActual();
+        jugadores = partida.getJugadores();
+        jugadores.remove(jugador.getCuenta());
+    }
+    
+    public List<CuentaDTO> getJugadores(){
+        return jugadores;
+    }
+    
+    public int getCantidadJugadores(){
+        return partida.getCantidadJugadores();
+    }
+    
+    public int getCantidadFichasPorJugador(){
+        return jugador.getFichas().size();
     }
 
     public PosibleJugadaDTO obtenerPosibleJugada(FichaDTO ficha) {

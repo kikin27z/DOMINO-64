@@ -43,13 +43,12 @@ public abstract class IReceptorEventosLogica implements Observer<Evento> {
                     TipoLogicaLobby.ABANDONO_ADMIN,
                     TipoLogicaLobby.CUENTA_ABANDONO,
                     TipoLogicaLobby.CUENTA_ENTRO,
-                    TipoLogicaLobby.AVATAR_ACTUALIZADO,
-                    TipoLogicaPartida.INICIO_PARTIDA
+                    TipoLogicaLobby.AVATAR_ACTUALIZADO
             ));
 
     public IReceptorEventosLogica() {
         this.consumers = new ConcurrentHashMap<>();
-        this.colaEventos = new LinkedBlockingDeque<>();
+        colaEventos = new LinkedBlockingDeque<>();
     }
 
     @Override
@@ -97,7 +96,6 @@ public abstract class IReceptorEventosLogica implements Observer<Evento> {
         consumers.putIfAbsent(TipoLogicaLobby.CUENTA_ABANDONO, this::cuentaAbandono);
         consumers.putIfAbsent(TipoLogicaLobby.ABANDONO_ADMIN, this::adminAbandono);
         consumers.putIfAbsent(TipoLogicaLobby.AVATAR_ACTUALIZADO, this::actualizarAvatares);
-        consumers.putIfAbsent(TipoLogicaLobby.NO_SE_PUDO_UNIR, this::errorUnirse);
         consumers.putIfAbsent(TipoLogicaLobby.CUENTA_ENTRO, this::cuentaEntro);
     }
 
@@ -106,7 +104,7 @@ public abstract class IReceptorEventosLogica implements Observer<Evento> {
     }
     
     public abstract void vincularCuenta();
-
+    public abstract void vincularJugador();
     public abstract void vincularDisplay();
     public abstract void iniciaConexion();
 
@@ -124,5 +122,5 @@ public abstract class IReceptorEventosLogica implements Observer<Evento> {
     
     public abstract void partidaEncontrada(Evento evento);
     public abstract void partidaCreada(Evento evento);
-    public abstract void errorUnirse(Evento evento);
+    public abstract void entrarPartida(Evento evento);
 }

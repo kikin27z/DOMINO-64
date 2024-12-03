@@ -1,7 +1,9 @@
 package partidaBuilder;
 
 import builder.DirectorEventos;
+import entidadesDTO.PartidaIniciadaDTO;
 import entidadesDTO.ReglasDTO;
+import entidadesDTO.ResultadosDTO;
 import eventos.EventoPartida;
 import tiposLogicos.TipoLogicaPartida;
 
@@ -26,4 +28,14 @@ public class DirectorPartida extends DirectorEventos<BuilderEventoPartida> {
         return builder.construirEvento();
     }
     
+    public EventoPartida crearEventoTerminoPartida(ResultadosDTO resultados){
+        return builder.construirEvento();
+    }
+    
+    public EventoPartida crearEventoInicioPartida(PartidaIniciadaDTO partida){
+        builder.setIdPublicador(idPublicador);
+        builder.setPartidaIniciada(partida);
+        builder.setTipo(TipoLogicaPartida.INICIO_PARTIDA);
+        return builder.construirEvento();
+    }
 }

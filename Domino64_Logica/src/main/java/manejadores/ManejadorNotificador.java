@@ -1,14 +1,13 @@
 package manejadores;
 
 import comunicadores_logica.IReceptorEventosLogica;
-import domino64.eventos.base.suscripcion.EventoSuscripcion;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.ReglasDTO;
 import entidadesDTO.UnirseDTO;
 import eventos.EventoJugador;
 import tiposLogicos.TipoLogicaLobby;
+import tiposLogicos.TipoLogicaPartida;
 import utilities.DirectorJugador;
-import utilities.DirectorSuscripcion;
 
 /**
  * @author Luisa Fernanda Morales Espinoza - 00000233450
@@ -42,9 +41,16 @@ public class ManejadorNotificador {
     }
 
     public void abandonarPartida() {
-       CuentaDTO cuenta = manejadorCuenta.getCuenta();
+        CuentaDTO cuenta = manejadorCuenta.getCuenta();
         EventoJugador abandonar = directorEventos.crearEventoAbandonarPartida(cuenta);
         receptor.enviarEvento(abandonar);
+    }
+
+    public void abandonarLobby() {
+        CuentaDTO cuenta = manejadorCuenta.getCuenta();
+        EventoJugador abandonar = directorEventos.crearEventoAbandonarLobby(cuenta);
+        receptor.enviarEvento(abandonar);
+        receptor.removerSuscripcion(TipoLogicaPartida.INICIO_PARTIDA);
     }
 
     public void cuentaLista(){

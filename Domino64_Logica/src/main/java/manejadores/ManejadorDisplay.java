@@ -2,6 +2,7 @@ package manejadores;
 
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
+import entidadesDTO.PartidaIniciadaDTO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import presentacion_utilities.DistribuidorEventosModelo;
@@ -32,7 +33,7 @@ public final class ManejadorDisplay {
 
     //------------------------Eventos de cambiar pantallas--------------------
     public void mostrarInicio(){
-        navegacion.cambiarOpcionesPartida();
+        navegacion.cambiarInicio();
     }
     public void mostrarOpcionesPartida(){
         navegacion.cambiarOpcionesPartida();
@@ -40,5 +41,9 @@ public final class ManejadorDisplay {
     
     public void mostrarLobby(CuentaDTO cuenta, LobbyDTO lobby){
         navegacion.cambiarLobby(cuenta, lobby);
+    }
+    
+    public void mostrarPartida(PartidaIniciadaDTO partida){
+        navegacion.cambiarPartida(partida);
     }
 }

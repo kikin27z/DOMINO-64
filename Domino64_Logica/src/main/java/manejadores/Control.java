@@ -20,6 +20,7 @@ import vinculacionModeloLogica.NotificarLogica;
  */
 public class Control {
     private static ManejadorCuenta cuenta;
+    private static ManejadorJugador jugador;
     private static ManejadorDisplay display;
     private static Control principal;
     private static ExecutorService hiloPrincipal;
@@ -41,9 +42,11 @@ public class Control {
                 receptor = new ReceptorLogica();
                 receptor.iniciaConexion();
                 cuenta = new ManejadorCuenta();
+                jugador = new ManejadorJugador();
                 notificador = new ManejadorNotificador();
                 display = new ManejadorDisplay();
                 receptor.vincularCuenta();
+                receptor.vincularJugador();
                 receptor.vincularDisplay();
                 mediador = new MediadorManejadores();
                 
@@ -84,6 +87,9 @@ public class Control {
      */
     public static ManejadorDisplay obtenerManejadorDisplay() {
         return display;
+    }
+    public static ManejadorJugador obtenerManejadorJugador() {
+        return jugador;
     }
     public static IReceptorEventosLogica obtenerReceptor() {
         return receptor;

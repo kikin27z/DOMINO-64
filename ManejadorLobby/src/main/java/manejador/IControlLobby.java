@@ -25,7 +25,7 @@ public abstract class IControlLobby implements Observer<Evento> {
     protected static final List<Enum> eventos = new ArrayList<>(
             List.of(
                     TipoError.ERROR_DE_SERVIDOR,
-                    TiposJugador.ABANDONAR_PARTIDA,
+                    TiposJugador.ABANDONAR_LOBBY,
                     TiposJugador.CAMBIAR_AVATAR,
                     TiposJugador.CREAR_PARTIDA,
                     TiposJugador.UNIRSE_PARTIDA,
@@ -52,7 +52,7 @@ public abstract class IControlLobby implements Observer<Evento> {
         cliente.enviarEvento(evento);
     }
     protected void setConsumers(){
-        consumers.putIfAbsent(TiposJugador.ABANDONAR_PARTIDA, this::abandonoCuenta);
+        consumers.putIfAbsent(TiposJugador.ABANDONAR_LOBBY, this::abandonoCuenta);
         consumers.putIfAbsent(TiposJugador.UNIRSE_PARTIDA, this::unirsePartida);
         consumers.putIfAbsent(TiposJugador.CREAR_PARTIDA, this::crearPartida);
         consumers.putIfAbsent(TiposJugador.CAMBIAR_AVATAR, this::cambiarAvatar);

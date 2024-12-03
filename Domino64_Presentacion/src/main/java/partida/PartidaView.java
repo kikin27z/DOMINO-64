@@ -4,18 +4,21 @@ import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
+import entidadesDTO.JugadorDTO;
 import entidadesDTO.PosibleJugadaDTO;
 import entidadesDTO.PosicionDTO;
 import eventosPartida.ObserverPartida;
 import eventosPartida.ObserverPartidaMVC;
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.logging.Logger;
 import javafx.geometry.Insets;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
@@ -82,6 +85,26 @@ public class PartidaView implements ObserverPartidaMVC {
         modelo.quitarMapeoFichas();
     }
 
+    private List<Node> crearJugadores(List<Node> paneles){
+        List<CuentaDTO> jugadores = modelo.getJugadores();
+        JugadorDTO jugador = modelo.getJugador();
+        switch (jugadores.size()+1) {
+            case 2 -> paneles.add(createTopPlayer(jugadores.get(0)));
+            case 3 -> {
+                paneles.add(createTopPlayer(jugadores.get(0)));
+                paneles.add(createRightPlayer(jugadores.get(1)));
+            }
+            case 4 -> {
+                paneles.add(createTopPlayer(jugadores.get(0)));
+                paneles.add(createRightPlayer(jugadores.get(1)));
+                paneles.add(createLeftPlayer(jugadores.get(2)));
+            }
+        }
+        createBottomPlayer(jugador.getCuenta());
+        paneles.add(bottomPlayer);
+        return paneles;
+    }
+    
     private AnchorPane createGameInterface() {
         // Main container
         AnchorPane root = new AnchorPane();
@@ -91,27 +114,21 @@ public class PartidaView implements ObserverPartidaMVC {
         root.setMaxSize(1000, 700);
         root.setStyle("-fx-background-color: #186F65;");
 
+        List<Node> nodos = new ArrayList<>();
         // Create all components
         containerGameBoard = createGameBoard();
-        AnchorPane topPlayer = createTopPlayer();
-        AnchorPane rightPlayer = createRightPlayer();
-        AnchorPane leftPlayer = createLeftPlayer();
-        createBottomPlayer();
+        
+        nodos.add(containerGameBoard);
+        nodos = crearJugadores(nodos);
         AnchorPane topOptions = createTopOptions();
         createDeckIndicator();
         ImageView playerAvatar = createPlayerAvatar();
-
+        
+        nodos.add(topOptions);
+        nodos.add(pozoIndicador);
+        nodos.add(playerAvatar);
         // Add all components to root
-        root.getChildren().addAll(
-                containerGameBoard,
-                topPlayer,
-                rightPlayer,
-                leftPlayer,
-                bottomPlayer,
-                topOptions,
-                pozoIndicador,
-                playerAvatar
-        );
+        root.getChildren().addAll(nodos);
 
         return root;
     }
@@ -137,7 +154,7 @@ public class PartidaView implements ObserverPartidaMVC {
     public void asignarProcesarJugada(){
         gameBoard.setOpcionJugada(colocarFicha);
     }
-    private AnchorPane createTopPlayer() {
+    private AnchorPane createTopPlayer(CuentaDTO cuenta) {
         AnchorPane topPlayer = new AnchorPane();
         topPlayer.setId("jugador3");
         topPlayer.setLayoutX(366);
@@ -154,7 +171,7 @@ public class PartidaView implements ObserverPartidaMVC {
         playerDeck.setLayoutY(7);
         playerDeck.setRotate(180);
 
-        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
+        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
         playerAvatar.setFitHeight(100);
         playerAvatar.setFitWidth(100);
         playerAvatar.setLayoutX(-64);
@@ -172,7 +189,7 @@ public class PartidaView implements ObserverPartidaMVC {
         return topPlayer;
     }
 
-    private AnchorPane createRightPlayer() {
+    private AnchorPane createRightPlayer(CuentaDTO cuenta) {
         AnchorPane rightPlayer = new AnchorPane();
         rightPlayer.setId("jugador4");
         rightPlayer.setLayoutX(892);
@@ -195,7 +212,7 @@ public class PartidaView implements ObserverPartidaMVC {
         playerDeck.setLayoutY(95);
         playerDeck.setRotate(-90);
 
-        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
+        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
         playerAvatar.setFitHeight(114);
         playerAvatar.setFitWidth(114);
         playerAvatar.setLayoutX(-13);
@@ -205,7 +222,7 @@ public class PartidaView implements ObserverPartidaMVC {
         return rightPlayer;
     }
 
-    private AnchorPane createLeftPlayer() {
+    private AnchorPane createLeftPlayer(CuentaDTO cuenta) {
         AnchorPane leftPlayer = new AnchorPane();
         leftPlayer.setId("jugador3");
         leftPlayer.setLayoutX(10);
@@ -213,7 +230,7 @@ public class PartidaView implements ObserverPartidaMVC {
         leftPlayer.setPrefSize(98, 234);
         leftPlayer.setStyle("-fx-background-color: #B2533E; -fx-background-radius: 20; -fx-border-color: #000000; -fx-border-radius: 20;");
 
-        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
+        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
         playerAvatar.setId("jugador3");
         playerAvatar.setFitHeight(114);
         playerAvatar.setFitWidth(114);
@@ -239,7 +256,7 @@ public class PartidaView implements ObserverPartidaMVC {
         return leftPlayer;
     }
 
-    private void createBottomPlayer() {
+    private void createBottomPlayer(CuentaDTO cuenta) {
         bottomPlayer = new HBox();
         bottomPlayer.setAlignment(javafx.geometry.Pos.CENTER);
         bottomPlayer.setLayoutX(164);
@@ -249,7 +266,7 @@ public class PartidaView implements ObserverPartidaMVC {
         bottomPlayer.setStyle("-fx-background-color: #B2533E; -fx-border-color: #000000; -fx-border-radius: 20; -fx-background-radius: 20;");
         bottomPlayer.setPadding(new Insets(0, 0, -12, 20));
 
-        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
+        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
         playerAvatar.setFitHeight(140);
         playerAvatar.setFitWidth(140);
         playerAvatar.setLayoutX(856);

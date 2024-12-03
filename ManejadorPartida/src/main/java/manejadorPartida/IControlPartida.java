@@ -27,7 +27,8 @@ public abstract class IControlPartida implements Observer<Evento> {
             List.of(
                     TipoLogicaTurno.FIN_JUEGO,
                     TipoError.ERROR_DE_SERVIDOR,
-                    TipoLogicaLobby.PREPARAR_PARTIDA
+                    TipoLogicaLobby.PREPARAR_PARTIDA,
+                    TipoLogicaTurno.TURNOS_DESIGNADOS
             ));
     
     protected IControlPartida(){
@@ -48,6 +49,7 @@ public abstract class IControlPartida implements Observer<Evento> {
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
         consumers.putIfAbsent(TipoLogicaTurno.FIN_JUEGO, this::finJuegoSinMovimientos);
         consumers.putIfAbsent(TipoLogicaLobby.PREPARAR_PARTIDA, this::prepararPartida);
+        consumers.putIfAbsent(TipoLogicaTurno.TURNOS_DESIGNADOS, this::iniciarPartida);
     }
     
     public void agregarEvento(Enum evento, Consumer<Evento> consumer){
@@ -62,4 +64,5 @@ public abstract class IControlPartida implements Observer<Evento> {
     public abstract void manejarError(Evento evento);
     public abstract void finJuegoSinMovimientos(Evento evento);
     public abstract void prepararPartida(Evento evento);
+    public abstract void iniciarPartida(Evento evento);
 }

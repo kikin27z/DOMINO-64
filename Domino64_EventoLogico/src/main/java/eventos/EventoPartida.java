@@ -2,6 +2,7 @@ package eventos;
 
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.JugadorDTO;
+import entidadesDTO.PartidaIniciadaDTO;
 import entidadesDTO.ReglasDTO;
 import entidadesDTO.ResultadosDTO;
 import tiposLogicos.TipoLogicaPartida;
@@ -17,6 +18,7 @@ public class EventoPartida extends EventoLogico {
     private ReglasDTO reglas;
     private JugadorDTO jugador;
     private ResultadosDTO resultados;
+    private PartidaIniciadaDTO partidaIniciada;
     
     public EventoPartida(){}
     
@@ -26,6 +28,14 @@ public class EventoPartida extends EventoLogico {
 
     public JugadorDTO getJugador() {
         return jugador;
+    }
+
+    public PartidaIniciadaDTO getPartidaIniciada() {
+        return partidaIniciada;
+    }
+
+    public void setPartidaIniciada(PartidaIniciadaDTO partidaIniciada) {
+        this.partidaIniciada = partidaIniciada;
     }
 
     public void setJugador(JugadorDTO jugador) {

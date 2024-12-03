@@ -2,6 +2,7 @@ package partidaBuilder;
 
 import builder.EventBuilder;
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.PartidaIniciadaDTO;
 import entidadesDTO.ReglasDTO;
 import eventos.EventoPartida;
 import tiposLogicos.TipoLogicaPartida;
@@ -24,6 +25,10 @@ public class BuilderEventoPartida implements EventBuilder<TipoLogicaPartida>{
     
     public void setReglas(ReglasDTO reglas){
         evento.setReglas(reglas);
+    }
+    
+    public void setPartidaIniciada(PartidaIniciadaDTO partida){
+        evento.setPartidaIniciada(partida);
     }
     
     @Override

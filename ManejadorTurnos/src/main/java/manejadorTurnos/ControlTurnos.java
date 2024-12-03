@@ -1,8 +1,10 @@
 package manejadorTurnos;
 
 import domino64.eventos.base.Evento;
+import domino64.eventos.base.error.EventoError;
 import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.MazosDTO;
+import entidadesDTO.TurnosDTO;
 import eventos.EventoJugador;
 import eventos.EventoJugadorFicha;
 import eventos.EventoPozo;
@@ -30,7 +32,8 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
     private final AtomicBoolean running;
     private static ExecutorService ejecutorEventos;
     private final ManejadorTurnos manejador;
-
+    private TurnosDTO turnos;
+    
     public ControlTurnos() {
         this.manejador = new ManejadorTurnos();
         setConsumers();
@@ -76,7 +79,8 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
 
     @Override
     public void manejarError(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoError error = (EventoError)evento;
+        System.out.println("Hubo un error: "+error.getMensaje());
     }
 
     @Override
@@ -84,14 +88,16 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
         EventoPozo eventoRecibido = (EventoPozo) evento;
         MazosDTO mazos = eventoRecibido.getMazos();
         
-        manejador.determinarOrden(mazos);
-        manejador.rotarSiguienteTurno();
-        manejador.rotarSiguienteTurno();
-        manejador.rotarSiguienteTurno();
-        manejador.rotarSiguienteTurno();
-        manejador.rotarSiguienteTurno();
-        manejador.rotarSiguienteTurno();
-        
+        turnos = manejador.determinarOrden(mazos);
+//        manejador.rotarSiguienteTurno();
+//        manejador.rotarSiguienteTurno();
+//        manejador.rotarSiguienteTurno();
+//        manejador.rotarSiguienteTurno();
+//        manejador.rotarSiguienteTurno();
+//        manejador.rotarSiguienteTurno();
+//        
+        EventoTurno turnosDesignados = director.crearEventoTurnoDesignados(turnos);
+        enviarEvento(turnosDesignados);
     }
 
     @Override
@@ -110,10 +116,10 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
     public void removerJugador(Evento evento) {
         EventoJugador jugadorSalio= (EventoJugador)evento;
         
-        manejador.quitarJugador(jugadorSalio.getCuenta());
+        turnos.setOrden(manejador.quitarJugador(jugadorSalio.getCuenta()));
         if(manejador.todosPasaron()){
-            //EventoTurno fin = director.crearEventoFinJuego(manejador.);
-            //enviarEvento(fin);
+            EventoTurno fin = director.crearEventoFinJuego(turnos);
+            enviarEvento(fin);
         }
     }
 

@@ -5,6 +5,7 @@ import creditos.CreditosModel;
 import creditos.CreditosView;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
+import entidadesDTO.PartidaIniciadaDTO;
 import inicio.InicioControl;
 import inicio.InicioModel;
 import inicio.InicioView;
@@ -110,8 +111,9 @@ public class Navegacion implements INavegacion {
     }
 
     @Override
-    public void cambiarPartida() {
+    public void cambiarPartida(PartidaIniciadaDTO partidaDTO) {
         PartidaModel modeloPartida = new PartidaModel();
+        modeloPartida.setPartida(partidaDTO);
         try {
             mediador.vincularModeloPartida(modeloPartida);
             PartidaView partida = new PartidaView(modeloPartida); // Instancia la vista de la partida

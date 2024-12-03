@@ -42,7 +42,11 @@ public class DistribuidorEventosModelo {
     public void setPartidaMVC(ObservablePartidaMVC partidaMVC) {
         this.partidaMVC = partidaMVC;
     }
-
+    //----------------------------------Mensaje de error-----------------------------------
+    
+    public void mostrarMensajeError(String msj){
+        System.out.println(msj);
+    }
     
     //----------------------------------Eventos Lobby-----------------------------------
     public void inicializarLobby(LobbyDTO lobby) {

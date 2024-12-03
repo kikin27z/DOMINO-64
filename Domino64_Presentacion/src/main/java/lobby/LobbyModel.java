@@ -216,9 +216,7 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
 
     @Override
     public void avisarAbandonar() {
-//        System.out.println("avisar");
         for (ObserverLobby observerLobby : observersLogica) {
-            System.out.println("observer?");
             observerLobby.avisarAbandonar();
         }
     }

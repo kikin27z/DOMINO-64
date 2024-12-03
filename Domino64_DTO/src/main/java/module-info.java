@@ -4,5 +4,6 @@
  */
 
 module Domino64_DTO {
+    requires java.base;
     exports entidadesDTO;
 }
