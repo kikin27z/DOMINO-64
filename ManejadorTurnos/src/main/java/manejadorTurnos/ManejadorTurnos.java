@@ -7,7 +7,9 @@ import entidades.Ficha;
 import entidades.Jugador;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
+import entidadesDTO.JugadorDTO;
 import entidadesDTO.MazosDTO;
+import entidadesDTO.TurnosDTO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,6 +23,7 @@ import java.util.Map;
  * @author José Karim Franco Valencia - 00000245138
  */
 public class ManejadorTurnos {
+    private TurnosDTO turnos;
     private LinkedList<String> orden = new LinkedList<>();
     private final AdaptadorEntidad adaptador;
     private final AdaptadorDTO adaptadorDTO;
@@ -71,6 +74,7 @@ public class ManejadorTurnos {
 
             mazos.put(idCuenta, jugador);
         }
+        
         return mazos;
     }
 
@@ -108,16 +112,32 @@ public class ManejadorTurnos {
 
     public void determinarOrden(MazosDTO mazos) {
         List<Cuenta> cuentas = adaptadorDTO.adaptarCuentasDTO(mazos.getCuentas());
- 
+        turnos = new TurnosDTO();
         List<List<Ficha>> fichas = devolverMazos(mazos.getMazos());
 
         Map<String, Jugador> j = entregarFichaJugadores(cuentas, fichas);
+        
+        
         String primerJugador = determinarPrimerJugador(j);
         orden = crearTurnos(primerJugador , j);
+        
+        crearTurnoDTO(j, orden);
+        
+        
         imprimirTurnos(orden);
         System.out.println(j);
     }
 
+    private void crearTurnoDTO(Map<String, Jugador> mazosJugadores, LinkedList<String> orden){
+        Map<String, JugadorDTO> mazosTurno = new HashMap<>();
+        for (Map.Entry<String, Jugador> entry : mazosJugadores.entrySet()) {
+            mazosTurno.put(entry.getKey(), adaptador.adaptarEntidadJugador(entry.getValue()));
+        }
+        turnos.setMazos(mazosTurno);
+        
+        turnos.setOrden(orden);
+    }
+    
     private void imprimirTurnos(LinkedList<String> orden) {
         for (int i = 0; i < orden.size(); i++) {
             System.out.println("Jugador #" + (1 + i) + " es " + orden.get(i));
@@ -142,4 +162,5 @@ public class ManejadorTurnos {
         }
         return mazos;
     }
+    
 }

@@ -112,8 +112,8 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
         
         manejador.quitarJugador(jugadorSalio.getCuenta());
         if(manejador.todosPasaron()){
-            EventoTurno fin = director.crearEventoFinJuego();
-            enviarEvento(fin);
+            //EventoTurno fin = director.crearEventoFinJuego(manejador.);
+            //enviarEvento(fin);
         }
     }
 
