@@ -1,6 +1,6 @@
 package abstraccion;
 
-import domino64.eventos.base.Evento;
+import eventoBase.Evento;
 import java.util.List;
 import observer.Observer;
 

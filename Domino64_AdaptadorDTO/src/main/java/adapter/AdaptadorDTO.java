@@ -57,7 +57,13 @@ public class AdaptadorDTO {
      * @return un objeto de tipo Jugador.
      */
     public Jugador adaptarJugadorDTO(JugadorDTO jugador) {
-        Jugador entidad = new Jugador(adaptarCuentaDTO(jugador.getCuenta()));
+        Jugador entidad ;
+        
+        if(jugador.getCuenta() != null){
+            entidad = new Jugador(adaptarCuentaDTO(jugador.getCuenta()));
+        }else{
+            entidad = new Jugador();
+        }
 
         if (jugador.getFichas() != null) {
             entidad.setFichas(adaptarFichaDTO(jugador.getFichas()));

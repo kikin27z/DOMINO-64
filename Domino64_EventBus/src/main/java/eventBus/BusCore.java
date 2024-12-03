@@ -1,7 +1,7 @@
 package eventBus;
 
-import domino64.eventos.base.*;
-import domino64.eventos.base.error.EventoError;
+import eventoBase.Evento;
+import eventoBaseError.EventoError;
 
 /**
  * Clase principal del EventBus. Aqui se reciben los eventos y las suscripciones

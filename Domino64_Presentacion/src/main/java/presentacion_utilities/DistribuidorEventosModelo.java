@@ -4,6 +4,10 @@ import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaDTO;
 import entidadesDTO.LobbyDTO;
+import entidadesDTO.ResultadosDTO;
+import entidadesDTO.TurnosDTO;
+import eventosCreditos.ObservableCreditosMVC;
+import eventosFin.ObservableFinJuegoMVC;
 import eventosLobby.ObservableLobbyMVC;
 import eventosOpcionesPartida.ObservableOpcionesMVC;
 import eventosPartida.ObservablePartidaMVC;
@@ -12,7 +16,8 @@ import javafx.application.Platform;
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class DistribuidorEventosModelo {
 
@@ -20,6 +25,8 @@ public class DistribuidorEventosModelo {
     private ObservableLobbyMVC lobbyMVC;
     private ObservableOpcionesMVC opcionesMVC;
     private ObservablePartidaMVC partidaMVC;
+    private ObservableFinJuegoMVC finMVC;
+    private ObservableCreditosMVC creditosMVC;
 
     private DistribuidorEventosModelo() {
     }
@@ -41,6 +48,12 @@ public class DistribuidorEventosModelo {
 
     public void setPartidaMVC(ObservablePartidaMVC partidaMVC) {
         this.partidaMVC = partidaMVC;
+    }
+    public void setFinJuegoMVC(ObservableFinJuegoMVC finMVC) {
+        this.finMVC = finMVC;
+    }
+    public void setPartidaMVC(ObservableCreditosMVC creditosMVC) {
+        this.creditosMVC = creditosMVC;
     }
 
     
@@ -120,6 +133,15 @@ public class DistribuidorEventosModelo {
         });
     }
 
-
+    public void inicializarPartida(TurnosDTO turnos){
+        Platform.runLater(() -> {
+            partidaMVC.inicializarPartida(turnos);
+        });
+    }
+    public void inicializarFinJuego(ResultadosDTO resultados){
+        Platform.runLater(() -> {
+            finMVC.inicializarFinJuego(resultados);
+        });
+    }
 
 }

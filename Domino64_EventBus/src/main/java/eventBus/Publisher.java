@@ -2,7 +2,7 @@ package eventBus;
 
 import publicadorSuscriptor.Publicador;
 import publicadorSuscriptor.Suscriptor;
-import domino64.eventos.base.Evento;
+import eventoBase.Evento;
 
 /**
  * Clase para representar a quienes pueden publicar eventos en el bus. Cada

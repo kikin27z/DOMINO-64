@@ -4,7 +4,7 @@
  */
 
 module Evento {
-    exports domino64.eventos.base;
-    exports domino64.eventos.base.error;
-    exports domino64.eventos.base.suscripcion;
+    exports eventoBase;
+    exports eventoBaseError;
+    exports eventoBaseSuscripcion;
 }

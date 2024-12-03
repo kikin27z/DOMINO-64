@@ -2,7 +2,8 @@ package eventosFin;
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public interface ObservableFinJuego {
     public void agregarObserver(ObserverFinJuego observador);
@@ -13,4 +14,6 @@ public interface ObservableFinJuego {
      * @param observador el observador que desea ser eliminado.
      */
     public void quitarObserver(ObserverFinJuego observador);
+    
+    public void avisarIrInicio();
 }

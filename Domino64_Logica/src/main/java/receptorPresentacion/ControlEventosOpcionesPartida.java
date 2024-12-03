@@ -9,7 +9,8 @@ import manejadores.ManejadorNotificador;
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class ControlEventosOpcionesPartida extends ControlEventos implements ObserverOpcionesPartida {
 
@@ -37,6 +38,9 @@ public class ControlEventosOpcionesPartida extends ControlEventos implements Obs
 
     @Override
     public void avisarIrInicio() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        hiloPrincipal.execute(()->{
+            
+            display.iniciarJuego();
+        });
     }
 }

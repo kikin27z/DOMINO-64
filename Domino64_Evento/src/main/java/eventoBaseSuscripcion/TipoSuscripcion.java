@@ -1,4 +1,4 @@
-package domino64.eventos.base.suscripcion;
+package eventoBaseSuscripcion;
 
 /**
  * Enumeradores de eventos que le interesan a varios suscriptores. Este tipo de

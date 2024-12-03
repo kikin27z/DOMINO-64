@@ -59,10 +59,6 @@ public class BuilderEventoJugador implements EventBuilder<TiposJugador> {
         evento.setIdContexto(idContexto);
     }
 
-//    @Override
-//    public void setContexto(Object info) {
-//        evento.agregarInfo(info);
-//    }
 
     @Override
     public EventoJugador construirEvento() {

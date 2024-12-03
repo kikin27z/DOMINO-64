@@ -1,8 +1,8 @@
 package manejadorTablero;
 
 import abstraccion.ICliente;
-import domino64.eventos.base.Evento;
-import domino64.eventos.base.error.EventoError;
+import eventoBase.Evento;
+import eventoBaseError.EventoError;
 import entidadesDTO.JugadaRealizadaDTO;
 import eventos.EventoJugadorFicha;
 import implementacion.Client;
@@ -18,16 +18,15 @@ import tableroBuilder.DirectorTablero;
 
 /**
  *
- * @author karim
+ * @author Luisa Fernanda Morales Espinoza - 00000233450
+ * @author José Karim Franco Valencia - 00000245138
  */
 public class ControlTablero extends IControlTablero implements Runnable {
-
-    private ICliente cliente;
     private int id;
-    private AtomicBoolean running;
-    private static ExecutorService ejecutorEventos;
     private DirectorTablero director;
-    private ManejadorTablero manejador;
+    private final AtomicBoolean running;
+    private final ExecutorService ejecutorEventos;
+    private final ManejadorTablero manejador;
 
     public ControlTablero() {
         this.manejador = new ManejadorTablero();
@@ -36,7 +35,45 @@ public class ControlTablero extends IControlTablero implements Runnable {
         running = new AtomicBoolean(true);
     }
 
+    private void vincularCliente(Client _cliente) {
+        this.cliente = _cliente;
+        cliente.establecerSuscripciones(eventos);
+        _cliente.iniciar();
+        id = _cliente.getClientId();
+        director = new DirectorTablero(new BuilderEventoTablero(), id);
+        ejecutorEventos.submit(this);
+    }
+
     @Override
+    public void iniciaConexion() {
+        Client c = Client.iniciarComunicacion();
+
+        for (Enum<?> suscripcion : eventos) {
+            c.addObserver(suscripcion, this);
+        }
+
+        this.vincularCliente(c);
+    }
+
+    @Override
+    public void run() {
+        while (running.get()) {
+            try {
+                Evento nextEvent = colaEventos.take();
+                Consumer<Evento> cons = consumers.get(nextEvent.getTipo());
+                if (cons != null) {
+                    cons.accept(nextEvent);
+                }
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                Logger.getLogger(ControlTablero.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
+                break;
+            }
+        }
+    }
+    
+    
+     @Override
     public void colocarFicha(Evento evento) {
         EventoJugadorFicha _evento = (EventoJugadorFicha) evento;
         JugadaRealizadaDTO jugada = _evento.getJugada();
@@ -59,32 +96,4 @@ public class ControlTablero extends IControlTablero implements Runnable {
             Thread.currentThread().interrupt();
         }
     }
-
-    @Override
-    public void vincularCliente(Client _cliente) {
-        this.cliente = _cliente;
-        cliente.establecerSuscripciones(eventos);
-        _cliente.iniciar();
-        id = _cliente.getClientId();
-        director = new DirectorTablero(new BuilderEventoTablero(), id);
-        ejecutorEventos.submit(this);
-    }
-
-    @Override
-    public void run() {
-        while (running.get()) {
-            try {
-                Evento nextEvent = colaEventos.take();
-                Consumer<Evento> cons = consumers.get(nextEvent.getTipo());
-                if (cons != null) {
-                    cons.accept(nextEvent);
-                }
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                Logger.getLogger(ControlTablero.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
-                break;
-            }
-        }
-    }
-
 }

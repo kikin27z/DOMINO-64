@@ -6,6 +6,7 @@ import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.PosibleJugadaDTO;
 import entidadesDTO.PosicionDTO;
+import entidadesDTO.TurnosDTO;
 import eventosPartida.ObserverPartida;
 import eventosPartida.ObserverPartidaMVC;
 import java.io.IOException;
@@ -408,5 +409,10 @@ public class PartidaView implements ObserverPartidaMVC {
     @Override
     public void actualizarJugadorSeRindio(CuentaDTO cuenta) {
         System.out.println("Esta cuenta solicito rendirse");
+    }
+
+    @Override
+    public void inicializarPartida(TurnosDTO turnos) {
+        
     }
 }

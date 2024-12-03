@@ -1,6 +1,6 @@
 package observer;
 
-import domino64.eventos.base.Evento;
+import eventoBase.Evento;
 
 /**
  *
