@@ -235,6 +235,9 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
         AnchorPane panelJugadorAct = crearPanelJugadorActual(cuenta);
         panelesJugadores.add(panelJugadorAct);
         jugadoresContainer.getChildren().add(panelJugadorAct);
+        EventoLobbyMVC evento = new EventoLobbyMVC(TipoLobbyMVC.NUEVO_PANEL_JUGADOR);
+        evento.setNodo(panelJugadorAct);
+        notifyObservers(evento.getTipo(), evento);
         return panelJugadorAct;
     }
 
@@ -243,6 +246,10 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
         AnchorPane panelJugadorAct = crearPanelOtroJugador(cuenta, listo);
         panelesJugadores.add(panelJugadorAct);
         jugadoresContainer.getChildren().add(panelJugadorAct);
+        
+        EventoLobbyMVC evento = new EventoLobbyMVC(TipoLobbyMVC.NUEVO_PANEL_JUGADOR);
+        evento.setNodo(panelJugadorAct);
+        notifyObservers(evento.getTipo(), evento);
         return panelJugadorAct;
     }
 
@@ -770,9 +777,6 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
         cambiarAvatar(cuenta.getAvatar(), true);
         actualizarEncabezado(modelo.ACTUALIZACION_CANTIDAD_JUGADORES, true);
         btnIniciar.setDisable(false);
-        EventoLobbyMVC evento = new EventoLobbyMVC(TipoLobbyMVC.NUEVO_PANEL_JUGADOR);
-        evento.setNodo(nuevoPanel);
-        notifyObservers(evento.getTipo(), evento);
     }
 
     @Override

@@ -69,6 +69,9 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
         avatares = new ArrayList<>(List.of(AvatarDTO.AVE, AvatarDTO.GATO, AvatarDTO.JAGUAR, AvatarDTO.KIWI, AvatarDTO.MARIPOSA,
                 AvatarDTO.PANDA, AvatarDTO.SERPIENTE, AvatarDTO.TORTUGA, AvatarDTO.VENADO));
         panelesJugadores = new HashMap<>();
+        for (CuentaDTO cuentaDTO : cuentasJugadoresOnline) {
+            panelesJugadores.put(cuentaDTO.getIdCadena(), null);
+        }
         //cuentasJugadoresOnline = new ArrayList<>();
     }
 
@@ -178,15 +181,23 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
 
     @Override
     public void avisarCuentaLista() {
+        this.cuentaLista = true;
         for (ObserverLobby observerLobby : observersLogica) {
             observerLobby.avisarCuentaLista();
+        }
+        for (ObserverLobbyMVC ob : observersMVC) {
+            ob.actualizarCuentaLista(cuentaActual);
         }
     }
 
     @Override
     public void avisarCuentaNoLista() {
+        this.cuentaLista = false;
         for (ObserverLobby observerLobby : observersLogica) {
             observerLobby.avisarCuentaNoLista();
+        }
+        for (ObserverLobbyMVC ob : observersMVC) {
+            ob.actualizarCuentaNoLista(cuentaActual);
         }
     }
 

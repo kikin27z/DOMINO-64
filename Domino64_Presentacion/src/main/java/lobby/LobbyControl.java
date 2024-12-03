@@ -28,7 +28,8 @@ public class LobbyControl implements Observer<EventoLobbyMVC>{
         this.view = view;
         this.modelo = modelo;
         cargarEventos();  // Carga todos los eventos de la interfaz
-//        view.agregarObserver(this);
+        this.view.addObserver(TipoLobbyMVC.NUEVO_PANEL_JUGADOR,this);
+        this.view.addObserver(TipoLobbyMVC.QUITAR_PANEL_JUGADOR,this);
         view.crearJugadores();
     }
 
@@ -38,7 +39,9 @@ public class LobbyControl implements Observer<EventoLobbyMVC>{
      * específico.
      */
     private void cargarEventos() {
-        view.mostrarConfiguracion(this::abrirConfiguracion);  // Evento para abrir la configuración
+        if(modelo.getCuentaActual().esAdmin()){
+            view.mostrarConfiguracion(this::abrirConfiguracion);
+        }  // Evento para abrir la configuración
         view.mostrarAvatares(this::abrirAvatares);  // Evento para abrir la selección de avatares
         view.abandonarPartida(this::abandonarPartida);  // Evento para abandonar la partida
         view.iniciarPartida(this::actualizarJugadorListo);  // Evento para iniciar la partida
