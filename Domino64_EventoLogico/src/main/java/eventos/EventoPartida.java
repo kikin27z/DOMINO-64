@@ -64,9 +64,4 @@ public class EventoPartida extends EventoLogico {
     public TipoLogicaPartida getTipo() {
         return tipo;
     }
-
-    @Override
-    public Object getInfo() {
-        return new Object();
-    }
 }

@@ -8,7 +8,6 @@ import entidades.Lobby;
 import entidades.Partida;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
-import entidadesDTO.PartidaDTO;
 import entidadesDTO.UnirseDTO;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,7 @@ public class ManejadorLobby {
     }
     public void iniciarLobby(){
         this.lobby =  new Lobby();
-        this.partida = new Partida(lobby.getCodigoPartida());
+        this.partida = new Partida();
     }
 
     public LobbyDTO devolverLobby(){
@@ -101,12 +100,12 @@ public class ManejadorLobby {
             jugadores.add(new Jugador(cuenta));
         }
         partida.setJugadores(jugadores);
-        int idContexto = generarIdContextoPartida(partida);
+        int idContexto = generarIdContextoPartida();
         return idContexto;
     }
     
-    public int generarIdContextoPartida(Partida partida) {
-        String codigoPartida = partida.getCodigoPartida();
+    public int generarIdContextoPartida() {
+        String codigoPartida = lobby.getCodigoPartida();
         String digitos = codigoPartida.replaceFirst("-", "");
         int idContextoPartida = Integer.parseInt(digitos);
         return idContextoPartida;

@@ -45,10 +45,6 @@ public class EventoPozo extends EventoLogico{
     public List<FichaDTO> getFichas(){
         return fichas;
     }
-
-    public void setJugadoresConFichas(List<JugadorDTO> jugadores){
-        this.jugadoresConFichas = jugadores;
-    }
     
     @Override
     public TipoLogicaPozo getTipo() {

@@ -22,8 +22,8 @@ import tiposLogicos.TipoLogicaTurno;
 public abstract class IControlPartida implements Observer<Evento> {
     protected ICliente cliente;
     protected static BlockingQueue<Evento> colaEventos;
-    protected Map<Enum<?>, Consumer<Evento>> consumers;
-    protected static final List<Enum<?>> eventos = new ArrayList<>(
+    protected Map<Enum, Consumer<Evento>> consumers;
+    protected static final List<Enum> eventos = new ArrayList<>(
             List.of(
                     TipoLogicaTurno.FIN_JUEGO,
                     TipoError.ERROR_DE_SERVIDOR,
@@ -40,7 +40,7 @@ public abstract class IControlPartida implements Observer<Evento> {
         colaEventos.offer(observable); 
    }
     
-    public List<Enum<?>> getEventos() {
+    public List<Enum> getEventos() {
         return eventos;
     }
     
@@ -50,12 +50,12 @@ public abstract class IControlPartida implements Observer<Evento> {
         consumers.putIfAbsent(TipoLogicaLobby.PREPARAR_PARTIDA, this::prepararPartida);
     }
     
-    public void agregarEvento(Enum<?> evento, Consumer<Evento> consumer){
+    public void agregarEvento(Enum evento, Consumer<Evento> consumer){
         eventos.add(evento);
         consumers.putIfAbsent(evento, consumer);
     }
   
-    public List<Enum<?>> obtenerEventosSuscrito() {
+    public List<Enum> obtenerEventosSuscrito() {
         return eventos;
     }
     

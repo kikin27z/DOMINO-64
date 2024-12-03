@@ -17,15 +17,12 @@ public class LobbyDTO implements Serializable{
     private Map<CuentaDTO, Boolean> jugadoresListos;
     private CuentaDTO cuentaActual;
     private String codigo;
-    private PartidaDTO partida;
 
     public LobbyDTO() {
         cuentas = new ArrayList<>();
-        partida = new PartidaDTO();
     }
     
     public LobbyDTO(String codigoPartida) {
-        partida = new PartidaDTO(codigoPartida);
         jugadoresListos = new HashMap<>();
         cuentas = new ArrayList<>();
     }
@@ -36,29 +33,12 @@ public class LobbyDTO implements Serializable{
     }
 
     
-    
-    public void setCantidadFichas(int cantidadFichas){
-        partida.setFichasPorJugador(cantidadFichas);
-    }
-    
-    public int getCantidadFichas(){
-        return partida.getFichasPorJugador();
-    }
-    
-    public PartidaDTO getPartida() {
-        return partida;
-    }
-
-    public void setPartida(PartidaDTO partida) {
-        this.partida = partida;
-    }
-    
     public String getCodigo() {
-        return partida.getCodigoPartida();
+        return codigo;
     }
 
     public void setCodigo(String codigo) {
-        this.partida.setCodigoPartida(codigo);
+        this.codigo = codigo;
     }
     
     public void agregarJugadoresListos(List<CuentaDTO> listos){
