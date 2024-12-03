@@ -30,6 +30,8 @@ public interface INavegacion {
     /**
      * Método para cambiar la vista a la pantalla de lobby.
      * Este método debería gestionar la transición de la vista actual a la vista del lobby.
+     * @param cuenta
+     * @param lobby
      */
     public void cambiarLobby(CuentaDTO cuenta, LobbyDTO lobby);
 

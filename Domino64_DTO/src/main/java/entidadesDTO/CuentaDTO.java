@@ -1,6 +1,7 @@
 package entidadesDTO;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
@@ -64,7 +65,29 @@ public class CuentaDTO implements Serializable{
         sb.append('}');
         return sb.toString();
     }
-    
 
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 17 * hash + Objects.hashCode(this.idCadena);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CuentaDTO other = (CuentaDTO) obj;
+        return Objects.equals(this.idCadena, other.idCadena);
+    }
+    
+    
    
 }

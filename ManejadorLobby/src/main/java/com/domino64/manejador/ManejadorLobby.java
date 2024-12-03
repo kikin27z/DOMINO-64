@@ -32,6 +32,7 @@ public class ManejadorLobby {
     public CuentaDTO unirCuenta(CuentaDTO cuentaDTO){
         Cuenta cuenta = adaptadorDTO.adaptarCuentaDTO(cuentaDTO);
         cuenta = lobby.agregarCuenta(cuenta);
+        lobby.removerJugadorListo(cuenta);
         CuentaDTO aux = adaptador.adaptarEntidadCuenta(cuenta);
         return aux;
     }
