@@ -43,8 +43,6 @@ public interface INavegacion {
      * @param partidaDTO
      */
     public void cambiarPartida(PartidaIniciadaDTO partidaDTO);
-     * @param cuenta
-     */
     public void cambiarPartida(CuentaDTO cuenta);
     
     /**

@@ -1,6 +1,6 @@
 package receptorPresentacion;
 
-import entidadesDTO.FichaDTO;
+//import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
 import eventosPartida.ObserverPartida;
 import java.util.concurrent.ExecutorService;

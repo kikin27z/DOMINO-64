@@ -7,6 +7,7 @@ import entidadesDTO.TurnosDTO;
 import eventos.EventoTurno;
 import eventoBase.Evento;
 import entidadesDTO.ReglasDTO;
+import eventoBaseError.EventoError;
 import eventos.EventoLobby;
 import eventos.EventoPartida;
 import implementacion.Client;

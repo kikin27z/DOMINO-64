@@ -116,16 +116,18 @@ public class Navegacion implements INavegacion {
 
     @Override
     public void cambiarPartida(PartidaIniciadaDTO partidaDTO) {
-        PartidaModel modeloPartida = new PartidaModel();
-        modeloPartida.setPartida(partidaDTO);
-        try {
-            mediador.vincularModeloPartida(modeloPartida);
-            PartidaView partida = new PartidaView(modeloPartida); // Instancia la vista de la partida
-            partida.iniciarEscena(fondo); // Inicia la escena de la partida
-            PartidaControl partidaControl = new PartidaControl(partida, modeloPartida);
-        } catch (IOException ex) {
-            ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
-        }
+        Platform.runLater(() -> {
+            PartidaModel modeloPartida = new PartidaModel(partidaDTO.getJugadorActual().getCuenta());
+            modeloPartida.setPartida(partidaDTO);
+            try {
+                mediador.vincularModeloPartida(modeloPartida);
+                PartidaView partida = new PartidaView(modeloPartida); // Instancia la vista de la partida
+                partida.iniciarEscena(fondo); // Inicia la escena de la partida
+                PartidaControl partidaControl = new PartidaControl(partida, modeloPartida);
+            } catch (IOException ex) {
+                ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
+            }
+        });
     }
 
     public void cambiarPartida(CuentaDTO cuenta) {

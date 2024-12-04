@@ -4,6 +4,8 @@ import eventoBase.Evento;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaIniciadaDTO;
+import eventoBaseError.EventoError;
+import eventoBaseError.TipoError;
 import eventos.EventoLobby;
 import eventos.EventoPartida;
 import implementacion.Client;

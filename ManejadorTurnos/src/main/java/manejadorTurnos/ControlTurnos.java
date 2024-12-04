@@ -1,8 +1,12 @@
 package manejadorTurnos;
 
+import entidadesDTO.JugadaRealizadaDTO;
 import eventoBase.Evento;
 import entidadesDTO.MazosDTO;
 import entidadesDTO.TurnosDTO;
+import eventoBaseError.EventoError;
+import eventos.EventoJugador;
+import eventos.EventoJugadorFicha;
 import eventos.EventoPozo;
 import eventos.EventoTurno;
 import implementacion.Client;

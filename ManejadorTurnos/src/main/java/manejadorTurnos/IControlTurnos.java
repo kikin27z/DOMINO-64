@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 import observer.Observer;
 import tiposLogicos.TipoJugadorFicha;
 import tiposLogicos.TipoLogicaPozo;
+import tiposLogicos.TiposJugador;
 
 /**
  *

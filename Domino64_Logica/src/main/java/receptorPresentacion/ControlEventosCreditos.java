@@ -15,7 +15,7 @@ public class ControlEventosCreditos extends ControlEventos implements ObserverCr
         super(hiloPrincipal, display);
     }
 
-    @Override
+//    @Override
     public void avisarIrInicio() {
          hiloPrincipal.execute(()->{
             display.iniciarJuego();

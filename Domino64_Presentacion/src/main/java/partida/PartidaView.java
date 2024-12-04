@@ -123,7 +123,7 @@ public class PartidaView implements ObserverPartidaMVC {
         nodos = crearJugadores(nodos);
         AnchorPane topOptions = createTopOptions();
         createDeckIndicator();
-        ImageView playerAvatar = createPlayerAvatar();
+        ImageView playerAvatar = createPlayerAvatar(modelo.getJugador().getCuenta());
         
         nodos.add(topOptions);
         nodos.add(pozoIndicador);
@@ -267,11 +267,12 @@ public class PartidaView implements ObserverPartidaMVC {
         bottomPlayer.setStyle("-fx-background-color: #B2533E; -fx-border-color: #000000; -fx-border-radius: 20; -fx-background-radius: 20;");
         bottomPlayer.setPadding(new Insets(0, 0, -12, 20));
 
-        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
-        playerAvatar.setFitHeight(140);
-        playerAvatar.setFitWidth(140);
-        playerAvatar.setLayoutX(856);
-        playerAvatar.setLayoutY(553);
+       
+//        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
+//        playerAvatar.setFitHeight(140);
+//        playerAvatar.setFitWidth(140);
+//        playerAvatar.setLayoutX(856);
+//        playerAvatar.setLayoutY(553);
 
     }
 
@@ -307,8 +308,8 @@ public class PartidaView implements ObserverPartidaMVC {
         pozoIndicador.setCursor(Cursor.HAND);
     }
 
-    private ImageView createPlayerAvatar() {
-        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/jaguar.png")));
+    private ImageView createPlayerAvatar(CuentaDTO cuenta) {
+        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
         playerAvatar.setFitHeight(140);
         playerAvatar.setFitWidth(140);
         playerAvatar.setLayoutX(856);

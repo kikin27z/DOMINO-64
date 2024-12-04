@@ -42,14 +42,13 @@ public class FinJuegoModel implements ObservableFinJuego, ObservableFinJuegoMVC 
         this.observersLogica.remove(observador);
     }
 
-    @Override
+   // @Override
     public void avisarIrInicio() {
-        for (var observer : observersLogica) {
-            observer.avisarIrInicio();
+        for (ObserverFinJuego observer : observersLogica) {
+//            observer.avisarIrInicio();
         }
     }
 
-    
     //Modelo a vista
 
     @Override
