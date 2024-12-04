@@ -126,6 +126,12 @@ public class DistribuidorEventosModelo {
         });
     }
     
+    public void actualizarJugadorEnTurno() {
+        Platform.runLater(() -> {
+            partidaMVC.actualizarJugadorEnTurno();
+        });
+    }
+    
     public void actualizarJugadorAbandono(CuentaDTO cuenta){
         Platform.runLater(() -> {
             partidaMVC.actualizarJugadorAbandono(cuenta);

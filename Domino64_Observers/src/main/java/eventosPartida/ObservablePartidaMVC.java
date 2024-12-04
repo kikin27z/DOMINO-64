@@ -20,6 +20,7 @@ public interface  ObservablePartidaMVC {
     public void actualizarDarFichas(List<FichaDTO> fichas);
     public void actualizarDarFicha(FichaDTO ficha);
     public void actualizarJalarFicha();
+    public void actualizarJugadorEnTurno();    
     public void actualizarProximaJugada(JugadaDTO jugada);
     public void actualizarTablero(JugadaRealizadaDTO jugada, CuentaDTO cuenta);
     public void inicializarPartida(TurnosDTO turnos);
