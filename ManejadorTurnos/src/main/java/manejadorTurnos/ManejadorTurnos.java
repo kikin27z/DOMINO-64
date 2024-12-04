@@ -42,7 +42,6 @@ public class ManejadorTurnos {
 
         CuentaDTO cuenta = new CuentaDTO();
         cuenta.setIdCadena(turnoActual);
-        System.out.println("Le toca a " + cuenta.getIdCadena());
 
         return cuenta;
     }
@@ -51,7 +50,7 @@ public class ManejadorTurnos {
         Map<String, Jugador> mazos = new HashMap<>();
         for (int i = 0; i < cuentas.size(); i++) {
             String idCuenta = cuentas.get(i).getIdCadena();
-            Jugador jugador = new Jugador();
+            Jugador jugador = new Jugador(cuentas.get(i));
             jugador.setFichas(fichas.get(i));
 
             mazos.put(idCuenta, jugador);

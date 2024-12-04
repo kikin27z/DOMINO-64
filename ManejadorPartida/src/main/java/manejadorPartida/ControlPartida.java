@@ -1,10 +1,22 @@
 package manejadorPartida;
 
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.FichaDTO;
+import entidadesDTO.JugadaDTO;
+import entidadesDTO.JugadaRealizadaDTO;
+import entidadesDTO.JugadorDTO;
+import entidadesDTO.MazosDTO;
 import eventoBase.Evento;
 import entidadesDTO.ReglasDTO;
+import entidadesDTO.TurnosDTO;
+import eventos.EventoJugadorFicha;
 import eventos.EventoLobby;
 import eventos.EventoPartida;
+import eventos.EventoPozo;
+import eventos.EventoTablero;
+import eventos.EventoTurno;
 import implementacion.Client;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -89,6 +101,56 @@ public class ControlPartida extends IControlPartida implements Runnable {
         EventoPartida eventoEnviar = director.crearEventoRepartirFichas(reglas);
         cliente.enviarEvento(eventoEnviar);
         
+    }
+
+    @Override
+    public void entregarFichaJugadores(Evento evento) {
+        EventoPozo er = (EventoPozo) evento;
+        MazosDTO mazos = er.getMazos();
+        manejador.repartirFichas(mazos);
+    }
+
+    @Override
+    public void quitarFicha(Evento evento) {
+        EventoJugadorFicha er = (EventoJugadorFicha) evento;
+        JugadaRealizadaDTO jugada = er.getJugada();
+        FichaDTO ficha = jugada.getFicha();
+        
+        if(ficha == null){
+            CuentaDTO cuenta = er.getCuenta();
+            manejador.quitarFicha(cuenta, ficha);
+        }
+    }
+
+    @Override
+    public void evaluarJugador(Evento evento) {
+        EventoTurno er = (EventoTurno) evento;
+        JugadaDTO jugada = er.getJugada();
+        CuentaDTO cuenta = er.getCuenta();
+        EventoPartida eventoEnviar;
+        if(manejador.tieneJugada(cuenta)){
+            eventoEnviar = director.crearEventoTuTurno(jugada, cuenta);
+        }else{
+            eventoEnviar = director.crearEventoSolicitarSiguienteTurno();
+        }
+        cliente.enviarEvento(eventoEnviar);
+        
+    }
+
+    @Override
+    public void iniciarPartida(Evento evento) {
+        EventoTurno er = (EventoTurno) evento;
+        TurnosDTO turnos = er.getTurnos();
+        
+        EventoPartida eventoEnviar = director.crearEventoPartida(turnos);
+        cliente.enviarEvento(eventoEnviar);
+    }
+
+    @Override
+    public void asignarJugadaNueva(Evento evento) {
+        EventoTablero er =(EventoTablero)evento;
+        JugadaDTO jugada = er.getJugada();
+        manejador.agregarJugadaActual(jugada);
     }
 
 }

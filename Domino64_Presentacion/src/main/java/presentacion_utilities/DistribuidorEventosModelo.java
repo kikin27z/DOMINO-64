@@ -3,6 +3,7 @@ package presentacion_utilities;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaDTO;
+import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.ResultadosDTO;
 import entidadesDTO.TurnosDTO;
@@ -114,9 +115,9 @@ public class DistribuidorEventosModelo {
         });
     }
 
-    public void actualizarTurno(JugadaDTO jugada) {
+    public void actualizarProximaJugada(JugadaDTO jugada) {
         Platform.runLater(() -> {
-            partidaMVC.actualizarTurno(jugada);
+            partidaMVC.actualizarProximaJugada(jugada);
         });
     }
     
@@ -130,6 +131,12 @@ public class DistribuidorEventosModelo {
     public void actualizarJugadorSeRindio(CuentaDTO cuenta){
         Platform.runLater(() -> {
             partidaMVC.actualizarJugadorSeRindio(cuenta);
+        });
+    }
+    
+    public void jugadaRealizada(JugadaRealizadaDTO jugada, CuentaDTO cuenta){
+        Platform.runLater(() -> {
+            partidaMVC.actualizarTablero(jugada,cuenta);
         });
     }
 

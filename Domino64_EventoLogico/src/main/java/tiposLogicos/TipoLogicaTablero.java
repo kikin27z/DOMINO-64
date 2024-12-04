@@ -7,6 +7,6 @@ package tiposLogicos;
  * @author José Karim Franco Valencia - 00000245138
  */
 public enum TipoLogicaTablero{
-    OBTENER_EXTREMOS,
+    OBTENER_JUGADA,
     JALAR_FICHA;
 }

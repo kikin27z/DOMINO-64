@@ -61,4 +61,14 @@ public class Partida {
     public int obtenerNumJugadoresRendidos(){
         return jugadoresRendidos;
     } 
+    
+    public Jugador obtenerJugador(Cuenta cuenta){
+        for(Jugador jugador : jugadores){
+            if(jugador.esCuentaJugador(cuenta)){
+                return jugador;
+                
+            }
+        }
+        return null;
+    }
 }

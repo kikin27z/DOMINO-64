@@ -11,7 +11,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Consumer;
 import observer.Observer;
+import tiposLogicos.TipoJugadorFicha;
 import tiposLogicos.TipoLogicaLobby;
+import tiposLogicos.TipoLogicaPozo;
+import tiposLogicos.TipoLogicaTablero;
 import tiposLogicos.TipoLogicaTurno;
 
 /**
@@ -27,7 +30,11 @@ public abstract class IControlPartida implements Observer<Evento> {
             List.of(
                     TipoLogicaTurno.FIN_JUEGO,
                     TipoError.ERROR_DE_SERVIDOR,
-                    TipoLogicaLobby.PREPARAR_PARTIDA
+                    TipoLogicaLobby.PREPARAR_PARTIDA,
+                    TipoLogicaPozo.REPARTIR_FICHAS,
+                    TipoJugadorFicha.JUGADA_REALIZADA,
+                    TipoLogicaTurno.TURNOS_DESIGNADOS,
+                    TipoLogicaTurno.TURNO_ACTUAL
             ));
     
     protected IControlPartida(){
@@ -48,6 +55,12 @@ public abstract class IControlPartida implements Observer<Evento> {
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
         consumers.putIfAbsent(TipoLogicaTurno.FIN_JUEGO, this::finJuegoSinMovimientos);
         consumers.putIfAbsent(TipoLogicaLobby.PREPARAR_PARTIDA, this::prepararPartida);
+        consumers.putIfAbsent(TipoLogicaPozo.REPARTIR_FICHAS, this::entregarFichaJugadores);
+        consumers.putIfAbsent(TipoJugadorFicha.JUGADA_REALIZADA, this::quitarFicha);
+        consumers.putIfAbsent(TipoLogicaTurno.TURNO_ACTUAL, this::evaluarJugador);
+        consumers.putIfAbsent(TipoLogicaTurno.TURNOS_DESIGNADOS, this::iniciarPartida);
+        consumers.putIfAbsent(TipoLogicaTablero.OBTENER_JUGADA, this::asignarJugadaNueva);
+        
     }
     
     public void agregarEvento(Enum evento, Consumer<Evento> consumer){
@@ -62,4 +75,9 @@ public abstract class IControlPartida implements Observer<Evento> {
     public abstract void manejarError(Evento evento);
     public abstract void finJuegoSinMovimientos(Evento evento);
     public abstract void prepararPartida(Evento evento);
+    public abstract void entregarFichaJugadores(Evento evento);
+    public abstract void quitarFicha(Evento evento);
+    public abstract void evaluarJugador(Evento evento);
+    public abstract void iniciarPartida(Evento evento);
+    public abstract void asignarJugadaNueva(Evento evento);
 }

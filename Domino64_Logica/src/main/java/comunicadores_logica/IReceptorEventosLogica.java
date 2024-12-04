@@ -13,8 +13,11 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Consumer;
 import manejadores.ManejadorCuenta;
 import observer.Observer;
+import tiposLogicos.TipoJugadorFicha;
 import tiposLogicos.TipoLogicaLobby;
 import tiposLogicos.TipoLogicaPartida;
+import tiposLogicos.TipoLogicaTablero;
+import tiposLogicos.TipoLogicaTurno;
 import utilities.DirectorSuscripcion;
 
 /**
@@ -30,6 +33,7 @@ import utilities.DirectorSuscripcion;
  * @author José Karim Franco Valencia - 00000245138
  */
 public abstract class IReceptorEventosLogica implements Observer<Evento> {
+
     protected ICliente cliente;
     protected DirectorSuscripcion directorSuscripcion;
     protected static BlockingQueue<Evento> colaEventos;
@@ -44,7 +48,9 @@ public abstract class IReceptorEventosLogica implements Observer<Evento> {
                     TipoLogicaLobby.CUENTA_ABANDONO,
                     TipoLogicaLobby.CUENTA_ENTRO,
                     TipoLogicaLobby.AVATAR_ACTUALIZADO,
-                    TipoLogicaPartida.INICIO_PARTIDA
+                    TipoLogicaPartida.INICIO_PARTIDA,
+                    TipoJugadorFicha.JUGADA_REALIZADA,
+                    TipoJugadorFicha.JALAR_FICHA
             ));
 
     public IReceptorEventosLogica() {
@@ -54,37 +60,37 @@ public abstract class IReceptorEventosLogica implements Observer<Evento> {
 
     @Override
     public void update(Evento observable) {
-        colaEventos.offer(observable); 
+        colaEventos.offer(observable);
     }
 
     public List<Enum> getEventos() {
         return eventos;
     }
-    
+
     public void enviarEvento(Evento evento) {
         cliente.enviarEvento(evento);
     }
-    
+
     public abstract int devolverIdCliente();
 
-    public void agregarSuscripcion(Enum eventoSuscripcion, Consumer<Evento> consumer){
+    public void agregarSuscripcion(Enum eventoSuscripcion, Consumer<Evento> consumer) {
         EventoSuscripcion suscripcion = directorSuscripcion.crearEventoSuscribirse(eventoSuscripcion);
         cliente.agregarSuscripcion(suscripcion, this);
         agregarEvento(eventoSuscripcion, consumer);
     }
-    
-    public void removerSuscripcion(Enum eventoSuscripcion){
+
+    public void removerSuscripcion(Enum eventoSuscripcion) {
         EventoSuscripcion suscripcion = directorSuscripcion.crearEventoDesuscribirse(eventoSuscripcion);
         cliente.removerSuscripcion(suscripcion, this);
         removerEvento(eventoSuscripcion);
     }
-    
-    private void agregarEvento( Enum evento, Consumer<Evento> consumer) {
+
+    private void agregarEvento(Enum evento, Consumer<Evento> consumer) {
         this.eventos.add(evento);
         consumers.putIfAbsent(evento, consumer);
     }
 
-    private void removerEvento( Enum evento) {
+    private void removerEvento(Enum evento) {
         this.eventos.remove(evento);
         consumers.remove(evento);
     }
@@ -99,31 +105,50 @@ public abstract class IReceptorEventosLogica implements Observer<Evento> {
         consumers.putIfAbsent(TipoLogicaLobby.AVATAR_ACTUALIZADO, this::actualizarAvatares);
         consumers.putIfAbsent(TipoLogicaLobby.NO_SE_PUDO_UNIR, this::errorUnirse);
         consumers.putIfAbsent(TipoLogicaLobby.CUENTA_ENTRO, this::cuentaEntro);
+        consumers.putIfAbsent(TipoJugadorFicha.JUGADA_REALIZADA, this::jugadaRealizada);
+        consumers.putIfAbsent(TipoJugadorFicha.JALAR_FICHA, this::jalarFicha);
+        consumers.putIfAbsent(TipoLogicaPartida.INICIO_PARTIDA, this::inicializarPartida);
+        consumers.putIfAbsent(TipoLogicaTablero.JALAR_FICHA, this::proximaJugada);
+
     }
 
     public List<Enum> obtenerEventosSuscrito() {
         return eventos;
     }
-    
+
     public abstract void vincularCuenta();
 
     public abstract void vincularDisplay();
+
     public abstract void iniciaConexion();
+
     public abstract void recibirPartida(Evento evento);
 
     public abstract void adminAbandono(Evento evento);
-    public abstract void cuentaAbandono(Evento evento);
-    public abstract void cuentaLista(Evento evento);
-    public abstract void cuentaNoLista(Evento evento);
-    public abstract void cuentaEntro(Evento evento);
 
+    public abstract void cuentaAbandono(Evento evento);
+
+    public abstract void cuentaLista(Evento evento);
+
+    public abstract void cuentaNoLista(Evento evento);
+
+    public abstract void cuentaEntro(Evento evento);
 
     public abstract void actualizarAvatares(Evento evento);
 
-
     public abstract void manejarError(Evento evento);
-    
-    public abstract void partidaEncontrada(Evento evento);
-    public abstract void partidaCreada(Evento evento);
+
+    public abstract void lobbyEncontrado(Evento evento);
+
+    public abstract void lobbyCreado(Evento evento);
+
     public abstract void errorUnirse(Evento evento);
+
+    public abstract void jugadaRealizada(Evento evento);
+
+    public abstract void jalarFicha(Evento evento);
+
+    public abstract void inicializarPartida(Evento evento);
+
+    public abstract void proximaJugada(Evento evento);
 }

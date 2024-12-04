@@ -1,9 +1,13 @@
 package manejadorTurnos;
 
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.JugadaDTO;
 import eventoBase.Evento;
 import entidadesDTO.MazosDTO;
 import entidadesDTO.TurnosDTO;
 import eventos.EventoPozo;
+import eventos.EventoTablero;
+import eventos.EventoTurno;
 import implementacion.Client;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -81,19 +85,23 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
         MazosDTO mazos = eventoRecibido.getMazos();
         
         TurnosDTO turnos = manejador.determinarOrden(mazos);
-        
-        
-        manejador.rotarSiguienteTurno();
-        manejador.rotarSiguienteTurno();
-        manejador.rotarSiguienteTurno();
-        manejador.rotarSiguienteTurno();
-        manejador.rotarSiguienteTurno();
-        manejador.rotarSiguienteTurno();
+        EventoTurno eventoEnviar = director.crearEventoTurnoDesignados(turnos);
+        cliente.enviarEvento(eventoEnviar);
         
     }
 
     @Override
     public void cambiarTurno(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoTablero er = (EventoTablero) evento;
+        JugadaDTO jugada = er.getJugada();
+        CuentaDTO cuenta =  manejador.rotarSiguienteTurno();
+        
+        EventoTurno  eventoEnviar;
+        if(cuenta != null){
+            eventoEnviar = director.crearEventoTurnoActual(cuenta);
+        }else{
+            eventoEnviar = director.crearEventoFinJuego();
+        }
+        cliente.enviarEvento(eventoEnviar);
     }
 }

@@ -13,6 +13,7 @@ public interface ObservablePartida {
     public void agregarObserver(ObserverPartida observador);
     public void quitarObserver(ObserverPartida observador);
     public void avisarJalarFichaPozo();
+    public void avisarJugadaRealizada(JugadaRealizadaDTO jugada);
     public void avisarAbandonarPartida();
     public void avisarPeticionRendirse();
 }

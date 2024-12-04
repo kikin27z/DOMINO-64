@@ -2,7 +2,9 @@ package partidaBuilder;
 
 import builder.EventBuilder;
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.JugadaDTO;
 import entidadesDTO.ReglasDTO;
+import entidadesDTO.TurnosDTO;
 import eventos.EventoPartida;
 import tiposLogicos.TipoLogicaPartida;
 
@@ -39,6 +41,14 @@ public class BuilderEventoPartida implements EventBuilder<TipoLogicaPartida>{
     @Override
     public void setIdDestinatario(int idDestinatario) {
         evento.setIdDestinatario(idDestinatario);
+    }
+    
+    public void setTurnos(TurnosDTO turnos){
+        evento.setTurnos(turnos);
+    }
+    
+    public void setJugadaDTO(JugadaDTO jugada){
+        evento.setJugada(jugada);
     }
 
     @Override

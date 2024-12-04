@@ -13,5 +13,7 @@ public enum TipoLogicaPartida {
     JUGADOR_GANO,
     JUGADOR_SALIO,
     PETICION_RENDIRSE,
+    SIGUIENTE_TURNO,
+    JUGADOR_EN_TURNO,
     REVOLVER_FICHAS;
 }
