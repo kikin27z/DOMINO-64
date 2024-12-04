@@ -2,9 +2,23 @@ package comunicadores_logica;
 
 import eventoBase.Evento;
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.FichaDTO;
+import entidadesDTO.JugadaDTO;
+import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.LobbyDTO;
+import entidadesDTO.PartidaIniciadaDTO;
+import entidadesDTO.PosibleJugadaDTO;
+import eventoBaseError.EventoError;
+import eventoBaseError.TipoError;
 import eventos.EventoLobby;
+import eventos.EventoPartida;
+import entidadesDTO.TurnosDTO;
+import eventos.EventoJugadorFicha;
+import eventos.EventoPozo;
+import eventos.EventoTablero;
+import eventos.EventoTurno;
 import implementacion.Client;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -16,7 +30,8 @@ import manejadores.ManejadorCuenta;
 import manejadores.ManejadorDisplay;
 import presentacion_utilities.DistribuidorEventosModelo;
 import tiposLogicos.TipoLogicaLobby;
-import utilities.BuilderEventoSuscripcion;
+import tiposLogicos.TipoLogicaPartida;
+import tiposLogicos.TipoLogicaPozo;
 import utilities.DirectorSuscripcion;
 
 /**
@@ -84,8 +99,6 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
 //        }
     }
 
-
-
     @Override
     public void actualizarAvatares(Evento evento) {
         
@@ -116,14 +129,12 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     @Override
     public void partidaCreada(Evento evento) {
         EventoLobby eventoRecibido = (EventoLobby) evento;
-//        if(evento.getIdDestinatario() != id){
-//            return;
-//        }
         LobbyDTO lobby = eventoRecibido.obtenerLobby();
         System.out.println("\ncodigo partida: "+lobby.getCodigo()+"\n");
         System.out.println("cuentas--"+ lobby.getCuentas());
         
-        removerSuscripcion(TipoLogicaLobby.PARTIDA_CREADA);
+        agregarSuscripcion(TipoLogicaPartida.INICIO_PARTIDA, this::inicializarPartida);
+        removerSuscripcion(TipoLogicaLobby.LOBBY_CREADO);
         CuentaDTO aux = eventoRecibido.getPublicador();
         manejadorCuenta.asignarCuenta(aux);
         CuentaDTO cuentaDTO = manejadorCuenta.getCuenta();
@@ -142,7 +153,8 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
         LobbyDTO lobby = eventoRecibido.obtenerLobby();
         CuentaDTO aux = eventoRecibido.getPublicador();
         //ya no va a recibir los eventos de partida encontrada
-        removerSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA);
+        agregarSuscripcion(TipoLogicaPartida.INICIO_PARTIDA, this::inicializarPartida);
+        removerSuscripcion(TipoLogicaLobby.LOBBY_ENCONTRADO);
         
         manejadorCuenta.asignarCuenta(aux);
         CuentaDTO cuenta = manejadorCuenta.getCuenta();
@@ -192,7 +204,7 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
         EventoLobby eventoLobby  = (EventoLobby) evento;
         CuentaDTO cuentaAbandono = eventoLobby.getPublicador();
         System.out.println(eventoLobby);
-        
+        distribuidor.actualizarQuitarCuenta(cuentaAbandono);
 //        if(eventoLobby.getIdDestinatario() == id){
 //            manejadorCuenta.borrarPerfil();
 //            display.mostrarInicio();
@@ -224,6 +236,54 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
         
         CuentaDTO cuentaNueva = evLobby.getPublicador();
         distribuidor.actualizarNuevoJugador(cuentaNueva);
+    }
+
+    @Override
+    public void jugadaRealizada(Evento evento) {
+        EventoJugadorFicha er = (EventoJugadorFicha) evento;
+        
+        JugadaRealizadaDTO jugada = er.getJugada();
+        CuentaDTO cuenta = er.getCuenta();
+        distribuidor.jugadaRealizada(jugada, cuenta);
+    }
+
+    @Override
+    public void jalarFicha(Evento evento) {
+        distribuidor.actualizarJalarFicha();
+    }
+
+    @Override
+    public void inicializarPartida(Evento evento) {
+        EventoPartida er = (EventoPartida) evento;
+        TurnosDTO turnos = er.getTurnos();
+        
+        CuentaDTO cuentaDTO = manejadorCuenta.getCuenta();
+        display.mostrarPartida(cuentaDTO);
+        distribuidor.inicializarPartida(turnos);
+    }
+
+    @Override
+    public void proximaJugada(Evento evento) {
+        EventoPartida prox = (EventoPartida)evento;
+        JugadaDTO jugada = prox.getJugada();
+        
+        if(manejadorCuenta.getCuenta().equals(prox.getCuenta())){
+            distribuidor.actualizarProximaJugada(jugada);
+        }
+    }
+    
+    @Override
+    public void pasarTurno(Evento evento){
+        distribuidor.mostrarMensajeError("El pozo no tiene fichas. Pasas turno");
+    }
+
+    @Override
+    public void fichaObtenida(Evento evento) {
+        EventoPozo fichaOb = (EventoPozo)evento;
+        FichaDTO ficha = fichaOb.getFicha();
+        distribuidor.actualizarDarFicha(ficha);
+        removerSuscripcion(TipoLogicaPozo.FICHA_OBTENIDA);
+        removerSuscripcion(TipoLogicaPozo.POZO_VACIO);
     }
     
 }

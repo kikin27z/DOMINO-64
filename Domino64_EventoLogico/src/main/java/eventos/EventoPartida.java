@@ -1,9 +1,16 @@
 package eventos;
 
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.FichaDTO;
+import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadorDTO;
+import entidadesDTO.PartidaIniciadaDTO;
+import entidadesDTO.PosibleJugadaDTO;
 import entidadesDTO.ReglasDTO;
 import entidadesDTO.ResultadosDTO;
+import entidadesDTO.TurnosDTO;
+import java.util.List;
+import java.util.Map;
 import tiposLogicos.TipoLogicaPartida;
 
 /**
@@ -16,6 +23,9 @@ public class EventoPartida extends EventoLogico {
     private TipoLogicaPartida tipo;
     private ReglasDTO reglas;
     private JugadorDTO jugador;
+    private TurnosDTO turnos;
+    private JugadaDTO jugada;
+    private Map<FichaDTO, PosibleJugadaDTO> posiblesJugadas;
     private ResultadosDTO resultados;
     
     public EventoPartida(){}
@@ -24,6 +34,31 @@ public class EventoPartida extends EventoLogico {
         this.tipo = tipo;
     }
 
+    public TurnosDTO getTurnos() {
+        return turnos;
+    }
+
+    public Map<FichaDTO, PosibleJugadaDTO> getPosiblesJugadas() {
+        return posiblesJugadas;
+    }
+
+    public void setPosiblesJugadas(Map<FichaDTO, PosibleJugadaDTO> posiblesJugadas) {
+        this.posiblesJugadas = posiblesJugadas;
+    }
+
+    public void setTurnos(TurnosDTO turnos) {
+        this.turnos = turnos;
+    }
+
+    public JugadaDTO getJugada() {
+        return jugada;
+    }
+
+    public void setJugada(JugadaDTO jugada) {
+        this.jugada = jugada;
+    }
+
+    
     public JugadorDTO getJugador() {
         return jugador;
     }

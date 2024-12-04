@@ -82,7 +82,6 @@ public class PartidaView implements ObserverPartidaMVC {
         bottomPlayer.getChildren().remove(dibujo);
         modelo.quitarMapeoFichas();
     }
-
     private AnchorPane createGameInterface() {
         // Main container
         AnchorPane root = new AnchorPane();
@@ -402,8 +401,8 @@ public class PartidaView implements ObserverPartidaMVC {
     }
 
     @Override
-    public void actualizarTurno(JugadaDTO jugada) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void actualizarProximaJugada(JugadaDTO jugada) {
+        System.out.println("Es tu turno");
     }
 
     @Override
@@ -413,6 +412,28 @@ public class PartidaView implements ObserverPartidaMVC {
 
     @Override
     public void inicializarPartida(TurnosDTO turnos) {
-        
+        colocarNumeroPozo(modelo.fichasRestantesPozoInicio());
+
+        switch (modelo.cuantosJugadoresSon()) {
+            case 2 -> {
+                partida2Jugadores(turnos.getMazos());
+            }
+            case 3 -> {
+                partida3Jugadores(turnos.getMazos());
+            }
+            default -> {
+                partida4Jugadores(turnos.getMazos());
+            }
+        }
+
+    }
+
+    @Override
+    public void actualizarTablero(JugadaRealizadaDTO jugada) {
+        gameBoard.dibujarFicha(jugada);
+    }
+
+    private void colocarNumeroPozo(int fichasRestantesPozoInicio) {
+        contadorPozo.setText(String.valueOf(fichasRestantesPozoInicio));
     }
 }

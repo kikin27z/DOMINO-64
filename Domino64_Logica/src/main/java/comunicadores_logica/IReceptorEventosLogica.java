@@ -15,6 +15,9 @@ import manejadores.ManejadorCuenta;
 import observer.Observer;
 import tiposLogicos.TipoLogicaLobby;
 import tiposLogicos.TipoLogicaPartida;
+import tiposLogicos.TipoLogicaPozo;
+import tiposLogicos.TipoLogicaTablero;
+import tiposLogicos.TipoLogicaTurno;
 import utilities.DirectorSuscripcion;
 
 /**
@@ -44,7 +47,11 @@ public abstract class IReceptorEventosLogica implements Observer<Evento> {
                     TipoLogicaLobby.CUENTA_ABANDONO,
                     TipoLogicaLobby.CUENTA_ENTRO,
                     TipoLogicaLobby.AVATAR_ACTUALIZADO,
-                    TipoLogicaPartida.INICIO_PARTIDA
+                    TipoLogicaPartida.INICIO_PARTIDA,
+                    TipoJugadorFicha.JUGADA_REALIZADA,
+                    TipoLogicaPartida.SIN_JUGADAS,
+                    TipoLogicaPartida.JUGADOR_EN_TURNO
+//                    TipoJugadorFicha.JALAR_FICHA,
             ));
 
     public IReceptorEventosLogica() {
@@ -99,6 +106,12 @@ public abstract class IReceptorEventosLogica implements Observer<Evento> {
         consumers.putIfAbsent(TipoLogicaLobby.AVATAR_ACTUALIZADO, this::actualizarAvatares);
         consumers.putIfAbsent(TipoLogicaLobby.NO_SE_PUDO_UNIR, this::errorUnirse);
         consumers.putIfAbsent(TipoLogicaLobby.CUENTA_ENTRO, this::cuentaEntro);
+        consumers.putIfAbsent(TipoJugadorFicha.JUGADA_REALIZADA, this::jugadaRealizada);
+//        consumers.putIfAbsent(TipoJugadorFicha.JALAR_FICHA, this::jalarFicha);
+        consumers.putIfAbsent(TipoLogicaPartida.INICIO_PARTIDA, this::inicializarPartida);
+        consumers.putIfAbsent(TipoLogicaPartida.JUGADOR_EN_TURNO, this::proximaJugada);
+        consumers.putIfAbsent(TipoLogicaPartida.SIN_JUGADAS, this::jalarFicha);
+
     }
 
     public List<Enum> obtenerEventosSuscrito() {
@@ -122,8 +135,18 @@ public abstract class IReceptorEventosLogica implements Observer<Evento> {
 
 
     public abstract void manejarError(Evento evento);
-    
-    public abstract void partidaEncontrada(Evento evento);
-    public abstract void partidaCreada(Evento evento);
-    public abstract void errorUnirse(Evento evento);
+
+    public abstract void lobbyEncontrado(Evento evento);
+
+    public abstract void lobbyCreado(Evento evento);
+
+    public abstract void jugadaRealizada(Evento evento);
+
+    public abstract void jalarFicha(Evento evento);
+    public abstract void fichaObtenida(Evento evento);
+
+    public abstract void inicializarPartida(Evento evento);
+
+    public abstract void proximaJugada(Evento evento);
+    public abstract void pasarTurno(Evento evento);
 }

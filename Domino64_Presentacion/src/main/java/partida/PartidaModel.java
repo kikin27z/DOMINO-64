@@ -29,6 +29,7 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
     private static final Logger logger = Logger.getLogger(PartidaModel.class.getName());
     private JugadorDTO jugador;
     private Map<Canvas, FichaDTO> mapeoFichas;
+    private Map<FichaDTO, PosibleJugadaDTO> jugadasPosibles;
     private final List<ObserverPartida> logicaObservers;
     private final List<ObserverPartidaMVC> viewObservers;
     private FichaDTO mulaAlta = new FichaDTO(-1, -1);
@@ -76,6 +77,25 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
     public boolean esLaMulaAlta(FichaDTO ficha) {
         return mulaAlta.esLaMismaFicha(ficha);
     }
+    
+    public void setPartida(PartidaIniciadaDTO partida){
+//        this.partida = partida;
+//        this.jugador = partida.getJugadorActual();
+//        jugadores = partida.getJugadores();
+//        jugadores.remove(jugador.getCuenta());
+    }
+//    
+//    public List<CuentaDTO> getJugadores(){
+//        return jugadores;
+//    }
+//    
+//    public int getCantidadJugadores(){
+//        return partida.getCantidadJugadores();
+//    }
+//    
+//    public int getCantidadFichasPorJugador(){
+//        return jugador.getFichas().size();
+//    }
 
     public PosibleJugadaDTO obtenerPosibleJugada(FichaDTO ficha) {
         
@@ -182,15 +202,17 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
     }
 
     @Override
-    public void actualizarTurno(JugadaDTO jugada) {
-        primeraJugadaHecha = (jugada == null);
+    public void actualizarProximaJugada(JugadaDTO jugada) {
         esMiTurno = true;
-        if (primeraJugadaHecha) {
-            System.out.println("Primera jugada sera??...");
-            designarMulaAlta();
-        } else {
-            jugadaActual = jugada;
+        this.jugadaActual = jugada;
+        for (var observer : viewObservers) {
+            observer.actualizarProximaJugada(jugada);
         }
+    }
+
+    @Override
+    public void actualizarJalarFicha() {
+        System.out.println("Tienes que jalar ficha");
     }
 
     @Override
@@ -216,7 +238,9 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
 
     @Override
     public void avisarJalarFichaPozo() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        for (ObserverPartida logicaObserver : logicaObservers) {
+            logicaObserver.avisarJalarFichaPozo();
+        }
     }
 
     @Override
@@ -229,4 +253,31 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    @Override
+    public void actualizarTablero(JugadaRealizadaDTO jugada, CuentaDTO cuenta) {
+        for (var observer : viewObservers) {
+            observer.actualizarTablero(jugada);
+        }
+    }
+
+    private void empiezaJugadorActual(LinkedList<String> orden) {
+        String primerJugador = orden.getFirst();
+        if (cuentaActual.getIdCadena().equalsIgnoreCase(primerJugador)) {
+            esMiTurno = true;
+            primeraJugadaHecha = false;
+            designarMulaAlta();
+        }
+    }
+
+    @Override
+    public void avisarJugadaRealizada(JugadaRealizadaDTO jugada) {
+        esMiTurno = false;
+        for(var observer : logicaObservers){
+            observer.avisarJugadaRealizada(jugada);
+        }
+        
+        for (var observer : viewObservers) {
+            observer.actualizarTablero(jugada);
+        }
+    }
 }

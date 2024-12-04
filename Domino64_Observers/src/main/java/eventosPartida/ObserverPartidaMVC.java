@@ -18,4 +18,7 @@ public interface ObserverPartidaMVC {
     public void actualizarDarFicha(FichaDTO ficha);
     public void actualizarTurno(JugadaDTO jugada);
     public void inicializarPartida(TurnosDTO turnos);
+
+    public void actualizarTablero(JugadaRealizadaDTO jugada);
+
 }

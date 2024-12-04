@@ -8,6 +8,8 @@ import entidadesDTO.UnirseDTO;
 import eventos.EventoJugador;
 import eventos.EventoJugadorFicha;
 import tiposLogicos.TipoLogicaLobby;
+import tiposLogicos.TipoLogicaPartida;
+import tiposLogicos.TipoLogicaPozo;
 import utilities.DirectorJugador;
 import utilities.DirectorJugadorFicha;
 
@@ -40,8 +42,8 @@ public class ManejadorNotificador {
         CuentaDTO cuentaDTO = manejadorCuenta.getCuenta();
         unirse.setCuenta(cuentaDTO);
         EventoJugador crear = directorEventos.crearEventoUnirsePartida(unirse);
+        receptor.agregarSuscripcion(TipoLogicaLobby.LOBBY_ENCONTRADO, receptor::lobbyEncontrado);
         receptor.enviarEvento(crear);
-        receptor.agregarSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA, receptor::partidaEncontrada);
     }
 
     public void abandonarLobby() {
@@ -81,6 +83,8 @@ public class ManejadorNotificador {
     public void jalarFichaPozo() {
         CuentaDTO cuenta = manejadorCuenta.getCuenta();
         EventoJugadorFicha evento = directorEventosFicha.crearEventoJalarPozo(cuenta);
+        receptor.agregarSuscripcion(TipoLogicaPozo.FICHA_OBTENIDA, receptor::fichaObtenida);
+        receptor.agregarSuscripcion(TipoLogicaPozo.POZO_VACIO, receptor::pasarTurno);
         receptor.enviarEvento(evento);
     }
 

@@ -114,7 +114,13 @@ public class DistribuidorEventosModelo {
         });
     }
 
-    public void actualizarTurno(JugadaDTO jugada) {
+    public void actualizarJalarFicha() {
+        Platform.runLater(() -> {
+            partidaMVC.actualizarJalarFicha();
+        });
+    }
+
+    public void actualizarProximaJugada(JugadaDTO jugada) {
         Platform.runLater(() -> {
             partidaMVC.actualizarTurno(jugada);
         });

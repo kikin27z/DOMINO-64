@@ -105,7 +105,13 @@ public class ControlPozo extends IControlPozo implements Runnable {
     @Override
     public void jalarFicha(Evento evento) {
         FichaDTO ficha = manejador.jalarPozo();
-        EventoPozo eventoEnviar = director.crearEventoFichaJalada(ficha);
+        EventoPozo eventoEnviar;
+        if(ficha != null){
+            eventoEnviar = director.crearEventoFichaJalada(ficha);
+        }else{
+            eventoEnviar = director.crearEventoPozoVacio();
+        }
+        
         cliente.enviarEvento(eventoEnviar);
     }
 

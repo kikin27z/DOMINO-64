@@ -9,6 +9,11 @@ import entidades.Partida;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadorDTO;
+import entidadesDTO.PartidaIniciadaDTO;
+import entidadesDTO.ResultadosDTO;
+import entidadesDTO.TurnosDTO;
+import entidadesDTO.MazosDTO;
+import entidadesDTO.PosibleJugadaDTO;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,5 +60,58 @@ public class ManejadorPartida {
         List<Ficha> fichas = partida.abandonoJugador(j);
         List<FichaDTO> fichasJugadorAbandono = adaptador.adaptarEntidadesFicha(fichas);
         return fichasJugadorAbandono;
+    }
+    
+    public void quitarFicha(CuentaDTO c, FichaDTO f){
+        Cuenta cuenta = adaptadorDTO.adaptarCuentaDTO(c);
+        Ficha ficha = adaptadorDTO.adaptarFichaDTO(f);
+        
+        Jugador jugador = partida.obtenerJugador(cuenta);
+        jugador.removerFicha(ficha);
+    }
+    
+    public void repartirFichas(MazosDTO mazos){
+        List<Cuenta> cuentas = adaptadorDTO.adaptarCuentasDTO(mazos.getCuentas());
+        List<List<Ficha>> manos = new ArrayList<>();
+        
+        for(var mazo : mazos.getMazos()){
+            List<Ficha> fichas = adaptadorDTO.adaptarFichaDTO(mazo);
+            manos.add(fichas);
+        }
+        
+        for (int i = 0; i < cuentas.size(); i++) {
+             Jugador jugador = partida.obtenerJugador(cuentas.get(i));
+            jugador.setFichas(manos.get(i));
+        }
+    }
+    
+    public JugadaDTO obtenerJugadaActual(){
+        return adaptador.adaptarJugada(jugadaActual);
+    }
+    
+    public void agregarJugadaActual(JugadaDTO jugadaDTO){
+        this.jugadaActual = adaptadorDTO.adaptarJugadaDTO(jugadaDTO);
+    }
+    
+    
+    public Map<FichaDTO, PosibleJugadaDTO> jugadasPosibles(CuentaDTO cuentaDTO, JugadaDTO jugadaPosible){
+        Cuenta aux = adaptadorDTO.adaptarCuentaDTO(cuentaDTO);
+        Jugador jugador = partida.obtenerJugador(aux);
+
+        Map<FichaDTO, PosibleJugadaDTO> jugadas = new HashMap<>();
+        for (Ficha ficha : jugador.getFichas()) {
+            PosibleJugadaDTO jugada = jugadaPosible.determinarJugada(adaptador.adaptarEntidadFicha(ficha));
+            if (!jugada.equals(PosibleJugadaDTO.NINGUNA)) {
+                jugadas.put(adaptador.adaptarEntidadFicha(ficha), jugada);
+            }
+        }
+        return jugadas;
+    }
+    
+    public boolean tieneJugada(CuentaDTO cuentaDTO){
+        Cuenta aux = adaptadorDTO.adaptarCuentaDTO(cuentaDTO);
+        Jugador jugador = partida.obtenerJugador(aux);
+        
+        return jugadaActual.puedeJugar(jugador.getFichas());
     }
 }

@@ -12,6 +12,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Consumer;
 import observer.Observer;
 import tiposLogicos.TipoJugadorFicha;
+import tiposLogicos.TipoLogicaPartida;
 import tiposLogicos.TipoLogicaPozo;
 
 /**
@@ -27,7 +28,9 @@ public abstract class IControlTurnos implements Observer<Evento> {
             List.of(
                     TipoError.ERROR_DE_SERVIDOR,
                     TipoLogicaPozo.REPARTIR_FICHAS,
-                    TipoJugadorFicha.JUGADA_REALIZADA
+//                    TipoJugadorFicha.JUGADA_REALIZADA,
+                    TipoLogicaTablero.OBTENER_JUGADA,
+                    TipoLogicaPartida.SIGUIENTE_TURNO
             ));
     
     protected IControlTurnos(){
@@ -50,7 +53,9 @@ public abstract class IControlTurnos implements Observer<Evento> {
     protected void setConsumers(){
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
         consumers.putIfAbsent(TipoLogicaPozo.REPARTIR_FICHAS, this::asignarOrden);
-        consumers.putIfAbsent(TipoJugadorFicha.JUGADA_REALIZADA, this::cambiarTurno);
+//        consumers.putIfAbsent(TipoJugadorFicha.JUGADA_REALIZADA, this::evaluarJugada);
+        consumers.putIfAbsent(TipoLogicaTablero.OBTENER_JUGADA, this::cambiarTurno);
+        consumers.putIfAbsent(TipoLogicaPartida.SIGUIENTE_TURNO, this::pasarTurno);
     }
     
     public void agregarEvento(Enum evento, Consumer<Evento> consumer){
@@ -65,6 +70,9 @@ public abstract class IControlTurnos implements Observer<Evento> {
     public abstract void manejarError(Evento evento);
     public abstract void asignarOrden(Evento evento);
     public abstract void cambiarTurno(Evento evento);
+    public abstract void pasarTurno(Evento evento);
+    public abstract void removerJugador(Evento evento);
+    public abstract void evaluarJugada(Evento evento);
     
     
 }

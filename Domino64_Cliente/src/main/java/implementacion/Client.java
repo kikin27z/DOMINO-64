@@ -157,7 +157,7 @@ public class Client extends Observable<Evento> implements ICliente {
                     try {
                         synchronized (output) {
                             output.reset();
-                            System.out.println("Envio evento; " + e);
+                            System.out.println("Envio evento; " + e.getTipo());
                             output.writeObject(e);//envia msj al servidor
                             output.flush();
                         }

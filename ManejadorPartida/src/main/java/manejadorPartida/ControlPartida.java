@@ -1,10 +1,22 @@
 package manejadorPartida;
 
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.FichaDTO;
+import entidadesDTO.JugadaDTO;
+import entidadesDTO.JugadaRealizadaDTO;
+import entidadesDTO.JugadorDTO;
+import entidadesDTO.MazosDTO;
+import entidadesDTO.PosibleJugadaDTO;
 import eventoBase.Evento;
 import entidadesDTO.ReglasDTO;
+import entidadesDTO.TurnosDTO;
+import eventoBaseError.EventoError;
+import eventos.EventoJugadorFicha;
 import eventos.EventoLobby;
 import eventos.EventoPartida;
 import implementacion.Client;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -25,7 +37,7 @@ public class ControlPartida extends IControlPartida implements Runnable {
     private final AtomicBoolean running;
     private final ManejadorPartida manejador;
     private final ExecutorService ejecutorEventos;
-
+    
     public ControlPartida() {
         this.manejador = new ManejadorPartida();
         setConsumers();
@@ -89,6 +101,74 @@ public class ControlPartida extends IControlPartida implements Runnable {
         EventoPartida eventoEnviar = director.crearEventoRepartirFichas(reglas);
         cliente.enviarEvento(eventoEnviar);
         
+    }
+
+    @Override
+    public void entregarFichaJugadores(Evento evento) {
+        EventoPozo er = (EventoPozo) evento;
+        MazosDTO mazos = er.getMazos();
+        manejador.repartirFichas(mazos);
+    }
+
+    @Override
+    public void quitarFicha(Evento evento) {
+        EventoJugadorFicha er = (EventoJugadorFicha) evento;
+        JugadaRealizadaDTO jugada = er.getJugada();
+        FichaDTO ficha = jugada.getFicha();
+        
+        if(ficha != null){
+            CuentaDTO cuenta = er.getCuenta();
+            manejador.quitarFicha(cuenta, ficha);
+        }
+    }
+
+    @Override
+    public void pozoVacio(Evento evento){
+        EventoPartida eventoEnviar = director.crearEventoSolicitarSiguienteTurno();
+        cliente.enviarEvento(eventoEnviar);
+    }
+    
+    @Override
+    public void evaluarJugador(Evento evento) {
+        EventoTurno er = (EventoTurno) evento;
+        CuentaDTO cuenta = er.getCuenta();
+        Map<FichaDTO, PosibleJugadaDTO> jugadasP;
+        
+        EventoPartida eventoEnviar;
+        if(er.getJugada() != null){
+            JugadaDTO jugada = er.getJugada();
+            manejador.agregarJugadaActual(jugada);
+        }
+        
+        if (manejador.tieneJugada(cuenta)) {
+            eventoEnviar = director.crearEventoTuTurno(manejador.obtenerJugadaActual(), cuenta);
+        } else {
+            eventoEnviar = director.crearEventoSinJugadas(cuenta);
+        }
+        
+//        if(manejador.tieneJugada(cuenta)){
+//            eventoEnviar = director.crearEventoTuTurno(jugada, cuenta);
+//        }else{
+//            eventoEnviar = director.crearEventoSolicitarSiguienteTurno();
+//        }
+        cliente.enviarEvento(eventoEnviar);
+        
+    }
+
+    @Override
+    public void iniciarPartida(Evento evento) {
+        EventoTurno er = (EventoTurno) evento;
+        TurnosDTO turnos = er.getTurnos();
+        
+        EventoPartida eventoEnviar = director.crearEventoPartida(turnos);
+        cliente.enviarEvento(eventoEnviar);
+    }
+
+    @Override
+    public void asignarJugadaNueva(Evento evento) {
+        EventoTablero er =(EventoTablero)evento;
+        JugadaDTO jugada = er.getJugada();
+        manejador.agregarJugadaActual(jugada);
     }
 
 }
