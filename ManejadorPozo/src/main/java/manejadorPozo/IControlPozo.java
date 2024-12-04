@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Consumer;
 import observer.Observer;
+import tiposLogicos.TipoJugadorFicha;
 import tiposLogicos.TipoLogicaPartida;
 import tiposLogicos.TipoLogicaTurno;
 import tiposLogicos.TiposJugador;
@@ -27,7 +28,7 @@ public abstract class IControlPozo implements Observer<Evento> {
     protected final List<Enum> eventos = new ArrayList<>(
             List.of(
                     TipoError.ERROR_DE_SERVIDOR,
-                    TiposJugador.JALAR_FICHA,
+                    TipoJugadorFicha.JALAR_FICHA,
                     TipoLogicaPartida.JUGADOR_SALIO,
                     TipoLogicaPartida.REPARTIR_FICHAS,
                     TipoLogicaTurno.FIN_JUEGO
@@ -52,7 +53,7 @@ public abstract class IControlPozo implements Observer<Evento> {
     }
     protected void setConsumers(){
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
-        consumers.putIfAbsent(TiposJugador.JALAR_FICHA, this::jalarFicha);
+        consumers.putIfAbsent(TipoJugadorFicha.JALAR_FICHA, this::jalarFicha);
         consumers.putIfAbsent(TipoLogicaPartida.JUGADOR_SALIO, this::jugadorAbandono);
         consumers.putIfAbsent(TipoLogicaPartida.REPARTIR_FICHAS, this::repartirFichas);
         consumers.putIfAbsent(TipoLogicaTurno.FIN_JUEGO, this::finJuego);

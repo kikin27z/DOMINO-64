@@ -56,7 +56,7 @@ public class ManejadorTurnos {
         String actual = orden.removeFirst();
         orden.addLast(actual);
         String nuevoTurno = orden.getFirst();
-        
+        System.out.println("nuevo turno: "+nuevoTurno);
 //        String turnoActual = orden.getFirst();
 //        
 //        String aux = orden.removeFirst();

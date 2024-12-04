@@ -274,8 +274,10 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
         EventoPartida prox = (EventoPartida)evento;
         JugadaDTO jugada = prox.getJugada();
         
+        distribuidor.actualizarProximaJugada(jugada);
+        
         if(manejadorCuenta.getCuenta().equals(prox.getCuenta())){
-            distribuidor.actualizarProximaJugada(jugada);
+            
         }
     }
     

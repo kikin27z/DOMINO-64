@@ -223,11 +223,22 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
 
     @Override
     public void actualizarProximaJugada(JugadaDTO jugada) {
-        esMiTurno = true;
+//        esMiTurno = true;
         this.jugadaActual = jugada;
+        if(!primeraJugadaHecha){
+            primeraJugadaHecha = true;
+        }
         for (var observer : viewObservers) {
             observer.actualizarProximaJugada(jugada);
         }
+    }
+
+    @Override
+    public void actualizarJugadorEnTurno() {
+        esMiTurno = true;
+//        for (var observer : viewObservers) {
+//            observer.actualizarProximaJugada(jugada);
+//        }
     }
 
     @Override
@@ -300,6 +311,9 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
 
     @Override
     public void avisarJugadaRealizada(JugadaRealizadaDTO jugada) {
+        if(!primeraJugadaHecha){
+            primeraJugadaHecha = true;
+        }
         esMiTurno = false;
         for(var observer : logicaObservers){
             observer.avisarJugadaRealizada(jugada);
