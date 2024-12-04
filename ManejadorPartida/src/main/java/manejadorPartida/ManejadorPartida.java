@@ -15,6 +15,7 @@ import entidadesDTO.PartidaIniciadaDTO;
 import entidadesDTO.ResultadosDTO;
 import entidadesDTO.TurnosDTO;
 import entidadesDTO.MazosDTO;
+import entidadesDTO.PosibleJugadaDTO;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -89,8 +90,27 @@ public class ManejadorPartida {
         }
     }
     
+    public JugadaDTO obtenerJugadaActual(){
+        return adaptador.adaptarJugada(jugadaActual);
+    }
+    
     public void agregarJugadaActual(JugadaDTO jugadaDTO){
         this.jugadaActual = adaptadorDTO.adaptarJugadaDTO(jugadaDTO);
+    }
+    
+    
+    public Map<FichaDTO, PosibleJugadaDTO> jugadasPosibles(CuentaDTO cuentaDTO, JugadaDTO jugadaPosible){
+        Cuenta aux = adaptadorDTO.adaptarCuentaDTO(cuentaDTO);
+        Jugador jugador = partida.obtenerJugador(aux);
+
+        Map<FichaDTO, PosibleJugadaDTO> jugadas = new HashMap<>();
+        for (Ficha ficha : jugador.getFichas()) {
+            PosibleJugadaDTO jugada = jugadaPosible.determinarJugada(adaptador.adaptarEntidadFicha(ficha));
+            if (!jugada.equals(PosibleJugadaDTO.NINGUNA)) {
+                jugadas.put(adaptador.adaptarEntidadFicha(ficha), jugada);
+            }
+        }
+        return jugadas;
     }
     
     public boolean tieneJugada(CuentaDTO cuentaDTO){

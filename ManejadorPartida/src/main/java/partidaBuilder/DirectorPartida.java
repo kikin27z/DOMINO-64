@@ -4,10 +4,14 @@ import builder.DirectorEventos;
 import entidadesDTO.PartidaIniciadaDTO;
 import entidadesDTO.ResultadosDTO;
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaDTO;
+import entidadesDTO.PosibleJugadaDTO;
 import entidadesDTO.ReglasDTO;
 import entidadesDTO.TurnosDTO;
 import eventos.EventoPartida;
+import java.util.List;
+import java.util.Map;
 import tiposLogicos.TipoLogicaPartida;
 
 /**
@@ -43,6 +47,13 @@ public class DirectorPartida extends DirectorEventos<BuilderEventoPartida> {
         builder.setJugadaDTO(jugada);
         builder.setIdPublicador(idPublicador);
         builder.setCuenta(cuenta);
+        return builder.construirEvento();
+    }
+    
+    public EventoPartida crearEventoSinJugadas(CuentaDTO cuenta){
+        builder.setIdPublicador(idPublicador);
+        builder.setCuenta(cuenta);
+        builder.setTipo(TipoLogicaPartida.SIN_JUGADAS);
         return builder.construirEvento();
     }
     

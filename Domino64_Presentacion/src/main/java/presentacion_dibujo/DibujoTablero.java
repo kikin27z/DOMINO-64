@@ -73,11 +73,13 @@ public class DibujoTablero extends AnchorPane {
         // Mostrar jugadas según el tipo
         if (tipoJugada == PosibleJugadaDTO.AMBOS_EXTREMOS
                 || tipoJugada == PosibleJugadaDTO.SOLO_IZQUIERDA) {
+            System.out.println("?");
             procesarJugadasIzquierda(ficha);
         }
 
         if (tipoJugada == PosibleJugadaDTO.AMBOS_EXTREMOS
                 || tipoJugada == PosibleJugadaDTO.SOLO_DERECHA) {
+            System.out.println("¿");
             procesarJugadasDerecha(ficha);
         }
     }

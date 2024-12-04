@@ -124,7 +124,7 @@ public class Servidor {
     private void recibirComponentes() {
         Socket socket;
         try {
-            while (clientesComponentes.size() < 4) {
+            while (clientesComponentes.size() < 5) {
                 socket = servidor.accept();
                 componenteId++;
                 Publisher publicador = new Publisher();

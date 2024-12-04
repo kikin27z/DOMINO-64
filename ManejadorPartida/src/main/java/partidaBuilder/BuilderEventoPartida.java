@@ -2,11 +2,15 @@ package partidaBuilder;
 
 import builder.EventBuilder;
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.FichaDTO;
 import entidadesDTO.PartidaIniciadaDTO;
 import entidadesDTO.JugadaDTO;
+import entidadesDTO.PosibleJugadaDTO;
 import entidadesDTO.ReglasDTO;
 import entidadesDTO.TurnosDTO;
 import eventos.EventoPartida;
+import java.util.List;
+import java.util.Map;
 import tiposLogicos.TipoLogicaPartida;
 
 /**
@@ -23,6 +27,10 @@ public class BuilderEventoPartida implements EventBuilder<TipoLogicaPartida>{
     
     public void setCuenta(CuentaDTO cuenta){
         evento.setCuenta(cuenta);
+    }
+    
+    public void setJugadasPosibles(Map<FichaDTO, PosibleJugadaDTO> jugadas){
+        evento.setPosiblesJugadas(jugadas);
     }
     
     public void setReglas(ReglasDTO reglas){

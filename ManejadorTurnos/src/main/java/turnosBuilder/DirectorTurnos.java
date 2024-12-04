@@ -28,24 +28,25 @@ public class DirectorTurnos extends DirectorEventos<BuilderEventoTurnos> {
         return builder.construirEvento();
     }
 
-    public EventoTurno crearEventoTurnoActual(CuentaDTO cuenta){
+    public EventoTurno crearEventoTurnoActual(CuentaDTO cuenta,JugadaDTO jugada){
         builder.setIdPublicador(idPublicador);
         builder.setCuenta(cuenta);
+        builder.setJugada(jugada);
         builder.setTipo(TipoLogicaTurno.TURNO_ACTUAL);
         return builder.construirEvento();
     }
     
-    public EventoTurno crearEventoPasarTurno(CuentaDTO cuenta,JugadaDTO jugada) {
+    public EventoTurno crearEventoPasarTurno(CuentaDTO cuenta) {
         builder.setIdPublicador(idPublicador);
         builder.setCuenta(cuenta);
-        builder.setJugada(jugada);
+//        builder.setJugada(jugada);
         builder.setTipo(TipoLogicaTurno.PASAR_TURNO);
         return builder.construirEvento();
     }
 
     public EventoTurno crearEventoFinJuego() {
         builder.setIdPublicador(idPublicador);
-        builder.setTurnos(turnos);
+        //builder.setTurnos(turnos);
         builder.setTipo(TipoLogicaTurno.FIN_JUEGO);
         return builder.construirEvento();
     }

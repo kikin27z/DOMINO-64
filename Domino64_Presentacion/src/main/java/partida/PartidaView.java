@@ -88,26 +88,26 @@ public class PartidaView implements ObserverPartidaMVC {
         bottomPlayer.getChildren().remove(dibujo);
         modelo.quitarMapeoFichas();
     }
-
-    private List<Node> crearJugadores(List<Node> paneles){
-        List<CuentaDTO> jugadores = modelo.getJugadores();
-        JugadorDTO jugador = modelo.getJugador();
-        switch (jugadores.size()+1) {
-            case 2 -> paneles.add(createTopPlayer(jugadores.get(0)));
-            case 3 -> {
-                paneles.add(createTopPlayer(jugadores.get(0)));
-                paneles.add(createRightPlayer(jugadores.get(1)));
-            }
-            case 4 -> {
-                paneles.add(createTopPlayer(jugadores.get(0)));
-                paneles.add(createRightPlayer(jugadores.get(1)));
-                paneles.add(createLeftPlayer(jugadores.get(2)));
-            }
-        }
-        createBottomPlayer(jugador.getCuenta());
-        paneles.add(bottomPlayer);
-        return paneles;
-    }
+//
+//    private List<Node> crearJugadores(List<Node> paneles){
+//        List<CuentaDTO> jugadores = modelo.getJugadores();
+//        JugadorDTO jugador = modelo.getJugador();
+//        switch (jugadores.size()+1) {
+//            case 2 -> paneles.add(createTopPlayer(jugadores.get(0)));
+//            case 3 -> {
+//                paneles.add(createTopPlayer(jugadores.get(0)));
+//                paneles.add(createRightPlayer(jugadores.get(1)));
+//            }
+//            case 4 -> {
+//                paneles.add(createTopPlayer(jugadores.get(0)));
+//                paneles.add(createRightPlayer(jugadores.get(1)));
+//                paneles.add(createLeftPlayer(jugadores.get(2)));
+//            }
+//        }
+//        createBottomPlayer(jugador.getCuenta());
+//        paneles.add(bottomPlayer);
+//        return paneles;
+//    }
     
     private AnchorPane createGameInterface() {
         // Main container
@@ -266,7 +266,7 @@ public class PartidaView implements ObserverPartidaMVC {
         panel.getChildren().add(leftPlayer);
     }
 
-    private void createBottomPlayer(CuentaDTO cuenta) {
+    private void createBottomPlayer() {
         bottomPlayer = new HBox();
         bottomPlayer.setAlignment(javafx.geometry.Pos.CENTER);
         bottomPlayer.setLayoutX(164);
@@ -452,7 +452,7 @@ public class PartidaView implements ObserverPartidaMVC {
 
     @Override
     public void actualizarProximaJugada(JugadaDTO jugada) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        System.out.println("Es tu turno");
     }
 
     @Override
@@ -479,7 +479,7 @@ public class PartidaView implements ObserverPartidaMVC {
     }
 
     @Override
-    public void actualizarTablero(JugadaRealizadaDTO jugada, CuentaDTO cuenta) {
+    public void actualizarTablero(JugadaRealizadaDTO jugada) {
         gameBoard.dibujarFicha(jugada);
     }
 

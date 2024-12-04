@@ -9,6 +9,7 @@ import entidadesDTO.TurnosDTO;
 import eventoBaseError.EventoError;
 import eventos.EventoJugador;
 import eventos.EventoJugadorFicha;
+import eventos.EventoPartida;
 import eventos.EventoPozo;
 import eventos.EventoTablero;
 import eventos.EventoTurno;
@@ -93,8 +94,8 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
         EventoPozo eventoRecibido = (EventoPozo) evento;
         MazosDTO mazos = eventoRecibido.getMazos();
         
-        TurnosDTO turnos = manejador.determinarOrden(mazos);
-        EventoTurno eventoEnviar = director.crearEventoTurnoDesignados(turnos);
+        TurnosDTO turno = manejador.determinarOrden(mazos);
+        EventoTurno eventoEnviar = director.crearEventoTurnoDesignados(turno);
         cliente.enviarEvento(eventoEnviar);
         
     }
@@ -102,16 +103,23 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
     @Override
     public void cambiarTurno(Evento evento) {
         EventoTablero er = (EventoTablero) evento;
-        JugadaDTO jugada = er.getJugada();
+        JugadaDTO j = er.getJugada();
         CuentaDTO cuenta =  manejador.rotarSiguienteTurno();
+        EventoTurno  eventoEnviar = director.crearEventoTurnoActual(cuenta, j);
         
-        EventoTurno  eventoEnviar;
-        if(cuenta != null){
-            eventoEnviar = director.crearEventoTurnoActual(cuenta);
-        }else{
-            eventoEnviar = director.crearEventoFinJuego();
-        }
         cliente.enviarEvento(eventoEnviar);
+    }
+
+    @Override
+    public void pasarTurno(Evento evento) {
+        EventoTurno turno;
+        if(manejador.agregarJugadorPaso()){
+            turno = director.crearEventoFinJuego();
+        }else{
+            CuentaDTO cuenta = manejador.rotarSiguienteTurno();
+            turno = director.crearEventoPasarTurno(cuenta);
+        }
+        cliente.enviarEvento(turno);
     }
 
     @Override
@@ -120,8 +128,20 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
         
         turnos.setOrden(manejador.quitarJugador(jugadorSalio.getCuenta()));
         if(manejador.todosPasaron()){
-            EventoTurno fin = director.crearEventoFinJuego(turnos);
+            EventoTurno fin = director.crearEventoFinJuego();
             enviarEvento(fin);
+        }
+    }
+
+    @Override
+    public void evaluarJugada(Evento evento) {
+        EventoJugadorFicha jugadaR = (EventoJugadorFicha)evento;
+        JugadaRealizadaDTO jugada = jugadaR.getJugada();
+        if (jugada == null || jugada.getFicha() == null) {
+            if (manejador.agregarJugadorPaso()) {
+                EventoTurno eventoEnviar = director.crearEventoFinJuego();
+                cliente.enviarEvento(eventoEnviar);
+            }
         }
     }
 

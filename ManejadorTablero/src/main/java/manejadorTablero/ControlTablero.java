@@ -83,7 +83,7 @@ public class ControlTablero extends IControlTablero implements Runnable {
         JugadaDTO proximaJugada = manejador.obtenerProximaJugada();
         
         EventoTablero eventoEnviar = director.crearEventoProximaJugada(proximaJugada);
-        cliente.enviarEvento(evento);
+        cliente.enviarEvento(eventoEnviar);
         
     }
 

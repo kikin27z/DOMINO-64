@@ -16,6 +16,7 @@ import observer.Observer;
 import tiposLogicos.TipoJugadorFicha;
 import tiposLogicos.TipoLogicaLobby;
 import tiposLogicos.TipoLogicaPartida;
+import tiposLogicos.TipoLogicaPozo;
 import tiposLogicos.TipoLogicaTablero;
 import tiposLogicos.TipoLogicaTurno;
 import utilities.DirectorSuscripcion;
@@ -50,7 +51,9 @@ public abstract class IReceptorEventosLogica implements Observer<Evento> {
                     TipoLogicaLobby.AVATAR_ACTUALIZADO,
                     TipoLogicaPartida.INICIO_PARTIDA,
                     TipoJugadorFicha.JUGADA_REALIZADA,
-                    TipoJugadorFicha.JALAR_FICHA
+                    TipoLogicaPartida.SIN_JUGADAS,
+                    TipoLogicaPartida.JUGADOR_EN_TURNO
+//                    TipoJugadorFicha.JALAR_FICHA,
             ));
 
     public IReceptorEventosLogica() {
@@ -105,9 +108,10 @@ public abstract class IReceptorEventosLogica implements Observer<Evento> {
         consumers.putIfAbsent(TipoLogicaLobby.AVATAR_ACTUALIZADO, this::actualizarAvatares);
         consumers.putIfAbsent(TipoLogicaLobby.CUENTA_ENTRO, this::cuentaEntro);
         consumers.putIfAbsent(TipoJugadorFicha.JUGADA_REALIZADA, this::jugadaRealizada);
-        consumers.putIfAbsent(TipoJugadorFicha.JALAR_FICHA, this::jalarFicha);
+//        consumers.putIfAbsent(TipoJugadorFicha.JALAR_FICHA, this::jalarFicha);
         consumers.putIfAbsent(TipoLogicaPartida.INICIO_PARTIDA, this::inicializarPartida);
-        consumers.putIfAbsent(TipoLogicaTablero.JALAR_FICHA, this::proximaJugada);
+        consumers.putIfAbsent(TipoLogicaPartida.JUGADOR_EN_TURNO, this::proximaJugada);
+        consumers.putIfAbsent(TipoLogicaPartida.SIN_JUGADAS, this::jalarFicha);
 
     }
 
@@ -139,13 +143,13 @@ public abstract class IReceptorEventosLogica implements Observer<Evento> {
 
     public abstract void lobbyCreado(Evento evento);
 
-    public abstract void errorUnirse(Evento evento);
-
     public abstract void jugadaRealizada(Evento evento);
 
     public abstract void jalarFicha(Evento evento);
+    public abstract void fichaObtenida(Evento evento);
 
     public abstract void inicializarPartida(Evento evento);
 
     public abstract void proximaJugada(Evento evento);
+    public abstract void pasarTurno(Evento evento);
 }

@@ -34,7 +34,9 @@ public abstract class IControlPartida implements Observer<Evento> {
                     TipoLogicaPozo.REPARTIR_FICHAS,
                     TipoJugadorFicha.JUGADA_REALIZADA,
                     TipoLogicaTurno.TURNOS_DESIGNADOS,
-                    TipoLogicaTurno.TURNO_ACTUAL
+                    TipoLogicaTurno.TURNO_ACTUAL,
+                    TipoLogicaTurno.PASAR_TURNO,
+                    TipoLogicaPozo.POZO_VACIO
             ));
     
     protected IControlPartida(){
@@ -58,8 +60,10 @@ public abstract class IControlPartida implements Observer<Evento> {
         consumers.putIfAbsent(TipoLogicaPozo.REPARTIR_FICHAS, this::entregarFichaJugadores);
         consumers.putIfAbsent(TipoJugadorFicha.JUGADA_REALIZADA, this::quitarFicha);
         consumers.putIfAbsent(TipoLogicaTurno.TURNO_ACTUAL, this::evaluarJugador);
+        consumers.putIfAbsent(TipoLogicaTurno.PASAR_TURNO, this::evaluarJugador);
         consumers.putIfAbsent(TipoLogicaTurno.TURNOS_DESIGNADOS, this::iniciarPartida);
-        consumers.putIfAbsent(TipoLogicaTablero.OBTENER_JUGADA, this::asignarJugadaNueva);
+        consumers.putIfAbsent(TipoLogicaPozo.POZO_VACIO, this::pozoVacio);
+//        consumers.putIfAbsent(TipoLogicaTablero.OBTENER_JUGADA, this::asignarJugadaNueva);
         
     }
     
@@ -80,4 +84,5 @@ public abstract class IControlPartida implements Observer<Evento> {
     public abstract void evaluarJugador(Evento evento);
     public abstract void iniciarPartida(Evento evento);
     public abstract void asignarJugadaNueva(Evento evento);
+    public abstract void pozoVacio(Evento evento);
 }

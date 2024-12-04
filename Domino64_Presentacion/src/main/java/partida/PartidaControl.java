@@ -68,6 +68,7 @@ public class PartidaControl {
 
     private void evaluarFicha(MouseEvent e) {
         if (!modelo.esMiTurno()) {
+            System.out.println("no es tu turnooo");
             return;
         }
         Canvas dibujo = (Canvas) e.getSource();
@@ -77,6 +78,7 @@ public class PartidaControl {
             return;
         }
         PosibleJugadaDTO posibleJugada = modelo.obtenerPosibleJugada(ficha);
+        System.out.println("posibleJugada = "+posibleJugada);
         view.dibujarJugada(ficha, posibleJugada);
     }
     

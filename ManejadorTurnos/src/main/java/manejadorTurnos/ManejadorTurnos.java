@@ -53,13 +53,17 @@ public class ManejadorTurnos {
     }
     
     public CuentaDTO rotarSiguienteTurno() {
-        String turnoActual = orden.getFirst();
-
-        String aux = orden.removeFirst();
-        orden.addLast(aux);
+        String actual = orden.removeFirst();
+        orden.addLast(actual);
+        String nuevoTurno = orden.getFirst();
+        
+//        String turnoActual = orden.getFirst();
+//        
+//        String aux = orden.removeFirst();
+//        orden.addLast(aux);
 
         CuentaDTO cuenta = new CuentaDTO();
-        cuenta.setIdCadena(turnoActual);
+        cuenta.setIdCadena(nuevoTurno);
 
         return cuenta;
     }
