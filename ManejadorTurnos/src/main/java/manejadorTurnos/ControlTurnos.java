@@ -1,6 +1,8 @@
 package manejadorTurnos;
 
 import entidadesDTO.JugadaRealizadaDTO;
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.JugadaDTO;
 import eventoBase.Evento;
 import entidadesDTO.MazosDTO;
 import entidadesDTO.TurnosDTO;
@@ -8,6 +10,7 @@ import eventoBaseError.EventoError;
 import eventos.EventoJugador;
 import eventos.EventoJugadorFicha;
 import eventos.EventoPozo;
+import eventos.EventoTablero;
 import eventos.EventoTurno;
 import implementacion.Client;
 import java.util.concurrent.ExecutorService;
@@ -90,28 +93,25 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
         EventoPozo eventoRecibido = (EventoPozo) evento;
         MazosDTO mazos = eventoRecibido.getMazos();
         
-        turnos = manejador.determinarOrden(mazos);
-//        manejador.rotarSiguienteTurno();
-//        manejador.rotarSiguienteTurno();
-//        manejador.rotarSiguienteTurno();
-//        manejador.rotarSiguienteTurno();
-//        manejador.rotarSiguienteTurno();
-//        manejador.rotarSiguienteTurno();
-//        
-        EventoTurno turnosDesignados = director.crearEventoTurnoDesignados(turnos);
-        enviarEvento(turnosDesignados);
+        TurnosDTO turnos = manejador.determinarOrden(mazos);
+        EventoTurno eventoEnviar = director.crearEventoTurnoDesignados(turnos);
+        cliente.enviarEvento(eventoEnviar);
+        
     }
 
     @Override
     public void cambiarTurno(Evento evento) {
-        EventoJugadorFicha fichaColocada = (EventoJugadorFicha)evento;
-        JugadaRealizadaDTO jugada = fichaColocada.getJugada();
-        if(jugada == null){
-            if(manejador.agregarJugadorPaso()){
-                
-            }
+        EventoTablero er = (EventoTablero) evento;
+        JugadaDTO jugada = er.getJugada();
+        CuentaDTO cuenta =  manejador.rotarSiguienteTurno();
+        
+        EventoTurno  eventoEnviar;
+        if(cuenta != null){
+            eventoEnviar = director.crearEventoTurnoActual(cuenta);
+        }else{
+            eventoEnviar = director.crearEventoFinJuego();
         }
-        manejador.rotarSiguienteTurno();
+        cliente.enviarEvento(eventoEnviar);
     }
 
     @Override

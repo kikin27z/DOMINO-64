@@ -1,10 +1,12 @@
 package manejadorTablero;
 
 import abstraccion.ICliente;
+import entidadesDTO.JugadaDTO;
 import eventoBase.Evento;
 import eventoBaseError.EventoError;
 import entidadesDTO.JugadaRealizadaDTO;
 import eventos.EventoJugadorFicha;
+import eventos.EventoTablero;
 import implementacion.Client;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -78,6 +80,11 @@ public class ControlTablero extends IControlTablero implements Runnable {
         EventoJugadorFicha _evento = (EventoJugadorFicha) evento;
         JugadaRealizadaDTO jugada = _evento.getJugada();
         manejador.colocarFicha(jugada);
+        JugadaDTO proximaJugada = manejador.obtenerProximaJugada();
+        
+        EventoTablero eventoEnviar = director.crearEventoProximaJugada(proximaJugada);
+        cliente.enviarEvento(evento);
+        
     }
 
     @Override

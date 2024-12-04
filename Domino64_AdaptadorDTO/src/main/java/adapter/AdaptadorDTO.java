@@ -3,11 +3,13 @@ package adapter;
 import entidades.Avatar;
 import entidades.Cuenta;
 import entidades.Ficha;
+import entidades.Jugada;
 import entidades.Jugador;
 import entidades.Lobby;
 import entidadesDTO.AvatarDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.LobbyDTO;
 import java.util.ArrayList;
@@ -146,5 +148,12 @@ public class AdaptadorDTO {
             case VENADO -> avatar = Avatar.VENADO;
         }
         return avatar;
+    }
+    
+    public Jugada adaptarJugadaDTO(JugadaDTO jugadaDTO){
+        Jugada jugada = new Jugada();
+        jugada.setExtremoDer(jugadaDTO.getDerecha());
+        jugada.setExtremoIzq(jugadaDTO.getIzquierda());
+        return jugada;
     }
 }

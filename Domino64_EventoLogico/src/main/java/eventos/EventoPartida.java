@@ -1,10 +1,12 @@
 package eventos;
 
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaIniciadaDTO;
 import entidadesDTO.ReglasDTO;
 import entidadesDTO.ResultadosDTO;
+import entidadesDTO.TurnosDTO;
 import tiposLogicos.TipoLogicaPartida;
 
 /**
@@ -17,6 +19,8 @@ public class EventoPartida extends EventoLogico {
     private TipoLogicaPartida tipo;
     private ReglasDTO reglas;
     private JugadorDTO jugador;
+    private TurnosDTO turnos;
+    private JugadaDTO jugada;
     private ResultadosDTO resultados;
     private PartidaIniciadaDTO partidaIniciada;
     
@@ -26,6 +30,23 @@ public class EventoPartida extends EventoLogico {
         this.tipo = tipo;
     }
 
+    public TurnosDTO getTurnos() {
+        return turnos;
+    }
+
+    public void setTurnos(TurnosDTO turnos) {
+        this.turnos = turnos;
+    }
+
+    public JugadaDTO getJugada() {
+        return jugada;
+    }
+
+    public void setJugada(JugadaDTO jugada) {
+        this.jugada = jugada;
+    }
+
+    
     public JugadorDTO getJugador() {
         return jugador;
     }

@@ -3,6 +3,7 @@ package eventosPartida;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaDTO;
+import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.TurnosDTO;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public interface  ObservablePartidaMVC {
     public void actualizarJugadorSeRindio(CuentaDTO cuenta);
     public void actualizarDarFichas(List<FichaDTO> fichas);
     public void actualizarDarFicha(FichaDTO ficha);
-    public void actualizarTurno(JugadaDTO jugada);
+    public void actualizarProximaJugada(JugadaDTO jugada);
+    public void actualizarTablero(JugadaRealizadaDTO jugada, CuentaDTO cuenta);
     public void inicializarPartida(TurnosDTO turnos);
 }

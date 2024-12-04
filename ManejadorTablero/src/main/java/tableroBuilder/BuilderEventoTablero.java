@@ -1,6 +1,7 @@
 package tableroBuilder;
 
 import builder.EventBuilder;
+import entidadesDTO.JugadaDTO;
 import eventoBase.Evento;
 import entidadesDTO.JugadaRealizadaDTO;
 import eventos.EventoTablero;
@@ -17,50 +18,36 @@ public class BuilderEventoTablero implements EventBuilder<TipoLogicaTablero>{//,
     public BuilderEventoTablero() {
         this.evento = new EventoTablero();
     }
-
-//    @Override
-//    public void setTipo(TipoLogicaTablero tipo) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-//    }
-
+    
     @Override
     public void setIdPublicador(int idPublicador) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        evento.setIdPublicador(idPublicador);
     }
 
     @Override
     public void setIdContexto(int idContexto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        evento.setIdContexto(idContexto);
     }
-
-//    @Override
-//    public void setContexto(JugadaRealizadaDTO contexto) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-//    }
+    
+    public void setJugadaDTO(JugadaDTO jugada){
+        evento.setJugada(jugada);
+    }
 
     @Override
     public EventoTablero construirEvento() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoTablero resultado = evento;
+        reiniciar();
+        return resultado;
     }
 
     @Override
     public void reiniciar() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-//    @Override
-//    public void setTipo(TipoLogicaTablero tipo) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-//    }
-
-////    @Override
-    public void setContexto(TipoLogicaTablero contexto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        evento = new EventoTablero();
     }
 
     @Override
     public void setTipo(TipoLogicaTablero tipo) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        evento.setTipo(tipo);
     }
 
     @Override

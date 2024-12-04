@@ -2,12 +2,18 @@ package comunicadores_logica;
 
 import eventoBase.Evento;
 import entidadesDTO.CuentaDTO;
+import entidadesDTO.JugadaDTO;
+import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaIniciadaDTO;
 import eventoBaseError.EventoError;
 import eventoBaseError.TipoError;
 import eventos.EventoLobby;
 import eventos.EventoPartida;
+import entidadesDTO.TurnosDTO;
+import eventos.EventoJugadorFicha;
+import eventos.EventoTablero;
+import eventos.EventoTurno;
 import implementacion.Client;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -128,7 +134,7 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     }
 
     @Override
-    public void partidaCreada(Evento evento) {
+    public void lobbyCreado(Evento evento) {
         EventoLobby eventoRecibido = (EventoLobby) evento;
 //        if(evento.getIdDestinatario() != id){
 //            return;
@@ -137,8 +143,8 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
         System.out.println("\ncodigo partida: "+lobby.getCodigo()+"\n");
         System.out.println("cuentas--"+ lobby.getCuentas());
         
-        removerSuscripcion(TipoLogicaLobby.PARTIDA_CREADA);
         agregarSuscripcion(TipoLogicaPartida.INICIO_PARTIDA, this::entrarPartida);
+        removerSuscripcion(TipoLogicaLobby.LOBBY_CREADO);
         CuentaDTO aux = eventoRecibido.getPublicador();
         manejadorCuenta.asignarCuenta(aux);
         CuentaDTO cuentaDTO = manejadorCuenta.getCuenta();
@@ -149,7 +155,7 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     }
 
     @Override
-    public void partidaEncontrada(Evento evento) {
+    public void lobbyEncontrado(Evento evento) {
         EventoLobby eventoRecibido = (EventoLobby) evento;
         
         System.out.println("\n");
@@ -157,8 +163,9 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
         LobbyDTO lobby = eventoRecibido.obtenerLobby();
         CuentaDTO aux = eventoRecibido.getPublicador();
         //ya no va a recibir los eventos de partida encontrada
-        removerSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA);
         agregarSuscripcion(TipoLogicaPartida.INICIO_PARTIDA, this::entrarPartida);
+        removerSuscripcion(TipoLogicaLobby.LOBBY_ENCONTRADO);
+        
         manejadorCuenta.asignarCuenta(aux);
         CuentaDTO cuenta = manejadorCuenta.getCuenta();
         lobby.setCuentaActual(cuenta);
@@ -239,13 +246,37 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     }
 
     @Override
-    public void entrarPartida(Evento evento) {
-        EventoPartida inicioPartida =(EventoPartida)evento;
+    public void jugadaRealizada(Evento evento) {
+        EventoJugadorFicha er = (EventoJugadorFicha) evento;
         
-        PartidaIniciadaDTO dto = inicioPartida.getPartidaIniciada();
-        dto.setJugadorActual(manejadorCuenta.getCuenta().getIdCadena());
-        manejadorJugador.setJugador(dto.getJugadorActual());
-        display.mostrarPartida(dto);
+        JugadaRealizadaDTO jugada = er.getJugada();
+        CuentaDTO cuenta = er.getCuenta();
+        distribuidor.jugadaRealizada(jugada, cuenta);
+    }
+
+    @Override
+    public void jalarFicha(Evento evento) {
+        
+        
+    }
+
+    @Override
+    public void inicializarPartida(Evento evento) {
+        EventoPartida er = (EventoPartida) evento;
+        TurnosDTO turnos = er.getTurnos();
+        
+        CuentaDTO cuentaDTO = manejadorCuenta.getCuenta();
+        display.mostrarPartida(cuentaDTO);
+        distribuidor.inicializarPartida(turnos);
+    }
+
+    @Override
+    public void proximaJugada(Evento evento) {
+        EventoTablero er = (EventoTablero) evento;
+        JugadaDTO jugada = er.getJugada();
+        distribuidor.actualizarProximaJugada(jugada);
+        
+        
     }
     
 }

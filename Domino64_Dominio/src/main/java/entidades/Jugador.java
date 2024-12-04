@@ -88,6 +88,7 @@ public class Jugador {
                 break;
             }
         }
+        System.out.println("Se borro " + fichaRemovida + " a " + cuenta);
         return fichaRemovida;
     }
 
@@ -117,6 +118,10 @@ public class Jugador {
      */
     public String obtenerIdJugador(){
         return this.cuenta.getIdCadena(); // Devuelve el ID de la cuenta del jugador
+    }
+    
+    public boolean esCuentaJugador(Cuenta c){
+        return cuenta.equals(c);
     }
 
     /**

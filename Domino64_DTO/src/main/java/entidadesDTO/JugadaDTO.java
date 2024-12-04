@@ -101,6 +101,16 @@ public class JugadaDTO implements Serializable {
         this.derecha = derecha;
     }
 
+    public int getIzquierda() {
+        return izquierda;
+    }
+
+    public int getDerecha() {
+        return derecha;
+    }
+
+    
+    
     @Override
     public String toString() {
         return "JugadaDTO{" + "extremoIzquierdo=" + izquierda + ", extremoDerecho=" + derecha + '}';

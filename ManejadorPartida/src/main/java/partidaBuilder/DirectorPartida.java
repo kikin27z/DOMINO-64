@@ -2,8 +2,11 @@ package partidaBuilder;
 
 import builder.DirectorEventos;
 import entidadesDTO.PartidaIniciadaDTO;
-import entidadesDTO.ReglasDTO;
 import entidadesDTO.ResultadosDTO;
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.JugadaDTO;
+import entidadesDTO.ReglasDTO;
+import entidadesDTO.TurnosDTO;
 import eventos.EventoPartida;
 import tiposLogicos.TipoLogicaPartida;
 
@@ -28,14 +31,25 @@ public class DirectorPartida extends DirectorEventos<BuilderEventoPartida> {
         return builder.construirEvento();
     }
     
-    public EventoPartida crearEventoTerminoPartida(ResultadosDTO resultados){
-        return builder.construirEvento();
-    }
-    
-    public EventoPartida crearEventoInicioPartida(PartidaIniciadaDTO partida){
+    public EventoPartida crearEventoPartida(TurnosDTO turnos){
         builder.setIdPublicador(idPublicador);
-        builder.setPartidaIniciada(partida);
+        builder.setTurnos(turnos);
         builder.setTipo(TipoLogicaPartida.INICIO_PARTIDA);
         return builder.construirEvento();
     }
+    
+    public EventoPartida crearEventoTuTurno(JugadaDTO jugada,CuentaDTO cuenta){
+        builder.setTipo(TipoLogicaPartida.JUGADOR_EN_TURNO);
+        builder.setJugadaDTO(jugada);
+        builder.setIdPublicador(idPublicador);
+        builder.setCuenta(cuenta);
+        return builder.construirEvento();
+    }
+    
+    public EventoPartida crearEventoSolicitarSiguienteTurno(){
+        builder.setIdPublicador(idPublicador);
+        builder.setTipo(TipoLogicaPartida.SIGUIENTE_TURNO);
+        return builder.construirEvento();
+    }
+    
 }

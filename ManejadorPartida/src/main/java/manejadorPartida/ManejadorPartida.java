@@ -4,14 +4,17 @@ import adapter.AdaptadorDTO;
 import adapter.AdaptadorEntidad;
 import entidades.Cuenta;
 import entidades.Ficha;
+import entidades.Jugada;
 import entidades.Jugador;
 import entidades.Partida;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
+import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.PartidaIniciadaDTO;
 import entidadesDTO.ResultadosDTO;
 import entidadesDTO.TurnosDTO;
+import entidadesDTO.MazosDTO;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +27,7 @@ import java.util.Map;
  */
 public class ManejadorPartida {
     private final Partida partida;
+    private Jugada jugadaActual;
     private final AdaptadorEntidad adaptador;
     private final AdaptadorDTO adaptadorDTO;
 
@@ -62,42 +66,37 @@ public class ManejadorPartida {
         return fichasJugadorAbandono;
     }
     
-    public ResultadosDTO obtenerResultados(){
-        return new ResultadosDTO();
-    }
-    
-    public PartidaIniciadaDTO iniciarPartida(TurnosDTO turnos){
-        Map<String, JugadorDTO> jugadoresConFichas = turnos.getMazos();
-        List<Jugador> jugadores = new ArrayList<>();
+    public void quitarFicha(CuentaDTO c, FichaDTO f){
+        Cuenta cuenta = adaptadorDTO.adaptarCuentaDTO(c);
+        Ficha ficha = adaptadorDTO.adaptarFichaDTO(f);
         
-        for (Map.Entry<String, JugadorDTO> entry : jugadoresConFichas.entrySet()) {
-            Jugador jugador = buscarJugador(entry.getKey());
-            jugador = asignarFichas(jugador, entry.getValue().getFichas());
-            jugadores.add(jugador);
-        }
-        partida.setJugadores(jugadores);
+        Jugador jugador = partida.obtenerJugador(cuenta);
+        jugador.removerFicha(ficha);
+    }
+    
+    public void repartirFichas(MazosDTO mazos){
+        List<Cuenta> cuentas = adaptadorDTO.adaptarCuentasDTO(mazos.getCuentas());
+        List<List<Ficha>> manos = new ArrayList<>();
         
-        PartidaIniciadaDTO p = new PartidaIniciadaDTO(turnos);
-        return p;
+        for(var mazo : mazos.getMazos()){
+            List<Ficha> fichas = adaptadorDTO.adaptarFichaDTO(mazo);
+            manos.add(fichas);
+        }
+        
+        for (int i = 0; i < cuentas.size(); i++) {
+             Jugador jugador = partida.obtenerJugador(cuentas.get(i));
+            jugador.setFichas(manos.get(i));
+        }
     }
     
-    private Jugador buscarJugador(String idCadena){
-        List<Jugador> jugadores = partida.getJugadores();
-        Cuenta cuenta;
-        for (Jugador jugador : jugadores) {
-            cuenta = jugador.getCuenta();
-            if(cuenta.getIdCadena().equals(idCadena))
-                return jugador;
-        }
-        return null;
+    public void agregarJugadaActual(JugadaDTO jugadaDTO){
+        this.jugadaActual = adaptadorDTO.adaptarJugadaDTO(jugadaDTO);
     }
     
-    private Jugador asignarFichas(Jugador jugador, List<FichaDTO> fichasDTO){
-        List<Ficha> fichas = new ArrayList<>();
-        for (FichaDTO ficha : fichasDTO) {
-            fichas.add(adaptadorDTO.adaptarFichaDTO(ficha));
-        }
-        jugador.setFichas(fichas);
-        return jugador;
+    public boolean tieneJugada(CuentaDTO cuentaDTO){
+        Cuenta aux = adaptadorDTO.adaptarCuentaDTO(cuentaDTO);
+        Jugador jugador = partida.obtenerJugador(aux);
+        
+        return jugadaActual.puedeJugar(jugador.getFichas());
     }
 }

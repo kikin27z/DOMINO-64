@@ -60,7 +60,6 @@ public class ManejadorTurnos {
 
         CuentaDTO cuenta = new CuentaDTO();
         cuenta.setIdCadena(turnoActual);
-        System.out.println("Le toca a " + cuenta.getIdCadena());
 
         return cuenta;
     }
