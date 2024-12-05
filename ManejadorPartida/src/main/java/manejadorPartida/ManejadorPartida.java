@@ -31,7 +31,7 @@ public class ManejadorPartida {
     private Jugada jugadaActual;
     private final AdaptadorEntidad adaptador;
     private final AdaptadorDTO adaptadorDTO;
-
+    
     public ManejadorPartida(){
         adaptador = new AdaptadorEntidad();
         adaptadorDTO = new AdaptadorDTO();
@@ -59,9 +59,10 @@ public class ManejadorPartida {
        return adaptador.adaptarJugadores(jugadores);
     }
     
-    public void peticionRendirseJugador(JugadorDTO jugador){
-        Jugador j = adaptadorDTO.adaptarJugadorDTO(jugador);
-        partida.seRindioJugador(j);
+    public boolean peticionRendirseJugador(CuentaDTO cuenta){
+        Jugador jugador = partida.obtenerJugador(adaptadorDTO.adaptarCuentaDTO(cuenta));
+        partida.seRindioJugador(jugador);
+        return partida.obtenerNumJugadoresRendidos() == partida.getJugadores().size();
     }
     
     public List<FichaDTO> jugadorAbandono(JugadorDTO jugador) {

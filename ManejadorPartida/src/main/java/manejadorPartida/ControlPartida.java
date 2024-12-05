@@ -205,9 +205,11 @@ public class ControlPartida extends IControlPartida implements Runnable {
     @Override
     public void manejarPeticionRendirse(Evento evento) {
         EventoJugador peticion=(EventoJugador)evento;
-        JugadorDTO jugador = peticion.getJugador();
+        CuentaDTO jugador = peticion.getCuenta();
         
-        manejador.peticionRendirseJugador(jugador);
+        if(manejador.peticionRendirseJugador(jugador)){
+            EventoPartida fin = director.crearEventoTerminoPartida();
+        }
     }
 
 }

@@ -45,6 +45,13 @@ public class DirectorPartida extends DirectorEventos<BuilderEventoPartida> {
         return builder.construirEvento();
     }
     
+    public EventoPartida crearEventoTerminoPartida(){
+        builder.setIdPublicador(idPublicador);
+//        builder.setTurnos(turnos);
+        builder.setTipo(TipoLogicaPartida.TERMINO_PARTIDA);
+        return builder.construirEvento();
+    }
+    
     public EventoPartida crearEventoTuTurno(JugadaDTO jugada,CuentaDTO cuenta){
         builder.setTipo(TipoLogicaPartida.JUGADOR_EN_TURNO);
         builder.setJugadaDTO(jugada);
