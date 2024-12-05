@@ -13,6 +13,7 @@ import entidadesDTO.ReglasDTO;
 import entidadesDTO.TurnosDTO;
 import eventoBaseError.EventoError;
 import eventoBaseSuscripcion.EventoSuscripcion;
+import eventos.EventoJugador;
 import eventos.EventoJugadorFicha;
 import eventos.EventoLobby;
 import eventos.EventoPartida;
@@ -199,6 +200,14 @@ public class ControlPartida extends IControlPartida implements Runnable {
         EventoTablero er =(EventoTablero)evento;
         JugadaDTO jugada = er.getJugada();
         manejador.agregarJugadaActual(jugada);
+    }
+
+    @Override
+    public void manejarPeticionRendirse(Evento evento) {
+        EventoJugador peticion=(EventoJugador)evento;
+        JugadorDTO jugador = peticion.getJugador();
+        
+        manejador.peticionRendirseJugador(jugador);
     }
 
 }
