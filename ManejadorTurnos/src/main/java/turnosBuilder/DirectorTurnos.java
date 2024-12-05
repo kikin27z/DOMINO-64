@@ -2,26 +2,23 @@ package turnosBuilder;
 
 import builder.DirectorEventos;
 import entidadesDTO.CuentaDTO;
-import entidadesDTO.JugadaDTO;
 import entidadesDTO.TurnosDTO;
 import eventos.EventoTurno;
 import tiposLogicos.TipoLogicaTurno;
 
 /**
  *
- * @author Luisa Fernanda Morales Espinoza - 00000233450
- * @author José Karim Franco Valencia - 00000245138
+ * @author karim
  */
 public class DirectorTurnos extends DirectorEventos<BuilderEventoTurnos> {
-
-    private int idPublicador;
+   private int idPublicador;
 
     public DirectorTurnos(BuilderEventoTurnos builder, int idPublicador) {
         super(builder);
         this.idPublicador = idPublicador;
     }
-
-    public EventoTurno crearEventoTurnoDesignados(TurnosDTO turnos) {
+    
+    public EventoTurno crearEventoTurnoDesignados(TurnosDTO turnos){
         builder.setIdPublicador(idPublicador);
         builder.setTipo(TipoLogicaTurno.TURNOS_DESIGNADOS);
         builder.setTurnos(turnos);
@@ -43,12 +40,12 @@ public class DirectorTurnos extends DirectorEventos<BuilderEventoTurnos> {
         builder.setTipo(TipoLogicaTurno.PASAR_TURNO);
         return builder.construirEvento();
     }
-
-    public EventoTurno crearEventoFinJuego() {
+    
+    public EventoTurno crearEventoFinJuego(){
         builder.setIdPublicador(idPublicador);
         //builder.setTurnos(turnos);
         builder.setTipo(TipoLogicaTurno.FIN_JUEGO);
         return builder.construirEvento();
     }
-
+   
 }

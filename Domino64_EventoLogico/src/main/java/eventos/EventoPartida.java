@@ -23,12 +23,10 @@ public class EventoPartida extends EventoLogico {
     private TipoLogicaPartida tipo;
     private ReglasDTO reglas;
     private JugadorDTO jugador;
-    private List<JugadorDTO> jugadores;
     private TurnosDTO turnos;
     private JugadaDTO jugada;
     private Map<FichaDTO, PosibleJugadaDTO> posiblesJugadas;
     private ResultadosDTO resultados;
-    private PartidaIniciadaDTO partidaIniciada;
     
     public EventoPartida(){}
     
@@ -38,14 +36,6 @@ public class EventoPartida extends EventoLogico {
 
     public TurnosDTO getTurnos() {
         return turnos;
-    }
-
-    public List<JugadorDTO> getJugadores() {
-        return jugadores;
-    }
-
-    public void setJugadores(List<JugadorDTO> jugadores) {
-        this.jugadores = jugadores;
     }
 
     public Map<FichaDTO, PosibleJugadaDTO> getPosiblesJugadas() {
@@ -71,14 +61,6 @@ public class EventoPartida extends EventoLogico {
     
     public JugadorDTO getJugador() {
         return jugador;
-    }
-
-    public PartidaIniciadaDTO getPartidaIniciada() {
-        return partidaIniciada;
-    }
-
-    public void setPartidaIniciada(PartidaIniciadaDTO partidaIniciada) {
-        this.partidaIniciada = partidaIniciada;
     }
 
     public void setJugador(JugadorDTO jugador) {

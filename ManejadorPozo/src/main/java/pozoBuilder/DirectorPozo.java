@@ -1,7 +1,6 @@
 package pozoBuilder;
 
 import builder.DirectorEventos;
-import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.MazosDTO;
 import eventos.EventoPozo;
@@ -21,9 +20,8 @@ public class DirectorPozo extends DirectorEventos<BuilderEventoPozo> {
         this.idPublicador = idPublicador;
     }
 
-    public EventoPozo crearEventoFichaJalada(FichaDTO ficha, CuentaDTO jugador) {
+    public EventoPozo crearEventoFichaJalada(FichaDTO ficha) {
         builder.setFicha(ficha);
-        builder.setJugador(jugador);
         builder.setIdPublicador(idPublicador);
         builder.setTipo(TipoLogicaPozo.FICHA_OBTENIDA);
         return builder.construirEvento();
@@ -47,7 +45,7 @@ public class DirectorPozo extends DirectorEventos<BuilderEventoPozo> {
         return builder.construirEvento();
     }
     
-    public EventoPozo crearEventoFichasRepartidas(MazosDTO mazos){
+    public EventoPozo crearEventoDesignarTurnos(MazosDTO mazos){
         builder.setMazos(mazos);
         builder.setIdPublicador(idPublicador);
         builder.setTipo(TipoLogicaPozo.REPARTIR_FICHAS);

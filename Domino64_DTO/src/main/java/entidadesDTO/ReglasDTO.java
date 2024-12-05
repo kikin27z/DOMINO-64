@@ -13,8 +13,6 @@ import java.util.List;
  */
 public class ReglasDTO implements Serializable {
     private int cantidadFichas;
-    
-    // Atributo que almacena una lista de cuentas de jugadores
     private List<CuentaDTO> cuentas;
 
     /**
@@ -49,6 +47,7 @@ public class ReglasDTO implements Serializable {
     public void setCantidadFichas(int cantidadFichas) {
         this.cantidadFichas = cantidadFichas;
     }
+
     /**
      * Obtiene la cantidad de jugadores, que corresponde al tamaño de la lista de cuentas.
      * 

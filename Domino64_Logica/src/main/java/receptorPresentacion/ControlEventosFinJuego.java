@@ -17,6 +17,7 @@ public class ControlEventosFinJuego extends ControlEventos implements ObserverFi
     @Override
     public void avisarIrInicio() {
         hiloPrincipal.execute(()->{
+            
             display.iniciarJuego();
         });
     }

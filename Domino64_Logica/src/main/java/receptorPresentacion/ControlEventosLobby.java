@@ -42,8 +42,6 @@ public class ControlEventosLobby extends ControlEventos implements ObserverLobby
         hiloPrincipal.execute(() -> {
             manejadorNotificador.abandonarLobby();
         });
-//        display.mostrarOpcionesPartida();
-        
     }
 
     @Override
@@ -53,16 +51,14 @@ public class ControlEventosLobby extends ControlEventos implements ObserverLobby
         });
     }
 
-//    @Override
-//    public void avisarIniciarPartida() {
-//        
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-//    }
-    
+    @Override
+    public void avisarIniciarPartida() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     @Override
     public void avisarCambioAvatar(CuentaDTO cuentaActualizada) {
         hiloPrincipal.execute(() -> {
-            manejadorNotificador.cambiarAvatar(cuentaActualizada);
+            //manejadorNotificador.cambiarReglas(reglas);
         });
     }
 }

@@ -1,6 +1,5 @@
 package eventos;
 
-import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.MazosDTO;
 import java.util.List;
@@ -12,7 +11,6 @@ import tiposLogicos.TipoLogicaPozo;
 public class EventoPozo extends EventoLogico{
     private List<FichaDTO> fichas;
     private FichaDTO ficha;
-    private CuentaDTO jugador;
     private TipoLogicaPozo tipo;
     private MazosDTO mazos;
     
@@ -21,14 +19,6 @@ public class EventoPozo extends EventoLogico{
     public EventoPozo( TipoLogicaPozo tipo){
         super();
         this.tipo = tipo;
-    }
-
-    public CuentaDTO getJugador() {
-        return jugador;
-    }
-
-    public void setJugador(CuentaDTO jugador) {
-        this.jugador = jugador;
     }
 
     public MazosDTO getMazos() {

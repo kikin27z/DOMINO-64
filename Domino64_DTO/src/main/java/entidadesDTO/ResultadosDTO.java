@@ -2,7 +2,6 @@ package entidadesDTO;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Clase que representa los resultados de una partida o proceso en el sistema.
@@ -15,7 +14,6 @@ public class ResultadosDTO implements Serializable {
 
     // Lista de cuentas participantes en el resultado.
     private List<CuentaDTO> cuentas;
-    private Map<CuentaDTO, Integer> puntajes;
 
     // Lista de puntos conseguidos, donde cada índice corresponde a la cuenta en la misma posición.
     private List<Integer> puntosConseguidos;
@@ -43,14 +41,6 @@ public class ResultadosDTO implements Serializable {
      */
     public void setCuentas(List<CuentaDTO> cuentas) {
         this.cuentas = cuentas;
-    }
-
-    public Map<CuentaDTO, Integer> getPuntajes() {
-        return puntajes;
-    }
-
-    public void setPuntajes(Map<CuentaDTO, Integer> puntajes) {
-        this.puntajes = puntajes;
     }
 
     /**

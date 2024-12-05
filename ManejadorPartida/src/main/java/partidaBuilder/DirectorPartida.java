@@ -6,10 +6,8 @@ import entidadesDTO.ResultadosDTO;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaDTO;
-import entidadesDTO.JugadorDTO;
 import entidadesDTO.PosibleJugadaDTO;
 import entidadesDTO.ReglasDTO;
-import entidadesDTO.TurnosDTO;
 import eventos.EventoPartida;
 import java.util.List;
 import java.util.Map;
@@ -28,27 +26,18 @@ public class DirectorPartida extends DirectorEventos<BuilderEventoPartida> {
         this.idPublicador = idPublicador;
     }
     
-    public EventoPartida crearEventoRepartirFichas(ReglasDTO reglas, List<JugadorDTO>jugadores){
+    
+    public EventoPartida crearEventoRepartirFichas(ReglasDTO reglas){
         builder.setIdPublicador(idPublicador);
         builder.setReglas(reglas);
-        builder.setJugadores(jugadores);
         builder.setTipo(TipoLogicaPartida.REPARTIR_FICHAS);
         return builder.construirEvento();
     }
     
-    public EventoPartida crearEventoPartida(PartidaIniciadaDTO partida){
+    public EventoPartida crearEventoPartida(TurnosDTO turnos){
         builder.setIdPublicador(idPublicador);
-//        builder.setTurnos(turnos);
-        builder.setPartidaIniciada(partida);
+        builder.setTurnos(turnos);
         builder.setTipo(TipoLogicaPartida.INICIO_PARTIDA);
-        return builder.construirEvento();
-    }
-    
-    public EventoPartida crearEventoTerminoPartida(ResultadosDTO resultados){
-        builder.setIdPublicador(idPublicador);
-        builder.setResultados(resultados);
-//        builder.setTurnos(turnos);
-        builder.setTipo(TipoLogicaPartida.TERMINO_PARTIDA);
         return builder.construirEvento();
     }
     
@@ -70,21 +59,6 @@ public class DirectorPartida extends DirectorEventos<BuilderEventoPartida> {
     public EventoPartida crearEventoSolicitarSiguienteTurno(){
         builder.setIdPublicador(idPublicador);
         builder.setTipo(TipoLogicaPartida.SIGUIENTE_TURNO);
-        return builder.construirEvento();
-    }
-    
-    public EventoPartida crearEventoJugadorSalio(JugadorDTO jugador){
-        builder.setIdPublicador(idPublicador);
-        builder.setJugador(jugador);
-        builder.setTipo(TipoLogicaPartida.JUGADOR_SALIO);
-        return builder.construirEvento();
-    }
-    
-    public EventoPartida crearEventoJugadorGano(CuentaDTO jugador, ResultadosDTO resultados){
-        builder.setIdPublicador(idPublicador);
-        builder.setCuenta(jugador);
-        builder.setResultados(resultados);
-        builder.setTipo(TipoLogicaPartida.JUGADOR_GANO);
         return builder.construirEvento();
     }
     

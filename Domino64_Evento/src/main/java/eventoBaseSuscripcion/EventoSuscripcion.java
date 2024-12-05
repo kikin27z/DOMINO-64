@@ -76,9 +76,4 @@ public class EventoSuscripcion implements Evento<TipoSuscripcion> {
         this.idPublicador = idPublicador;
     }
 
-    @Override
-    public String toString() {
-        return "EventoSuscripcion{" + "evento=" + evento + ", tipo=" + tipo + ", idPublicador=" + idPublicador + '}';
-    }
-
 }

@@ -18,9 +18,8 @@ public class DirectorJugadorFicha extends DirectorEventos<BuilderEventoJugadorFi
         this.idPublicador = idPublicador;
     }
     
-    public EventoJugadorFicha crearEventoJugadaRealizada(JugadaRealizadaDTO jugada, CuentaDTO cuenta){
+    public EventoJugadorFicha crearEventoJugadaRealizada(JugadaRealizadaDTO jugada){
         builder.asignarJugadaRealizada(jugada);
-        builder.setCuenta(cuenta);
         builder.setIdPublicador(idPublicador);
         builder.setTipo(TipoJugadorFicha.JUGADA_REALIZADA);
         return builder.construirEvento();

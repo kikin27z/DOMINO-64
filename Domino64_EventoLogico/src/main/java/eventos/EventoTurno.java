@@ -1,7 +1,6 @@
 package eventos;
 
 import entidadesDTO.CuentaDTO;
-import entidadesDTO.JugadaDTO;
 import entidadesDTO.TurnosDTO;
 import tiposLogicos.TipoLogicaTurno;
 
@@ -13,7 +12,6 @@ public class EventoTurno extends EventoLogico{
     private TipoLogicaTurno tipo;
     private TurnosDTO turnos;
     private CuentaDTO cuenta;
-    private JugadaDTO jugada;
     
     public EventoTurno(){}
     
@@ -39,14 +37,6 @@ public class EventoTurno extends EventoLogico{
         this.cuenta = cuenta;
     }
 
-    public JugadaDTO getJugada() {
-        return jugada;
-    }
-
-    public void setJugada(JugadaDTO jugada) {
-        this.jugada = jugada;
-    }
-    
     public TurnosDTO getTurnos() {
         return turnos;
     }

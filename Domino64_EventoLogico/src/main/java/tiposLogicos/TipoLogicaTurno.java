@@ -9,6 +9,5 @@ package tiposLogicos;
 public enum TipoLogicaTurno {
     TURNOS_DESIGNADOS,
     FIN_JUEGO,
-    TURNO_ACTUAL,
     PASAR_TURNO;
 }

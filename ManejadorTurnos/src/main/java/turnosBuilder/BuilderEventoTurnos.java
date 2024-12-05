@@ -3,7 +3,6 @@ package turnosBuilder;
 import builder.EventBuilder;
 import eventoBase.Evento;
 import entidadesDTO.CuentaDTO;
-import entidadesDTO.JugadaDTO;
 import entidadesDTO.TurnosDTO;
 import eventos.EventoTurno;
 import tiposLogicos.TipoLogicaTurno;
@@ -45,10 +44,6 @@ public class BuilderEventoTurnos implements EventBuilder<TipoLogicaTurno>{
     @Override
     public void setIdContexto(int idContexto) {
         evento.setIdContexto(idContexto);
-    }
-    
-    public void setJugada(JugadaDTO jugada){
-        evento.setJugada(jugada);
     }
 
     @Override

@@ -171,7 +171,7 @@ public class Lobby {
      * @param avatar El nuevo avatar a asignar.
      */
     public void cambiarAvatar(Cuenta cuenta, Avatar avatar) {
-        Cuenta aux = cuentas.get(cuentas.indexOf(cuenta));
+        Cuenta aux = obtenerCuenta(cuenta);
         aux.setAvatar(avatar);
     }
 

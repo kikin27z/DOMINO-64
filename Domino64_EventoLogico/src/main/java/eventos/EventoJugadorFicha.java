@@ -37,7 +37,7 @@ public class EventoJugadorFicha extends EventoLogico {
     
     @Override
     public TipoJugadorFicha getTipo() {
-        return tipo;
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public JugadaRealizadaDTO getJugada() {

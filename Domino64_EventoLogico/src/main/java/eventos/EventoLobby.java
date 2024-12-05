@@ -21,6 +21,7 @@ import tiposLogicos.TipoLogicaLobby;
 public class EventoLobby extends EventoLogico {
     private LobbyDTO lobby;
     private TipoLogicaLobby tipo;
+    private Object contexto;
     private CuentaDTO publicador;
     private ReglasDTO reglas;
     
@@ -54,6 +55,11 @@ public class EventoLobby extends EventoLogico {
     public CuentaDTO getPublicador(){
         return publicador;
     }
+    
+//    @Override
+//    public void agregarInfo(Object info) {
+//        contexto = info;
+//    }
 
     @Override
     public TipoLogicaLobby getTipo() {

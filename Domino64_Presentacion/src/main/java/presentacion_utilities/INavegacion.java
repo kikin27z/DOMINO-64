@@ -2,7 +2,6 @@ package presentacion_utilities;
 
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
-import entidadesDTO.PartidaIniciadaDTO;
 import entidadesDTO.ResultadosDTO;
 
 /**
@@ -40,9 +39,8 @@ public interface INavegacion {
     /**
      * Método para cambiar la vista a la pantalla de partida.
      * Este método debería gestionar la transición de la vista actual a la vista de partida.
-     * @param partidaDTO
+     * @param cuenta
      */
-    public void cambiarPartida(PartidaIniciadaDTO partidaDTO);
     public void cambiarPartida(CuentaDTO cuenta);
     
     /**

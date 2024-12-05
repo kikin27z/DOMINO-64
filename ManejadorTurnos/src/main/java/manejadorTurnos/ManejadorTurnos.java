@@ -28,94 +28,12 @@ public class ManejadorTurnos {
     private final AdaptadorEntidad adaptador;
     private final AdaptadorDTO adaptadorDTO;
     private Cuenta ultimoQueRealizoJugada;
-    private Cuenta jugadorEnTurno;
-    private List<Cuenta> turnos;
-    private int turnosPasados;
 
     public ManejadorTurnos() {
         adaptador = new AdaptadorEntidad();
         adaptadorDTO = new AdaptadorDTO();
-        turnos = new ArrayList<>();
     }
 
-    public CuentaDTO cambiarTurno() {
-        int index = turnos.indexOf(jugadorEnTurno);
-        //si el jugador con el turno actual es
-        //el jugador con el ultimo turno
-        if (index == turnos.size() - 1) {
-            //inicia otra ronda de turnos, es decir
-            //que ahora el siguiente jugador es el primero en la lista
-            index = 0;
-        } else {
-            index++;
-        }
-        jugadorEnTurno = turnos.get(index);
-        return adaptador.adaptarEntidadCuenta(jugadorEnTurno);
-    }
-    
-    private Jugador designarPrimerTurno(List<Jugador> jugadores){
-        List<Ficha> mulasJugadores = new ArrayList<>();
-        List<Jugador> jugadoresConMula = new ArrayList<>();
-        for (Jugador jugador : jugadores) {
-            if(jugador.tieneMulas()){
-                Ficha mayorMula = jugador.mulaMasAlta();
-                jugadoresConMula.add(jugador);
-                mulasJugadores.add(mayorMula);
-            }
-        }
-
-        if (!mulasJugadores.isEmpty()) {
-            int index = mulasJugadores.indexOf(Collections.max(mulasJugadores));
-            return jugadoresConMula.get(index);
-        }
-        return null;
-    }
-    
-    private List<Jugador> designarOtrosTurnos(List<Jugador> jugadores, Jugador primerJugador) {
-        jugadores.remove(primerJugador);
-        Collections.shuffle(jugadores);
-        jugadores.addFirst(primerJugador);
-        System.out.println("se designaron los demas turnos");
-        return jugadores;
-    }
-    
-    public TurnosDTO determinarTurnos(MazosDTO mazos){
-        List<Jugador> jugadores = adaptadorDTO.adaptarJugadoresDTO(mazos.getJugadores());
-        
-        Jugador primerJugador = designarPrimerTurno(jugadores);
-        
-        TurnosDTO turnosDTO = null;
-        
-        if(primerJugador != null){
-            jugadorEnTurno = primerJugador.getCuenta();
-            jugadores = designarOtrosTurnos(jugadores, primerJugador);
-            for (Jugador jugador : jugadores) {
-                turnos.add(jugador.getCuenta());
-            }
-            List<JugadorDTO> dtos = adaptador.adaptarJugadores(jugadores);
-            turnosDTO = new TurnosDTO();
-            turnosDTO.setJugadores(dtos);
-            System.out.println("Jugadores en turnos: "+dtos);
-        }
-        return turnosDTO;
-    }
-    public boolean agregarJugadorPaso(){
-        turnosPasados++;
-        return todosPasaron();
-    }
-    
-    public boolean todosPasaron(){
-        return orden.size() == turnosPasados;
-    }
-    
-    public void reinciarJugadoresPaso(){
-        turnosPasados = 0;
-    }
-    
-    public void setUltimoQueRealizoJugada(Cuenta ultimoQueRealizoJugada) {
-        this.ultimoQueRealizoJugada = ultimoQueRealizoJugada;
-    }
-    
     public CuentaDTO rotarSiguienteTurno() {
         String actual = orden.removeFirst();
         orden.addLast(actual);
@@ -136,15 +54,13 @@ public class ManejadorTurnos {
         Map<String, Jugador> mazos = new HashMap<>();
         for (int i = 0; i < cuentas.size(); i++) {
             String idCuenta = cuentas.get(i).getIdCadena();
-            Jugador jugador = new Jugador(cuentas.get(i));
+            Jugador jugador = new Jugador();
             jugador.setFichas(fichas.get(i));
 
             mazos.put(idCuenta, jugador);
         }
-        
         return mazos;
     }
-    
 
     private String determinarPrimerJugador(Map<String, Jugador> mazos) {
         String idJugador = null;
@@ -178,59 +94,47 @@ public class ManejadorTurnos {
         return or;
     }
 
-    public TurnosDTO determinarOrden(MazosDTO mazos) {
-        List<Cuenta> cuentas = adaptadorDTO.adaptarCuentasDTO(mazos.getCuentas());
-        List<List<Ficha>> fichas = devolverMazos(mazos.getMazos());
-
-        Map<String, Jugador> j = entregarFichaJugadores(cuentas, fichas);
-        
-        
-        String primero = determinarPrimerJugador(j);
-        orden = crearTurnos(primero , j);
-        
-        
-        imprimirTurnos(orden);
-        System.out.println(j);
-        return crearTurnoDTO(j, orden);
-    }
-
-    private TurnosDTO crearTurnoDTO(Map<String, Jugador> mazosJugadores, LinkedList<String> orden){
+    private TurnosDTO crearTurnoDTO(Map<String, Jugador> mazosJugadores, LinkedList<String> orden) {
         TurnosDTO turnos = new TurnosDTO();
         Map<String, JugadorDTO> mazosTurno = new HashMap<>();
         for (Map.Entry<String, Jugador> entry : mazosJugadores.entrySet()) {
             mazosTurno.put(entry.getKey(), adaptador.adaptarEntidadJugador(entry.getValue()));
         }
         turnos.setMazos(mazosTurno);
-        
+
         turnos.setOrden(orden);
         return turnos;
     }
-    
+
+    public TurnosDTO determinarOrden(MazosDTO mazos) {
+        List<Cuenta> cuentas = adaptadorDTO.adaptarCuentasDTO(mazos.getCuentas());
+
+        List<List<Ficha>> fichas = devolverMazos(mazos.getMazos());
+
+        Map<String, Jugador> mapeoMazos = entregarFichaJugadores(cuentas, fichas);
+        String primerJugador = determinarPrimerJugador(mapeoMazos);
+        orden = crearTurnos(primerJugador, mapeoMazos);
+        TurnosDTO turnos = crearTurnoDTO(mapeoMazos, orden);
+
+        imprimirTurnos(orden);
+        System.out.println(mapeoMazos);
+        
+        return turnos;
+    }
+
     private void imprimirTurnos(LinkedList<String> orden) {
         for (int i = 0; i < orden.size(); i++) {
             System.out.println("Jugador #" + (1 + i) + " es " + orden.get(i));
         }
     }
 
-    public CuentaDTO removerJugador(CuentaDTO dto){
-        Cuenta cuenta = adaptadorDTO.adaptarCuentaDTO(dto);
-        if(cuenta.equals(jugadorEnTurno)){
-            dto = cambiarTurno();
-        }else{
-            dto = null;
-        }
-        turnos.remove(cuenta);
-        return dto;
-    }
-    
-    public LinkedList quitarJugador(CuentaDTO cuenta) {
+    public void quitarJugador(CuentaDTO cuenta) {
         for (String id : orden) {
             if (cuenta.getIdCadena().equals(id)) {
                 orden.remove(id);
                 break;
             }
         }
-        return orden;
     }
 
     private List<List<Ficha>> devolverMazos(List<List<FichaDTO>> mazosDTO) {
@@ -242,5 +146,4 @@ public class ManejadorTurnos {
         }
         return mazos;
     }
-    
 }

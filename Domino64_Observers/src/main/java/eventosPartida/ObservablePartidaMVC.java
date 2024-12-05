@@ -3,7 +3,6 @@ package eventosPartida;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaDTO;
-import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.TurnosDTO;
 import java.util.List;
 

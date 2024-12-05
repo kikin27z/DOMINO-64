@@ -1,7 +1,10 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package eventos;
 
 import entidadesDTO.FichaDTO;
-import entidadesDTO.JugadaDTO;
 import tiposLogicos.TipoLogicaTablero;
 
 /**
@@ -9,8 +12,8 @@ import tiposLogicos.TipoLogicaTablero;
  * @author luisa M
  */
 public class EventoTablero extends EventoLogico{
+    private FichaDTO ficha;
     private TipoLogicaTablero tipo;
-    private JugadaDTO jugada;
     
     public EventoTablero(){}
     
@@ -19,14 +22,19 @@ public class EventoTablero extends EventoLogico{
         this.tipo = tipo;
     }
 
-    public JugadaDTO getJugada() {
-        return jugada;
+//    @Override
+//    public void agregarInfo(FichaDTO info) {
+//        ficha = info;
+//    }
+
+    public FichaDTO getFicha() {
+        return ficha;
     }
 
-    public void setJugada(JugadaDTO jugada) {
-        this.jugada = jugada;
+    public void setFicha(FichaDTO ficha){
+        this.ficha = ficha;
     }
-
+    
     @Override
     public TipoLogicaTablero getTipo() {
         return tipo;

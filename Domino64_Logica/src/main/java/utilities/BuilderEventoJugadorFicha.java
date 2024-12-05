@@ -15,12 +15,6 @@ import tiposLogicos.TipoJugadorFicha;
 public class BuilderEventoJugadorFicha implements EventBuilder<TipoJugadorFicha> {
     private EventoJugadorFicha evento;
 
-    public BuilderEventoJugadorFicha() {
-        evento = new EventoJugadorFicha();
-    }
-
-    
-    
     @Override
     public void setTipo(TipoJugadorFicha tipo) {
         evento.setTipo(tipo);

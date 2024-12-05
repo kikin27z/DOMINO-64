@@ -21,7 +21,6 @@ public class LobbyDTO implements Serializable {
     private Map<CuentaDTO, Boolean> jugadoresListos;
     private CuentaDTO cuentaActual;
     private String codigo;
-    private ReglasDTO reglas;
 
     /**
      * Constructor vacío que inicializa las listas de cuentas y jugadores listos.
@@ -48,14 +47,6 @@ public class LobbyDTO implements Serializable {
     public LobbyDTO(CuentaDTO cuentaActual) {
         jugadoresListos = new HashMap<>();
         cuentas = new ArrayList<>();
-    }
-
-    public ReglasDTO getReglas() {
-        return reglas;
-    }
-
-    public void setReglas(ReglasDTO reglas) {
-        this.reglas = reglas;
     }
 
     /**

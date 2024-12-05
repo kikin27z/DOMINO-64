@@ -14,7 +14,6 @@ import java.util.List;
 public class MazosDTO implements Serializable{
     private List<List<FichaDTO>> mazos;
     private List<CuentaDTO> cuentas;
-    private List<JugadorDTO> jugadores;
 
     /**
      * Constructor por defecto que inicializa la lista de mazos.
@@ -30,14 +29,6 @@ public class MazosDTO implements Serializable{
      */
     public List<CuentaDTO> getCuentas() {
         return cuentas;
-    }
-
-    public List<JugadorDTO> getJugadores() {
-        return jugadores;
-    }
-
-    public void setJugadores(List<JugadorDTO> jugadores) {
-        this.jugadores = jugadores;
     }
 
     /**
