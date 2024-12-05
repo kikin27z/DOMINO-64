@@ -80,4 +80,12 @@ public class DirectorPartida extends DirectorEventos<BuilderEventoPartida> {
         return builder.construirEvento();
     }
     
+    public EventoPartida crearEventoJugadorGano(CuentaDTO jugador, ResultadosDTO resultados){
+        builder.setIdPublicador(idPublicador);
+        builder.setCuenta(jugador);
+        builder.setResultados(resultados);
+        builder.setTipo(TipoLogicaPartida.JUGADOR_GANO);
+        return builder.construirEvento();
+    }
+    
 }

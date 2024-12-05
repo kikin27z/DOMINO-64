@@ -159,13 +159,14 @@ public class ManejadorPartida {
         return dto;
     }
     
-    public void quitarFicha(CuentaDTO c, FichaDTO f){
+    public boolean quitarFicha(CuentaDTO c, FichaDTO f){
 //        Cuenta cuenta = adaptadorDTO.adaptarCuentaDTO(c);
         Ficha ficha = adaptadorDTO.adaptarFichaDTO(f);
         
         Jugador jugador = buscarJugador(c.getIdCadena());
         jugador.removerFicha(ficha);
         jugadores.set(jugadores.indexOf(jugador), jugador);
+        return jugador.getFichas().isEmpty();
     }
     
     public void agregarFicha(CuentaDTO c, FichaDTO f){

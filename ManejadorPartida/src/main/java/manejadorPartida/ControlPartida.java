@@ -102,6 +102,9 @@ public class ControlPartida extends IControlPartida implements Runnable {
     public void finJuegoSinMovimientos(Evento evento) {
         System.out.println("Los jugadres se quedaron sin movimientos");
         System.out.println("Fin del juego jejejeje");
+        ResultadosDTO resultados = manejador.terminarPartida();
+        EventoPartida eventoEnviar = director.crearEventoTerminoPartida(resultados);
+        cliente.enviarEvento(eventoEnviar);
        // EventoPartida fin = director.crearEventoInicioPartida();
     }
 
@@ -131,7 +134,11 @@ public class ControlPartida extends IControlPartida implements Runnable {
         
         if(ficha != null){
             CuentaDTO cuenta = er.getCuenta();
-            manejador.quitarFicha(cuenta, ficha);
+            if(manejador.quitarFicha(cuenta, ficha)){
+                ResultadosDTO resultados =manejador.terminarPartida();
+                EventoPartida eventoEnviar = director.crearEventoJugadorGano(cuenta,resultados);
+                cliente.enviarEvento(eventoEnviar);
+            }
         }
     }
 
