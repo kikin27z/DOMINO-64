@@ -31,6 +31,10 @@ public class ManejadorLobby {
         this.cantiFichas = 7;
     }
     
+    public int cantidadFichas(){
+        return cantiFichas;
+    }
+    
     public void actualizarCambioAvatar(CuentaDTO cuentaDTO){
         Cuenta cuenta= adaptadorDTO.adaptarCuentaDTO(cuentaDTO);
         lobby.cambiarAvatar(cuenta, cuenta.getAvatar());
@@ -91,6 +95,10 @@ public class ManejadorLobby {
     }
     public void removerJugadorListo(CuentaDTO cuenta){
         lobby.removerJugadorListo(adaptadorDTO.adaptarCuentaDTO(cuenta));
+    }
+    
+    public void actualizarCantidadFichas(ReglasDTO reglas){
+        this.cantiFichas = reglas.getCantidadFichas();
     }
     
     public boolean todosListos(){

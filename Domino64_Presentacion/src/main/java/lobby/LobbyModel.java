@@ -51,6 +51,7 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
     public LobbyModel(CuentaDTO cuenta, LobbyDTO lobby) {
         cuentaActual = cuenta;
         lobbyDTO = lobby;
+        reglas = lobbyDTO.getReglas();
         cuentasJugadoresOnline = lobbyDTO.getCuentas();
         cuentaLista = false;
         System.out.println("Tu cuenta inicializada es" + cuentaActual);
@@ -386,10 +387,10 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
     protected boolean estaListaCuenta() {
         return cuentaLista;
     }
-//
-//    protected int getCantidadFichas() {
-//        return lobbyDTO.getCantidadFichas();
-//    }
+
+    protected int getCantidadFichas() {
+        return reglas.getCantidadFichas();
+    }
 ////
 //    protected void setCantidadFichas(int cantidadFichas) {
 //        lobbyDTO.setCantidadFichas(cantidadFichas);

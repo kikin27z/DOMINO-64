@@ -42,8 +42,11 @@ public class ManejadorPartida {
         Jugador j = adaptadorDTO.adaptarJugadorDTO(jugador);
     }
     
+    public void setJugadores(List<JugadorDTO> jugadores){
+        partida.setJugadores(adaptadorDTO.adaptarJugadoresDTO(jugadores));
+    }
     
-    public void crearPartida(List<CuentaDTO> cuentasDTO){
+    public List<JugadorDTO> crearPartida(List<CuentaDTO> cuentasDTO){
         List<Cuenta> cuentas = adaptadorDTO.adaptarCuentasDTO(cuentasDTO);
         
         List<Jugador> jugadores = new ArrayList<>();
@@ -53,6 +56,7 @@ public class ManejadorPartida {
         }
 
        partida.setJugadores(jugadores);
+       return adaptador.adaptarJugadores(jugadores);
     }
     
     public void peticionRendirseJugador(JugadorDTO jugador){
@@ -73,6 +77,14 @@ public class ManejadorPartida {
         
         Jugador jugador = partida.obtenerJugador(cuenta);
         jugador.removerFicha(ficha);
+    }
+    
+    public void agregarFicha(CuentaDTO c, FichaDTO f){
+        Cuenta cuenta = adaptadorDTO.adaptarCuentaDTO(c);
+        Ficha ficha = adaptadorDTO.adaptarFichaDTO(f);
+        
+        Jugador jugador = partida.obtenerJugador(cuenta);
+        jugador.agregarFicha(ficha);
     }
     
     public void repartirFichas(MazosDTO mazos){

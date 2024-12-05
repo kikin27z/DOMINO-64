@@ -6,6 +6,7 @@ import entidadesDTO.ResultadosDTO;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaDTO;
+import entidadesDTO.JugadorDTO;
 import entidadesDTO.PosibleJugadaDTO;
 import entidadesDTO.ReglasDTO;
 import entidadesDTO.TurnosDTO;
@@ -28,16 +29,18 @@ public class DirectorPartida extends DirectorEventos<BuilderEventoPartida> {
     }
     
     
-    public EventoPartida crearEventoRepartirFichas(ReglasDTO reglas){
+    public EventoPartida crearEventoRepartirFichas(ReglasDTO reglas, List<JugadorDTO>jugadores){
         builder.setIdPublicador(idPublicador);
         builder.setReglas(reglas);
+        builder.setJugadores(jugadores);
         builder.setTipo(TipoLogicaPartida.REPARTIR_FICHAS);
         return builder.construirEvento();
     }
     
-    public EventoPartida crearEventoPartida(TurnosDTO turnos){
+    public EventoPartida crearEventoPartida(PartidaIniciadaDTO partida){
         builder.setIdPublicador(idPublicador);
-        builder.setTurnos(turnos);
+//        builder.setTurnos(turnos);
+        builder.setPartidaIniciada(partida);
         builder.setTipo(TipoLogicaPartida.INICIO_PARTIDA);
         return builder.construirEvento();
     }

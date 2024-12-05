@@ -97,6 +97,8 @@ public class ManejadorNotificador {
     }
 
     public void peticionRendirse() {
-
+        CuentaDTO cuenta = manejadorCuenta.getCuenta();
+        EventoJugador abandonar = directorEventos.crearEventoPeticionRendirse(cuenta);
+        receptor.enviarEvento(abandonar);
     }
 }

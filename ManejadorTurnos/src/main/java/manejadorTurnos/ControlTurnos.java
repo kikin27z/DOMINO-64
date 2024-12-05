@@ -94,7 +94,7 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
         EventoPozo eventoRecibido = (EventoPozo) evento;
         MazosDTO mazos = eventoRecibido.getMazos();
         
-        TurnosDTO turno = manejador.determinarOrden(mazos);
+        TurnosDTO turno = manejador.determinarTurnos(mazos);
         EventoTurno eventoEnviar = director.crearEventoTurnoDesignados(turno);
         cliente.enviarEvento(eventoEnviar);
         
@@ -104,7 +104,8 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
     public void cambiarTurno(Evento evento) {
         EventoTablero er = (EventoTablero) evento;
         JugadaDTO j = er.getJugada();
-        CuentaDTO cuenta =  manejador.rotarSiguienteTurno();
+//        CuentaDTO cuenta =  manejador.rotarSiguienteTurno();
+        CuentaDTO cuenta =  manejador.cambiarTurno();
         EventoTurno  eventoEnviar = director.crearEventoTurnoActual(cuenta, j);
         
         cliente.enviarEvento(eventoEnviar);

@@ -5,6 +5,7 @@ import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.PartidaIniciadaDTO;
 import entidadesDTO.JugadaDTO;
+import entidadesDTO.JugadorDTO;
 import entidadesDTO.PosibleJugadaDTO;
 import entidadesDTO.ReglasDTO;
 import entidadesDTO.TurnosDTO;
@@ -35,6 +36,10 @@ public class BuilderEventoPartida implements EventBuilder<TipoLogicaPartida>{
     
     public void setReglas(ReglasDTO reglas){
         evento.setReglas(reglas);
+    }
+    
+    public void setJugadores(List<JugadorDTO> jugadores){
+        evento.setJugadores(jugadores);
     }
     
     public void setPartidaIniciada(PartidaIniciadaDTO partida){

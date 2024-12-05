@@ -6,11 +6,13 @@ import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.MazosDTO;
+import entidadesDTO.PartidaIniciadaDTO;
 import entidadesDTO.PosibleJugadaDTO;
 import eventoBase.Evento;
 import entidadesDTO.ReglasDTO;
 import entidadesDTO.TurnosDTO;
 import eventoBaseError.EventoError;
+import eventoBaseSuscripcion.EventoSuscripcion;
 import eventos.EventoJugadorFicha;
 import eventos.EventoLobby;
 import eventos.EventoPartida;
@@ -28,6 +30,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import partidaBuilder.BuilderEventoPartida;
 import partidaBuilder.DirectorPartida;
+import partidaBuilder.DirectorSuscripcion;
+import tiposLogicos.TipoLogicaPozo;
 
 /**
  *
@@ -71,6 +75,7 @@ public class ControlPartida extends IControlPartida implements Runnable {
         _cliente.iniciar();
         id = _cliente.getClientId();
         director = new DirectorPartida(new BuilderEventoPartida(), id);
+        directorSuscripcion = new DirectorSuscripcion(id);
         ejecutorEventos.submit(this);
     }
 
@@ -103,8 +108,8 @@ public class ControlPartida extends IControlPartida implements Runnable {
         EventoLobby er = (EventoLobby) evento;
         System.out.println("Evento recibido " + er);
         ReglasDTO reglas = er.getReglas();
-        manejador.crearPartida(reglas.getCuentas());
-        EventoPartida eventoEnviar = director.crearEventoRepartirFichas(reglas);
+        List<JugadorDTO> jugadores = manejador.crearPartida(reglas.getCuentas());
+        EventoPartida eventoEnviar = director.crearEventoRepartirFichas(reglas, jugadores);
         cliente.enviarEvento(eventoEnviar);
         
     }
@@ -138,7 +143,6 @@ public class ControlPartida extends IControlPartida implements Runnable {
     public void evaluarJugador(Evento evento) {
         EventoTurno er = (EventoTurno) evento;
         CuentaDTO cuenta = er.getCuenta();
-        Map<FichaDTO, PosibleJugadaDTO> jugadasP;
         
         EventoPartida eventoEnviar;
         if(er.getJugada() != null){
@@ -162,11 +166,31 @@ public class ControlPartida extends IControlPartida implements Runnable {
     }
 
     @Override
+    public void evaluarFichaObtenida(Evento evento){
+        EventoPozo fichaOb = (EventoPozo)evento;
+        FichaDTO ficha = fichaOb.getFicha();
+        CuentaDTO cuenta = fichaOb.getJugador();
+        
+        EventoPartida eventoEnviar;
+        manejador.agregarFicha(cuenta, ficha);
+        if (manejador.tieneJugada(cuenta)) {
+            eventoEnviar = director.crearEventoTuTurno(manejador.obtenerJugadaActual(), cuenta);
+        } else {
+            eventoEnviar = director.crearEventoSinJugadas(cuenta);
+        }
+        cliente.enviarEvento(eventoEnviar);
+    }
+    
+    @Override
     public void iniciarPartida(Evento evento) {
         EventoTurno er = (EventoTurno) evento;
         TurnosDTO turnos = er.getTurnos();
+        List<JugadorDTO> jugadores = turnos.getJugadores();
+        manejador.setJugadores(jugadores);
         
-        EventoPartida eventoEnviar = director.crearEventoPartida(turnos);
+        PartidaIniciadaDTO partida = new PartidaIniciadaDTO(turnos);
+        
+        EventoPartida eventoEnviar = director.crearEventoPartida(partida);
         cliente.enviarEvento(eventoEnviar);
     }
 

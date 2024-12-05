@@ -576,7 +576,7 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
         tilesChoiceBox.setStyle("-fx-background-color: #FFF;");
         tilesChoiceBox.setCursor(Cursor.HAND);
         tilesChoiceBox.getItems().addAll("2", "3", "4", "5", "6", "7");
-//        tilesChoiceBox.setValue(String.valueOf(modelo.getCantidadFichas()));
+        tilesChoiceBox.setValue(String.valueOf(modelo.getCantidadFichas()));
 
         // Radio buttons
         ToggleGroup playerToggleGroup = new ToggleGroup();

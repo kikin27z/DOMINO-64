@@ -262,11 +262,14 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     @Override
     public void inicializarPartida(Evento evento) {
         EventoPartida er = (EventoPartida) evento;
-        TurnosDTO turnos = er.getTurnos();
+//        TurnosDTO turnos = er.getTurnos();
+        PartidaIniciadaDTO partida = er.getPartidaIniciada();
         
         CuentaDTO cuentaDTO = manejadorCuenta.getCuenta();
-        display.mostrarPartida(cuentaDTO);
-        distribuidor.inicializarPartida(turnos);
+        partida.setJugadorActual(cuentaDTO.getIdCadena());
+        display.mostrarPartida(partida);
+        removerSuscripcion(TipoLogicaPartida.INICIO_PARTIDA);
+//        distribuidor.inicializarPartida(turnos);
     }
 
     @Override
@@ -277,7 +280,7 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
         distribuidor.actualizarProximaJugada(jugada);
         
         if(manejadorCuenta.getCuenta().equals(prox.getCuenta())){
-            
+            distribuidor.actualizarJugadorEnTurno();
         }
     }
     

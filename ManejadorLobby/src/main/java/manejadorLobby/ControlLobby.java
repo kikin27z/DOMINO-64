@@ -92,7 +92,8 @@ public class ControlLobby extends IControlLobby implements Runnable {
         manejador.iniciarLobby();
         CuentaDTO cuentaDTO = manejador.unirCuenta(eventoRecibido.getCuenta());
         LobbyDTO lobby = manejador.devolverLobby();
-
+        lobby.setReglas(new ReglasDTO(manejador.cantidadFichas()));
+        
         EventoLobby ev = director.crearEventoPartidaCreada(lobby, cuentaDTO);
         enviarEvento(ev);
 
@@ -121,6 +122,8 @@ public class ControlLobby extends IControlLobby implements Runnable {
     private void unirJugador(CuentaDTO cuentaDTO, int destinatario) {
         CuentaDTO aux = manejador.unirCuenta(cuentaDTO);
         LobbyDTO lobby = manejador.devolverLobby();
+        lobby.setReglas(new ReglasDTO(manejador.cantidadFichas()));
+        
         EventoLobby jugadorNuevo = director.crearEventoJugadorNuevo(lobby, aux, destinatario);
         cliente.enviarEvento(jugadorNuevo);
         
@@ -219,7 +222,9 @@ public class ControlLobby extends IControlLobby implements Runnable {
 
     @Override
     public void cambiarReglas(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoJugador cambioReglas = (EventoJugador)evento;
+        ReglasDTO reglas = cambioReglas.getReglas();
+        manejador.actualizarCantidadFichas(reglas);
     }
 
 }

@@ -16,22 +16,22 @@ import java.util.Map;
  * @author Luisa Morales
  */
 public class PartidaIniciadaDTO implements Serializable {
-    private Map<String,JugadorDTO> jugadores;
+    private Map<String,JugadorDTO> mapeoJugadores;
+    private List<JugadorDTO> jugadores;
     private List<CuentaDTO> cuentas;
     private LinkedList<String> orden;
     private JugadorDTO jugadorActual;
     
     
     public PartidaIniciadaDTO(TurnosDTO turnos){
-        this.jugadores = turnos.getMazos();
-        this.orden = turnos.getOrden();
+        this.jugadores = turnos.getJugadores();
         initCuentas();
     }
     
     private JugadorDTO obtenerJugador(String idJugador){
-        for (Map.Entry<String, JugadorDTO> entry : jugadores.entrySet()) {
-            if(idJugador.equals(entry.getKey()))
-                return entry.getValue();
+        for (JugadorDTO jugador : jugadores) {
+            if(idJugador.equals(jugador.getCuenta().getIdCadena()))
+                return jugador;
         }
         return null;
     }
@@ -50,9 +50,13 @@ public class PartidaIniciadaDTO implements Serializable {
     
     private void initCuentas(){
         cuentas = new ArrayList<>();
-        for (Map.Entry<String, JugadorDTO> entry : jugadores.entrySet()) {
-            cuentas.add(entry.getValue().getCuenta());
+        for (JugadorDTO j: jugadores) {
+            cuentas.add(j.getCuenta());
         }
+    }
+    
+    public boolean esPrimerTurno(CuentaDTO cuenta){
+        return cuentas.indexOf(cuenta) == 0;
     }
     
     public List<CuentaDTO> getJugadores(){

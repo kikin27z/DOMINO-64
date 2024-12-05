@@ -121,6 +121,7 @@ public class Navegacion implements INavegacion {
             modeloPartida.setPartida(partidaDTO);
             try {
                 mediador.vincularModeloPartida(modeloPartida);
+                distribuidor.setPartidaMVC(modeloPartida);
                 PartidaView partida = new PartidaView(modeloPartida); // Instancia la vista de la partida
                 partida.iniciarEscena(fondo); // Inicia la escena de la partida
                 PartidaControl partidaControl = new PartidaControl(partida, modeloPartida);

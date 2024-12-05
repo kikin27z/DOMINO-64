@@ -27,6 +27,7 @@ public class PartidaControl {
         this.view = view;
         this.modelo = modelo;
         cargarEventos();
+        view.crearJugadores();
     }
 
     //-------------------Eventos-------------------
@@ -83,7 +84,9 @@ public class PartidaControl {
     }
     
     private void evaluarPrimeraJugada(FichaDTO ficha) {
-        if (modelo.esLaMulaAlta(ficha)) {
+//        if (modelo.esLaMulaAlta(ficha)) {
+        if (ficha.esMula()) {
+            modelo.primeraJugadaHecha();
             view.dibujarJugada(ficha, null);
         }
     }

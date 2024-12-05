@@ -49,7 +49,7 @@ public abstract class IReceptorEventosLogica implements Observer<Evento> {
                     TipoLogicaLobby.CUENTA_ABANDONO,
                     TipoLogicaLobby.CUENTA_ENTRO,
                     TipoLogicaLobby.AVATAR_ACTUALIZADO,
-                    TipoLogicaPartida.INICIO_PARTIDA,
+//                    TipoLogicaPartida.INICIO_PARTIDA,
                     TipoJugadorFicha.JUGADA_REALIZADA,
                     TipoLogicaPartida.SIN_JUGADAS,
                     TipoLogicaPartida.JUGADOR_EN_TURNO
@@ -109,7 +109,7 @@ public abstract class IReceptorEventosLogica implements Observer<Evento> {
         consumers.putIfAbsent(TipoLogicaLobby.CUENTA_ENTRO, this::cuentaEntro);
         consumers.putIfAbsent(TipoJugadorFicha.JUGADA_REALIZADA, this::jugadaRealizada);
 //        consumers.putIfAbsent(TipoJugadorFicha.JALAR_FICHA, this::jalarFicha);
-        consumers.putIfAbsent(TipoLogicaPartida.INICIO_PARTIDA, this::inicializarPartida);
+//        consumers.putIfAbsent(TipoLogicaPartida.INICIO_PARTIDA, this::inicializarPartida);
         consumers.putIfAbsent(TipoLogicaPartida.JUGADOR_EN_TURNO, this::proximaJugada);
         consumers.putIfAbsent(TipoLogicaPartida.SIN_JUGADAS, this::jalarFicha);
 

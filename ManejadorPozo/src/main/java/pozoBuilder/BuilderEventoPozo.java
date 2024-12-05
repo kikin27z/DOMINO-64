@@ -1,6 +1,7 @@
 package pozoBuilder;
 
 import builder.EventBuilder;
+import entidadesDTO.CuentaDTO;
 import eventoBase.Evento;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.MazosDTO;
@@ -17,6 +18,10 @@ public class BuilderEventoPozo implements EventBuilder<TipoLogicaPozo>{
 
     public BuilderEventoPozo() {
         evento = new EventoPozo();
+    }
+    
+    public void setJugador(CuentaDTO cuenta){
+        evento.setJugador(cuenta);
     }
     
     @Override

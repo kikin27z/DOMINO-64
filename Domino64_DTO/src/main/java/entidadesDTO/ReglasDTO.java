@@ -49,7 +49,6 @@ public class ReglasDTO implements Serializable {
     public void setCantidadFichas(int cantidadFichas) {
         this.cantidadFichas = cantidadFichas;
     }
-
     /**
      * Obtiene la cantidad de jugadores, que corresponde al tamaño de la lista de cuentas.
      * 

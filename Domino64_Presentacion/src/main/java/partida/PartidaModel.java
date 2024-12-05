@@ -42,6 +42,11 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
     private final CuentaDTO cuentaActual;
     private int numFichasIniciales;
     private LinkedList<String> ordenInicial;
+    
+    private List<CuentaDTO> jugadores;
+    private PartidaIniciadaDTO partida;
+    private JugadorDTO jugador;
+    private int contadorFichasPozo;
 
     public PartidaModel(CuentaDTO cuenta) {
         cuentaActual = cuenta;
@@ -51,6 +56,7 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
         logicaObservers = new ArrayList<>();
         viewObservers = new ArrayList<>();
         ordenInicial = new LinkedList<>();
+        contadorFichasPozo = 28;
     }
 
     public CuentaDTO getCuentaActual() {
@@ -84,23 +90,32 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
     }
     
     public void setPartida(PartidaIniciadaDTO partida){
-//        this.partida = partida;
-//        this.jugador = partida.getJugadorActual();
-//        jugadores = partida.getJugadores();
-//        jugadores.remove(jugador.getCuenta());
+        this.partida = partida;
+        this.jugador = partida.getJugadorActual();
+        jugadores = partida.getJugadores();
+        numFichasIniciales = jugador.getFichas().size();
+        contadorFichasPozo-= (jugadores.size()*numFichasIniciales);
+        if(partida.esPrimerTurno(cuentaActual)){
+            esMiTurno = true;
+        }
+        jugadores.remove(jugador.getCuenta());
     }
 //    
-//    public List<CuentaDTO> getJugadores(){
-//        return jugadores;
-//    }
-//    
-//    public int getCantidadJugadores(){
-//        return partida.getCantidadJugadores();
-//    }
-//    
-//    public int getCantidadFichasPorJugador(){
-//        return jugador.getFichas().size();
-//    }
+    public List<CuentaDTO> getJugadores(){
+        return jugadores;
+    }
+    
+    public int getCantidadJugadores(){
+        return partida.getCantidadJugadores();
+    }
+    
+    public int getCantidadFichasPorJugador(){
+        return numFichasIniciales;
+    }
+    
+    public JugadorDTO getJugador(){
+        return jugador;
+    }
 
     public PosibleJugadaDTO obtenerPosibleJugada(FichaDTO ficha) {
         
@@ -160,6 +175,10 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
         return primeraJugadaHecha;
     }
 
+    public void primeraJugadaHecha(){
+        primeraJugadaHecha = true;
+    }
+    
     public String queJugadorEs(int i) {
         return ordenInicial.get(i);
     }
@@ -218,7 +237,8 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
     }
 
     public int fichasRestantesPozoInicio() {
-        return (28 - (ordenInicial.size() * numFichasIniciales));
+        return contadorFichasPozo;
+//        return (28 - (ordenInicial.size() * numFichasIniciales));
     }
 
     @Override
@@ -243,6 +263,7 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
 
     @Override
     public void actualizarJalarFicha() {
+        esMiTurno = true;
         System.out.println("Tienes que jalar ficha");
     }
 
@@ -290,7 +311,9 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
 
     @Override
     public void avisarPeticionRendirse() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        for (ObserverPartida logicaObserver : logicaObservers) {
+            logicaObserver.avisarPeticionRendirse();
+        }
     }
 
     @Override
@@ -314,6 +337,8 @@ public class PartidaModel implements ObservablePartidaMVC, ObservablePartida {
         if(!primeraJugadaHecha){
             primeraJugadaHecha = true;
         }
+        if(contadorFichasPozo >0)
+            contadorFichasPozo--;
         esMiTurno = false;
         for(var observer : logicaObservers){
             observer.avisarJugadaRealizada(jugada);

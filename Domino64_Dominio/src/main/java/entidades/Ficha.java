@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @author Luisa Fernanda Morales Espinoza - 00000233450
  * @author José Karim Franco Valencia - 00000245138
  */
-public class Ficha implements Serializable {
+public class Ficha implements Serializable,Comparable<Ficha> {
     private int izquierda, derecha;
 
     /**
@@ -114,4 +114,10 @@ public class Ficha implements Serializable {
         sb.append(']');
         return sb.toString();
     }
+
+    @Override
+    public int compareTo(Ficha o) {
+        return Integer.compare(getValor(), o.getValor());
+    }
+
 }
