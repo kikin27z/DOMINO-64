@@ -51,6 +51,7 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
     public LobbyModel(CuentaDTO cuenta, LobbyDTO lobby) {
         cuentaActual = cuenta;
         lobbyDTO = lobby;
+        reglas = lobbyDTO.getReglas();
         cuentasJugadoresOnline = lobbyDTO.getCuentas();
         cuentaLista = false;
         System.out.println("Tu cuenta inicializada es" + cuentaActual);
@@ -119,9 +120,8 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
 
     @Override
     public void actualizarAvatarCuenta(CuentaDTO cuenta) {
-        if (cuenta.equals(cuentaActual)) {
-            cuentaActual.setAvatar(cuenta.getAvatar());
-            cuenta.setIdCadena(cuentaActual.getIdCadena());
+        for (ObserverLobbyMVC ob : observersMVC) {
+            ob.actualizarAvatarCuenta(cuenta);
         }
 //        observerMVC.actualizarAvatarCuenta(cuenta);
     }
@@ -181,11 +181,16 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
         for (ObserverLobby observerLobby : observersLogica) {
             observerLobby.avisarCambioAvatar(cuentaActualizada);
         }
+        for (ObserverLobbyMVC ob : observersMVC) {
+            ob.actualizarAvatarCuenta(cuentaActualizada);
+        }
+        
     }
 
     @Override
     public void avisarCuentaLista() {
         this.cuentaLista = true;
+        jugadoresListos.add(cuentaActual);
         for (ObserverLobby observerLobby : observersLogica) {
             observerLobby.avisarCuentaLista();
         }
@@ -197,6 +202,7 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
     @Override
     public void avisarCuentaNoLista() {
         this.cuentaLista = false;
+        jugadoresListos.remove(cuentaActual);
         for (ObserverLobby observerLobby : observersLogica) {
             observerLobby.avisarCuentaNoLista();
         }
@@ -211,9 +217,7 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
 
     @Override
     public void avisarAbandonar() {
-//        System.out.println("avisar");
         for (ObserverLobby observerLobby : observersLogica) {
-            System.out.println("observer?");
             observerLobby.avisarAbandonar();
         }
     }
@@ -383,10 +387,10 @@ public class LobbyModel implements ObservableLobbyMVC, ObservableLobby {
     protected boolean estaListaCuenta() {
         return cuentaLista;
     }
-//
-//    protected int getCantidadFichas() {
-//        return lobbyDTO.getCantidadFichas();
-//    }
+
+    protected int getCantidadFichas() {
+        return reglas.getCantidadFichas();
+    }
 ////
 //    protected void setCantidadFichas(int cantidadFichas) {
 //        lobbyDTO.setCantidadFichas(cantidadFichas);

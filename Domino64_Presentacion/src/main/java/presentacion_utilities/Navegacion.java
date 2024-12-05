@@ -5,6 +5,7 @@ import creditos.CreditosModel;
 import creditos.CreditosView;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.LobbyDTO;
+import entidadesDTO.PartidaIniciadaDTO;
 import entidadesDTO.ResultadosDTO;
 import finjuego.FinJuegoControl;
 import finjuego.FinJuegoModel;
@@ -114,11 +115,28 @@ public class Navegacion implements INavegacion {
     }
 
     @Override
+    public void cambiarPartida(PartidaIniciadaDTO partidaDTO) {
+        Platform.runLater(() -> {
+            PartidaModel modeloPartida = new PartidaModel(partidaDTO.getJugadorActual().getCuenta());
+            modeloPartida.setPartida(partidaDTO);
+            try {
+                mediador.vincularModeloPartida(modeloPartida);
+                distribuidor.setPartidaMVC(modeloPartida);
+                PartidaView partida = new PartidaView(modeloPartida); // Instancia la vista de la partida
+                partida.iniciarEscena(fondo); // Inicia la escena de la partida
+                PartidaControl partidaControl = new PartidaControl(partida, modeloPartida);
+            } catch (IOException ex) {
+                ex.printStackTrace(); // Maneja la excepción imprimiendo el stack trace
+            }
+        });
+    }
+
     public void cambiarPartida(CuentaDTO cuenta) {
         Platform.runLater(() -> {
             PartidaModel modeloPartida = new PartidaModel(cuenta);
             try {
                 mediador.vincularModeloPartida(modeloPartida);
+                 distribuidor.setPartidaMVC(modeloPartida);
                 PartidaView partida = new PartidaView(modeloPartida); // Instancia la vista de la partida
                 partida.iniciarEscena(fondo); // Inicia la escena de la partida
                 PartidaControl partidaControl = new PartidaControl(partida, modeloPartida);
@@ -134,6 +152,7 @@ public class Navegacion implements INavegacion {
             try {
                 OpcionesPartidaModel modelo = new OpcionesPartidaModel();
                 mediador.vincularModeloOpciones(modelo);
+                distribuidor.setOpcionesMVC(modelo);
                 OpcionesPartidaView view = new OpcionesPartidaView(modelo); // Instancia la vista de la partida
                 view.iniciarEscena(fondo); // Inicia la escena de la partida
                 OpcionesPartidaControl control = new OpcionesPartidaControl(view, modelo);
@@ -153,6 +172,7 @@ public class Navegacion implements INavegacion {
             CreditosModel modeloCreditos = new CreditosModel();
             try {
                 mediador.vincularCreditos(modeloCreditos);
+                
                 CreditosView view = new CreditosView(modeloCreditos); // Instancia la vista de la partida
                 view.iniciarEscena(fondo); // Inicia la escena de la partida
                 CreditosControl control = new CreditosControl(view, modeloCreditos);
@@ -168,6 +188,7 @@ public class Navegacion implements INavegacion {
             FinJuegoModel modeloFin = new FinJuegoModel();
             try {
                 mediador.vincularModeloFin(modeloFin);
+                distribuidor.setFinJuegoMVC(modeloFin);
                 FinJuegoView view = new FinJuegoView(modeloFin); // Instancia la vista de la partida
                 view.iniciarEscena(fondo); // Inicia la escena de la partida
                 FinJuegoControl control = new FinJuegoControl(view, modeloFin);

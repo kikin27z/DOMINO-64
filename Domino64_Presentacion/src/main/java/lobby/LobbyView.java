@@ -226,9 +226,6 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
                 paneles.put(cuenta.getIdCadena(), ponerJugadorOtro(cuenta));
             }
         }
-//        EventoMVCLobby evento = new EventoMVCLobby(TipoLobbyMVC.INICIALIZAR_PANELES_JUGADORES);
-//        evento.agregarContexto(paneles);
-//        notifyObservers(evento.getTipo(), evento);
     }
 
     private AnchorPane ponerJugadorActual(CuentaDTO cuenta) {
@@ -277,7 +274,7 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
 
         // Avatar del jugador
         btnAvatar.setImage(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
-        btnAvatar.setId("avatar");
+        btnAvatar.setId(cuenta.getAvatar().getAnimal());
         AnchorPane.setLeftAnchor(btnAvatar, 41.0);
         AnchorPane.setTopAnchor(btnAvatar, 15.0);
 
@@ -314,7 +311,7 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
 
         // Avatar del jugador
         ImageView avatar = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
-        avatar.setId("avatar");
+        avatar.setId(cuenta.getAvatar().getAnimal());
         avatar.setFitHeight(150);
         avatar.setFitWidth(200);
         avatar.setPreserveRatio(true);
@@ -579,7 +576,7 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
         tilesChoiceBox.setStyle("-fx-background-color: #FFF;");
         tilesChoiceBox.setCursor(Cursor.HAND);
         tilesChoiceBox.getItems().addAll("2", "3", "4", "5", "6", "7");
-//        tilesChoiceBox.setValue(String.valueOf(modelo.getCantidadFichas()));
+        tilesChoiceBox.setValue(String.valueOf(modelo.getCantidadFichas()));
 
         // Radio buttons
         ToggleGroup playerToggleGroup = new ToggleGroup();
@@ -718,8 +715,11 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
 
     //----------------------Eventos de Modelo------------------------------------
     private AnchorPane actualizarPanel(AnchorPane pane, AvatarDTO avatarNuevo) {
-        ImageView iconoListo = (ImageView) pane.getChildren().filtered(node -> node.getId().equals("iconoListo")).get(0);
-
+        FilteredList list = pane.getChildren().filtered(node -> node.getId().equals("iconoListo"));
+        ImageView iconoListo = null;
+        if(list != null && !list.isEmpty()){
+            iconoListo= (ImageView)list.get(0);
+        }
         ObservableList<Node> nodes = pane.getChildren();
         Image imgAvatar = new Image(avatarNuevo.getUrl());
         ImageView avatar = ((ImageView) nodes.get(0));
@@ -727,7 +727,7 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
         Label nombre = (Label) nodes.getLast();
         nombre.setText(avatarNuevo.getNombre());
 
-        pane.getChildren().removeAll();
+        pane.getChildren().clear();
 
         if (iconoListo != null) {
             pane.getChildren().addAll(avatar, iconoListo, nombre);
@@ -766,13 +766,22 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
     @Override
     public void actualizarAvatarCuenta(CuentaDTO cuenta) {
         AnchorPane pane = modelo.obtenerPanelJugador(cuenta.getIdCadena());
+        
+        ImageView iconoAv = (ImageView)pane.getChildren().get(0);
+        
+        String idAvatar = iconoAv.getId();
+        cambiarAvatar(modelo.getAvatarPorAnimal(idAvatar), false);
         cambiarAvatar(cuenta.getAvatar(), true);
 //        ObservableList<Node> nodes = pane.getChildren().filtered(node -> node.getId().equals("avatar"));
         AnchorPane panelAct = actualizarPanel(pane, cuenta.getAvatar());
-
-        int index = jugadoresContainer.getChildren().indexOf(pane);
-        jugadoresContainer.getChildren().remove(index);
-        jugadoresContainer.getChildren().add(index, panelAct);
+        if(panelAct != null){
+            int index = jugadoresContainer.getChildren().indexOf(pane);
+            //jugadoresContainer.getChildren().remove(pane);
+            jugadoresContainer.getChildren().set(index,panelAct);
+        }
+        else{
+            System.out.println("nmo se pudo");
+        }
     }
 
     
@@ -798,19 +807,24 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
     @Override
     public void actualizarCuentaLista(CuentaDTO cuenta) {
         ImageView icono = pintarIconoListo();
+        if (cuenta.equals(modelo.getCuentaActual())) {
+            btnIniciar.setText("No estoy listo");
+        }
         actualizarEncabezado(modelo.ACTUALIZACION_JUGADORES_LISTOS, true);
         AnchorPane pane = modelo.obtenerPanelJugador(cuenta.getIdCadena());
         pane.getChildren().add(icono);
-        btnIniciar.setText("No listo");
 
     }
 
     @Override
     public void actualizarCuentaNoLista(CuentaDTO cuenta) {
+        if(cuenta.equals(modelo.getCuentaActual())){
+            btnIniciar.setText("Estoy listo");
+        }
         actualizarEncabezado(modelo.ACTUALIZACION_JUGADORES_LISTOS, false);
         AnchorPane pane = modelo.obtenerPanelJugador(cuenta.getIdCadena());
         pane.getChildren().removeIf(node -> node.getId().equals("iconoListo"));
-        btnIniciar.setText("Estoy listo");
+        
     }
 
     //--------------------Getters-------------------------
@@ -916,7 +930,7 @@ public class LobbyView extends Observable<EventoLobbyMVC> implements ObserverLob
         }
 
         String oldTxt = lblJugadoresListos.getText();
-        String newTxt = oldTxt.replace(numJugadoresAnt, numNuevo);
+        String newTxt = oldTxt.replaceFirst(String.valueOf(numJugadoresAnt), String.valueOf(numNuevo));
 
         lblJugadoresListos.setText(newTxt);
         //lblEncabezado.setText(modelo.getEncabezadoLobby());//---------------------------Falta terminar----------

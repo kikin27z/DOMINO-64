@@ -1,10 +1,12 @@
 package manejadorTablero;
 
 import abstraccion.ICliente;
+import entidadesDTO.JugadaDTO;
 import eventoBase.Evento;
 import eventoBaseError.EventoError;
 import entidadesDTO.JugadaRealizadaDTO;
 import eventos.EventoJugadorFicha;
+import eventos.EventoTablero;
 import implementacion.Client;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

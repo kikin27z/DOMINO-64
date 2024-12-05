@@ -2,6 +2,7 @@ package manejadorLobby;
 
 import adapter.AdaptadorDTO;
 import adapter.AdaptadorEntidad;
+import entidades.Avatar;
 import entidades.Cuenta;
 import entidades.Jugador;
 import entidades.Lobby;
@@ -30,8 +31,13 @@ public class ManejadorLobby {
         this.cantiFichas = 7;
     }
     
-    public boolean validarCambioAvatar(CuentaDTO cuenta){
-        return true;
+    public int cantidadFichas(){
+        return cantiFichas;
+    }
+    
+    public void actualizarCambioAvatar(CuentaDTO cuentaDTO){
+        Cuenta cuenta= adaptadorDTO.adaptarCuentaDTO(cuentaDTO);
+        lobby.cambiarAvatar(cuenta, cuenta.getAvatar());
     }
     
     public CuentaDTO unirCuenta(CuentaDTO cuentaDTO){
@@ -89,6 +95,10 @@ public class ManejadorLobby {
     }
     public void removerJugadorListo(CuentaDTO cuenta){
         lobby.removerJugadorListo(adaptadorDTO.adaptarCuentaDTO(cuenta));
+    }
+    
+    public void actualizarCantidadFichas(ReglasDTO reglas){
+        this.cantiFichas = reglas.getCantidadFichas();
     }
     
     public boolean todosListos(){

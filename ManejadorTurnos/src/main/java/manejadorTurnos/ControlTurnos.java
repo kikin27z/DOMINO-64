@@ -1,5 +1,8 @@
 package manejadorTurnos;
 
+import entidadesDTO.JugadaRealizadaDTO;
+import entidadesDTO.CuentaDTO;
+import entidadesDTO.JugadaDTO;
 import eventoBase.Evento;
 import entidadesDTO.MazosDTO;
 import entidadesDTO.TurnosDTO;
@@ -8,6 +11,8 @@ import eventos.EventoJugador;
 import eventos.EventoJugadorFicha;
 import eventos.EventoPartida;
 import eventos.EventoPozo;
+import eventos.EventoTablero;
+import eventos.EventoTurno;
 import implementacion.Client;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,6 +20,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import tiposLogicos.TipoLogicaTurno;
+import tiposLogicos.TiposJugador;
 import turnosBuilder.BuilderEventoTurnos;
 import turnosBuilder.DirectorTurnos;
 
@@ -28,6 +35,8 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
     private DirectorTurnos director;
     private final AtomicBoolean running;
     private final ManejadorTurnos manejador;
+    private TurnosDTO turnos;
+    
     private final ExecutorService ejecutorEventos;
 
     public ControlTurnos() {
@@ -67,7 +76,7 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
     public void iniciaConexion() {
         Client c = Client.iniciarComunicacion();
 
-        for (Enum<?> suscripcion : eventos) {
+        for (Enum suscripcion : eventos) {
             c.addObserver(suscripcion, this);
         }
 
@@ -76,7 +85,8 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
 
     @Override
     public void manejarError(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoError error = (EventoError)evento;
+        System.out.println("Hubo un error: "+error.getMensaje());
     }
 
     @Override
@@ -84,7 +94,7 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
         EventoPozo eventoRecibido = (EventoPozo) evento;
         MazosDTO mazos = eventoRecibido.getMazos();
         
-        TurnosDTO turno = manejador.determinarOrden(mazos);
+        TurnosDTO turno = manejador.determinarTurnos(mazos);
         EventoTurno eventoEnviar = director.crearEventoTurnoDesignados(turno);
         cliente.enviarEvento(eventoEnviar);
         
@@ -94,7 +104,8 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
     public void cambiarTurno(Evento evento) {
         EventoTablero er = (EventoTablero) evento;
         JugadaDTO j = er.getJugada();
-        CuentaDTO cuenta =  manejador.rotarSiguienteTurno();
+//        CuentaDTO cuenta =  manejador.rotarSiguienteTurno();
+        CuentaDTO cuenta =  manejador.cambiarTurno();
         EventoTurno  eventoEnviar = director.crearEventoTurnoActual(cuenta, j);
         
         cliente.enviarEvento(eventoEnviar);
@@ -132,6 +143,17 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
                 EventoTurno eventoEnviar = director.crearEventoFinJuego();
                 cliente.enviarEvento(eventoEnviar);
             }
+        }
+    }
+
+    @Override
+    public void reacomodarTurnos(Evento evento) {
+        EventoPartida jugadorSalio = (EventoPartida)evento;
+        CuentaDTO cuenta =jugadorSalio.getJugador().getCuenta();
+        cuenta = manejador.removerJugador(cuenta);
+        if(cuenta != null){
+            EventoTurno eventoEnviar = director.crearEventoTurnoActual(cuenta, null);
+            cliente.enviarEvento(eventoEnviar);
         }
     }
 

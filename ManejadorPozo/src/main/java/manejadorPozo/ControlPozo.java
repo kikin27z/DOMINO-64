@@ -10,6 +10,7 @@ import eventos.EventoJugadorFicha;
 import eventos.EventoLobby;
 import eventos.EventoPartida;
 import eventos.EventoPozo;
+import eventos.EventoTurno;
 import implementacion.Client;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -54,7 +55,7 @@ public class ControlPozo extends IControlPozo implements Runnable {
     public void iniciaConexion() {
         Client c = Client.iniciarComunicacion();
 
-        for (Enum<?> suscripcion : eventos) {
+        for (Enum suscripcion : eventos) {
             c.addObserver(suscripcion, this);
         }
 
@@ -88,8 +89,13 @@ public class ControlPozo extends IControlPozo implements Runnable {
         EventoPartida eventoRecibido = (EventoPartida) evento;
         System.out.println("Evento recibido " + eventoRecibido);
         ReglasDTO reglas = eventoRecibido.getReglas();
-        MazosDTO mazos = manejador.repartirFichas(reglas);
-        EventoPozo eventoEnviar = director.crearEventoDesignarTurnos(mazos);
+        List<JugadorDTO> jugadores = eventoRecibido.getJugadores();
+        jugadores = manejador.repartirFichas2(jugadores, reglas);
+        
+//        MazosDTO mazos = manejador.repartirFichas(reglas, jugadores);
+        MazosDTO mazos = new MazosDTO();
+        mazos.setJugadores(jugadores);
+        EventoPozo eventoEnviar = director.crearEventoFichasRepartidas(mazos);
         cliente.enviarEvento(eventoEnviar); 
     }
 
@@ -104,15 +110,22 @@ public class ControlPozo extends IControlPozo implements Runnable {
 
     @Override
     public void jalarFicha(Evento evento) {
+        EventoJugador jalarF = (EventoJugador)evento;
         FichaDTO ficha = manejador.jalarPozo();
         EventoPozo eventoEnviar;
         if(ficha != null){
-            eventoEnviar = director.crearEventoFichaJalada(ficha);
+            eventoEnviar = director.crearEventoFichaJalada(ficha, jalarF.getCuenta());
         }else{
             eventoEnviar = director.crearEventoPozoVacio();
         }
         
         cliente.enviarEvento(eventoEnviar);
+    }
+
+    @Override
+    public void finJuego(Evento evento) {
+        EventoTurno finJuego = (EventoTurno)evento;
+        
     }
 
 }

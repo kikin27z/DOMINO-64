@@ -88,9 +88,26 @@ public class Jugador {
                 break;
             }
         }
+        System.out.println("Se borro " + fichaRemovida + " a " + cuenta);
         return fichaRemovida;
     }
 
+    public Ficha mulaMasAlta() {
+        Ficha higherDouble = null;
+        int higherValue = 0;
+        for (Ficha f : fichas) {
+            if (f.esMula()) {
+                int actualValue = f.getValor();
+                if (actualValue > higherValue) {
+                    higherValue = actualValue;
+                    higherDouble = f;
+                    //System.out.println("higher double: " + higherDouble);
+                }
+            }
+        }
+        return higherDouble;
+    }
+    
     /**
      * Obtiene la ficha de mayor valor que sea una mula (ficha con el mismo valor en ambos lados).
      * 
@@ -110,6 +127,14 @@ public class Jugador {
         return mayorMula;
     }
 
+    public boolean tieneMulas(){
+        for (Ficha ficha : fichas) {
+            if(ficha.esMula())
+                return true;
+        }
+        return false;
+    }
+    
     /**
      * Obtiene el identificador del jugador, que es el ID de su cuenta.
      * 
@@ -117,6 +142,10 @@ public class Jugador {
      */
     public String obtenerIdJugador(){
         return this.cuenta.getIdCadena(); // Devuelve el ID de la cuenta del jugador
+    }
+    
+    public boolean esCuentaJugador(Cuenta c){
+        return cuenta.equals(c);
     }
 
     /**

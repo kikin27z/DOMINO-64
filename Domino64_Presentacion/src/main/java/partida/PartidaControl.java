@@ -26,9 +26,8 @@ public class PartidaControl {
     public PartidaControl(PartidaView view, PartidaModel modelo) {
         this.view = view;
         this.modelo = modelo;
-//        CuentaDTO cuenta = new CuentaDTO(0, "/avatar/tortuga.png", "Karim"); //Quitar esto es harcodeo----------------------------------------------
-//        view.insertarMesaAba(cuenta);//Quitar esto es harcodeo--------------------------------------------------------------------------------------
         cargarEventos();
+        view.crearJugadores();
     }
 
     //-------------------Eventos-------------------
@@ -42,40 +41,30 @@ public class PartidaControl {
     }
 
     private void mostrarPausa(MouseEvent e) {
-        modelo.actualizarTurno(null);
+        modelo.actualizarProximaJugada(null);
     }
 
     private void jalarPozo(MouseEvent e) {
-        List<FichaDTO> fichas = new ArrayList<>();
-        fichas.add(new FichaDTO(6, 6));
-        fichas.add(new FichaDTO(6, 0));
-        fichas.add(new FichaDTO(3, 0));
-        
-        fichas.add(new FichaDTO(6, 2));
-        fichas.add(new FichaDTO(3, 2));
-        fichas.add(new FichaDTO(3, 3));
-        fichas.add(new FichaDTO(3, 4));
-        fichas.add(new FichaDTO(5, 4));
-        fichas.add(new FichaDTO(5, 1));
-        fichas.add(new FichaDTO(1, 1));
-        fichas.add(new FichaDTO(1, 4));
-        fichas.add(new FichaDTO(2, 4));
-        
-        modelo.actualizarDarFichas(fichas);
+        if (!modelo.esMiTurno()) {
+            return;
+        }
+        modelo.avisarJalarFichaPozo();
     }
 
     private void rendirse(MouseEvent e) {
-        
+        modelo.avisarPeticionRendirse();
     }
 
     private void procesarFicha(MouseEvent e) {
         DibujoJugada dibujoJugada = (DibujoJugada) e.getSource();
         JugadaRealizadaDTO jugada = modelo.crearJugadaRealizada(dibujoJugada);
-        view.dibujarFicha(jugada);
         view.quitarFichaMazo();
+        modelo.quitarMapeoFichas();
+        view.limpiarJugadas();
+        modelo.avisarJugadaRealizada(jugada);
         
-        //Simulacion de que se guarda la ficha en el tablero y obtiene una nueva jugada
-        aquiNoVaEsto(jugada);
+//        //Simulacion de que se guarda la ficha en el tablero y obtiene una nueva jugada
+//        aquiNoVaEsto(jugada);
     }
 
     private void evaluarFicha(MouseEvent e) {
@@ -85,7 +74,7 @@ public class PartidaControl {
         }
         Canvas dibujo = (Canvas) e.getSource();
         FichaDTO ficha = modelo.obtenerFicha(dibujo);
-        if (modelo.esPrimeraJugadaHecha()) {
+        if (!modelo.esPrimeraJugadaHecha()) {
             evaluarPrimeraJugada(ficha);
             return;
         }
@@ -95,14 +84,16 @@ public class PartidaControl {
     }
     
     private void evaluarPrimeraJugada(FichaDTO ficha) {
-        if (modelo.esLaMulaAlta(ficha)) {
+//        if (modelo.esLaMulaAlta(ficha)) {
+        if (ficha.esMula()) {
+            modelo.primeraJugadaHecha();
             view.dibujarJugada(ficha, null);
         }
     }
-    private void aquiNoVaEsto(JugadaRealizadaDTO jugada){
-        tablero.colocarFicha(jugada);
-        JugadaDTO jugadaProxima = tablero.obtenerProximaJugada();
-        modelo.actualizarTurno(jugadaProxima);
-    }
+//    private void aquiNoVaEsto(JugadaRealizadaDTO jugada){
+//        tablero.colocarFicha(jugada);
+//        JugadaDTO jugadaProxima = tablero.obtenerProximaJugada();
+//        modelo.actualizarProximaJugada(jugadaProxima);
+//    }
 
 }

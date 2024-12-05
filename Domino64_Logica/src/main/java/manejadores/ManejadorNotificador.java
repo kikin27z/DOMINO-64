@@ -35,7 +35,7 @@ public class ManejadorNotificador {
         CuentaDTO cuentaDTO = manejadorCuenta.getCuenta();
         EventoJugador crear = directorEventos.crearEventoCrearPartida(cuentaDTO);
         receptor.enviarEvento(crear);
-        receptor.agregarSuscripcion(TipoLogicaLobby.PARTIDA_CREADA, receptor::partidaCreada);
+        receptor.agregarSuscripcion(TipoLogicaLobby.LOBBY_CREADO, receptor::lobbyCreado);
     }
 
     public void unirsePartida(UnirseDTO unirse) {
@@ -50,9 +50,10 @@ public class ManejadorNotificador {
         CuentaDTO cuenta = manejadorCuenta.getCuenta();
         EventoJugador abandonar = directorEventos.crearEventoAbandonarLobby(cuenta);
         receptor.enviarEvento(abandonar);
+        receptor.removerSuscripcion(TipoLogicaPartida.INICIO_PARTIDA);
     }
 
-    public void cuentaLista() {
+    public void cuentaLista(){
         CuentaDTO cuenta = manejadorCuenta.getCuenta();
         EventoJugador listo = directorEventos.crearEventoCuentaLista(cuenta);
         receptor.enviarEvento(listo);
@@ -76,7 +77,8 @@ public class ManejadorNotificador {
 
     //----------------------------------Eventos Partida----------------------------------
     public void enviarJugadaRealizada(JugadaRealizadaDTO jugada) {
-        EventoJugadorFicha evento = directorEventosFicha.crearEventoJugadaRealizada(jugada);
+        CuentaDTO cuenta = manejadorCuenta.getCuenta();
+        EventoJugadorFicha evento = directorEventosFicha.crearEventoJugadaRealizada(jugada, cuenta);
         receptor.enviarEvento(evento);
     }
 
@@ -95,6 +97,8 @@ public class ManejadorNotificador {
     }
 
     public void peticionRendirse() {
-
+        CuentaDTO cuenta = manejadorCuenta.getCuenta();
+        EventoJugador abandonar = directorEventos.crearEventoPeticionRendirse(cuenta);
+        receptor.enviarEvento(abandonar);
     }
 }

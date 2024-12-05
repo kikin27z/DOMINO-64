@@ -21,6 +21,7 @@ import implementacion.Client;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -28,6 +29,7 @@ import java.util.logging.Logger;
 import manejadores.Control;
 import manejadores.ManejadorCuenta;
 import manejadores.ManejadorDisplay;
+import manejadores.ManejadorJugador;
 import presentacion_utilities.DistribuidorEventosModelo;
 import tiposLogicos.TipoLogicaLobby;
 import tiposLogicos.TipoLogicaPartida;
@@ -46,6 +48,7 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     private DistribuidorEventosModelo distribuidor;
     private AtomicBoolean running;
     private ManejadorCuenta manejadorCuenta;
+    private ManejadorJugador manejadorJugador;
 
     public ReceptorLogica() {
         super();
@@ -58,6 +61,11 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     @Override
     public void vincularDisplay() {
         display = Control.obtenerManejadorDisplay();
+    }
+
+    @Override
+    public void vincularJugador() {
+        manejadorJugador = Control.obtenerManejadorJugador();
     }
 
     public void vincularCliente(Client _cliente) {
@@ -81,53 +89,55 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
         this.vincularCliente(c);
     }
 
-    @Override
-    public void recibirPartida(Evento evento) {
-//        System.out.println("partida recibida");
-//        Enum tipo = evento.getTipo();
-//        if (tipo.equals(TipoLogicaLobby.PARTIDA_ENCONTRADA)) {
-//            EventoLobby eventoLobby = (EventoLobby) evento;
-//            System.out.println("evento: " + eventoLobby);
-//
-//            lobbyDTO = eventoLobby.obtenerLobby();
-//            manejador.asignarCuenta(lobbyDTO.getCuentaActual());
-//
-//            System.out.println("lobbyDTO: " + lobbyDTO);
-////            MediadorManejadores.enviarADisplay(eventoLobby);
-//
-//            removerSuscripcion(TipoLogicaLobby.PARTIDA_ENCONTRADA);
-//        }
-    }
 
     @Override
     public void actualizarAvatares(Evento evento) {
         
         System.out.println("Jugador actualizo su avatar");
-//        EventoLobby ev = esEventoDeEsteLobby(evento);
-//        if( ev != null){
-//            CuentaDTO jugadorEvento = ev.getPublicador();
-//            
-//            for (CuentaDTO cuentaDTO : jugadoresLobby) {
-//                if(cuentaDTO.equals(jugadorEvento)){
-//                    cuentaDTO.setAvatar(jugadorEvento.getAvatar());
-//                    MediadorManejadores.enviarADisplay(ev);
-//                    break;
-//                }
-//            }
-//        }
+        EventoLobby eventoL = (EventoLobby)evento;
+        CuentaDTO cuenta = eventoL.getPublicador();
+        distribuidor.actualizarAvatarCuenta(cuenta);
     }
+    
     @Override
     public void manejarError(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoError error = (EventoError)evento;
+        if(error.getTipo().equals(TipoError.ERROR_DE_SERVIDOR)){
+            manejarErrorServidor(error);
+        }else{
+            errorUnirse(error);
+        }
+        
+    }
+    
+    private void manejarErrorServidor(EventoError error){
+        System.out.println("error: "+error.getMensaje());
+        distribuidor.mostrarMensajeError("Ha ocurrido un error en el servidor");
+        
+        running.set(false);
+        ejecutorEventos.shutdown();
+
+        try {
+            if (!ejecutorEventos.awaitTermination(5, TimeUnit.SECONDS)) {
+                ejecutorEventos.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            ejecutorEventos.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
+    private void errorUnirse(EventoError error) {
+        distribuidor.mostrarMensajeError(error.getMensaje());
+    }
+    
     @Override
     public int devolverIdCliente() {
         return id;
     }
 
     @Override
-    public void partidaCreada(Evento evento) {
+    public void lobbyCreado(Evento evento) {
         EventoLobby eventoRecibido = (EventoLobby) evento;
         LobbyDTO lobby = eventoRecibido.obtenerLobby();
         System.out.println("\ncodigo partida: "+lobby.getCodigo()+"\n");
@@ -145,7 +155,7 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     }
 
     @Override
-    public void partidaEncontrada(Evento evento) {
+    public void lobbyEncontrado(Evento evento) {
         EventoLobby eventoRecibido = (EventoLobby) evento;
         
         System.out.println("\n");
@@ -163,9 +173,6 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
 //        distribuidor.inicializarLobby(lobby);
     }
 
-    @Override
-    public void errorUnirse(Evento evento) {
-    }
 
     @Override
     public void run() {
@@ -196,7 +203,7 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
         EventoLobby eventoLobby  = (EventoLobby) evento;
         System.out.println(eventoLobby);
         manejadorCuenta.borrarPerfil();
-        display.mostrarInicio();
+        display.mostrarOpcionesPartida();
     }
 
     @Override
@@ -255,11 +262,14 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
     @Override
     public void inicializarPartida(Evento evento) {
         EventoPartida er = (EventoPartida) evento;
-        TurnosDTO turnos = er.getTurnos();
+//        TurnosDTO turnos = er.getTurnos();
+        PartidaIniciadaDTO partida = er.getPartidaIniciada();
         
         CuentaDTO cuentaDTO = manejadorCuenta.getCuenta();
-        display.mostrarPartida(cuentaDTO);
-        distribuidor.inicializarPartida(turnos);
+        partida.setJugadorActual(cuentaDTO.getIdCadena());
+        display.mostrarPartida(partida);
+        removerSuscripcion(TipoLogicaPartida.INICIO_PARTIDA);
+//        distribuidor.inicializarPartida(turnos);
     }
 
     @Override
@@ -270,7 +280,7 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
         distribuidor.actualizarProximaJugada(jugada);
         
         if(manejadorCuenta.getCuenta().equals(prox.getCuenta())){
-            
+            distribuidor.actualizarJugadorEnTurno();
         }
     }
     

@@ -3,6 +3,7 @@ package presentacion_utilities;
 import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaDTO;
+import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.ResultadosDTO;
 import entidadesDTO.TurnosDTO;
@@ -48,6 +49,11 @@ public class DistribuidorEventosModelo {
 
     public void setPartidaMVC(ObservablePartidaMVC partidaMVC) {
         this.partidaMVC = partidaMVC;
+    }
+    //----------------------------------Mensaje de error-----------------------------------
+    
+    public void mostrarMensajeError(String msj){
+        System.out.println(msj);
     }
     public void setFinJuegoMVC(ObservableFinJuegoMVC finMVC) {
         this.finMVC = finMVC;
@@ -122,7 +128,13 @@ public class DistribuidorEventosModelo {
 
     public void actualizarProximaJugada(JugadaDTO jugada) {
         Platform.runLater(() -> {
-            partidaMVC.actualizarTurno(jugada);
+            partidaMVC.actualizarProximaJugada(jugada);
+        });
+    }
+    
+    public void actualizarJugadorEnTurno() {
+        Platform.runLater(() -> {
+            partidaMVC.actualizarJugadorEnTurno();
         });
     }
     
@@ -142,6 +154,12 @@ public class DistribuidorEventosModelo {
     public void actualizarJugadorSeRindio(CuentaDTO cuenta){
         Platform.runLater(() -> {
             partidaMVC.actualizarJugadorSeRindio(cuenta);
+        });
+    }
+    
+    public void jugadaRealizada(JugadaRealizadaDTO jugada, CuentaDTO cuenta){
+        Platform.runLater(() -> {
+            partidaMVC.actualizarTablero(jugada,cuenta);
         });
     }
 

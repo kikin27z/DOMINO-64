@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 import observer.Observer;
 import tiposLogicos.TipoJugadorFicha;
 import tiposLogicos.TipoLogicaPartida;
+import tiposLogicos.TipoLogicaTurno;
 import tiposLogicos.TiposJugador;
 
 /**
@@ -29,7 +30,8 @@ public abstract class IControlPozo implements Observer<Evento> {
                     TipoError.ERROR_DE_SERVIDOR,
                     TipoJugadorFicha.JALAR_FICHA,
                     TipoLogicaPartida.JUGADOR_SALIO,
-                    TipoLogicaPartida.REPARTIR_FICHAS
+                    TipoLogicaPartida.REPARTIR_FICHAS,
+                    TipoLogicaTurno.FIN_JUEGO
             ));
     
     protected IControlPozo(){
@@ -54,6 +56,7 @@ public abstract class IControlPozo implements Observer<Evento> {
         consumers.putIfAbsent(TipoJugadorFicha.JALAR_FICHA, this::jalarFicha);
         consumers.putIfAbsent(TipoLogicaPartida.JUGADOR_SALIO, this::jugadorAbandono);
         consumers.putIfAbsent(TipoLogicaPartida.REPARTIR_FICHAS, this::repartirFichas);
+        consumers.putIfAbsent(TipoLogicaTurno.FIN_JUEGO, this::finJuego);
     }
     
     public void agregarEvento(Enum evento, Consumer<Evento> consumer){
@@ -69,6 +72,7 @@ public abstract class IControlPozo implements Observer<Evento> {
     public abstract void repartirFichas(Evento evento);
     public abstract void jugadorAbandono(Evento evento);
     public abstract void jalarFicha(Evento evento);
+    public abstract void finJuego(Evento evento);
     
     
 }

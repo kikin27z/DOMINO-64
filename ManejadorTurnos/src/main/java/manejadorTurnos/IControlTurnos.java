@@ -14,6 +14,8 @@ import observer.Observer;
 import tiposLogicos.TipoJugadorFicha;
 import tiposLogicos.TipoLogicaPartida;
 import tiposLogicos.TipoLogicaPozo;
+import tiposLogicos.TiposJugador;
+import tiposLogicos.TipoLogicaTablero;
 
 /**
  *
@@ -22,15 +24,16 @@ import tiposLogicos.TipoLogicaPozo;
  */
 public abstract class IControlTurnos implements Observer<Evento> {
     protected ICliente cliente;
-    protected BlockingQueue<Evento> colaEventos;
+    protected static BlockingQueue<Evento> colaEventos;
     protected Map<Enum, Consumer<Evento>> consumers;
-    protected final List<Enum> eventos = new ArrayList<>(
+    protected static final List<Enum> eventos = new ArrayList<>(
             List.of(
                     TipoError.ERROR_DE_SERVIDOR,
                     TipoLogicaPozo.REPARTIR_FICHAS,
 //                    TipoJugadorFicha.JUGADA_REALIZADA,
                     TipoLogicaTablero.OBTENER_JUGADA,
-                    TipoLogicaPartida.SIGUIENTE_TURNO
+                    TipoLogicaPartida.SIGUIENTE_TURNO,
+                    TipoLogicaPartida.JUGADOR_SALIO
             ));
     
     protected IControlTurnos(){
@@ -47,7 +50,7 @@ public abstract class IControlTurnos implements Observer<Evento> {
         return eventos;
     }
     
-     public void enviarEvento(Evento evento) {
+    public void enviarEvento(Evento evento) {
         cliente.enviarEvento(evento);
     }
     protected void setConsumers(){
@@ -56,6 +59,7 @@ public abstract class IControlTurnos implements Observer<Evento> {
 //        consumers.putIfAbsent(TipoJugadorFicha.JUGADA_REALIZADA, this::evaluarJugada);
         consumers.putIfAbsent(TipoLogicaTablero.OBTENER_JUGADA, this::cambiarTurno);
         consumers.putIfAbsent(TipoLogicaPartida.SIGUIENTE_TURNO, this::pasarTurno);
+        consumers.putIfAbsent(TipoLogicaPartida.JUGADOR_SALIO, this::reacomodarTurnos);
     }
     
     public void agregarEvento(Enum evento, Consumer<Evento> consumer){
@@ -73,6 +77,7 @@ public abstract class IControlTurnos implements Observer<Evento> {
     public abstract void pasarTurno(Evento evento);
     public abstract void removerJugador(Evento evento);
     public abstract void evaluarJugada(Evento evento);
+    public abstract void reacomodarTurnos(Evento evento);
     
     
 }

@@ -4,6 +4,7 @@ import entidadesDTO.CuentaDTO;
 import entidadesDTO.FichaDTO;
 import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
+import entidadesDTO.JugadorDTO;
 import entidadesDTO.PosibleJugadaDTO;
 import entidadesDTO.PosicionDTO;
 import entidadesDTO.TurnosDTO;
@@ -11,12 +12,15 @@ import eventosPartida.ObserverPartida;
 import eventosPartida.ObserverPartidaMVC;
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import javafx.geometry.Insets;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
@@ -51,8 +55,10 @@ public class PartidaView implements ObserverPartidaMVC {
     private StackPane surrenderButton;
     private StackPane pauseButton;
     private DibujoTablero gameBoard;
-    private EventHandler<MouseEvent> evaluarFicha;
-    private EventHandler<MouseEvent> colocarFicha;
+    private static EventHandler<MouseEvent> evaluarFicha;
+    private static EventHandler<MouseEvent> colocarFicha;
+    private AnchorPane panel;
+    private Label contadorPozo;
 
     public PartidaView(PartidaModel modelo) {
         this.modelo = modelo;
@@ -82,38 +88,57 @@ public class PartidaView implements ObserverPartidaMVC {
         bottomPlayer.getChildren().remove(dibujo);
         modelo.quitarMapeoFichas();
     }
+//
+    protected void crearJugadores(){
+        List<Node> paneles = new ArrayList<>();
+        List<CuentaDTO> jugadores = modelo.getJugadores();
+        switch (jugadores.size()+1) {
+            case 2 -> paneles.add(createTopPlayer(jugadores.get(0)));
+            case 3 -> {
+                paneles.add(createTopPlayer(jugadores.get(0)));
+                paneles.add(createRightPlayer(jugadores.get(1)));
+            }
+            case 4 -> {
+                paneles.add(createTopPlayer(jugadores.get(0)));
+                paneles.add(createRightPlayer(jugadores.get(1)));
+                paneles.add(createLeftPlayer(jugadores.get(2)));
+            }
+        }
+        
+        createBottomPlayer();
+        paneles.add(bottomPlayer);
+        
+        panel.getChildren().addAll(paneles);
+    }
+    
     private AnchorPane createGameInterface() {
         // Main container
-        AnchorPane root = new AnchorPane();
-        root.setId("AnchorPane");
-        root.setPrefSize(1000, 700);
-        root.setMinSize(1000, 700);
-        root.setMaxSize(1000, 700);
-        root.setStyle("-fx-background-color: #186F65;");
+        panel = new AnchorPane();
+        panel.setId("AnchorPane");
+        panel.setPrefSize(1000, 700);
+        panel.setMinSize(1000, 700);
+        panel.setMaxSize(1000, 700);
+        panel.setStyle("-fx-background-color: #186F65;");
 
+        List<Node> nodos = new ArrayList<>();
         // Create all components
         containerGameBoard = createGameBoard();
-        AnchorPane topPlayer = createTopPlayer();
-        AnchorPane rightPlayer = createRightPlayer();
-        AnchorPane leftPlayer = createLeftPlayer();
         createBottomPlayer();
-        AnchorPane topOptions = createTopOptions();
         createDeckIndicator();
+        AnchorPane topOptions = createTopOptions();
         ImageView playerAvatar = createPlayerAvatar();
-
+        
+        nodos.add(containerGameBoard);
+//        nodos = crearJugadores(nodos);
+        nodos.add(bottomPlayer);
+        nodos.add(pozoIndicador);
+        nodos.add(topOptions);
+        nodos.add(playerAvatar);
+        
         // Add all components to root
-        root.getChildren().addAll(
-                containerGameBoard,
-                topPlayer,
-                rightPlayer,
-                leftPlayer,
-                bottomPlayer,
-                topOptions,
-                pozoIndicador,
-                playerAvatar
-        );
+        panel.getChildren().addAll(nodos);
 
-        return root;
+        return panel;
     }
 
     private AnchorPane createGameBoard() {
@@ -133,13 +158,13 @@ public class PartidaView implements ObserverPartidaMVC {
         return containerGameBoard;
     }
 
-    
-    public void asignarProcesarJugada(){
+    public void asignarProcesarJugada() {
         gameBoard.setOpcionJugada(colocarFicha);
     }
-    private AnchorPane createTopPlayer() {
+
+    private AnchorPane createTopPlayer(CuentaDTO cuenta) {
         AnchorPane topPlayer = new AnchorPane();
-        topPlayer.setId("jugador3");
+        topPlayer.setId(cuenta.getUsername());
         topPlayer.setLayoutX(366);
         topPlayer.setLayoutY(0);
         topPlayer.setPrefSize(268, 98);
@@ -154,39 +179,43 @@ public class PartidaView implements ObserverPartidaMVC {
         playerDeck.setLayoutY(7);
         playerDeck.setRotate(180);
 
-        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
+        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
         playerAvatar.setFitHeight(100);
         playerAvatar.setFitWidth(100);
         playerAvatar.setLayoutX(-64);
         playerAvatar.setLayoutY(1);
+        playerAvatar.setId(cuenta.getIdCadena());
 
-        Label cardCount = new Label("6");
+        Label cardCount = new Label(String.valueOf(modelo.getCantidadFichasPorJugador()));
         cardCount.setAlignment(javafx.geometry.Pos.CENTER);
         cardCount.setLayoutX(167);
         cardCount.setLayoutY(22);
         cardCount.setPrefSize(60, 60);
         cardCount.setTextFill(javafx.scene.paint.Color.WHITE);
         cardCount.setFont(Font.font("Verdana Bold", 40));
+        cardCount.setId(cuenta.getAvatar().getUrl());
 
         topPlayer.getChildren().addAll(playerDeck, playerAvatar, cardCount);
         return topPlayer;
+//        panel.getChildren().add(topPlayer);
     }
 
-    private AnchorPane createRightPlayer() {
+    private AnchorPane createRightPlayer(CuentaDTO cuenta) {
         AnchorPane rightPlayer = new AnchorPane();
-        rightPlayer.setId("jugador4");
+        rightPlayer.setId(cuenta.getUsername());
         rightPlayer.setLayoutX(892);
         rightPlayer.setLayoutY(210);
         rightPlayer.setPrefSize(98, 234);
         rightPlayer.setStyle("-fx-background-color: #B2533E; -fx-background-radius: 20; -fx-border-color: #000000; -fx-border-radius: 20;");
 
-        Label cardCount = new Label("6");
+        Label cardCount = new Label(String.valueOf(modelo.getCantidadFichasPorJugador()));
         cardCount.setAlignment(javafx.geometry.Pos.CENTER);
         cardCount.setLayoutX(21);
         cardCount.setLayoutY(162);
         cardCount.setPrefSize(60, 60);
         cardCount.setTextFill(javafx.scene.paint.Color.WHITE);
         cardCount.setFont(Font.font("Verdana Bold", 40));
+        cardCount.setId(cuenta.getIdCadena());
 
         ImageView playerDeck = new ImageView(new Image(getClass().getResourceAsStream("/images/mazoJugador.png")));
         playerDeck.setFitHeight(88);
@@ -195,7 +224,7 @@ public class PartidaView implements ObserverPartidaMVC {
         playerDeck.setLayoutY(95);
         playerDeck.setRotate(-90);
 
-        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
+        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
         playerAvatar.setFitHeight(114);
         playerAvatar.setFitWidth(114);
         playerAvatar.setLayoutX(-13);
@@ -203,18 +232,19 @@ public class PartidaView implements ObserverPartidaMVC {
 
         rightPlayer.getChildren().addAll(cardCount, playerDeck, playerAvatar);
         return rightPlayer;
+//        panel.getChildren().add(rightPlayer);
     }
 
-    private AnchorPane createLeftPlayer() {
+    private AnchorPane createLeftPlayer(CuentaDTO cuenta) {
         AnchorPane leftPlayer = new AnchorPane();
-        leftPlayer.setId("jugador3");
+        leftPlayer.setId(cuenta.getUsername());
         leftPlayer.setLayoutX(10);
         leftPlayer.setLayoutY(210);
         leftPlayer.setPrefSize(98, 234);
         leftPlayer.setStyle("-fx-background-color: #B2533E; -fx-background-radius: 20; -fx-border-color: #000000; -fx-border-radius: 20;");
 
-        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
-        playerAvatar.setId("jugador3");
+        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
+        playerAvatar.setId(cuenta.getAvatar().getUrl());
         playerAvatar.setFitHeight(114);
         playerAvatar.setFitWidth(114);
         playerAvatar.setLayoutX(-6);
@@ -227,16 +257,18 @@ public class PartidaView implements ObserverPartidaMVC {
         playerDeck.setLayoutY(86);
         playerDeck.setRotate(90);
 
-        Label cardCount = new Label("6");
+        Label cardCount = new Label(String.valueOf(modelo.getCantidadFichasPorJugador()));
         cardCount.setAlignment(javafx.geometry.Pos.CENTER);
         cardCount.setLayoutX(16);
         cardCount.setLayoutY(159);
         cardCount.setPrefSize(60, 60);
         cardCount.setTextFill(javafx.scene.paint.Color.WHITE);
         cardCount.setFont(Font.font("Verdana Bold", 40));
+        cardCount.setId(cuenta.getIdCadena());
 
         leftPlayer.getChildren().addAll(playerAvatar, playerDeck, cardCount);
         return leftPlayer;
+//        panel.getChildren().add(leftPlayer);
     }
 
     private void createBottomPlayer() {
@@ -248,13 +280,7 @@ public class PartidaView implements ObserverPartidaMVC {
         bottomPlayer.setSpacing(20);
         bottomPlayer.setStyle("-fx-background-color: #B2533E; -fx-border-color: #000000; -fx-border-radius: 20; -fx-background-radius: 20;");
         bottomPlayer.setPadding(new Insets(0, 0, -12, 20));
-
-        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/ave.png")));
-        playerAvatar.setFitHeight(140);
-        playerAvatar.setFitWidth(140);
-        playerAvatar.setLayoutX(856);
-        playerAvatar.setLayoutY(553);
-
+        actualizarDarFichas(modelo.getJugador().getFichas());
     }
 
     private AnchorPane createTopOptions() {
@@ -279,18 +305,20 @@ public class PartidaView implements ObserverPartidaMVC {
         deckImage.setFitHeight(130);
         deckImage.setFitWidth(78);
 
-        Label deckLabel = new Label("jo");
-        deckLabel.setTextFill(javafx.scene.paint.Color.valueOf("#790000"));
-        deckLabel.setFont(Font.font("Russo One", 23));
-        deckLabel.setUnderline(true);
-        deckLabel.setTranslateY(-30);
+        contadorPozo = new Label(String.valueOf(modelo.fichasRestantesPozoInicio()));
+        contadorPozo.setTextFill(javafx.scene.paint.Color.valueOf("#790000"));
+        contadorPozo.setFont(Font.font("Russo One", 23));
+        contadorPozo.setUnderline(true);
+        contadorPozo.setTranslateY(-30);
 
-        pozoIndicador.getChildren().addAll(deckImage, deckLabel);
+        pozoIndicador.getChildren().addAll(deckImage, contadorPozo);
         pozoIndicador.setCursor(Cursor.HAND);
+        
     }
 
     private ImageView createPlayerAvatar() {
-        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream("/avatar/jaguar.png")));
+        CuentaDTO cuenta = modelo.getCuentaActual();
+        ImageView playerAvatar = new ImageView(new Image(getClass().getResourceAsStream(cuenta.getAvatar().getUrl())));
         playerAvatar.setFitHeight(140);
         playerAvatar.setFitWidth(140);
         playerAvatar.setLayoutX(856);
@@ -317,15 +345,44 @@ public class PartidaView implements ObserverPartidaMVC {
         return buttonContainer;
     }
 
+    public void partida2Jugadores(Map<String, JugadorDTO> mapeoJugadores) {
+        JugadorDTO jugadorArriba = mapeoJugadores.get(modelo.queJugadorEs(1));
+        createTopPlayer(jugadorArriba.getCuenta());
+    }
+
+    public void partida3Jugadores(Map<String, JugadorDTO> mapeoJugadores) {
+        JugadorDTO jugadorIzquierda = mapeoJugadores.get(modelo.queJugadorEs(1));
+        JugadorDTO jugadorDerecha = mapeoJugadores.get(modelo.queJugadorEs(2));
+        createRightPlayer(jugadorIzquierda.getCuenta());
+        createLeftPlayer(jugadorDerecha.getCuenta());
+    }
+
+    public void partida4Jugadores(Map<String, JugadorDTO> mapeoJugadores) {
+        JugadorDTO jugadorIzquierda = mapeoJugadores.get(modelo.queJugadorEs(1));
+        JugadorDTO jugadorArriba = mapeoJugadores.get(modelo.queJugadorEs(2));
+        JugadorDTO jugadorDerecha = mapeoJugadores.get(modelo.queJugadorEs(3));
+        createTopPlayer(jugadorArriba.getCuenta());
+        createRightPlayer(jugadorIzquierda.getCuenta());
+        createLeftPlayer(jugadorDerecha.getCuenta());
+        int fichasPozo = 28 - (4 * modelo.cuantasFichasInicialesFueron());
+    }
+
+    private void cambiarNumeroFichasJugador(CuentaDTO cuenta) {
+        Label cardCountLabel = (Label) panel.lookup("#" + cuenta.getAvatar().getUrl());
+        if (cardCountLabel != null) {
+            cardCountLabel.setText("4");  // Update the card count
+        }
+    }
+
     //--------------------------------Eventos--------------------------------
     public void evaluarFicha(EventHandler<MouseEvent> e) {
-        this.evaluarFicha = e;
+        evaluarFicha = e;
     }
 
     public void procesarJugada(EventHandler<MouseEvent> e) {
-        this.colocarFicha = e;
+        colocarFicha = e;
     }
-
+    
     public void clicPozo(EventHandler<MouseEvent> e) {
         pozoIndicador.setOnMouseClicked(e);
     }
@@ -339,61 +396,69 @@ public class PartidaView implements ObserverPartidaMVC {
     }
 
     //--------------------------------Metodos Observador--------------------------------
-    public void dibujarFichaPrueba(FichaDTO ficha) {
-        JugadaRealizadaDTO jugada;
-        if (cuenta == 0) {
-            jugada = new JugadaRealizadaDTO(PosicionDTO.ARRIBA, true, 30, 0, ficha);
-        } else if (cuenta == 1) {
-            jugada = new JugadaRealizadaDTO(PosicionDTO.ARRIBA, true, 30, 60, ficha);
+//    public void dibujarFichaPrueba(FichaDTO ficha) {
+//        JugadaRealizadaDTO jugada;
+//        if (cuenta == 0) {
+//            jugada = new JugadaRealizadaDTO(PosicionDTO.ARRIBA, true, 30, 0, ficha);
+//        } else if (cuenta == 1) {
+//            jugada = new JugadaRealizadaDTO(PosicionDTO.ARRIBA, true, 30, 60, ficha);
+//
+//        } else if (cuenta == 2) {
+//            jugada = new JugadaRealizadaDTO(PosicionDTO.ARRIBA, true, 30, 120, ficha);
+//
+//        } else {
+//            jugada = new JugadaRealizadaDTO(PosicionDTO.ARRIBA, true, 30, 180, ficha);
+//        }
+//        gameBoard.dibujarFicha(jugada);
+//        cuenta++;
+//    }
 
-        } else if (cuenta == 2) {
-            jugada = new JugadaRealizadaDTO(PosicionDTO.ARRIBA, true, 30, 120, ficha);
+    public void dibujarFicha(JugadaRealizadaDTO jugada) {
+        gameBoard.dibujarFicha(jugada);
 
-        } else{
-            jugada = new JugadaRealizadaDTO(PosicionDTO.ARRIBA, true, 30, 180, ficha);
-        } 
-        gameBoard.dibujarFicha(jugada);
-        cuenta++;
     }
-    
-    public void dibujarFicha(JugadaRealizadaDTO jugada){
-        gameBoard.dibujarFicha(jugada);
-        
-    }
-    
-    public void dibujarJugada(FichaDTO ficha, PosibleJugadaDTO jugada){
+
+    public void dibujarJugada(FichaDTO ficha, PosibleJugadaDTO jugada) {
         gameBoard.mostrarPosiblesJugadas(ficha, jugada);
     }
-    
-    public void limpiarJugadas(){
+
+    public void limpiarJugadas() {
         gameBoard.limpiarJugadas();
     }
-    
-    
+
     @Override
     public void actualizarDarFichas(List<FichaDTO> fichas) {
         BuilderFichaMazo dibujaFicha = new BuilderFichaMazo();
         for (FichaDTO ficha : fichas) {
-            dibujaFicha.construirVertical(ficha);
-            Canvas dibujo = dibujaFicha.resultado();
-            dibujo.setOnMouseClicked(evaluarFicha);
-            modelo.agregarMapeoFichas(dibujo, ficha);
-            agregarDominoMazo(dibujo);
+            pintarFichasMazo(dibujaFicha,ficha);
+//            dibujaFicha.construirVertical(ficha);
+//            Canvas dibujo = dibujaFicha.resultado();
+//            dibujo.setOnMouseClicked(evaluarFicha);
+//            modelo.agregarMapeoFichas(dibujo, ficha);
+//            agregarDominoMazo(dibujo);
         }
     }
 
-    @Override
-    public void actualizarDarFicha(FichaDTO ficha) {
-        BuilderFichaMazo dibujaFicha = new BuilderFichaMazo();
+    private void pintarFichasMazo(BuilderFichaMazo dibujaFicha, FichaDTO ficha){
         dibujaFicha.construirVertical(ficha);
         Canvas dibujo = dibujaFicha.resultado();
         dibujo.setOnMouseClicked(evaluarFicha);
         modelo.agregarMapeoFichas(dibujo, ficha);
         agregarDominoMazo(dibujo);
     }
+    
+    @Override
+    public void actualizarDarFicha(FichaDTO ficha) {
+        BuilderFichaMazo dibujaFicha = new BuilderFichaMazo();
+        pintarFichasMazo(dibujaFicha, ficha);
+//        dibujaFicha.construirVertical(ficha);
+//        Canvas dibujo = dibujaFicha.resultado();
+//        dibujo.setOnMouseClicked(evaluarFicha);
+//        modelo.agregarMapeoFichas(dibujo, ficha);
+//        agregarDominoMazo(dibujo);
+    }
 
-    private int cuenta = 0;
-
+   // private int cuenta = 0;
 
     @Override
     public void actualizarJugadorAbandono(CuentaDTO cuenta) {
@@ -402,12 +467,12 @@ public class PartidaView implements ObserverPartidaMVC {
 
     @Override
     public void actualizarProximaJugada(JugadaDTO jugada) {
-        System.out.println("Es tu turno");
+        System.out.println("\n\nJugada posible: "+jugada+"\n");
     }
 
     @Override
     public void actualizarJugadorSeRindio(CuentaDTO cuenta) {
-        System.out.println("Esta cuenta solicito rendirse");
+        System.out.println("Esta cuenta solicito rendirse"  + cuenta);
     }
 
     @Override

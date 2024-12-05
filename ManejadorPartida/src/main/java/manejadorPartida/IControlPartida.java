@@ -11,8 +11,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Consumer;
 import observer.Observer;
+import partidaBuilder.DirectorSuscripcion;
+import tiposLogicos.TipoJugadorFicha;
 import tiposLogicos.TipoLogicaLobby;
+import tiposLogicos.TipoLogicaPozo;
+import tiposLogicos.TipoLogicaTablero;
 import tiposLogicos.TipoLogicaTurno;
+import tiposLogicos.TiposJugador;
 
 /**
  *
@@ -21,6 +26,7 @@ import tiposLogicos.TipoLogicaTurno;
  */
 public abstract class IControlPartida implements Observer<Evento> {
     protected ICliente cliente;
+    protected DirectorSuscripcion directorSuscripcion;
     protected BlockingQueue<Evento> colaEventos;
     protected Map<Enum, Consumer<Evento>> consumers;
     protected final List<Enum> eventos = new ArrayList<>(
@@ -28,7 +34,8 @@ public abstract class IControlPartida implements Observer<Evento> {
                     TipoLogicaTurno.FIN_JUEGO,
                     TipoError.ERROR_DE_SERVIDOR,
                     TipoLogicaLobby.PREPARAR_PARTIDA,
-                    TipoLogicaPozo.REPARTIR_FICHAS,
+                    TiposJugador.PETICION_RENDIRSE,
+//                    TipoLogicaPozo.REPARTIR_FICHAS,
                     TipoJugadorFicha.JUGADA_REALIZADA,
                     TipoLogicaTurno.TURNOS_DESIGNADOS,
                     TipoLogicaTurno.TURNO_ACTUAL,
@@ -54,12 +61,14 @@ public abstract class IControlPartida implements Observer<Evento> {
         consumers.putIfAbsent(TipoError.ERROR_DE_SERVIDOR, this::manejarError);
         consumers.putIfAbsent(TipoLogicaTurno.FIN_JUEGO, this::finJuegoSinMovimientos);
         consumers.putIfAbsent(TipoLogicaLobby.PREPARAR_PARTIDA, this::prepararPartida);
-        consumers.putIfAbsent(TipoLogicaPozo.REPARTIR_FICHAS, this::entregarFichaJugadores);
+        consumers.putIfAbsent(TiposJugador.PETICION_RENDIRSE, this::manejarPeticionRendirse);
+//        consumers.putIfAbsent(TipoLogicaPozo.REPARTIR_FICHAS, this::entregarFichaJugadores);
         consumers.putIfAbsent(TipoJugadorFicha.JUGADA_REALIZADA, this::quitarFicha);
         consumers.putIfAbsent(TipoLogicaTurno.TURNO_ACTUAL, this::evaluarJugador);
         consumers.putIfAbsent(TipoLogicaTurno.PASAR_TURNO, this::evaluarJugador);
         consumers.putIfAbsent(TipoLogicaTurno.TURNOS_DESIGNADOS, this::iniciarPartida);
         consumers.putIfAbsent(TipoLogicaPozo.POZO_VACIO, this::pozoVacio);
+        consumers.putIfAbsent(TipoLogicaPozo.FICHA_OBTENIDA, this::evaluarFichaObtenida);
 //        consumers.putIfAbsent(TipoLogicaTablero.OBTENER_JUGADA, this::asignarJugadaNueva);
         
     }
@@ -67,6 +76,11 @@ public abstract class IControlPartida implements Observer<Evento> {
     public void agregarEvento(Enum evento, Consumer<Evento> consumer){
         eventos.add(evento);
         consumers.putIfAbsent(evento, consumer);
+    }
+  
+    public void removerEvento(Enum evento){
+        eventos.remove(evento);
+        consumers.remove(evento);
     }
   
     public List<Enum> obtenerEventosSuscrito() {
@@ -82,4 +96,7 @@ public abstract class IControlPartida implements Observer<Evento> {
     public abstract void iniciarPartida(Evento evento);
     public abstract void asignarJugadaNueva(Evento evento);
     public abstract void pozoVacio(Evento evento);
+    public abstract void evaluarFichaObtenida(Evento evento);
+    public abstract void manejarPeticionRendirse(Evento evento);
+    
 }

@@ -6,14 +6,21 @@ import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.MazosDTO;
+import entidadesDTO.PartidaIniciadaDTO;
 import entidadesDTO.PosibleJugadaDTO;
 import eventoBase.Evento;
 import entidadesDTO.ReglasDTO;
+import entidadesDTO.ResultadosDTO;
 import entidadesDTO.TurnosDTO;
 import eventoBaseError.EventoError;
+import eventoBaseSuscripcion.EventoSuscripcion;
+import eventos.EventoJugador;
 import eventos.EventoJugadorFicha;
 import eventos.EventoLobby;
 import eventos.EventoPartida;
+import eventos.EventoPozo;
+import eventos.EventoTablero;
+import eventos.EventoTurno;
 import implementacion.Client;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +32,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import partidaBuilder.BuilderEventoPartida;
 import partidaBuilder.DirectorPartida;
+import partidaBuilder.DirectorSuscripcion;
+import tiposLogicos.TipoLogicaPozo;
 
 /**
  *
@@ -68,6 +77,7 @@ public class ControlPartida extends IControlPartida implements Runnable {
         _cliente.iniciar();
         id = _cliente.getClientId();
         director = new DirectorPartida(new BuilderEventoPartida(), id);
+        directorSuscripcion = new DirectorSuscripcion(id);
         ejecutorEventos.submit(this);
     }
 
@@ -84,12 +94,18 @@ public class ControlPartida extends IControlPartida implements Runnable {
 
     @Override
     public void manejarError(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EventoError error = (EventoError)evento;
+        System.out.println("Hubo un error: "+error.getMensaje());
     }
 
     @Override
     public void finJuegoSinMovimientos(Evento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        System.out.println("Los jugadres se quedaron sin movimientos");
+        System.out.println("Fin del juego jejejeje");
+        ResultadosDTO resultados = manejador.terminarPartida();
+        EventoPartida eventoEnviar = director.crearEventoTerminoPartida(resultados);
+        cliente.enviarEvento(eventoEnviar);
+       // EventoPartida fin = director.crearEventoInicioPartida();
     }
 
     @Override
@@ -97,8 +113,8 @@ public class ControlPartida extends IControlPartida implements Runnable {
         EventoLobby er = (EventoLobby) evento;
         System.out.println("Evento recibido " + er);
         ReglasDTO reglas = er.getReglas();
-        manejador.crearPartida(reglas.getCuentas());
-        EventoPartida eventoEnviar = director.crearEventoRepartirFichas(reglas);
+        List<JugadorDTO> jugadores = manejador.crearPartida(reglas.getCuentas());
+        EventoPartida eventoEnviar = director.crearEventoRepartirFichas(reglas, jugadores);
         cliente.enviarEvento(eventoEnviar);
         
     }
@@ -118,7 +134,11 @@ public class ControlPartida extends IControlPartida implements Runnable {
         
         if(ficha != null){
             CuentaDTO cuenta = er.getCuenta();
-            manejador.quitarFicha(cuenta, ficha);
+            if(manejador.quitarFicha(cuenta, ficha)){
+                ResultadosDTO resultados =manejador.terminarPartida();
+                EventoPartida eventoEnviar = director.crearEventoJugadorGano(cuenta,resultados);
+                cliente.enviarEvento(eventoEnviar);
+            }
         }
     }
 
@@ -132,7 +152,6 @@ public class ControlPartida extends IControlPartida implements Runnable {
     public void evaluarJugador(Evento evento) {
         EventoTurno er = (EventoTurno) evento;
         CuentaDTO cuenta = er.getCuenta();
-        Map<FichaDTO, PosibleJugadaDTO> jugadasP;
         
         EventoPartida eventoEnviar;
         if(er.getJugada() != null){
@@ -156,11 +175,31 @@ public class ControlPartida extends IControlPartida implements Runnable {
     }
 
     @Override
+    public void evaluarFichaObtenida(Evento evento){
+        EventoPozo fichaOb = (EventoPozo)evento;
+        FichaDTO ficha = fichaOb.getFicha();
+        CuentaDTO cuenta = fichaOb.getJugador();
+        
+        EventoPartida eventoEnviar;
+        manejador.agregarFicha(cuenta, ficha);
+        if (manejador.tieneJugada(cuenta)) {
+            eventoEnviar = director.crearEventoTuTurno(manejador.obtenerJugadaActual(), cuenta);
+        } else {
+            eventoEnviar = director.crearEventoSinJugadas(cuenta);
+        }
+        cliente.enviarEvento(eventoEnviar);
+    }
+    
+    @Override
     public void iniciarPartida(Evento evento) {
         EventoTurno er = (EventoTurno) evento;
         TurnosDTO turnos = er.getTurnos();
+        List<JugadorDTO> jugadores = turnos.getJugadores();
+        manejador.setJugadores(jugadores);
         
-        EventoPartida eventoEnviar = director.crearEventoPartida(turnos);
+        PartidaIniciadaDTO partida = new PartidaIniciadaDTO(turnos);
+        
+        EventoPartida eventoEnviar = director.crearEventoPartida(partida);
         cliente.enviarEvento(eventoEnviar);
     }
 
@@ -169,6 +208,25 @@ public class ControlPartida extends IControlPartida implements Runnable {
         EventoTablero er =(EventoTablero)evento;
         JugadaDTO jugada = er.getJugada();
         manejador.agregarJugadaActual(jugada);
+    }
+
+    @Override
+    public void manejarPeticionRendirse(Evento evento) {
+        EventoJugador peticion=(EventoJugador)evento;
+        CuentaDTO cuenta = peticion.getCuenta();
+        
+        EventoPartida eventoEnviar = null;
+        
+        manejador.agregarPeticionRendirse(cuenta);
+        if(manejador.esSegundaPeticionJugador(cuenta)){
+            JugadorDTO jugador = manejador.jugadorAbandono(cuenta);
+            eventoEnviar = director.crearEventoJugadorSalio(jugador);
+        }
+        else if(manejador.todosRendidos()){
+            ResultadosDTO resultados = manejador.terminarPartida();
+            eventoEnviar = director.crearEventoTerminoPartida(resultados);
+        }
+        cliente.enviarEvento(eventoEnviar);
     }
 
 }
