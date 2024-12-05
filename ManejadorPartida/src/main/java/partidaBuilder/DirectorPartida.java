@@ -28,7 +28,6 @@ public class DirectorPartida extends DirectorEventos<BuilderEventoPartida> {
         this.idPublicador = idPublicador;
     }
     
-    
     public EventoPartida crearEventoRepartirFichas(ReglasDTO reglas, List<JugadorDTO>jugadores){
         builder.setIdPublicador(idPublicador);
         builder.setReglas(reglas);
@@ -45,8 +44,9 @@ public class DirectorPartida extends DirectorEventos<BuilderEventoPartida> {
         return builder.construirEvento();
     }
     
-    public EventoPartida crearEventoTerminoPartida(){
+    public EventoPartida crearEventoTerminoPartida(ResultadosDTO resultados){
         builder.setIdPublicador(idPublicador);
+        builder.setResultados(resultados);
 //        builder.setTurnos(turnos);
         builder.setTipo(TipoLogicaPartida.TERMINO_PARTIDA);
         return builder.construirEvento();
@@ -70,6 +70,13 @@ public class DirectorPartida extends DirectorEventos<BuilderEventoPartida> {
     public EventoPartida crearEventoSolicitarSiguienteTurno(){
         builder.setIdPublicador(idPublicador);
         builder.setTipo(TipoLogicaPartida.SIGUIENTE_TURNO);
+        return builder.construirEvento();
+    }
+    
+    public EventoPartida crearEventoJugadorSalio(JugadorDTO jugador){
+        builder.setIdPublicador(idPublicador);
+        builder.setJugador(jugador);
+        builder.setTipo(TipoLogicaPartida.JUGADOR_SALIO);
         return builder.construirEvento();
     }
     

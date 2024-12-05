@@ -8,6 +8,7 @@ import entidadesDTO.JugadaDTO;
 import entidadesDTO.JugadorDTO;
 import entidadesDTO.PosibleJugadaDTO;
 import entidadesDTO.ReglasDTO;
+import entidadesDTO.ResultadosDTO;
 import entidadesDTO.TurnosDTO;
 import eventos.EventoPartida;
 import java.util.List;
@@ -30,12 +31,20 @@ public class BuilderEventoPartida implements EventBuilder<TipoLogicaPartida>{
         evento.setCuenta(cuenta);
     }
     
+    public void setJugador(JugadorDTO jugador){
+        evento.setJugador(jugador);
+    }
+    
     public void setJugadasPosibles(Map<FichaDTO, PosibleJugadaDTO> jugadas){
         evento.setPosiblesJugadas(jugadas);
     }
     
     public void setReglas(ReglasDTO reglas){
         evento.setReglas(reglas);
+    }
+    
+    public void setResultados(ResultadosDTO resultados){
+        evento.setResultados(resultados);
     }
     
     public void setJugadores(List<JugadorDTO> jugadores){

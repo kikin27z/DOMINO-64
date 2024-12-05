@@ -17,9 +17,12 @@ import entidadesDTO.TurnosDTO;
 import entidadesDTO.MazosDTO;
 import entidadesDTO.PosibleJugadaDTO;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -28,6 +31,8 @@ import java.util.Map;
  */
 public class ManejadorPartida {
     private final Partida partida;
+    private List<Jugador> jugadores;
+    private Map<Jugador,Integer> peticionesPorJugador;
     private Jugada jugadaActual;
     private final AdaptadorEntidad adaptador;
     private final AdaptadorDTO adaptadorDTO;
@@ -36,6 +41,7 @@ public class ManejadorPartida {
         adaptador = new AdaptadorEntidad();
         adaptadorDTO = new AdaptadorDTO();
         partida = new Partida();
+        peticionesPorJugador = new HashMap<>();
     }
 
     public void agregarJugador(JugadorDTO jugador){
@@ -44,12 +50,16 @@ public class ManejadorPartida {
     
     public void setJugadores(List<JugadorDTO> jugadores){
         partida.setJugadores(adaptadorDTO.adaptarJugadoresDTO(jugadores));
+        this.jugadores = partida.getJugadores();
+        for (Jugador jugador : this.jugadores) {
+            peticionesPorJugador.put(jugador,0);
+        }
     }
     
     public List<JugadorDTO> crearPartida(List<CuentaDTO> cuentasDTO){
         List<Cuenta> cuentas = adaptadorDTO.adaptarCuentasDTO(cuentasDTO);
         
-        List<Jugador> jugadores = new ArrayList<>();
+        jugadores = new ArrayList<>();
         for (Cuenta c : cuentas) {
             Jugador jugador = new Jugador(c);
             jugadores.add(jugador);
@@ -59,33 +69,113 @@ public class ManejadorPartida {
        return adaptador.adaptarJugadores(jugadores);
     }
     
-    public boolean peticionRendirseJugador(CuentaDTO cuenta){
-        Jugador jugador = partida.obtenerJugador(adaptadorDTO.adaptarCuentaDTO(cuenta));
-        partida.seRindioJugador(jugador);
-        return partida.obtenerNumJugadoresRendidos() == partida.getJugadores().size();
+    public ResultadosDTO terminarPartida(){
+        ResultadosDTO resultados = new ResultadosDTO();
+        Map<Cuenta, Integer> puntajes = obtenerResultados();
+        resultados.setPuntajes(convertirDTO(puntajes));
+        return resultados;
     }
     
-    public List<FichaDTO> jugadorAbandono(JugadorDTO jugador) {
-        Jugador j = adaptadorDTO.adaptarJugadorDTO(jugador);
-        List<Ficha> fichas = partida.abandonoJugador(j);
-        List<FichaDTO> fichasJugadorAbandono = adaptador.adaptarEntidadesFicha(fichas);
-        return fichasJugadorAbandono;
+    private Map<CuentaDTO, Integer> convertirDTO(Map<Cuenta, Integer> mapeo){
+        Map<CuentaDTO, Integer> dtos = new LinkedHashMap<>();
+        for (Map.Entry<Cuenta, Integer> entry : mapeo.entrySet()) {
+            CuentaDTO cuenta = adaptador.adaptarEntidadCuenta(entry.getKey());
+            dtos.put(cuenta, entry.getValue());
+        }
+        return dtos;
+    }
+    
+    private Map<Cuenta, Integer> ordenarPorPuntaje(Map<Cuenta, Integer> mapeo){
+        LinkedHashMap<Cuenta, Integer> ordenado = mapeo.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+        return ordenado;
+    }
+    
+    private Map<Cuenta, Integer> obtenerResultados(){
+        Map<Cuenta, Integer> mapeo = new HashMap<>();
+        
+        for (Jugador jugador : jugadores) {
+            Cuenta cuenta = jugador.getCuenta();
+            int puntaje = 0;
+            
+            if(!jugador.getFichas().isEmpty()){
+                for (Ficha ficha : jugador.getFichas()) {
+                    puntaje+=ficha.getValor();
+                }
+            }
+            mapeo.put(cuenta, puntaje);
+        }
+        
+        return ordenarPorPuntaje(mapeo);
+    }
+    
+    private Jugador buscarJugador(String idCuenta){
+        for (Jugador jugador : jugadores) {
+            if(jugador.obtenerIdJugador().equals(idCuenta)){
+                return jugador;
+            }
+        }
+        return null;
+    }
+    
+    private void removerJugador(Jugador jugador){
+        jugadores.remove(jugador);
+        peticionesPorJugador.remove(jugador);
+        
+    }
+    
+    public boolean todosRendidos(){
+        for (Map.Entry<Jugador, Integer> entry : peticionesPorJugador.entrySet()) {
+            if(entry.getValue()==0)
+                return false;
+        }
+        return true;
+    }
+    
+    public boolean esSegundaPeticionJugador(CuentaDTO cuenta){
+        Jugador jugador = buscarJugador(cuenta.getIdCadena());
+        return peticionesPorJugador.get(jugador) == 2;
+    }
+    
+    public void agregarPeticionRendirse(CuentaDTO cuenta){
+        Jugador jugador = buscarJugador(cuenta.getIdCadena());
+        peticionesPorJugador.merge(jugador, 1, (oldV, newV) -> oldV+newV);
+        partida.seRindioJugador(jugador);
+    }
+    
+    public JugadorDTO jugadorAbandono(CuentaDTO jugador) {
+        Jugador j = buscarJugador(jugador.getIdCadena());
+        JugadorDTO dto = adaptador.adaptarEntidadJugador(j);
+        
+//        List<Ficha> fichas = partida.abandonoJugador(j);
+        removerJugador(j);
+        return dto;
     }
     
     public void quitarFicha(CuentaDTO c, FichaDTO f){
-        Cuenta cuenta = adaptadorDTO.adaptarCuentaDTO(c);
+//        Cuenta cuenta = adaptadorDTO.adaptarCuentaDTO(c);
         Ficha ficha = adaptadorDTO.adaptarFichaDTO(f);
         
-        Jugador jugador = partida.obtenerJugador(cuenta);
+        Jugador jugador = buscarJugador(c.getIdCadena());
         jugador.removerFicha(ficha);
+        jugadores.set(jugadores.indexOf(jugador), jugador);
     }
     
     public void agregarFicha(CuentaDTO c, FichaDTO f){
-        Cuenta cuenta = adaptadorDTO.adaptarCuentaDTO(c);
+//        Cuenta cuenta = adaptadorDTO.adaptarCuentaDTO(c);
         Ficha ficha = adaptadorDTO.adaptarFichaDTO(f);
         
-        Jugador jugador = partida.obtenerJugador(cuenta);
+//        Jugador jugador = partida.obtenerJugador(cuenta);
+        Jugador jugador = buscarJugador(c.getIdCadena());
         jugador.agregarFicha(ficha);
+        jugadores.set(jugadores.indexOf(jugador), jugador);
     }
     
     public void repartirFichas(MazosDTO mazos){

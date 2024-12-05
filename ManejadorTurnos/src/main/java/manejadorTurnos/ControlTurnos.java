@@ -146,4 +146,15 @@ public class ControlTurnos extends IControlTurnos implements Runnable{
         }
     }
 
+    @Override
+    public void reacomodarTurnos(Evento evento) {
+        EventoPartida jugadorSalio = (EventoPartida)evento;
+        CuentaDTO cuenta =jugadorSalio.getJugador().getCuenta();
+        cuenta = manejador.removerJugador(cuenta);
+        if(cuenta != null){
+            EventoTurno eventoEnviar = director.crearEventoTurnoActual(cuenta, null);
+            cliente.enviarEvento(eventoEnviar);
+        }
+    }
+
 }

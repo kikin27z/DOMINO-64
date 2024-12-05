@@ -10,6 +10,7 @@ import entidadesDTO.PartidaIniciadaDTO;
 import entidadesDTO.PosibleJugadaDTO;
 import eventoBase.Evento;
 import entidadesDTO.ReglasDTO;
+import entidadesDTO.ResultadosDTO;
 import entidadesDTO.TurnosDTO;
 import eventoBaseError.EventoError;
 import eventoBaseSuscripcion.EventoSuscripcion;
@@ -205,11 +206,20 @@ public class ControlPartida extends IControlPartida implements Runnable {
     @Override
     public void manejarPeticionRendirse(Evento evento) {
         EventoJugador peticion=(EventoJugador)evento;
-        CuentaDTO jugador = peticion.getCuenta();
+        CuentaDTO cuenta = peticion.getCuenta();
         
-        if(manejador.peticionRendirseJugador(jugador)){
-            EventoPartida fin = director.crearEventoTerminoPartida();
+        EventoPartida eventoEnviar = null;
+        
+        manejador.agregarPeticionRendirse(cuenta);
+        if(manejador.esSegundaPeticionJugador(cuenta)){
+            JugadorDTO jugador = manejador.jugadorAbandono(cuenta);
+            eventoEnviar = director.crearEventoJugadorSalio(jugador);
         }
+        else if(manejador.todosRendidos()){
+            ResultadosDTO resultados = manejador.terminarPartida();
+            eventoEnviar = director.crearEventoTerminoPartida(resultados);
+        }
+        cliente.enviarEvento(eventoEnviar);
     }
 
 }

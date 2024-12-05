@@ -212,6 +212,17 @@ public class ManejadorTurnos {
         }
     }
 
+    public CuentaDTO removerJugador(CuentaDTO dto){
+        Cuenta cuenta = adaptadorDTO.adaptarCuentaDTO(dto);
+        if(cuenta.equals(jugadorEnTurno)){
+            dto = cambiarTurno();
+        }else{
+            dto = null;
+        }
+        turnos.remove(cuenta);
+        return dto;
+    }
+    
     public LinkedList quitarJugador(CuentaDTO cuenta) {
         for (String id : orden) {
             if (cuenta.getIdCadena().equals(id)) {

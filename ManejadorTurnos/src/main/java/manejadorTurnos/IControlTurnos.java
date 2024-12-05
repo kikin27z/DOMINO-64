@@ -32,7 +32,8 @@ public abstract class IControlTurnos implements Observer<Evento> {
                     TipoLogicaPozo.REPARTIR_FICHAS,
 //                    TipoJugadorFicha.JUGADA_REALIZADA,
                     TipoLogicaTablero.OBTENER_JUGADA,
-                    TipoLogicaPartida.SIGUIENTE_TURNO
+                    TipoLogicaPartida.SIGUIENTE_TURNO,
+                    TipoLogicaPartida.JUGADOR_SALIO
             ));
     
     protected IControlTurnos(){
@@ -58,6 +59,7 @@ public abstract class IControlTurnos implements Observer<Evento> {
 //        consumers.putIfAbsent(TipoJugadorFicha.JUGADA_REALIZADA, this::evaluarJugada);
         consumers.putIfAbsent(TipoLogicaTablero.OBTENER_JUGADA, this::cambiarTurno);
         consumers.putIfAbsent(TipoLogicaPartida.SIGUIENTE_TURNO, this::pasarTurno);
+        consumers.putIfAbsent(TipoLogicaPartida.JUGADOR_SALIO, this::reacomodarTurnos);
     }
     
     public void agregarEvento(Enum evento, Consumer<Evento> consumer){
@@ -75,6 +77,7 @@ public abstract class IControlTurnos implements Observer<Evento> {
     public abstract void pasarTurno(Evento evento);
     public abstract void removerJugador(Evento evento);
     public abstract void evaluarJugada(Evento evento);
+    public abstract void reacomodarTurnos(Evento evento);
     
     
 }
