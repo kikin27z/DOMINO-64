@@ -54,7 +54,7 @@ public final class ManejadorDisplay {
         navegacion.cambiarCreditos();
     }
     
-    public void mostrarFinJuego(){
-        navegacion.cambiarFinJuego();
+    public void mostrarFinJuego(ResultadosDTO resultado){
+        navegacion.cambiarFinJuego(resultado);
     }
 }

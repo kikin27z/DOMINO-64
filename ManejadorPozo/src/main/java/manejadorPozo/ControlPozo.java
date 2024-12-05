@@ -110,7 +110,7 @@ public class ControlPozo extends IControlPozo implements Runnable {
 
     @Override
     public void jalarFicha(Evento evento) {
-        EventoJugador jalarF = (EventoJugador)evento;
+        EventoJugadorFicha jalarF = (EventoJugadorFicha)evento;
         FichaDTO ficha = manejador.jalarPozo();
         EventoPozo eventoEnviar;
         if(ficha != null){

@@ -8,6 +8,7 @@ import entidadesDTO.JugadaRealizadaDTO;
 import entidadesDTO.LobbyDTO;
 import entidadesDTO.PartidaIniciadaDTO;
 import entidadesDTO.PosibleJugadaDTO;
+import entidadesDTO.ResultadosDTO;
 import eventoBaseError.EventoError;
 import eventoBaseError.TipoError;
 import eventos.EventoLobby;
@@ -269,9 +270,17 @@ public class ReceptorLogica extends IReceptorEventosLogica implements Runnable {
         partida.setJugadorActual(cuentaDTO.getIdCadena());
         display.mostrarPartida(partida);
         removerSuscripcion(TipoLogicaPartida.INICIO_PARTIDA);
+        agregarSuscripcion(TipoLogicaPartida.JUGADOR_GANO, this::mostrarResultados);
+        agregarSuscripcion(TipoLogicaPartida.TERMINO_PARTIDA, this::mostrarResultados);
 //        distribuidor.inicializarPartida(turnos);
     }
 
+    private void mostrarResultados(Evento evento){
+        EventoPartida fin =(EventoPartida)evento;
+        ResultadosDTO resultados = fin.getResultados();
+        display.mostrarFinJuego(resultados);
+    }
+    
     @Override
     public void proximaJugada(Evento evento) {
         EventoPartida prox = (EventoPartida)evento;

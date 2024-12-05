@@ -52,5 +52,5 @@ public interface INavegacion {
     public void cambiarOpcionesPartida();
     
     public void cambiarCreditos();
-    public void cambiarFinJuego();
+    public void cambiarFinJuego(ResultadosDTO resultadosDTO);
 }

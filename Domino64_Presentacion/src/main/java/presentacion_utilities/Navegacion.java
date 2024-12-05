@@ -183,9 +183,9 @@ public class Navegacion implements INavegacion {
     }
 
     @Override
-    public void cambiarFinJuego() {
+    public void cambiarFinJuego(ResultadosDTO resultados) {
         Platform.runLater(() -> {
-            FinJuegoModel modeloFin = new FinJuegoModel();
+            FinJuegoModel modeloFin = new FinJuegoModel(resultados);
             try {
                 mediador.vincularModeloFin(modeloFin);
                 distribuidor.setFinJuegoMVC(modeloFin);

@@ -18,10 +18,13 @@ public class FinJuegoModel implements ObservableFinJuego, ObservableFinJuegoMVC 
     private final List<ObserverFinJuego> observersLogica;
     private final List<ObserverFinJuegoMVC> observersMVC;
     private boolean ganadorPuesto;
+    private ResultadosDTO resultados;
 
-    public FinJuegoModel() {
+    public FinJuegoModel(ResultadosDTO resultados) {
+        this.resultados = resultados;
         observersLogica = new ArrayList<>();
         observersMVC = new ArrayList<>();
+        inicializarFinJuego(resultados);
     }
 
     public boolean isGanadorPuesto() {
